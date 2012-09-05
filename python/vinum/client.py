@@ -5,7 +5,7 @@ def get():
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     json_out = {'success': True}
-    json_out['total'] = count(cursor, 'client')
+    json_out['total'] = db.count(cursor, 'client')
 
     order_by = None
     if 'sort' in request.args:
@@ -22,7 +22,17 @@ def get():
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
         
-    json_out['rows'] = select(cursor, 'client', what=['no_client', 'no_client_saq', 'nom_social', 'date_ouverture_dossier'],
-                              where=where, offset=request.args['start'], limit=request.args['limit'], order_by=order_by)                              
+    json_out['rows'] = db.select(cursor, 'client', what=['no_client', 'no_client_saq', 'nom_social', 'date_ouverture_dossier'],
+                                 where=where, offset=request.args['start'], limit=request.args['limit'], order_by=order_by)                              
 
+    return json.dumps(json_out, default=json_dthandler)
+
+
+@app.route('/client/update', methods=['POST'])
+def update():
+    conn = psycopg2.connect("dbname=vinum user=christian")
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    db.update(cursor, 'client',values=request.form, where={'no_client':request.form['no_client']})
+    conn.commit()
+    json_out = {'success': True}
     return json.dumps(json_out, default=json_dthandler)

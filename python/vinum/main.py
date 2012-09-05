@@ -1,6 +1,6 @@
 import traceback, datetime, psycopg2, psycopg2.extras
+import little_pger as db
 from flask import *
-from little_pger import *
 
 app = Flask('vinum')
 app.debug = True

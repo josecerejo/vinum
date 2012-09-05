@@ -4,6 +4,9 @@ Ext.define('VIN.controller.Client', {
     models: ['VIN.model.Client'],
     stores: ['VIN.store.Clients'],
     refs: [{
+        ref: 'list',
+        selector: 'client_grid'
+    }, {
         ref: 'form',
         selector: 'client_form'
     }],
@@ -18,6 +21,29 @@ Ext.define('VIN.controller.Client', {
                         this.getForm().getForm().loadRecord(records[0]);
                     }
                 }                
+            },
+            'client_form button': {
+                click: function(btn, e, eopts) {
+                    if (btn.text == 'Créer') {
+                        this.createClient();
+                    } else if (btn.text == 'Modifier') {
+                        this.updateClient();
+                    }
+                }
+            }
+        });
+    },
+    createClient: function() {
+    },
+    updateClient: function() {
+        // todo: keep selection
+        var that = this;
+        this.getForm().getForm().submit({
+            success: function(form, action) {
+                that.getList().getStore().reload();
+            },
+            failure: function(form, action) {
+                VIN.utils.serverErrorPopup(action.result.error_msg);
             }
         });
     }
