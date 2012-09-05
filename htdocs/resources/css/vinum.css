@@ -1,0 +1,71 @@
+.header {  
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #8fc33a), color-stop(100%, #739b2e));
+    background-image: -webkit-linear-gradient(top, #8fc33a, #739b2e);
+    background-image: -moz-linear-gradient(top, #8fc33a, #739b2e);
+    background-image: -o-linear-gradient(top, #8fc33a, #739b2e);
+    background-image: -ms-linear-gradient(top, #8fc33a, #739b2e);
+    background-image: linear-gradient(top, #8fc33a, #739b2e);
+    /* border-bottom: 1px solid #567422; */
+    border: 0 none;
+   /* background: #1E4176; */
+   /* padding-top: 3px; */
+   /* padding-left: 3px; */
+}
+
+.header .title {
+    padding: 10px 10px 10px 10px;
+    /* background: url(../images/logo-roucet.gif) no-repeat; */
+    color: #fff;
+    font-size: 25px;
+    /* font-weight: bold; */
+    text-shadow: 0 1px 0 #4e691f;
+    /* font: normal 20px tahoma, arial, sans-serif; */
+    /* color: white; */
+    /* margin: 5px; */
+}
+
+.clients-icon {
+    background-image: url(../images/icons/group.png) !important;
+}
+
+.commandes-icon {
+    background-image: url(../images/icons/cart.png) !important;
+}
+
+.produits-icon {
+    background-image: url(../images/icons/drink.png) !important;
+}
+
+.inventaire-icon {
+    background-image: url(../images/icons/database.png) !important;
+}
+
+.nav-menu {
+    padding: 0 3px 0 3px;
+}
+
+.nav-menu-item {
+    margin-top: 3px;
+    padding-left: 15px;
+    font-size: 11px;
+    line-height: 20px;
+    cursor: pointer;
+    border: 1px solid #fff;
+}
+
+.nav-menu-item-img {
+    margin-right: 3px;
+    position: relative;
+    top: 3px;
+}
+
+.nav-menu .x-item-selected {
+    font-weight: bold; 
+    color: #15428B;
+    background-color: #DFE8F6;
+    border: 1px dotted #A3BAE9;
+}
+
+.nav-menu-item-hover {
+    background-color: #eee;
+}
