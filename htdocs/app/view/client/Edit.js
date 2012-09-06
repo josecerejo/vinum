@@ -9,7 +9,8 @@ Ext.define('VIN.view.client.Edit', {
         items: [{
             xtype: 'textfield',
             fieldLabel: '# client',
-            name: 'no_client'
+            name: 'no_client',
+            id: 'no_client_tf'
         }, {
             xtype: 'textfield',
             fieldLabel: '# SAQ',
@@ -29,5 +30,7 @@ Ext.define('VIN.view.client.Edit', {
         text: 'Créer'
     }, {
         text: 'Modifier'
+    }, {
+        text: 'Détruire'
     }]
 });

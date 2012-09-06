@@ -7,8 +7,8 @@ Ext.define('VIN.store.Clients', {
     autoLoad: true,
     remoteSort: true,
     sorters: [{
-        property: 'no_client',
-        direction: 'ASC'
+        property: 'nom_social',// 'no_client',
+        direction: 'DESC'
     }],
     proxy: {
         type: 'ajax',

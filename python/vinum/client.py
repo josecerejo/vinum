@@ -33,7 +33,31 @@ def get():
 def update():
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    db.update(cursor, 'client',values=request.form, where={'no_client':request.form['no_client']})
+    request.form = dict([(c, f if f else None) for c, f in request.form.items()])
+    db.update(cursor, 'client', values=request.form, where={'no_client':request.form['no_client']})
+    conn.commit()
+    json_out = {'success': True}
+    return json.dumps(json_out, default=json_dthandler)
+
+
+@app.route('/client/create', methods=['POST'])
+def create():
+    conn = psycopg2.connect("dbname=vinum user=christian")
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    request.form = dict([(c, f if f else None) for c, f in request.form.items()])
+    del request.form['no_client']
+    db.insert(cursor, 'client', values=request.form)
+    conn.commit()
+    json_out = {'success': True}
+    return json.dumps(json_out, default=json_dthandler)
+
+
+@app.route('/client/delete', methods=['POST'])
+def delete():
+    conn = psycopg2.connect("dbname=vinum user=christian")
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    request.form = dict([(c, f if f else None) for c, f in request.form.items()])
+    db.delete(cursor, 'client', where={'no_client':request.form['no_client']})
     conn.commit()
     json_out = {'success': True}
     return json.dumps(json_out, default=json_dthandler)

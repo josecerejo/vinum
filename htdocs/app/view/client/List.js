@@ -3,6 +3,9 @@ Ext.define('VIN.view.client.List', {
     alias: 'widget.client_grid',
     store: 'VIN.store.Clients',
     requires: ['Ext.ux.grid.FiltersFeature'],
+    viewConfig: {
+        preserveScrollOnRefresh: true
+    },
     features: [{
         ftype: 'filters',
         encode: true,
