@@ -22,10 +22,10 @@ def get():
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
 
-    json_out['total'] = len(db.select(cursor, 'client', what=['no_client', 'no_client_saq', 'nom_social', 'date_ouverture_dossier'], where=where))
-    json_out['rows'] = db.select(cursor, 'client', what=['no_client', 'no_client_saq', 'nom_social', 'date_ouverture_dossier'],
-                                 where=where, offset=request.args['start'], limit=request.args['limit'], order_by=order_by)                              
-
+    json_out['total'] = db.count(cursor, 'client', where=where)
+    json_out['rows'] = db.select(cursor, 'client', #what=['no_client', 'no_client_saq', 'nom_social', 'date_ouverture_dossier'],
+                                 where=where, offset=request.args['start'], limit=request.args['limit'], order_by=order_by)
+    
     return json.dumps(json_out, default=json_dthandler)
 
 
@@ -47,8 +47,9 @@ def create():
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
     del request.form['no_client']
     db.insert(cursor, 'client', values=request.form)
+    no_client = db.getCurrentPKeyValue(cursor, 'client', pkey_seq_name='client_no_client_seq')
     conn.commit()
-    json_out = {'success': True}
+    json_out = {'success': True, 'no_client': no_client}
     return json.dumps(json_out, default=json_dthandler)
 
 

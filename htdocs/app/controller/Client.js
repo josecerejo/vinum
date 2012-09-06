@@ -1,4 +1,5 @@
 Ext.define('VIN.controller.Client', {
+
     extend: 'Ext.app.Controller',
     views: ['VIN.view.client.List', 'VIN.view.client.Edit'],
     models: ['VIN.model.Client'],
@@ -10,6 +11,7 @@ Ext.define('VIN.controller.Client', {
         ref: 'form',
         selector: 'client_form'
     }],
+
     init: function() {
         this.control({
             'client_grid': {
@@ -37,6 +39,7 @@ Ext.define('VIN.controller.Client', {
             }
         });
     },
+
     createClient: function() {
         if (Ext.getCmp('no_client_tf').getValue()) {
             Ext.Msg.show({
@@ -47,24 +50,38 @@ Ext.define('VIN.controller.Client', {
             });                    
             return;
         }
+        var form = this.getForm();
         var grid = this.getList();
         var store = grid.getStore();
-        this.getForm().getForm().submit({
+        form.getForm().submit({
             url: '/vinum_server/client/create',
-            success: function(form, action) {
-                store.reload(Ext.apply(store.lastOptions, {
-                    callback: function(records, options) {
-                        //var new_sel_rec = store.findRecord('no_client', sel_rec.get('no_client'));
-                        //grid.getSelectionModel().select(new_sel_rec.index);
-                    }
+            success: function(_form, action) {
+                var new_no_client = Ext.JSON.decode(action.response.responseText).no_client;
+                var new_rec = Ext.create('VIN.model.Client', Ext.override(form.getForm().getFieldValues(), {
+                    no_client: new_no_client
                 }));
+                store.insert(0, new_rec);
+                grid.getSelectionModel().select(0);
             },
-            failure: function(form, action) {
+            failure: function(_form, action) {
                 VIN.utils.serverErrorPopup(action.result.error_msg);
             }
         });        
     },
+
     updateClient: function() {
+        var form = this.getForm();
+        var grid = this.getList();
+        var store = grid.getStore();
+        if (grid.getSelectionModel().getSelection().length == 0) {
+            Ext.Msg.show({
+                title: 'Vinum',
+                msg: 'Veuillez sélectionner un client',
+                icon: Ext.MessageBox.WARNING,
+                buttons: Ext.MessageBox.OK
+            });                    
+            return;
+        }
         if (!Ext.getCmp('no_client_tf').getValue()) {
             Ext.Msg.show({
                 title: 'Vinum',
@@ -74,24 +91,29 @@ Ext.define('VIN.controller.Client', {
             });                    
             return;
         }
-        var grid = this.getList();
-        var store = grid.getStore();
         var sel_rec = grid.getSelectionModel().getSelection()[0];
-        this.getForm().getForm().submit({
+        var form_values = form.getForm().getFieldValues();
+        if (sel_rec.get('no_client') != form_values.no_client) {
+            Ext.Msg.show({
+                title: 'Vinum',
+                msg: "Le # d'un client existant ne peut pas être modifié",
+                icon: Ext.MessageBox.WARNING,
+                buttons: Ext.MessageBox.OK
+            });                    
+            return;
+        }
+        form.getForm().submit({
             url: '/vinum_server/client/update',
-            success: function(form, action) {
-                store.reload(Ext.apply(store.lastOptions, {
-                    callback: function(records, options) {
-                        var new_sel_rec = store.findRecord('no_client', sel_rec.get('no_client'));
-                        grid.getSelectionModel().select(new_sel_rec.index);
-                    }
-                }));
+            success: function(_form, action) {
+                sel_rec.set(form_values);
+                grid.getView().refresh();
             },
-            failure: function(form, action) {
+            failure: function(_form, action) {
                 VIN.utils.serverErrorPopup(action.result.error_msg);
             }
         });
     },
+
     deleteClient: function() {
         var form = this.getForm();
         var grid = this.getList();
@@ -104,15 +126,10 @@ Ext.define('VIN.controller.Client', {
             if (btn == 'yes') {
                 form.getForm().submit({
                     url: '/vinum_server/client/delete',
-                    success: function(form, action) {
-                        store.reload(Ext.apply(store.lastOptions, {
-                            callback: function(records, options) {
-                                //var new_sel_rec = store.findRecord('no_client', sel_rec.get('no_client'));
-                                //grid.getSelectionModel().select(new_sel_rec.index);
-                            }
-                        }));
+                    success: function(_form, action) {
+                        store.reload();
                     },
-                    failure: function(form, action) {
+                    failure: function(_form, action) {
                         VIN.utils.serverErrorPopup(action.result.error_msg);
                     }
                 });

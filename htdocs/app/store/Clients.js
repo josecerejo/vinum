@@ -2,12 +2,12 @@ Ext.define('VIN.store.Clients', {
     extend: 'Ext.data.Store',
     requires: ['VIN.utils'],
     model: 'VIN.model.Client',
-    pageSize: 200,
+    pageSize: 50,
     //buffered: true,
     autoLoad: true,
     remoteSort: true,
     sorters: [{
-        property: 'nom_social',// 'no_client',
+        property: 'no_client',
         direction: 'DESC'
     }],
     proxy: {

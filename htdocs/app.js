@@ -1,7 +1,7 @@
 Ext.Loader.setConfig({enabled:true});
 Ext.Loader.setPath('Ext.ux', './extjs/examples/ux');
 
-var use_login = false;
+var use_login = true;
 
 Ext.application({
 
@@ -22,10 +22,9 @@ Ext.application({
                     icon: Ext.MessageBox.QUESTION,
                     closable: false,
                     fn: function(btn, text) {
-                        //if (text != '!!rouc.com99') {
-                        if (text != 'x') {
+                        if (text != '!!rouc.com99') {
                             Ext.Msg.show({
-                                title: 'Erreur', 
+                                title: 'Vinum', 
                                 msg: 'Mot de passe inconnu...',
                                 icon: Ext.MessageBox.ERROR,
                                 buttons: Ext.MessageBox.OK,
