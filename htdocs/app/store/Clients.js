@@ -3,7 +3,7 @@ Ext.define('VIN.store.Clients', {
     requires: ['VIN.utils'],
     model: 'VIN.model.Client',
     pageSize: 200,
-    buffered: true,
+    //buffered: true,
     autoLoad: true,
     remoteSort: true,
     sorters: [{

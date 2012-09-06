@@ -29,5 +29,11 @@ Ext.define('VIN.view.client.List', {
         dataIndex: 'date_ouverture_dossier',
         filterable: true,
         renderer: Ext.util.Format.dateRenderer('Y-m-d')
-    }]
+    }],
+    dockedItems: {
+        xtype: 'pagingtoolbar',
+        store: 'VIN.store.Clients',
+        dock: 'bottom',
+        displayInfo: true
+    }
 });

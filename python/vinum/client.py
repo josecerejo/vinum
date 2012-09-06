@@ -5,7 +5,7 @@ def get():
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     json_out = {'success': True}
-    json_out['total'] = db.count(cursor, 'client')
+    #json_out['total'] = db.count(cursor, 'client')
 
     order_by = None
     if 'sort' in request.args:
@@ -21,7 +21,8 @@ def get():
                 where[(filter_arg['field'], 'ilike')] = '%%%s%%' % filter_arg['value']
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
-        
+
+    json_out['total'] = len(db.select(cursor, 'client', what=['no_client', 'no_client_saq', 'nom_social', 'date_ouverture_dossier'], where=where))
     json_out['rows'] = db.select(cursor, 'client', what=['no_client', 'no_client_saq', 'nom_social', 'date_ouverture_dossier'],
                                  where=where, offset=request.args['start'], limit=request.args['limit'], order_by=order_by)                              
 
