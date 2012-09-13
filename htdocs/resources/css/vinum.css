@@ -24,12 +24,28 @@
     /* margin: 5px; */
 }
 
+.home-icon {
+    background-image: url(../images/icons/house.png) !important;
+}
+
 .clients-icon {
     background-image: url(../images/icons/group.png) !important;
 }
 
+.clients-add-icon {
+    background-image: url(../images/icons/user_add.png) !important;
+}
+
+.clients-list-icon {
+    background-image: url(../images/icons/table.png) !important;
+}
+
 .commandes-icon {
     background-image: url(../images/icons/cart.png) !important;
+}
+
+.commandes-add-icon {
+    background-image: url(../images/icons/cart_add.png) !important;
 }
 
 .produits-icon {

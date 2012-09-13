@@ -5,7 +5,6 @@ def get():
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     json_out = {'success': True}
-    #json_out['total'] = db.count(cursor, 'client')
 
     order_by = None
     if 'sort' in request.args:

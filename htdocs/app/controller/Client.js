@@ -14,7 +14,7 @@ Ext.define('VIN.controller.Client', {
 
     init: function() {
         this.control({
-            'client_grid': {
+            'list': {
                 viewready: function(g) {
                     //g.getSelectionModel().select(0);
                 },                
@@ -26,8 +26,8 @@ Ext.define('VIN.controller.Client', {
                     }
                 }                
             },
-            'client_form button': {
-                click: function(btn, e, eopts) {
+            'form button': {
+                click: function(btn, e, opts) {
                     if (btn.text == 'Créer') {
                         this.createClient();
                     } else if (btn.text == 'Modifier') {

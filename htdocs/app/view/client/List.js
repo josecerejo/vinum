@@ -1,8 +1,22 @@
 Ext.define('VIN.view.client.List', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.client_grid',
-    store: 'VIN.store.Clients',
+    title: 'Clients',
+    closable: true,
+    //store: 'VIN.store.Clients',
     requires: ['Ext.ux.grid.FiltersFeature'],
+
+    initComponent: function() {
+        this.store = Ext.create('VIN.store.Clients');
+        this.dockedItems = {
+            xtype: 'pagingtoolbar',
+            store: this.store,
+            dock: 'bottom',
+            displayInfo: true
+        };
+        this.callParent(arguments);
+    },
+
     viewConfig: {
         preserveScrollOnRefresh: true
     },
@@ -118,10 +132,10 @@ Ext.define('VIN.view.client.List', {
         filterable: true,
         renderer: Ext.util.Format.dateRenderer('Y-m-d')
     }],
-    dockedItems: {
-        xtype: 'pagingtoolbar',
-        store: 'VIN.store.Clients',
-        dock: 'bottom',
-        displayInfo: true
-    }
+    // dockedItems: {
+    //     xtype: 'pagingtoolbar',
+    //     store: //'VIN.store.Clients',
+    //     dock: 'bottom',
+    //     displayInfo: true
+    // }
 });

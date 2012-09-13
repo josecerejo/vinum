@@ -7,7 +7,7 @@ Ext.application({
 
     name: 'VIN',
 
-    controllers: ['LeftNav', 'Client'],
+    controllers: ['MainToolbar', 'Client'],
 
     launch: function() {
         if (use_login) {
