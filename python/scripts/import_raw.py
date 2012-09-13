@@ -22,6 +22,21 @@ cursor.execute("select setval('client_no_client_seq', (select max(no_client) fro
 
 # produits
 
+formats = {}
+f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/Formats.txt'))
+f.next()
+for row in f:
+    data = dict(zip(cols, [v.strip() if v.strip() else None for v in row]))
+    formats[data['FormatID']] = data['Format']
+
+producteurs = {}
+f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/Producteurs.txt'))
+f.next()
+for row in f:
+    data = dict(zip(cols, [v.strip() if v.strip() else None for v in row]))
+    formats[data['FormatID']] = data['Format']
+
+
 cols = getColumns(cursor, 'produit')
 
 f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/Produits.txt'))
