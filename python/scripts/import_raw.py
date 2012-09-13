@@ -7,6 +7,8 @@ cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 cols = getColumns(cursor, 'client')
 
+# clients
+
 f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/Clients.txt'))
 f.next()
 for row in f:
@@ -17,4 +19,18 @@ for row in f:
     insert(cursor, 'client', values=data)
 
 cursor.execute("select setval('client_no_client_seq', (select max(no_client) from client)+1)")
+
+# produits
+
+cols = getColumns(cursor, 'produit')
+
+f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/Produits.txt'))
+f.next()
+for row in f:
+    data = dict(zip(cols, [v.strip() if v.strip() else None for v in row]))
+    insert(cursor, 'produit', values=data)
+
+cursor.execute("select setval('produit_no_produit_interne_seq', (select max(no_produit_interne) from produit)+1)")
+
+
 conn.commit()

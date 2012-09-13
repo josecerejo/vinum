@@ -1,4 +1,5 @@
 drop table if exists client cascade;
+drop table if exists produit cascade;
 
 create table client (
     no_client serial primary key,
@@ -31,4 +32,17 @@ create table client (
     jours_livraison text,
     date_ouverture_dossier date,
     jour_livraison text    
+);
+
+create table produit (
+    no_produit_interne serial primary key,
+    ancien_no_produit integer,
+    no_producteur integer,
+    type_vin text,
+    nom_domaine text,
+    format_id integer,
+    couleur text,
+    quantite_par_caisse integer,
+    pays text,
+    suc_num integer    
 );

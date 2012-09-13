@@ -1,0 +1,35 @@
+Ext.define('VIN.model.Produit', {
+    extend: 'Ext.data.Model',
+    fields: [{
+        name: 'no_produit_interne', 
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'ancien_no_produit', 
+        type: 'int',
+        useNull: true
+    }, {             
+        name: 'no_producteur'
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'type_vin'
+    } ,{
+        name: 'nom_domaine'
+    }, {
+        name: 'format_id',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'couleur'
+    }, {
+        name: 'quantite_par_caisse'
+    }, {
+        name: 'pays'
+    }, {
+        name: 'suc_num'
+        type: 'int',
+        useNull: true
+    }],
+    idProperty: 'no_produit_interne'
+});

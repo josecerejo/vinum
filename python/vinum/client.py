@@ -20,6 +20,8 @@ def get():
                 where[(filter_arg['field'], 'ilike')] = '%%%s%%' % filter_arg['value']
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
+    elif 'query' in request.args:
+        where[('nom_social', 'ilike')] = '%%%s%%' % request.args['query']
 
     json_out['total'] = db.count(cursor, 'client', where=where)
     json_out['rows'] = db.select(cursor, 'client', #what=['no_client', 'no_client_saq', 'nom_social', 'date_ouverture_dossier'],
