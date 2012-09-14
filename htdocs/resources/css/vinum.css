@@ -36,6 +36,10 @@
     background-image: url(../images/icons/user_add.png) !important;
 }
 
+.add-icon {
+    background-image: url(../images/icons/add.png) !important;
+}
+
 .clients-list-icon {
     background-image: url(../images/icons/table.png) !important;
 }

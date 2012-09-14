@@ -21,6 +21,7 @@ Ext.define('VIN.controller.MainToolbar', {
                         this.getMain().setActiveTab(cf);                        
                     } else if (itm.text == 'Voir la liste de clients') {
                         var cg = Ext.create('widget.client_grid');
+                        cg.store.load();
                         this.getMain().add(cg);
                         this.getMain().setActiveTab(cg);
                     }

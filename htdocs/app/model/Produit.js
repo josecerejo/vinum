@@ -9,25 +9,22 @@ Ext.define('VIN.model.Produit', {
         type: 'int',
         useNull: true
     }, {             
-        name: 'no_producteur'
-        type: 'int',
-        useNull: true
+        name: 'nom_producteur'
     }, {
         name: 'type_vin'
-    } ,{
+    }, {
         name: 'nom_domaine'
     }, {
-        name: 'format_id',
-        type: 'int',
-        useNull: true
+        name: 'format',
     }, {
         name: 'couleur'
     }, {
-        name: 'quantite_par_caisse'
+        name: 'quantite_par_caisse',
+        type: 'int'
     }, {
         name: 'pays'
     }, {
-        name: 'suc_num'
+        name: 'suc_num',
         type: 'int',
         useNull: true
     }],

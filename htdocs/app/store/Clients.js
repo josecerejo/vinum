@@ -4,7 +4,7 @@ Ext.define('VIN.store.Clients', {
     model: 'VIN.model.Client',
     pageSize: 50,
     //buffered: true,
-    autoLoad: true,
+    //autoLoad: true,
     remoteSort: true,
     sorters: [{
         property: 'no_client',

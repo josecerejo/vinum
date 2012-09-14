@@ -15,7 +15,7 @@ app.handle_exception = general_error_handler
 json_dthandler = lambda obj: obj.isoformat() if obj.__class__ in [datetime.date, datetime.datetime] else None
 
 try:
-    from vinum import *
-    from vinum.client import *
+    import client
+    import produit
 except:
     pass

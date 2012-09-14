@@ -4,7 +4,7 @@ Ext.define('VIN.store.Produits', {
     model: 'VIN.model.Produit',
     pageSize: 50,
     //buffered: true,
-    autoLoad: true,
+    //autoLoad: true,
     remoteSort: true,
     sorters: [{
         property: 'type_vin',

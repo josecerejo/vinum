@@ -1,7 +1,6 @@
 Ext.define('VIN.view.Viewport', {
     extend: 'Ext.container.Viewport',
-    requires: ['VIN.view.LeftNavPanel',
-               'VIN.view.MainPanel'],
+    requires: ['VIN.view.MainPanel'],
     layout: 'border',
     items: [{
         region: 'north',
@@ -11,7 +10,7 @@ Ext.define('VIN.view.Viewport', {
             items: {
                 xtype: 'component',
                 cls: 'title',
-                html: 'Vinum (prototype - 2012-09-12)'
+                html: 'Prototype Vinum (2012-09-14)'
             }            
         }, {
             xtype: 'main_toolbar'
