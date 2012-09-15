@@ -1,2 +1,2 @@
-from vinum.main import app as application
+from vinum import app as application
 

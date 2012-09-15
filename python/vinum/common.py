@@ -1,7 +1,11 @@
-from main import *
+import psycopg2, psycopg2.extras, json, datetime
+import little_pger as db
 
 
-def get(table, query_fields):
+json_dthandler = lambda obj: obj.isoformat() if obj.__class__ in [datetime.date, datetime.datetime] else None
+
+
+def get(request, table, query_fields):
     assert query_fields.__class__ is tuple
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -24,20 +28,17 @@ def get(table, query_fields):
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
     elif 'query' in request.args:
-        if len(query_fields) == 1:
-            where[(query_fields[0], 'ilike')] = '%%%s%%' % request.args['query']
-        else:
-            for f in query_fields:
-                where_or[(f, 'ilike')] = '%%%s%%' % request.args['query']
+        for f in query_fields:
+            where_or[(f, 'ilike')] = '%%%s%%' % request.args['query']
 
     json_out['total'] = db.count(cursor, table, where=where, where_or=where_or, debug_assert=False)
     json_out['rows'] = db.select(cursor, table, where=where, where_or=where_or, offset=request.args['start'], 
-                                 limit=request.args['limit'], order_by=order_by)
+                                 limit=request.args['limit'], order_by=order_by, debug_assert=False)
     
     return json.dumps(json_out, default=json_dthandler)
 
 
-def update(table, id):
+def update(request, table, id):
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
@@ -47,7 +48,7 @@ def update(table, id):
     return json.dumps(json_out, default=json_dthandler)
 
 
-def create(table, id):
+def create(request, table, id):
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
@@ -59,7 +60,7 @@ def create(table, id):
     return json.dumps(json_out, default=json_dthandler)
 
 
-def delete(table, id):
+def delete(request, table, id):
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
@@ -67,3 +68,5 @@ def delete(table, id):
     conn.commit()
     json_out = {'success': True}
     return json.dumps(json_out, default=json_dthandler)
+
+

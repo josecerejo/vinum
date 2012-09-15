@@ -38,7 +38,7 @@ Ext.define('VIN.view.commande.Form', {
                     width: 600,
                     listConfig: {
                         loadingText: 'Recherche...',
-                        emptyText: 'Aucun client ne correspond à cette recherche..',            
+                        emptyText: 'Aucun client ne correspond à cette recherche..',
                         getInnerTpl: function() {
                             return '<span style="display:inline-block; width:400px !important">{nom_social}</span>' +
                                 '<span style="display:inline-block; width:50px !important">{no_client_saq}</span>';

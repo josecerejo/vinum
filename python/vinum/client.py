@@ -1,21 +1,22 @@
+from vinum import *
 import common
 
 
-@common.app.route('/client/get', methods=['GET'])
-def c_get():
-    return common.get('client', ('nom_social',))
+@app.route('/client/get', methods=['GET'])
+def get_client():
+    return common.get(request, 'client', ('nom_social', 'no_client_saq'))
     
 
-@common.app.route('/client/update', methods=['POST'])
-def c_update():
-    return common.update('client', 'no_client')
+@app.route('/client/update', methods=['POST'])
+def update_client():
+    return common.update(request, 'client', 'no_client')
 
 
-@common.app.route('/client/create', methods=['POST'])
-def c_create():
-    return common.create('client', 'no_client')    
+@app.route('/client/create', methods=['POST'])
+def create_client():
+    return common.create(request, 'client', 'no_client')    
 
 
-@common.app.route('/client/delete', methods=['POST'])
-def c_delete():
-    return common.delete('client', 'no_client')        
+@app.route('/client/delete', methods=['POST'])
+def delete_client():
+    return common.delete(request, 'client', 'no_client')        

@@ -22,7 +22,7 @@ create table client (
     expedition text,
     no_succursale text,
     note text,
-    no_client_saq integer,
+    no_client_saq text,
     no_civique_fact text,
     rue_fact text,
     ville_fact text,

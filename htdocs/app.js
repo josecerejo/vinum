@@ -14,7 +14,7 @@ Ext.application({
             var msg_box = new Ext.window.MessageBox();
             msg_box.textField.inputType = 'password';
             var popLogin = function() {                
-                msg_box.show({		    
+                msg_box.show({		                        
                     title: 'Bienvenue à Vinum!',
                     msg: 'Votre mot de passe:',
                     buttons: Ext.MessageBox.OK,
