@@ -27,77 +27,93 @@ Ext.define('VIN.view.commande.Form', {
                 align: 'stretch'
             },
             items: [{
-                // left panel
+                // left part
+                layout: 'anchor',
                 items: [{
                     xtype: 'combo',
-                    displayField: 'nom_social',
+                    anchor: '100%',
+                    displayField: 'nom_social',                    
                     store: client_store,
                     itemId: 'client_combo',
                     fieldLabel: 'Client',
                     minChars: 3,
-                    width: 600,
                     listConfig: {
                         loadingText: 'Recherche...',
                         emptyText: 'Aucun client ne correspond à cette recherche..',
                         getInnerTpl: function() {
-                            return '<span style="display:inline-block; width:400px !important">{nom_social}</span>' +
-                                '<span style="display:inline-block; width:50px !important">{no_client_saq}</span>';
+                            return '<span style="display:inline-block; width:80% !important">{nom_social}</span>' +
+                                   '<span style="display:inline-block; width:20% !important">{no_client_saq}</span>';
                         }
                     },
-                    pageSize: 10
-                }, {
+                    pageSize: 10,
+                    style: 'margin-bottom: 20px'
+                }/*, {
                     xtype: 'datefield',
                     fieldLabel: 'Date',
                     format: 'Y-m-d',
                     value: new Date(),
-                    style: 'margin-bottom: 10px'
-                }, {
+                    style: 'margin-bottom: 20px'
+                }*/, {
                     xtype: 'produit_grid',
-                    title: 'Produits ayant déjà été commandés',
+                    title: 'Produits ayant déjà été commandés dans le passé',
+                    resizable: { handles: 's' },
                     column_flex: {
                         type_vin: 2,
                         nom_domaine: 2,
                         format: 1
                     },
-                    width: 600,
+                    height: 300,
+                    style: 'margin-bottom: 20px'
+                }, {
+
+                    xtype: 'produit_grid',
+                    title: 'Produits commandés',
+                    resizable: { handles: 's' },
+                    column_flex: {
+                        type_vin: 2,
+                        nom_domaine: 2,
+                        format: 1
+                    },
                     height: 300
+                    
                 }]
             }, {
-                // right panel
+                // right part
+                layout: 'anchor',
                 items: [{
                     xtype: 'combo',
+                    anchor: '100%',
                     displayField: 'type_vin',
                     store: produit_store,
                     itemId: 'produit_combo',
                     fieldLabel: 'Produit',
                     minChars: 3,
-                    width: 600,
                     listConfig: {
                         loadingText: 'Recherche...',
                         emptyText: 'Aucun produit ne correspond à cette recherche..',            
                         getInnerTpl: function() {
-                            return '<span style="display:inline-block; width:250px !important">{type_vin} - </span>' +
-                                '<span style="display:inline-block; width:250px !important">{nom_domaine} - </span>' +
-                                '<span style="display:inline-block; width:50px !important">{format}</span>';
+                            return '<span style="display:inline-block; width:45%; !important">{type_vin}</span>' +
+                                   '<span style="display:inline-block; width:45%; !important">{nom_domaine}</span>' +
+                                   '<span style="display:inline-block; width:10%; !important">{format}</span>';
                         }
                     },
-                    pageSize: 10
-                }, {
+                    pageSize: 10,
+                    style: 'margin-bottom: 20px'
+                }/*, {
                     xtype: 'button',
                     iconCls: 'add-icon',
                     text: 'Ajouter à la commande',
                     style: 'margin-bottom: 30px'
-                }, {
+                }*/, {
                     xtype: 'produit_grid',
-                    bla: 'coucou!',
-                    title: 'Produits commandés',
+                    title: 'Inventaire pour un produit particulier',
+                    resizable: { handles: 's' },
                     column_flex: {
                         type_vin: 1,
                         nom_domaine: 1,
                         format: 1,
                         pays: 1
                     },
-                    width: 600,
                     height: 300
                 }]                
             }]

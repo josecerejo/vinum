@@ -10,7 +10,7 @@ Ext.define('VIN.view.Viewport', {
             items: {
                 xtype: 'component',
                 cls: 'title',
-                html: 'Prototype Vinum (2012-09-14)'
+                html: 'Prototype Vinum (2012-09-24)'
             }            
         }, {
             xtype: 'main_toolbar'
