@@ -1,7 +1,7 @@
 Ext.define('VIN.view.commande.Form', {
     extend: 'Ext.form.Panel',
     alias: 'widget.commande_form',
-    requires: ['VIN.view.produit.List'],
+    requires: ['VIN.view.produit.List', 'VIN.view.inventaire.List'],
     frame: true,
     autoScroll: true,
     title: 'Commande',
@@ -11,8 +11,10 @@ Ext.define('VIN.view.commande.Form', {
     },
 
     initComponent: function() {
-        var client_store = Ext.create('VIN.store.Clients');
-        var produit_store = Ext.create('VIN.store.Produits');
+        var client_search_store = Ext.create('VIN.store.Clients');
+        var produit_search_store = Ext.create('VIN.store.Produits');
+        var produits_commandes_store = Ext.create('VIN.store.Produits');
+        var inventaire_store = Ext.create('VIN.store.Inventaires');
         this.items = {
             bodyStyle: 'background-color:#dfe8f5',
             border: false,
@@ -33,7 +35,7 @@ Ext.define('VIN.view.commande.Form', {
                     xtype: 'combo',
                     anchor: '100%',
                     displayField: 'nom_social',                    
-                    store: client_store,
+                    store: client_search_store,
                     itemId: 'client_combo',
                     fieldLabel: 'Client',
                     minChars: 3,
@@ -55,8 +57,10 @@ Ext.define('VIN.view.commande.Form', {
                     style: 'margin-bottom: 20px'
                 }*/, {
                     xtype: 'produit_grid',
-                    title: 'Produits ayant déjà été commandés dans le passé',
+                    itemId: 'produits_commandes',
+                    title: 'Produits ayant déjà été commandés par ce client',
                     resizable: { handles: 's' },
+                    store: produits_commandes_store,
                     column_flex: {
                         type_vin: 2,
                         nom_domaine: 2,
@@ -84,7 +88,7 @@ Ext.define('VIN.view.commande.Form', {
                     xtype: 'combo',
                     anchor: '100%',
                     displayField: 'type_vin',
-                    store: produit_store,
+                    store: produit_search_store,
                     itemId: 'produit_combo',
                     fieldLabel: 'Produit',
                     minChars: 3,
@@ -105,14 +109,17 @@ Ext.define('VIN.view.commande.Form', {
                     text: 'Ajouter à la commande',
                     style: 'margin-bottom: 30px'
                 }*/, {
-                    xtype: 'produit_grid',
+                    xtype: 'inventaire_grid',
                     title: 'Inventaire pour un produit particulier',
+                    store: inventaire_store,
                     resizable: { handles: 's' },
                     column_flex: {
-                        type_vin: 1,
-                        nom_domaine: 1,
-                        format: 1,
-                        pays: 1
+                        no_produit_saq: 1,
+                        no_commande_saq: 1,
+                        statut: 1,
+                        date_commande: 1,
+                        quantite_commandee: 1,
+                        quantite_recue: 1
                     },
                     height: 300
                 }]                

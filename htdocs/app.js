@@ -7,7 +7,7 @@ Ext.application({
 
     name: 'VIN',
 
-    controllers: ['MainToolbar', 'Client'],
+    controllers: ['MainToolbar', 'Client', 'Commande'],
 
     launch: function() {
         if (use_login) {

@@ -8,6 +8,24 @@ Ext.define('VIN.utils', {
                 icon: Ext.MessageBox.ERROR,
                 buttons: Ext.MessageBox.OK
             });        
+        },
+
+        getGridColumnsFromModel: function(model, column_flex) {
+            var cols = [];
+            var items = model.prototype.fields.items;
+            for (var i = 0; i < items.length; i++) {
+                var name = items[i].name;
+                cols.push({
+                    header: items[i].header,
+                    dataIndex: name,
+                    type: items[i].type,
+                    filterable: true,
+                    flex: column_flex.hasOwnProperty(name) ? column_flex[name] : 0,
+                    hidden: !column_flex.hasOwnProperty(name)
+                });
+            }
+            return cols;
         }
+
     }
 });

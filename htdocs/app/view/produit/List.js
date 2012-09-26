@@ -7,7 +7,9 @@ Ext.define('VIN.view.produit.List', {
 
     initComponent: function() {
         
-        this.store = Ext.create('VIN.store.Produits');
+        if (!this.store) {
+            this.store = Ext.create('VIN.store.Produits');
+        } 
 
         this.dockedItems = {
             xtype: 'pagingtoolbar',
