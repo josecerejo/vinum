@@ -13,5 +13,6 @@ app.debug = True
 try:
     import client
     import produit
+    import inventaire
 except:
     pass

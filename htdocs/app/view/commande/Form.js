@@ -110,6 +110,7 @@ Ext.define('VIN.view.commande.Form', {
                     style: 'margin-bottom: 30px'
                 }*/, {
                     xtype: 'inventaire_grid',
+                    itemId: 'inventaire',
                     title: 'Inventaire pour un produit particulier',
                     store: inventaire_store,
                     resizable: { handles: 's' },
@@ -118,8 +119,9 @@ Ext.define('VIN.view.commande.Form', {
                         no_commande_saq: 1,
                         statut: 1,
                         date_commande: 1,
-                        quantite_commandee: 1,
-                        quantite_recue: 1
+                        millesime: 1,
+                        solde: 1,
+                        solde_caisse: 1
                     },
                     height: 300
                 }]                

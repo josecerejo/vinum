@@ -2,7 +2,9 @@ import psycopg2, psycopg2.extras, json, datetime
 import little_pger as db
 
 
-json_dthandler = lambda obj: obj.isoformat() if obj.__class__ in [datetime.date, datetime.datetime] else None
+# The '00:00:00' suffix is important for the correct handling of ExtJS dates (I don't know what exactly 
+# is the problem with simple iso format)
+json_dthandler = lambda obj: obj.strftime('%Y-%m-%d 00:00:00') if obj.__class__ in [datetime.date, datetime.datetime] else None
 
 
 def get(request, table, query_fields):

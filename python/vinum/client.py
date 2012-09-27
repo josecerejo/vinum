@@ -27,13 +27,12 @@ def get_produits_commandes(no_client):
     conn = psycopg2.connect("dbname=vinum user=christian")
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     json_out = {'success': True}
-    cursor.execute("""select type_vin, nom_domaine, format, count(*) 
-                      from produit p, commande_produit cp where cp.no_client = %s and 
-                      cp.no_produit_interne = p.no_produit_interne 
-                      group by p.type_vin, nom_domaine, format 
-                      order by count desc""", [no_client])
+    cursor.execute("""select * from produit p, (select no_produit_interne, count(*) 
+                      from commande_produit cp where cp.no_client = %s 
+                      group by no_produit_interne) f 
+                      where p.no_produit_interne = f.no_produit_interne 
+                      order by count desc;""", [no_client])
     rows = cursor.fetchall()
     json_out['total'] = len(rows)
     json_out['rows'] = rows
     return json.dumps(json_out, default=common.json_dthandler)
-    

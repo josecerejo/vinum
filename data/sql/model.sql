@@ -100,7 +100,7 @@ create table inventaire (
     millesime integer,
     commission numeric,
     statut text,
-    solde numeric,
+    solde integer,
     solde_30_jours numeric,
     solde_60_jours numeric,
     suc_num integer           

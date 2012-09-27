@@ -55,9 +55,14 @@ Ext.define('VIN.model.Inventaire', {
         header: 'Statut',
         name: 'statut'
     }, {
-        header: 'Solde',
+        header: 'Solde (b)',
         name: 'solde',
-        type: 'float',
+        type: 'int',
+        useNull: true
+    }, {
+        header: 'Solde (c)',
+        name: 'solde_caisse',
+        type: 'int',
         useNull: true
     }, {
         header: 'Solde 30 jours',

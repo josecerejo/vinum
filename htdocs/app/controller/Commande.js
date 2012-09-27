@@ -13,6 +13,12 @@ Ext.define('VIN.controller.Commande', {
                     this.updateProduitsCommandes(view, records[0]);
                 }
             },
+            '#produit_combo': {
+                select: function(field, records, eopts) {
+                    var view = this._getFormViewInstance(field);
+                    this.updateInventaire(view, records[0]);
+                }                               
+            },
             '#produits_commandes': {
                 selectionchange: function(model, records) {
                     var view = this._getFormViewInstance(model.view);
@@ -35,7 +41,10 @@ Ext.define('VIN.controller.Commande', {
     },
 
     updateInventaire: function(view, record) {
-        view.down('').store.load({
+        view.down('#inventaire').store.load({
+            params: {
+                no_produit_interne: record.get('no_produit_interne')
+            }
         });
     }
 
