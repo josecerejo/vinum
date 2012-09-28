@@ -24,6 +24,17 @@ Ext.define('VIN.controller.Commande', {
                     var view = this._getFormViewInstance(model.view);
                     this.updateInventaire(view, records[0]);
                 }                
+            },
+            '#inventaire': {
+                itemdblclick: function(view, record, item, index, e, eOpts) {
+                    this.addProduitToCommande(this._getFormViewInstance(view), record);
+                }
+            },
+            '#commande': {
+                edit: function(editor, e) {
+                    var view = this._getFormViewInstance(editor.grid);
+                    return this.updateInventaireItem(view, e);
+                }
             }
         });
     },
@@ -41,11 +52,57 @@ Ext.define('VIN.controller.Commande', {
     },
 
     updateInventaire: function(view, record) {
-        view.down('#inventaire').store.load({
+        var g = view.down('#inventaire');
+        g.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', record.get('type_vin')));
+        g.store.load({
             params: {
                 no_produit_interne: record.get('no_produit_interne')
             }
         });
+    },
+
+    updateInventaireItem: function(view, e) {
+        var inv_grid = view.down('#inventaire');        
+        var inv_rec = inv_grid.store.findRecord('no_inventaire', e.record.get('no_inventaire'));
+        var qc_delta = e.value - e.originalValue; // possibly negative
+        if (inv_rec.get('solde_caisse') - qc_delta < 0) {
+            e.record.set('quantite_caisse', e.originalValue);
+            Ext.Msg.show({
+                title: 'Vinum',
+                msg: 'Quantité insuffisante pour commander',
+                icon: Ext.MessageBox.WARNING,
+                buttons: Ext.MessageBox.OK
+            });
+            return false;
+        }
+        var qpc = inv_rec.get('quantite_par_caisse');
+        e.record.set('quantite_bouteille', e.record.get('quantite_bouteille') + (qc_delta * qpc));
+        inv_rec.set('solde', inv_rec.get('solde') - (qc_delta * qpc));
+        inv_rec.set('solde_caisse', inv_rec.get('solde_caisse') - qc_delta);
+        return true;
+    },
+
+    addProduitToCommande: function(view, record) {
+        var g = view.down('#commande');
+        if (record.get('solde_caisse') == 0) {
+            Ext.Msg.show({
+                title: 'Vinum',
+                msg: 'Quantité insuffisante pour commander',
+                icon: Ext.MessageBox.WARNING,
+                buttons: Ext.MessageBox.OK
+            });                                
+            return false;
+        }
+        record.data.quantite_caisse = 1;
+        var qpc = record.get('quantite_par_caisse');
+        record.data.quantite_bouteille = qpc;
+        record.data.commission = -1;
+        record.data.statut = 'OK';        
+        record.set('solde', record.get('solde') - qpc);
+        record.set('solde_caisse', record.get('solde_caisse') - 1);
+        // using set() on the commande record (once created) makes it dirty, which we don't want
+        var commande = Ext.create('VIN.model.Commande', record.data);
+        g.store.add(commande);
     }
 
 });

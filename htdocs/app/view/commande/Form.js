@@ -1,7 +1,7 @@
 Ext.define('VIN.view.commande.Form', {
     extend: 'Ext.form.Panel',
     alias: 'widget.commande_form',
-    requires: ['VIN.view.produit.List', 'VIN.view.inventaire.List'],
+    requires: ['VIN.view.produit.List', 'VIN.view.inventaire.List', 'VIN.view.commande.List'],
     frame: true,
     autoScroll: true,
     title: 'Commande',
@@ -11,10 +11,13 @@ Ext.define('VIN.view.commande.Form', {
     },
 
     initComponent: function() {
+
         var client_search_store = Ext.create('VIN.store.Clients');
         var produit_search_store = Ext.create('VIN.store.Produits');
         var produits_commandes_store = Ext.create('VIN.store.Produits');
         var inventaire_store = Ext.create('VIN.store.Inventaires');
+        var commande_store = Ext.create('VIN.store.Commandes');
+
         this.items = {
             bodyStyle: 'background-color:#dfe8f5',
             border: false,
@@ -70,16 +73,21 @@ Ext.define('VIN.view.commande.Form', {
                     style: 'margin-bottom: 20px'
                 }, {
 
-                    xtype: 'produit_grid',
+                    xtype: 'commande_grid',
                     title: 'Produits commandés',
+                    itemId: 'commande',
+                    store: commande_store,
                     resizable: { handles: 's' },
                     column_flex: {
-                        type_vin: 2,
-                        nom_domaine: 2,
-                        format: 1
+                        type_vin: 1,
+                        format: 1,
+                        no_produit_saq: 1,
+                        quantite_caisse: 1,
+                        quantite_bouteille: 1,
+                        commission: 1,
+                        statut: 1
                     },
-                    height: 300
-                    
+                    height: 300                    
                 }]
             }, {
                 // right part
@@ -111,7 +119,7 @@ Ext.define('VIN.view.commande.Form', {
                 }*/, {
                     xtype: 'inventaire_grid',
                     itemId: 'inventaire',
-                    title: 'Inventaire pour un produit particulier',
+                    title: 'Inventaire pour un produit particulier (choisir dans la table de gauche ou dans le champ "Produit")',
                     store: inventaire_store,
                     resizable: { handles: 's' },
                     column_flex: {

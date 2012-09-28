@@ -1,26 +1,25 @@
-import psycopg2, psycopg2.extras, json, datetime
 from vinum import *
-import common
+from common import *
 
 
 @app.route('/client/get', methods=['GET'])
 def get_client():
-    return common.get(request, 'client', ('nom_social', 'no_client_saq'))
+    return get(request, 'client', ('nom_social', 'no_client_saq'))
 
     
 @app.route('/client/update', methods=['POST'])
 def update_client():
-    return common.update(request, 'client', 'no_client')
+    return update(request, 'client', 'no_client')
 
 
 @app.route('/client/create', methods=['POST'])
 def create_client():
-    return common.create(request, 'client', 'no_client')    
+    return create(request, 'client', 'no_client')    
 
 
 @app.route('/client/delete', methods=['POST'])
 def delete_client():
-    return common.delete(request, 'client', 'no_client')        
+    return delete(request, 'client', 'no_client')        
 
 
 def get_produits_commandes(no_client):
@@ -35,4 +34,4 @@ def get_produits_commandes(no_client):
     rows = cursor.fetchall()
     json_out['total'] = len(rows)
     json_out['rows'] = rows
-    return json.dumps(json_out, default=common.json_dthandler)
+    return json.dumps(json_out, default=json_dthandler)

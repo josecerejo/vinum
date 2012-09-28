@@ -10,6 +10,15 @@ Ext.define('VIN.model.Inventaire', {
         name: 'no_produit_interne', 
         type: 'int',
         useNull: true
+    }, {
+        header: 'Type de vin',
+        name: 'type_vin'
+    }, {
+        header: 'Format',
+        name: 'format'
+    }, {
+        header: 'Quantité par caisse',
+        name: 'quantite_par_caisse'
     }, {            
         header: '# produit SAQ',
         name: 'no_produit_saq',

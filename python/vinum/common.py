@@ -2,6 +2,13 @@ import psycopg2, psycopg2.extras, json, datetime
 import little_pger as db
 
 
+DEC2FLOAT = psycopg2._psycopg.new_type(
+    psycopg2._psycopg.DECIMAL.values,
+    'DEC2FLOAT',
+    lambda value, curs: float(value) if value is not None else None)
+psycopg2._psycopg.register_type(DEC2FLOAT)
+
+
 # The '00:00:00' suffix is important for the correct handling of ExtJS dates (I don't know what exactly 
 # is the problem with simple iso format)
 json_dthandler = lambda obj: obj.strftime('%Y-%m-%d 00:00:00') if obj.__class__ in [datetime.date, datetime.datetime] else None
