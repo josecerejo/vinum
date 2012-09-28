@@ -27,13 +27,22 @@ Ext.define('VIN.controller.Commande', {
             },
             '#inventaire': {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
-                    this.addProduitToCommande(this._getFormViewInstance(view), record);
+                    this.addCommandeItem(this._getFormViewInstance(view), record);
                 }
             },
             '#commande': {
                 edit: function(editor, e) {
                     var view = this._getFormViewInstance(editor.grid);
-                    return this.updateInventaireItem(view, e);
+                    return this.updateCommandeAndInventaireItems(view, e);
+                }
+            },
+            '#commande actioncolumn': {
+                // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
+                click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    var view = this._getFormViewInstance(grid);
+                    var rec = grid.store.getAt(rowIndex);
+                    grid.store.removeAt(rowIndex);
+                    this.removeCommandeItem(view, rec);
                 }
             }
         });
@@ -61,7 +70,7 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    updateInventaireItem: function(view, e) {
+    updateCommandeAndInventaireItems: function(view, e) {
         var inv_grid = view.down('#inventaire');        
         var inv_rec = inv_grid.store.findRecord('no_inventaire', e.record.get('no_inventaire'));
         var qc_delta = e.value - e.originalValue; // possibly negative
@@ -82,7 +91,14 @@ Ext.define('VIN.controller.Commande', {
         return true;
     },
 
-    addProduitToCommande: function(view, record) {
+    removeCommandeItem: function(view, rec) {
+        var inv_grid = view.down('#inventaire');        
+        var inv_rec = inv_grid.store.findRecord('no_inventaire', rec.get('no_inventaire'));
+        inv_rec.set('solde', inv_rec.get('solde') + rec.get('quantite_bouteille'));
+        inv_rec.set('solde_caisse', inv_rec.get('solde_caisse') + rec.get('quantite_caisse'));
+    },
+
+    addCommandeItem: function(view, record) {
         var g = view.down('#commande');
         if (record.get('solde_caisse') == 0) {
             Ext.Msg.show({

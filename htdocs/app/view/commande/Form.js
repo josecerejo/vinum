@@ -72,7 +72,6 @@ Ext.define('VIN.view.commande.Form', {
                     height: 300,
                     style: 'margin-bottom: 20px'
                 }, {
-
                     xtype: 'commande_grid',
                     title: 'Produits commandés',
                     itemId: 'commande',
