@@ -85,9 +85,15 @@ Ext.define('VIN.controller.Commande', {
             return false;
         }
         var qpc = inv_rec.get('quantite_par_caisse');
-        e.record.set('quantite_bouteille', e.record.get('quantite_bouteille') + (qc_delta * qpc));
-        inv_rec.set('solde', inv_rec.get('solde') - (qc_delta * qpc));
-        inv_rec.set('solde_caisse', inv_rec.get('solde_caisse') - qc_delta);
+        if (inv_rec.get('solde') < qc_delta * qpc) {
+            e.record.set('quantite_bouteille', e.record.get('quantite_bouteille') + inv_rec.get('solde'));
+            inv_rec.set('solde', 0);
+            inv_rec.set('solde_caisse', 0);
+        } else {
+            e.record.set('quantite_bouteille', e.record.get('quantite_bouteille') + (qc_delta * qpc));
+            inv_rec.set('solde', inv_rec.get('solde') - (qc_delta * qpc));
+            inv_rec.set('solde_caisse', inv_rec.get('solde_caisse') - qc_delta);
+        }
         return true;
     },
 
@@ -110,11 +116,16 @@ Ext.define('VIN.controller.Commande', {
             return false;
         }
         record.data.quantite_caisse = 1;
-        var qpc = record.get('quantite_par_caisse');
-        record.data.quantite_bouteille = qpc;
         record.data.commission = -1;
         record.data.statut = 'OK';        
-        record.set('solde', record.get('solde') - qpc);
+        var qpc = record.get('quantite_par_caisse');
+        if (record.get('solde') < qpc) {
+            record.data.quantite_bouteille = record.get('solde');
+            record.set('solde', 0);
+        } else {
+            record.data.quantite_bouteille = qpc;
+            record.set('solde', record.get('solde') - qpc);
+        }
         record.set('solde_caisse', record.get('solde_caisse') - 1);
         // using set() on the commande record (once created) makes it dirty, which we don't want
         var commande = Ext.create('VIN.model.Commande', record.data);
