@@ -11,12 +11,12 @@ Ext.define('VIN.view.produit.List', {
             this.store = Ext.create('VIN.store.Produits');
         } 
 
-        this.dockedItems = {
-            xtype: 'pagingtoolbar',
-            store: this.store,
-            dock: 'bottom',
-            displayInfo: true
-        };
+        // this.dockedItems = {
+        //     xtype: 'pagingtoolbar',
+        //     store: this.store,
+        //     dock: 'bottom',
+        //     displayInfo: true
+        // };
 
         this.columns = [{
             header: '# produit', 

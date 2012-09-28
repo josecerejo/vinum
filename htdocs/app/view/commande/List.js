@@ -24,7 +24,7 @@ Ext.define('VIN.view.commande.List', {
 
         this.columns.push({
             xtype: 'actioncolumn',
-            width:30,
+            width: 30,
             sortable: false,
             items: [{
                 icon: 'resources/images/icons/delete.png',

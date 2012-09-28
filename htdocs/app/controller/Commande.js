@@ -30,6 +30,12 @@ Ext.define('VIN.controller.Commande', {
                     this.addCommandeItem(this._getFormViewInstance(view), record);
                 }
             },
+            '#inventaire actioncolumn': {
+                // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
+                click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    this.addCommandeItem(this._getFormViewInstance(grid), rec);
+                }
+            },
             '#commande': {
                 edit: function(editor, e) {
                     var view = this._getFormViewInstance(editor.grid);
