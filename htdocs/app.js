@@ -10,6 +10,8 @@ Ext.application({
 
     controllers: ['MainToolbar', 'Client', 'Commande'],
 
+    autoCreateViewport: true,
+
     launch: function() {
         if (use_login) {
             var msg_box = new Ext.window.MessageBox();
@@ -34,15 +36,14 @@ Ext.application({
                                 }
                             });
                         } else {
-                            Ext.create('VIN.view.Viewport');
+                            //Ext.create('VIN.view.Viewport');
                         }
                     }
                 });
             };
             popLogin();
         } else {
-            Ext.create('VIN.view.Viewport');
+            //Ext.create('VIN.view.Viewport');
         }
     }
 });
-

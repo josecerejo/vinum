@@ -13,11 +13,6 @@ Ext.define('VIN.controller.MainToolbar', {
 
     init: function() {
         this.control({
-            'main_toolbar': {
-                render: function() {
-                    this.getMain().setActiveTab(1);
-                }
-            },
             'toolbar menuitem': {
                 click: function(itm, e, opts) {
                     if (itm.text == 'Créer une commande') {
@@ -36,6 +31,7 @@ Ext.define('VIN.controller.MainToolbar', {
     },
 
     onLaunch: function() {
+        this.getMain().setActiveTab(1);
     }
 
 });

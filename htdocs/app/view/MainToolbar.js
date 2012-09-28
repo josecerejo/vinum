@@ -13,6 +13,7 @@ Ext.define('VIN.view.MainToolbar', {
         iconCls: 'clients-icon',
         menu: [{
             text: 'Créer un client', 
+            disabled: true,
             iconCls: 'clients-add-icon'
         }, {
             text: 'Voir la liste de clients', 
