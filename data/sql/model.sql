@@ -48,6 +48,14 @@ create table produit (
     suc_num integer    
 );
 
+drop table if exists client_produit cascade;
+create table client_produit (
+    client_produit_id serial primary key,
+    no_client integer,    
+    no_produit_interne integer,
+    suc_num integer
+);
+
 drop table if exists commande cascade;
 create table commande (
     no_commande_facture serial primary key,    

@@ -16,7 +16,7 @@ Ext.define('VIN.utils', {
             for (var i = 0; i < items.length; i++) {
                 var name = items[i].name;
                 var col = {
-                    header: items[i].header,
+                    header: items[i].hasOwnProperty('header') ? items[i].header : Ext.String.capitalize(items[i].name),
                     dataIndex: name,
                     type: items[i].type.type,
                     filterable: true,

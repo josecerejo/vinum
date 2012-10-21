@@ -1,7 +1,8 @@
 Ext.define('VIN.view.commande.Form', {
     extend: 'Ext.form.Panel',
     alias: 'widget.commande_form',
-    requires: ['VIN.view.produit.List', 'VIN.view.inventaire.List', 'VIN.view.commande.List'],
+    requires: ['VIN.view.produit.List', 'VIN.view.client.ProduitList', 
+               'VIN.view.inventaire.List', 'VIN.view.commande.List'],
     frame: true,
     autoScroll: true,
     title: 'Commande',
@@ -14,7 +15,7 @@ Ext.define('VIN.view.commande.Form', {
 
         var client_search_store = Ext.create('VIN.store.Clients');
         var produit_search_store = Ext.create('VIN.store.Produits');
-        var produits_commandes_store = Ext.create('VIN.store.Produits');
+        var client_produit_store = Ext.create('VIN.store.Produits');
         var inventaire_store = Ext.create('VIN.store.Inventaires');
         var commande_store = Ext.create('VIN.store.Commandes');
 
@@ -59,11 +60,11 @@ Ext.define('VIN.view.commande.Form', {
                     value: new Date(),
                     style: 'margin-bottom: 20px'
                 }*/, {
-                    xtype: 'produit_grid',
-                    itemId: 'produits_commandes',
-                    title: 'Produits ayant déjà été commandés par ce client',
+                    xtype: 'client_produit_grid',
+                    itemId: 'client_produit',
+                    title: 'Liste de produits associés à ce client',
                     resizable: { handles: 's' },
-                    store: produits_commandes_store,
+                    store: client_produit_store,
                     column_flex: {
                         type_vin: 2,
                         nom_domaine: 2,
@@ -118,7 +119,7 @@ Ext.define('VIN.view.commande.Form', {
                 }*/, {
                     xtype: 'inventaire_grid',
                     itemId: 'inventaire',
-                    title: 'Inventaire pour un produit particulier (choisir dans la table de gauche ou dans le champ "Produit")',
+                    title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Produit")',
                     store: inventaire_store,
                     resizable: { handles: 's' },
                     column_flex: {

@@ -14,7 +14,6 @@ Ext.define('VIN.model.Commande', {
         header: 'Type de vin',
         name: 'type_vin'
     }, {
-        header: 'Format',
         name: 'format'
     }, {            
         header: '# produit SAQ',
@@ -35,12 +34,10 @@ Ext.define('VIN.model.Commande', {
         type: 'int',
         useNull: true
     }, {
-        header: 'Commission',
         name: 'commission',
         type: 'float',
         useNull: true
     }, {
-        header: 'Statut',
         name: 'statut'
     }],
     idProperty: 'no_produit_saq'

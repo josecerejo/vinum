@@ -5,7 +5,7 @@ Ext.define('VIN.store.Produits', {
     pageSize: 50,
     //buffered: true,
     //autoLoad: true,
-    remoteSort: true,
+    //remoteSort: true,
     sorters: [{
         property: 'type_vin',
         direction: 'ASC'

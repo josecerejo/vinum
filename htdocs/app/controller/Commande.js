@@ -10,7 +10,8 @@ Ext.define('VIN.controller.Commande', {
             '#client_combo': {
                 select: function(field, records, eopts) {
                     var view = this._getFormViewInstance(field);
-                    this.updateProduitsCommandes(view, records[0]);
+                    this.updateClientProduit(view, records[0]);
+                    this.current_no_client = records[0].get('no_client');
                 }
             },
             '#produit_combo': {
@@ -19,11 +20,17 @@ Ext.define('VIN.controller.Commande', {
                     this.updateInventaire(view, records[0]);
                 }                               
             },
-            '#produits_commandes': {
+            '#client_produit': {
                 selectionchange: function(model, records) {
                     var view = this._getFormViewInstance(model.view);
                     this.updateInventaire(view, records[0]);
                 }                
+            },
+            '#client_produit actioncolumn': {
+                // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
+                click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    this.removeClientProduitItem(this._getFormViewInstance(grid), grid, rec, this.current_no_client);
+                }
             },
             '#inventaire': {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
@@ -58,12 +65,33 @@ Ext.define('VIN.controller.Commande', {
         return any_contained_view.up('commande_form');
     },
 
-    updateProduitsCommandes: function(view, record) {
-        view.down('#produits_commandes').store.load({
+    updateClientProduit: function(view, record) {
+        view.down('#client_produit').store.load({
             params: {
                 no_client: record.get('no_client')
             }
         });
+    },
+
+    removeClientProduitItem: function(view, grid, record, current_no_client) {
+        Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la liste?', record.get('type_vin')), function(btn) {
+            if (btn == 'yes') {
+                grid.store.remove(record);
+                view.submit({
+                    url: '/vinum_server/client/remove_produit',
+                    params: {
+                        no_client: current_no_client,
+                        no_produit_interne: record.get('no_produit_interne')
+                    },
+                    success: function(_form, action) {
+                        //store.reload();
+                    },
+                    failure: function(_form, action) {
+                        VIN.utils.serverErrorPopup(action.result.error_msg);
+                    }
+                });
+            }
+        });        
     },
 
     updateInventaire: function(view, record) {
