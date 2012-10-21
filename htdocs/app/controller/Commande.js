@@ -28,15 +28,18 @@ Ext.define('VIN.controller.Commande', {
             },
             '#client_produit actioncolumn': {
                 // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
-                click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                remove_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     this.removeClientProduitItem(this._getFormViewInstance(grid), grid, rec, this.current_no_client);
+                },
+                add_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    alert('add!');
                 }
             },
-            '#inventaire': {
-                itemdblclick: function(view, record, item, index, e, eOpts) {
-                    this.addCommandeItem(this._getFormViewInstance(view), record);
-                }
-            },
+            // '#inventaire': {
+            //     itemdblclick: function(view, record, item, index, e, eOpts) {
+            //         this.addCommandeItem(this._getFormViewInstance(view), record);
+            //     }
+            // },
             '#inventaire actioncolumn': {
                 // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
                 click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {

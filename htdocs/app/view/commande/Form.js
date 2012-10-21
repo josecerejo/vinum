@@ -53,6 +53,44 @@ Ext.define('VIN.view.commande.Form', {
                     },
                     pageSize: 10,
                     style: 'margin-bottom: 20px'
+                }, {
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    items: [{
+                        xtype: 'combo',
+                        flex: 0.70,
+                        displayField: 'type_vin',
+                        store: produit_search_store,
+                        itemId: 'produit_combo',
+                        fieldLabel: 'Tous les produits',
+                        minChars: 3,
+                        listConfig: {
+                            loadingText: 'Recherche...',
+                            emptyText: 'Aucun produit ne correspond à cette recherche..',            
+                            getInnerTpl: function() {
+                                return '<span style="display:inline-block; width:45%; !important">{type_vin}</span>' +
+                                       '<span style="display:inline-block; width:45%; !important">{nom_domaine}</span>' +
+                                       '<span style="display:inline-block; width:10%; !important">{format}</span>';
+                            }
+                        },
+                        pageSize: 10,
+                        style: 'margin-bottom: 20px; margin-right: 20px'
+                    }, {
+                        xtype: 'numberfield',
+                        flex: 0.15,
+                        fieldLabel: 'Quantité (c)',
+                        style: 'margin-bottom: 20px; margin-right: 20px'
+                    }, {
+                        xtype: 'button',
+                        scale: 'small',
+                        text: 'Ajouter',
+                        iconCls: 'add-icon',
+                        style: 'margin-bottom: 20px; margin-top: 20px'
+                    }]
                 }/*, {
                     xtype: 'datefield',
                     fieldLabel: 'Date',
@@ -62,56 +100,22 @@ Ext.define('VIN.view.commande.Form', {
                 }*/, {
                     xtype: 'client_produit_grid',
                     itemId: 'client_produit',
-                    title: 'Liste de produits associés à ce client',
+                    title: 'Liste de produits habituels',
                     resizable: { handles: 's' },
                     store: client_produit_store,
                     column_flex: {
                         type_vin: 2,
                         nom_domaine: 2,
-                        format: 1
+                        format: 1,
+                        quantite_caisse: 1
                     },
                     height: 300,
                     style: 'margin-bottom: 20px'
-                }, {
-                    xtype: 'commande_grid',
-                    title: 'Produits commandés',
-                    itemId: 'commande',
-                    store: commande_store,
-                    resizable: { handles: 's' },
-                    column_flex: {
-                        type_vin: 1,
-                        format: 1,
-                        no_produit_saq: 1,
-                        quantite_caisse: 1,
-                        quantite_bouteille: 1,
-                        commission: 1,
-                        statut: 1
-                    },
-                    height: 300                    
                 }]
             }, {
                 // right part
                 layout: 'anchor',
-                items: [{
-                    xtype: 'combo',
-                    anchor: '100%',
-                    displayField: 'type_vin',
-                    store: produit_search_store,
-                    itemId: 'produit_combo',
-                    fieldLabel: 'Produit',
-                    minChars: 3,
-                    listConfig: {
-                        loadingText: 'Recherche...',
-                        emptyText: 'Aucun produit ne correspond à cette recherche..',            
-                        getInnerTpl: function() {
-                            return '<span style="display:inline-block; width:45%; !important">{type_vin}</span>' +
-                                   '<span style="display:inline-block; width:45%; !important">{nom_domaine}</span>' +
-                                   '<span style="display:inline-block; width:10%; !important">{format}</span>';
-                        }
-                    },
-                    pageSize: 10,
-                    style: 'margin-bottom: 20px'
-                }/*, {
+                items: [/*, {
                     xtype: 'button',
                     iconCls: 'add-icon',
                     text: 'Ajouter à la commande',
@@ -131,7 +135,25 @@ Ext.define('VIN.view.commande.Form', {
                         solde: 1,
                         solde_caisse: 1
                     },
-                    height: 300
+                    height: 300,
+                    style: 'margin-bottom: 20px'
+                }, {
+                    xtype: 'commande_grid',
+                    title: 'Produits commandés',
+                    itemId: 'commande',
+                    store: commande_store,
+                    resizable: { handles: 's' },
+                    column_flex: {
+                        type_vin: 1,
+                        format: 1,
+                        no_produit_saq: 1,
+                        quantite_caisse: 1,
+                        quantite_bouteille: 1,
+                        commission: 1,
+                        statut: 1
+                    },
+                    height: 300,
+                    style: 'margin-bottom: 20px'
                 }]                
             }]
         };

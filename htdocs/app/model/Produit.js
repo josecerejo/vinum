@@ -33,6 +33,17 @@ Ext.define('VIN.model.Produit', {
         name: 'suc_num',
         type: 'int',
         useNull: true
+    }, { // those two are actually part of a Commande, but since
+         // they can displayed in a product table, they must be here too
+        header: 'Quantité (c)',
+        name: 'quantite_caisse',
+        type: 'int',
+        useNull: true
+    }, {
+        header: 'Quantité (b)',
+        name: 'quantite_bouteille',
+        type: 'int',
+        useNull: true
     }],
     idProperty: 'no_produit_interne'
 });

@@ -19,9 +19,39 @@ Ext.define('VIN.view.client.ProduitList', {
             sortable: false,
             items: [{
                 icon: 'resources/images/icons/delete.png',
-                tooltip: 'Enlever ce produit de la liste'
+                tooltip: 'Enlever ce produit de la liste',
+                handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
+                    this.fireEvent('remove_click', grid, rowIndex, colIndex, node, e, record, rowNode);
+                }
             }]
         });
+
+        this.columns.push({
+            xtype: 'actioncolumn',
+            width: 30,
+            sortable: false,
+            items: [{
+                icon: 'resources/images/icons/add.png',
+                tooltip: 'Ajouter à la commande',
+                handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
+                    this.fireEvent('add_click', grid, rowIndex, colIndex, node, e, record, rowNode);
+                }                
+            }]
+        });
+
+        for (var i = 0; i < this.columns.length; i++) {
+            if (this.columns[i].dataIndex == 'quantite_caisse') {
+                this.columns[i].editor = {
+                    xtype: 'numberfield',
+                    allowBlank: false,
+                    minValue: 1
+                };
+            }
+        }
+
+        this.plugins = [Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1
+        })];
 
         this.callParent(arguments);
     },
