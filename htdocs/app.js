@@ -7,7 +7,8 @@ var use_login = (window.location.hostname != 'localhost');
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
     yes: 'Oui',
-    no: 'Non'
+    no: 'Non',
+    ok: 'Ok'
 };
 
 Ext.application({
