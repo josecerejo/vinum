@@ -15,7 +15,7 @@ Ext.define('VIN.view.commande.List', {
         this.dockedItems = [{
             xtype: 'toolbar',
             items: [{
-                iconCls: 'del-icon',
+                iconCls: 'cancel-icon',
                 text: 'Tout supprimer'
             }]
         }];

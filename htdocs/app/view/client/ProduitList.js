@@ -31,7 +31,7 @@ Ext.define('VIN.view.client.ProduitList', {
             renderer: function(value, metadata, record, rowIndex, colIndex, store) {
                 if (record.get('locked_by_user')) {
                     metadata.tdCls = 'lock-icon';
-                    metadata.attr = 'ext:qtip="bla"';
+                    metadata.tdAttr = Ext.String.format('data-qtip="Ce produit est présentement utilisé par l\'usager \'{0}\'"', record.get('locked_by_user'));
                 }
             }
         });

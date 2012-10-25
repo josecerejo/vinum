@@ -44,6 +44,10 @@
     background: url(../images/icons/delete.png) no-repeat !important;
 }
 
+.cancel-icon {
+    background: url(../images/icons/cancel.png) no-repeat !important;
+}
+
 .clients-list-icon {
     background: url(../images/icons/table.png) no-repeat !important;
 }
