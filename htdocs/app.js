@@ -4,6 +4,12 @@ Ext.Date.defaultFormat = 'Y-m-d';
 
 var use_login = (window.location.hostname != 'localhost');
 
+Ext.window.MessageBox.prototype.buttonText = {
+    cancel: 'Annuler',
+    yes: 'Oui',
+    no: 'Non'
+};
+
 Ext.application({
 
     name: 'VIN',

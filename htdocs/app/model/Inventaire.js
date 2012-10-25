@@ -64,13 +64,13 @@ Ext.define('VIN.model.Inventaire', {
         header: 'Statut',
         name: 'statut'
     }, {
-        header: 'Solde (b)',
-        name: 'solde',
+        header: 'Solde (c)',
+        name: 'solde_caisse',
         type: 'int',
         useNull: true
     }, {
-        header: 'Solde (c)',
-        name: 'solde_caisse',
+        header: 'Solde (b)',
+        name: 'solde',
         type: 'int',
         useNull: true
     }, {

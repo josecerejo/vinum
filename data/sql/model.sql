@@ -45,7 +45,8 @@ create table produit (
     couleur text,
     quantite_par_caisse integer,
     pays text,
-    suc_num integer    
+    suc_num integer,
+    locked_by_user text
 );
 
 drop table if exists client_produit cascade;
@@ -113,3 +114,5 @@ create table inventaire (
     solde_60_jours numeric,
     suc_num integer           
 );
+
+--insert into inventaire (no_produit_interne, no_produit_saq, no_commande_saq, date_commande, millesime, statut, solde) values (178, -1, -1, '2000-01-01', 2000, 'Actif', 23);

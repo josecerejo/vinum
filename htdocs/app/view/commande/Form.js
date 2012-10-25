@@ -38,11 +38,13 @@ Ext.define('VIN.view.commande.Form', {
                 items: [{
                     xtype: 'combo',
                     anchor: '100%',
-                    displayField: 'nom_social',                    
+                    displayField: 'nom_social',
+                    name: 'nom_social',
                     store: client_search_store,
                     itemId: 'client_combo',
                     fieldLabel: 'Client',
                     minChars: 3,
+                    forceSelection: true,
                     listConfig: {
                         loadingText: 'Recherche...',
                         emptyText: 'Aucun client ne correspond à cette recherche..',
@@ -64,10 +66,12 @@ Ext.define('VIN.view.commande.Form', {
                         xtype: 'combo',
                         flex: 0.70,
                         displayField: 'type_vin',
+                        name: 'type_vin',
                         store: produit_search_store,
                         itemId: 'produit_combo',
                         fieldLabel: 'Tous les produits',
                         minChars: 3,
+                        forceSelection: true,
                         listConfig: {
                             loadingText: 'Recherche...',
                             emptyText: 'Aucun produit ne correspond à cette recherche..',            
@@ -83,9 +87,12 @@ Ext.define('VIN.view.commande.Form', {
                         xtype: 'numberfield',
                         flex: 0.15,
                         fieldLabel: 'Quantité (c)',
+                        itemId: 'add_produit_qte_nf',
+                        minValue: 1,
                         style: 'margin-bottom: 20px; margin-right: 20px'
                     }, {
                         xtype: 'button',
+                        itemId: 'add_produit_btn',
                         scale: 'small',
                         text: 'Ajouter',
                         iconCls: 'add-icon',

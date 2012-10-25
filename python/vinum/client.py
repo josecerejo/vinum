@@ -62,3 +62,14 @@ def remove_produit():
     json_out = {'success': True}
     return json.dumps(json_out, default=json_dthandler)
     
+@app.route('/client/add_produit', methods=['POST'])
+def add_produit():
+    conn = psycopg2.connect("dbname=vinum user=christian")
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    request.form = dict([(c, f if f else None) for c, f in request.form.items()])
+    no_produit_interne = db.select1(cursor, 'produit', 'no_produit_interne', where={'type_vin': request.form['type_vin']})
+    db.insert(cursor, 'client_produit', values={'no_client': request.form['no_client'], 
+                                                'no_produit_interne': no_produit_interne})
+    conn.commit()
+    json_out = {'success': True}
+    return json.dumps(json_out, default=json_dthandler)

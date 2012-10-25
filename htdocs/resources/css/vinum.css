@@ -25,39 +25,43 @@
 }
 
 .home-icon {
-    background-image: url(../images/icons/house.png) !important;
+    background: url(../images/icons/house.png) no-repeat !important;
 }
 
 .clients-icon {
-    background-image: url(../images/icons/group.png) !important;
+    background: url(../images/icons/group.png) no-repeat !important;
 }
 
 .clients-add-icon {
-    background-image: url(../images/icons/user_add.png) !important;
+    background: url(../images/icons/user_add.png) no-repeat !important;
 }
 
 .add-icon {
-    background-image: url(../images/icons/add.png) !important;
+    background: url(../images/icons/add.png) no-repeat !important;
 }
 
 .clients-list-icon {
-    background-image: url(../images/icons/table.png) !important;
+    background: url(../images/icons/table.png) no-repeat !important;
 }
 
 .commandes-icon {
-    background-image: url(../images/icons/cart.png) !important;
+    background: url(../images/icons/cart.png) no-repeat !important;
 }
 
 .commandes-add-icon {
-    background-image: url(../images/icons/cart_add.png) !important;
+    background: url(../images/icons/cart_add.png) no-repeat !important;
 }
 
 .produits-icon {
-    background-image: url(../images/icons/drink.png) !important;
+    background: url(../images/icons/drink.png) no-repeat !important;
 }
 
 .inventaire-icon {
-    background-image: url(../images/icons/database.png) !important;
+    background: url(../images/icons/database.png) no-repeat !important;
+}
+
+.lock-icon {
+    background: url(../images/icons/lock.png) no-repeat !important;
 }
 
 .nav-menu {
