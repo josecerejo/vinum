@@ -130,7 +130,7 @@ Ext.define('VIN.view.commande.Form', {
                 }*/, {
                     xtype: 'inventaire_grid',
                     itemId: 'inventaire',
-                    title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Produit")',
+                    title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
                     store: inventaire_store,
                     resizable: { handles: 's' },
                     column_flex: {

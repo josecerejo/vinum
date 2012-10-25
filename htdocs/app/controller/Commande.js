@@ -34,7 +34,7 @@ Ext.define('VIN.controller.Commande', {
             '#client_produit actioncolumn': {
                 // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
                 remove_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
-                    this.removeClientProduitItem(this._getFormViewInstance(grid), grid, rec, this.curr_client_rec);
+                    this.removeClientProduit(this._getFormViewInstance(grid), grid, rec, this.curr_client_rec);
                 },
                 add_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     var view = this._getFormViewInstance(grid);
@@ -45,51 +45,68 @@ Ext.define('VIN.controller.Commande', {
                             icon: Ext.MessageBox.WARNING,
                             buttons: Ext.MessageBox.OK
                         });                                            
-                        return false;
+                        return;
                     }
                     var desired_qc = rec.get('quantite_caisse');
                     if (desired_qc) {                        
-                        this.addCommandeItem(view, desired_qc, this.curr_produit_rec);
+                        this.addCommandeProduit(view, desired_qc, this.curr_produit_rec);
                     } else {
                         Ext.Msg.show({
                             title: 'Vinum',
                             msg: "Veuillez spécifier une quantité (en cliquant dans la cellule voulue de la colonne 'Quantité (c)')",
                             icon: Ext.MessageBox.WARNING,
                             buttons: Ext.MessageBox.OK
-                        });                                            
+                        });                           
+                        return;
                     }
                 }
             },
             '#add_produit_btn': {
                 click: function(btn) {
                     var view = this._getFormViewInstance(btn);
-                    var desired_qc = this.addProduit(view, this.curr_client_rec);
-                    if (desired_qc) {
-                        this.addCommandeItem(view, desired_qc, this.curr_produit_rec);
+                    var is_valid = true;
+                    Ext.Array.each(['#client_combo', '#produit_combo', '#add_produit_qc_nf'], function(item_id) {
+                        if (!view.down(item_id).getValue()) {
+                            view.down(item_id).markInvalid('Ce champ est requis');
+                            is_valid = false;
+                        }            
+                    });
+                    if (is_valid) {
+                        this.addClientProduit(view, this.curr_client_rec);
+                        var desired_qc = view.down('#add_produit_qc_nf').getValue();
+                        this.addCommandeProduit(view, desired_qc, this.curr_produit_rec);
                     }
                 }
             },
-            '#inventaire actioncolumn': {
-                // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
-                click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
-                    this.addCommandeItem(this._getFormViewInstance(grid), rec);
-                }
-            },
-            '#commande': {
-                edit: function(editor, e) {
-                    var view = this._getFormViewInstance(editor.grid);
-                    return this.updateCommandeAndInventaireItems(view, e);
-                }
-            },
-            '#commande actioncolumn': {
-                // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
-                click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
-                    var view = this._getFormViewInstance(grid);
-                    var rec = grid.store.getAt(rowIndex);
-                    grid.store.removeAt(rowIndex);
-                    this.removeCommandeItem(view, rec);
+            '#commande button': {
+                click: function(btn) {
+                    var view = this._getFormViewInstance(btn);
+                    view.down('#inventaire').getStore().removeAll();
+                    view.down('#commande').getStore().removeAll();
+                    this.updateInventaire(view, this.curr_produit_rec);
                 }
             }
+            // '#inventaire actioncolumn': {
+            //     // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
+            //     click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+            //         this.addCommandeProduit(this._getFormViewInstance(grid), rec);
+            //     }
+            // },
+            // '#commande': {
+            //     edit: function(editor, e) {
+            //         var view = this._getFormViewInstance(editor.grid);
+            //         return this.updateCommandeAndInventaireItems(view, e);
+            //     }
+            // }
+            // '#commande actioncolumn': {
+            //     // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
+            //     click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+            //         var view = this._getFormViewInstance(grid);
+            //         var rec = grid.store.getAt(rowIndex);
+            //         grid.store.removeAt(rowIndex);
+            //         this.removeCommandeItem(view, rec);
+            //     }
+            // }
         });
     },
 
@@ -105,7 +122,7 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    removeClientProduitItem: function(view, grid, record, curr_client_rec) {
+    removeClientProduit: function(view, grid, record, curr_client_rec) {
         Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la liste de produits habituels de ce client?', record.get('type_vin')), function(btn) {
             if (btn == 'yes') {
                 grid.store.remove(record);
@@ -125,17 +142,9 @@ Ext.define('VIN.controller.Commande', {
             }
         });        
     },
-
+    
     // return quantite commandee
-    addProduit: function(view, curr_client_rec) {
-        var is_valid = true;
-        Ext.Array.each(['#client_combo', '#produit_combo', '#add_produit_qc_nf'], function(item_id) {
-            if (!view.down(item_id).getValue()) {
-                view.down(item_id).markInvalid('Ce champ est requis');
-                is_valid = false;
-            }            
-        });
-        if (!is_valid) return null;
+    addClientProduit: function(view, curr_client_rec) {
         var cp_grid = view.down('#client_produit');
         var produit = view.down('#produit_combo').getValue();
         if (!cp_grid.getStore().findRecord('type_vin', produit)) {
@@ -157,7 +166,6 @@ Ext.define('VIN.controller.Commande', {
                 }
             });        
         } 
-        return view.down('#add_produit_qc_nf').getValue();
     },
 
     updateInventaire: function(view, record) {
@@ -170,43 +178,54 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    updateCommandeAndInventaireItems: function(view, e) {
-        var inv_grid = view.down('#inventaire');        
-        var inv_rec = inv_grid.store.findRecord('no_inventaire', e.record.get('no_inventaire'));
-        var qc_delta = e.value - e.originalValue; // possibly negative
-        if (inv_rec.get('solde_caisse') - qc_delta < 0) {
-            e.record.set('quantite_caisse', e.originalValue);
+    // updateCommandeAndInventaireItems: function(view, e) {
+    //     var inv_grid = view.down('#inventaire');        
+    //     var inv_rec = inv_grid.store.findRecord('no_inventaire', e.record.get('no_inventaire'));
+    //     var qc_delta = e.value - e.originalValue; // possibly negative
+    //     if (inv_rec.get('solde_caisse') - qc_delta < 0) {
+    //         e.record.set('quantite_caisse', e.originalValue);
+    //         Ext.Msg.show({
+    //             title: 'Vinum',
+    //             msg: 'Quantité insuffisante pour commander',
+    //             icon: Ext.MessageBox.WARNING,
+    //             buttons: Ext.MessageBox.OK
+    //         });
+    //         return false;
+    //     }
+    //     var qpc = inv_rec.get('quantite_par_caisse');
+    //     if (inv_rec.get('solde') < qc_delta * qpc) {
+    //         e.record.set('quantite_bouteille', e.record.get('quantite_bouteille') + inv_rec.get('solde'));
+    //         inv_rec.set('solde', 0);
+    //         inv_rec.set('solde_caisse', 0);
+    //     } else {
+    //         e.record.set('quantite_bouteille', e.record.get('quantite_bouteille') + (qc_delta * qpc));
+    //         inv_rec.set('solde', inv_rec.get('solde') - (qc_delta * qpc));
+    //         inv_rec.set('solde_caisse', inv_rec.get('solde_caisse') - qc_delta);
+    //     }
+    //     return true;
+    // },
+
+    // removeCommandeItem: function(view, rec) {
+    //     var inv_grid = view.down('#inventaire');        
+    //     var inv_rec = inv_grid.store.findRecord('no_inventaire', rec.get('no_inventaire'));
+    //     inv_rec.set('solde', inv_rec.get('solde') + rec.get('quantite_bouteille'));
+    //     inv_rec.set('solde_caisse', inv_rec.get('solde_caisse') + rec.get('quantite_caisse'));
+    // },
+
+    addCommandeProduit: function(view, desired_qc, curr_produit_rec) {
+        var ig = view.down('#inventaire');
+        var cg = view.down('#commande');
+
+        if (cg.store.find('no_produit_interne', curr_produit_rec.get('no_produit_interne')) != -1) {
             Ext.Msg.show({
                 title: 'Vinum',
-                msg: 'Quantité insuffisante pour commander',
+                msg: "Ce produit existe déjà dans la commande",
                 icon: Ext.MessageBox.WARNING,
                 buttons: Ext.MessageBox.OK
             });
-            return false;
+            return;
         }
-        var qpc = inv_rec.get('quantite_par_caisse');
-        if (inv_rec.get('solde') < qc_delta * qpc) {
-            e.record.set('quantite_bouteille', e.record.get('quantite_bouteille') + inv_rec.get('solde'));
-            inv_rec.set('solde', 0);
-            inv_rec.set('solde_caisse', 0);
-        } else {
-            e.record.set('quantite_bouteille', e.record.get('quantite_bouteille') + (qc_delta * qpc));
-            inv_rec.set('solde', inv_rec.get('solde') - (qc_delta * qpc));
-            inv_rec.set('solde_caisse', inv_rec.get('solde_caisse') - qc_delta);
-        }
-        return true;
-    },
 
-    removeCommandeItem: function(view, rec) {
-        var inv_grid = view.down('#inventaire');        
-        var inv_rec = inv_grid.store.findRecord('no_inventaire', rec.get('no_inventaire'));
-        inv_rec.set('solde', inv_rec.get('solde') + rec.get('quantite_bouteille'));
-        inv_rec.set('solde_caisse', inv_rec.get('solde_caisse') + rec.get('quantite_caisse'));
-    },
-
-    addCommandeItem: function(view, desired_qc, curr_produit_rec) {
-        var ig = view.down('#inventaire');
-        var cg = view.down('#commande');
         var actif_recs = ig.getStore().query('statut', /Actif|En réserve/);
         actif_recs.sort([{property:'statut', direction:'ASC', root:'data'}, 
                          {property:'date_commande', direction:'ASC', root:'data'}]);
@@ -244,12 +263,7 @@ Ext.define('VIN.controller.Commande', {
 
             if (rec.get('solde_caisse') == 0) {
                 rec.set('statut', 'Inactif');
-            } // else {
-            //     rec.set('statut', 'Actif');
-            // }
-            // if (rem_qc == 0) {                
-            //     break;
-            // }
+            } 
         }
         
         if (rem_qc > 0) {
@@ -267,7 +281,6 @@ Ext.define('VIN.controller.Commande', {
             cg.store.add(comm);
             
         }
-
     }
 
 });

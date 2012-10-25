@@ -12,6 +12,14 @@ Ext.define('VIN.view.commande.List', {
 
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            items: [{
+                iconCls: 'del-icon',
+                text: 'Tout supprimer'
+            }]
+        }];
+
         // for (var i = 0; i < this.columns.length; i++) {
         //     if (this.columns[i].dataIndex == 'quantite_caisse') {
         //         this.columns[i].editor = {

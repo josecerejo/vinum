@@ -40,6 +40,10 @@
     background: url(../images/icons/add.png) no-repeat !important;
 }
 
+.del-icon {
+    background: url(../images/icons/delete.png) no-repeat !important;
+}
+
 .clients-list-icon {
     background: url(../images/icons/table.png) no-repeat !important;
 }
