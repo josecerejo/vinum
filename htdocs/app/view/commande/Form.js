@@ -87,7 +87,7 @@ Ext.define('VIN.view.commande.Form', {
                         xtype: 'numberfield',
                         flex: 0.15,
                         fieldLabel: 'Quantité (c)',
-                        itemId: 'add_produit_qte_nf',
+                        itemId: 'add_produit_qc_nf',
                         minValue: 1,
                         style: 'margin-bottom: 20px; margin-right: 20px'
                     }, {

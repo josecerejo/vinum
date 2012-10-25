@@ -29,8 +29,9 @@ Ext.define('VIN.view.client.ProduitList', {
         this.columns.splice(1, 0, {
             width: 30,
             renderer: function(value, metadata, record, rowIndex, colIndex, store) {
-                if (value) {
-                    metadata.tdCls = 'lock-icon-cell';
+                if (record.get('locked_by_user')) {
+                    metadata.tdCls = 'lock-icon';
+                    metadata.attr = 'ext:qtip="bla"';
                 }
             }
         });

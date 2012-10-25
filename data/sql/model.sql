@@ -116,3 +116,4 @@ create table inventaire (
 );
 
 --insert into inventaire (no_produit_interne, no_produit_saq, no_commande_saq, date_commande, millesime, statut, solde) values (178, -1, -1, '2000-01-01', 2000, 'Actif', 23);
+--update produit set locked_by_user = 'test' where type_vin like 'AUS%';

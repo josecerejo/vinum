@@ -44,6 +44,9 @@ Ext.define('VIN.model.Produit', {
         name: 'quantite_bouteille',
         type: 'int',
         useNull: true
+    }, {
+        header: '',
+        name: 'locked_by_user'
     }],
     idProperty: 'no_produit_interne'
 });
