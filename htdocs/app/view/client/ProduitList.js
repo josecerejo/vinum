@@ -59,6 +59,13 @@ Ext.define('VIN.view.client.ProduitList', {
             }
         }
 
+        // this.dockedItems = {
+        //     xtype: 'pagingtoolbar',
+        //     store: this.store,
+        //     dock: 'bottom',
+        //     displayInfo: true
+        // };
+
         this.plugins = [Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
         })];

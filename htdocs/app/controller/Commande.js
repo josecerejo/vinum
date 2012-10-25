@@ -41,7 +41,8 @@ Ext.define('VIN.controller.Commande', {
                     if (rec.get('locked_by_user')) {
                         Ext.Msg.show({
                             title: 'Vinum',
-                            msg: Ext.String.format("Ce produit est présentement utilisé dans une commande effectuée par l'usager '{0}'", rec.get('locked_by_user')),
+                            msg: Ext.String.format("Ce produit est présentement utilisé dans une commande effectuée par l'usager '{0}'", 
+                                                   rec.get('locked_by_user')),
                             icon: Ext.MessageBox.WARNING,
                             buttons: Ext.MessageBox.OK
                         });                                            
@@ -114,10 +115,15 @@ Ext.define('VIN.controller.Commande', {
         return any_contained_view.up('commande_form');
     },
 
-    updateClientProduit: function(view, record) {
+    updateClientProduit: function(view, client_rec) {
         view.down('#client_produit').store.load({
             params: {
-                no_client: record.get('no_client')
+                no_client: client_rec.get('no_client')
+            },
+            callback: function(records, operation, success) {
+                var g = view.down('#client_produit');
+                g.setTitle(Ext.String.format('Liste de produits habituels pour le client "{0}" ({1})', 
+                                             client_rec.get('nom_social'), g.store.getCount()));
             }
         });
     },
@@ -125,7 +131,7 @@ Ext.define('VIN.controller.Commande', {
     removeClientProduit: function(view, grid, record, curr_client_rec) {
         Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la liste de produits habituels de ce client?', record.get('type_vin')), function(btn) {
             if (btn == 'yes') {
-                grid.store.remove(record);
+                //grid.store.remove(record);
                 view.submit({
                     url: '/vinum_server/client/remove_produit',
                     params: {
@@ -133,7 +139,7 @@ Ext.define('VIN.controller.Commande', {
                         no_produit_interne: record.get('no_produit_interne')
                     },
                     success: function(_form, action) {
-                        //store.reload();
+                        grid.store.reload();
                     },
                     failure: function(_form, action) {
                         VIN.utils.serverErrorPopup(action.result.error_msg);
@@ -143,21 +149,20 @@ Ext.define('VIN.controller.Commande', {
         });        
     },
     
-    // return quantite commandee
     addClientProduit: function(view, curr_client_rec) {
         var cp_grid = view.down('#client_produit');
         var produit = view.down('#produit_combo').getValue();
         if (!cp_grid.getStore().findRecord('type_vin', produit)) {
-            Ext.Msg.confirm('Vinum', Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit), function(btn) {
+            var msg = Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit);
+            Ext.Msg.confirm('Vinum', msg, function(btn) {
                 if (btn == 'yes') {
-                    //grid.store.remove(record);
                     view.submit({
                         url: '/vinum_server/client/add_produit',
                         params: {
                             no_client: curr_client_rec.get('no_client')
                         },
                         success: function(_form, action) {
-                            cp_grid.getStore().reload();
+                            cp_grid.getStore().reload();                            
                         },
                         failure: function(_form, action) {
                             VIN.utils.serverErrorPopup(action.result.error_msg);
