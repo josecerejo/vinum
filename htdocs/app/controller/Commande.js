@@ -188,14 +188,8 @@ Ext.define('VIN.controller.Commande', {
     addCommandeItem: function(view, qte) {
         var ig = view.down('#inventaire');
         var actif_recs = ig.getStore().query('statut', /Actif|En réserve/);
-        console.log(actif_recs.getCount());
-        actif_recs.sortBy(function(r1, r2) {
-            if (r1.get('statut') == r2.get('statut')) {
-                return r1.get('date_commande') > r2.get('date_commande');
-            } else {
-                return r1.get('statut') == 'En réserve';
-            }
-        });
+        actif_recs.sort([{property:'statut', direction:'ASC', root:'data'}, 
+                         {property:'date_commande', direction:'ASC', root:'data'}]);
 
         // actif_recs.each(function(rec) {
         //     console.log(rec.get('date_commande'), rec.get('statut'));
