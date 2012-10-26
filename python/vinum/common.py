@@ -29,8 +29,6 @@ def get(request, table, query_fields):
     comp_op_map = {'lt':'<', 'gt':'>', 'le':'<=', 'ge':'>=', 'eq':'='}
 
     where = {}
-    where_or = {}
-    where_cartpow = ()
     if request.args.get('filter', '').strip():
         for filter_arg in json.loads(request.args['filter']):
             if filter_arg['type'] == 'string':
@@ -38,12 +36,10 @@ def get(request, table, query_fields):
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
     elif request.args.get('query', '').strip():
-        where_cartpow = (query_fields, 'ilike', ['%%%s%%' % v for v in request.args['query'].split()])
-        #for f in query_fields:
-        #    where_or[(f, 'ilike')] = set(['%%%s%%' % v for v in request.args['query'].split()])
+        where[('||'.join(query_fields), 'ilike')] = set(['%%%s%%' % v for v in request.args['query'].split()])
 
-    json_out['total'] = db.count(cursor, table, where=where, where_or=where_or, where_cartpow=where_cartpow, debug_assert=False)
-    json_out['rows'] = db.select(cursor, table, where=where, where_or=where_or, where_cartpow=where_cartpow, offset=request.args['start'], 
+    json_out['total'] = db.count(cursor, table, where=where, debug_assert=False)
+    json_out['rows'] = db.select(cursor, table, where=where, offset=request.args['start'], 
                                  limit=request.args['limit'], order_by=order_by, debug_assert=False)
     
     return json.dumps(json_out, default=json_dthandler)
