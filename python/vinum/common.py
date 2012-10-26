@@ -30,15 +30,15 @@ def get(request, table, query_fields):
 
     where = {}
     where_or = {}
-    if 'filter' in request.args:
+    if request.args.get('filter', '').strip():
         for filter_arg in json.loads(request.args['filter']):
             if filter_arg['type'] == 'string':
                 where[(filter_arg['field'], 'ilike')] = '%%%s%%' % filter_arg['value']
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
-    elif 'query' in request.args:
+    elif request.args.get('query', '').strip():
         for f in query_fields:
-            where_or[(f, 'ilike')] = '%%%s%%' % request.args['query']
+            where_or[(f, 'ilike')] = set(['%%%s%%' % v for v in request.args['query'].split()])
 
     json_out['total'] = db.count(cursor, table, where=where, where_or=where_or, debug_assert=False)
     json_out['rows'] = db.select(cursor, table, where=where, where_or=where_or, offset=request.args['start'], 
