@@ -91,12 +91,13 @@ Ext.define('VIN.controller.Commande', {
                 groupaction: function(grid, records, action, groupValue) {
                     var view = this._getFormViewInstance(grid);
                     var type_vin = groupValue;
+                    var that = this;
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la commande?', type_vin), function(btn) {
                         if (btn == 'yes') {
                             var group_recs = view.down('#commande').getStore().query('type_vin', type_vin);
                             view.down('#commande').getStore().remove(group_recs.items);
-                            if (this.current_produit_rec.get('type_vin') == type_vin) {
-                                this.updateInventaire(view, this.curr_produit_rec);
+                            if (that.current_produit_rec.get('type_vin') == type_vin) {
+                                that.updateInventaire(view, that.curr_produit_rec);
                             }
                         }
                     });
