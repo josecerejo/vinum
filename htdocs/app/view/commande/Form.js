@@ -17,7 +17,9 @@ Ext.define('VIN.view.commande.Form', {
         var produit_search_store = Ext.create('VIN.store.Produits');
         var client_produit_store = Ext.create('VIN.store.Produits');
         var inventaire_store = Ext.create('VIN.store.Inventaires');
-        var commande_store = Ext.create('VIN.store.Commandes');
+        var commande_store = Ext.create('VIN.store.Commandes', {
+            groupField: 'type_vin'
+        });
 
         this.items = {
             bodyStyle: 'background-color:#dfe8f5',
@@ -89,6 +91,7 @@ Ext.define('VIN.view.commande.Form', {
                         fieldLabel: 'Quantité (c)',
                         itemId: 'add_produit_qc_nf',
                         minValue: 1,
+                        //enableKeyEvents: true,
                         style: 'margin-bottom: 20px; margin-right: 20px'
                     }, {
                         xtype: 'button',
