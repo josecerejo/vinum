@@ -96,7 +96,7 @@ Ext.define('VIN.controller.Commande', {
                         if (btn == 'yes') {
                             var group_recs = view.down('#commande').getStore().query('type_vin', type_vin);
                             view.down('#commande').getStore().remove(group_recs.items);
-                            if (that.current_produit_rec.get('type_vin') == type_vin) {
+                            if (that.curr_produit_rec.get('type_vin') == type_vin) {
                                 that.updateInventaire(view, that.curr_produit_rec);
                             }
                         }
