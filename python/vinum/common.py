@@ -9,9 +9,11 @@ DEC2FLOAT = psycopg2._psycopg.new_type(
 psycopg2._psycopg.register_type(DEC2FLOAT)
 
 
-# The '00:00:00' suffix is important for the correct handling of ExtJS dates (I don't know what exactly 
+# The '00:00:00' suffix is important for the correct handling of ExtJS dates (I don't know what exactly
 # is the problem with simple iso format)
 json_dthandler = lambda obj: obj.strftime('%Y-%m-%d 00:00:00') if obj.__class__ in [datetime.date, datetime.datetime] else None
+
+
 
 
 def get(request, table, query_fields):
@@ -39,9 +41,9 @@ def get(request, table, query_fields):
         where[('||'.join(query_fields), 'ilike')] = set(['%%%s%%' % v for v in request.args['query'].split()])
 
     json_out['total'] = db.count(cursor, table, where=where, debug_assert=False)
-    json_out['rows'] = db.select(cursor, table, where=where, offset=request.args['start'], 
+    json_out['rows'] = db.select(cursor, table, where=where, offset=request.args['start'],
                                  limit=request.args['limit'], order_by=order_by, debug_assert=False)
-    
+
     return json.dumps(json_out, default=json_dthandler)
 
 
@@ -75,5 +77,3 @@ def delete(request, table, id):
     conn.commit()
     json_out = {'success': True}
     return json.dumps(json_out, default=json_dthandler)
-
-
