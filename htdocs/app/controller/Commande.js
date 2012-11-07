@@ -1,7 +1,7 @@
 Ext.define('VIN.controller.Commande', {
 
     extend: 'Ext.app.Controller',
-    views: ['VIN.view.commande.Form'],
+    views: ['VIN.view.commande.Form', 'VIN.view.client.Form'],
     models: ['VIN.model.Produit'],
     stores: ['VIN.store.Produits'],
 
@@ -12,6 +12,39 @@ Ext.define('VIN.controller.Commande', {
                     var view = this._getFormViewInstance(field);
                     this.updateClientProduit(view, records[0]);
                     this.curr_client_rec = records[0].copy();
+                    var r = this.curr_client_rec;
+                    var adresse = Ext.String.format('{0} {1} {2} {3}', r.get('no_civique')||'<no?>', 
+                                                    r.get('rue')||'<rue?>', r.get('ville')||'<ville?>',
+                                                    r.get('code_postal')||'<code_postal?>');
+                    view.down('#adresse_tf').setValue(adresse);
+                    view.down('#details_client_btn').setDisabled(false);
+                    view.down('#succ_tf').setValue(r.get('no_succursale')||'');
+                }
+            },
+            '#details_client_btn': {
+                click: function(btn) {
+                    var cf = Ext.create('widget.client_form');
+                    var mp = Ext.getCmp('main_pnl');
+                    mp.add(cf);
+                    mp.setActiveTab(cf);
+                }
+            },
+            '#direct_df': {
+                focus: function(field) {
+                    var view = this._getFormViewInstance(field);
+                    view.down('#direct_rb').setValue(true);
+                }
+            },
+            '#succ_tf': {
+                focus: function(field) {
+                    var view = this._getFormViewInstance(field);
+                    view.down('#succ_rb').setValue(true);
+                }
+            },
+            '#pickup_df': {
+                focus: function(field) {
+                    var view = this._getFormViewInstance(field);
+                    view.down('#pickup_rb').setValue(true);
                 }
             },
             '#produit_combo': {

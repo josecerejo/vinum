@@ -6,7 +6,7 @@ from common import *
 def get_inventaire():
     #where = {'no_produit_interne': request.args['no_produit_interne'], ('statut', '!='): 'Inactif'}
     #rows = db.select(cursor, 'inventaire', what={'*':1, '-1':'solde_caisse'}, where=where)
-    cursor = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = g.db.cursor()
     cursor.execute("""select i.*, p.type_vin, p.format, p.quantite_par_caisse,
                              ceil(solde::real / quantite_par_caisse) as solde_caisse
                       from inventaire i, produit p

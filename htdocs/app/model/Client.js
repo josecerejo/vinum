@@ -35,7 +35,7 @@ Ext.define('VIN.model.Client', {
         name: 'courriel',
     }, {
         name: 'type_client',
-    }, /* {
+    }, {
         name: 'specialite',
     }, {
         name: 'representant',
@@ -45,7 +45,7 @@ Ext.define('VIN.model.Client', {
         name: 'no_succursale',
     }, {
         name: 'note',
-    }, */ {
+    }, {
         name: 'date_ouverture_dossier',
         type: 'date'
     }],

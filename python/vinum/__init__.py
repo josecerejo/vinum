@@ -43,7 +43,8 @@ app.debug = True
 
 @app.before_request
 def before_request():
-    g.db = psycopg2.connect("dbname=vinum user=christian")
+    g.db = psycopg2.connect("dbname=vinum user=christian",
+                            connection_factory=psycopg2.extras.RealDictConnection)
 
 
 @app.teardown_request

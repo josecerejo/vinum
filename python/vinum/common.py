@@ -4,7 +4,7 @@ import little_pger as db
 
 def get(g, request, table, query_fields):
     assert query_fields.__class__ is tuple
-    cursor = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = g.db.cursor()
     order_by = None
     if 'sort' in request.args:
         sort_arg = json.loads(request.args['sort'])[0]
@@ -31,7 +31,7 @@ def get(g, request, table, query_fields):
 
 
 def update(g, request, table, id):
-    cursor = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
     db.update(cursor, table, values=request.form, where={id:request.form[id]})
     g.db.commit()
@@ -39,7 +39,7 @@ def update(g, request, table, id):
 
 
 def create(g, request, table, id):
-    cursor = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
     del request.form[id]
     db.insert(cursor, table, values=request.form)
@@ -49,7 +49,7 @@ def create(g, request, table, id):
 
 
 def delete(g, request, table, id):
-    cursor = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
     db.delete(cursor, table, where={id:request.form[id]})
     g.db.commit()

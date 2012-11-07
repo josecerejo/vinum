@@ -22,23 +22,8 @@ def delete_client():
     return delete(g, request, 'client', 'no_client')        
 
 
-# def get_produits_commandes(no_client):
-#     conn = psycopg2.connect("dbname=vinum user=christian")
-#     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-#     json_out = {'success': True}
-#     cursor.execute("""select * from produit p, (select no_produit_interne, count(*) 
-#                       from commande_produit cp where cp.no_client = %s 
-#                       group by no_produit_interne) f 
-#                       where p.no_produit_interne = f.no_produit_interne 
-#                       order by count desc;""", [no_client])
-#     rows = cursor.fetchall()
-#     json_out['total'] = len(rows)
-#     json_out['rows'] = rows
-#     return json.dumps(json_out, default=json_dthandler)
-
-
 def get_produits(g, no_client):
-    cursor = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)    
+    cursor = g.db.cursor()
     cursor.execute("""select * from produit p, client_produit cp
                       where cp.no_client = %s and p.no_produit_interne = cp.no_produit_interne
                       order by type_vin asc
@@ -49,7 +34,7 @@ def get_produits(g, no_client):
 
 @app.route('/client/remove_produit', methods=['POST'])
 def remove_produit():
-    cursor = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
     db.delete(cursor, 'client_produit', where={'no_client': request.form['no_client'], 
                                                 'no_produit_interne': request.form['no_produit_interne']})
@@ -59,7 +44,7 @@ def remove_produit():
     
 @app.route('/client/add_produit', methods=['POST'])
 def add_produit():
-    cursor = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
     no_produit_interne = db.select1(cursor, 'produit', 'no_produit_interne', where={'type_vin': request.form['type_vin']})
     db.insert(cursor, 'client_produit', values={'no_client': request.form['no_client'], 

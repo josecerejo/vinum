@@ -1,6 +1,6 @@
 Ext.define('VIN.view.client.Edit', {
     extend: 'Ext.form.Panel',
-    alias: 'widget.client_form',
+    alias: 'widget.client_form_',
     frame: true,
     url: '/vinum_server/client/update',
     autoScroll: true,

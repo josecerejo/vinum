@@ -32,6 +32,10 @@
     background: url(../images/icons/group.png) no-repeat !important;
 }
 
+.client-icon {
+    background: url(../images/icons/user.png) no-repeat !important;
+}
+
 .clients-add-icon {
     background: url(../images/icons/user_add.png) no-repeat !important;
 }
