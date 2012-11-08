@@ -57,5 +57,6 @@ try:
     import client
     import produit
     import inventaire
+    import commande
 except:
     pass

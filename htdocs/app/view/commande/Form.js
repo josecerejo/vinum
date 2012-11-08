@@ -202,8 +202,27 @@ Ext.define('VIN.view.commande.Form', {
                         format: 1,
                         quantite_caisse: 1
                     },
-                    height: 300,
-                    style: 'margin-bottom: 20px'
+                    height: 300
+                    //style: 'margin-bottom: 20px'
+                }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    items: [{
+                        xtype: 'button',
+                        text: 'Enregistrer la commande',
+                        itemId: 'save_commande_btn',
+                        //disabled: true,
+                        iconCls: 'cart-go-icon',
+                        style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
+                    }, {
+                        xtype: 'button',
+                        text: 'Télécharger la facture',
+                        itemId: 'download_facture_btn',
+                        disabled: true,
+                        iconCls: 'page-save-icon',
+                        style: 'margin-bottom: 20px; margin-top: 20px'
+                    }]
                 }]
             }, {
                 // -----------------------------------------------------

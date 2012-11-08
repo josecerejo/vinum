@@ -135,6 +135,16 @@ Ext.define('VIN.controller.Commande', {
                         }
                     });
                 }
+            },
+            '#download_facture_btn': {
+                click: function(btn) {
+                    location.href = '/vinum_server/commande/download_facture?rnd=' + Math.random();
+                }
+            },
+            '#save_commande_btn': {
+                click: function(btn) {
+                    
+                }
             }
         });
     },

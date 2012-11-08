@@ -32,6 +32,22 @@
     background: url(../images/icons/group.png) no-repeat !important;
 }
 
+.arrow-down-icon {
+    background: url(../images/icons/arrow_down.png) no-repeat !important;
+}
+
+.disk-icon {
+    background: url(../images/icons/disk.png) no-repeat !important;
+}
+
+.page-save-icon {
+    background: url(../images/icons/page_save.png) no-repeat !important;
+}
+
+.cart-go-icon {
+    background: url(../images/icons/cart_go.png) no-repeat !important;
+}
+
 .client-icon {
     background: url(../images/icons/user.png) no-repeat !important;
 }
