@@ -219,7 +219,7 @@ Ext.define('VIN.view.commande.Form', {
                         xtype: 'button',
                         text: 'Télécharger la facture',
                         itemId: 'download_facture_btn',
-                        disabled: true,
+                        //disabled: true,
                         iconCls: 'page-save-icon',
                         style: 'margin-bottom: 20px; margin-top: 20px'
                     }]
