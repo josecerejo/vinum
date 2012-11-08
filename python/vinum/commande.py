@@ -7,12 +7,13 @@ from appy.pod.renderer import Renderer
 def download_facture():
 
     params = {}
-    params['coucou'] = 'allo!'
-    params['persons'] = [('Christian!!','Jauvin')]
+    params['items'] = [('12', 'ROU724 Valle D\'Oro Rosso .. 2009', '750 ml', '1.59$', '19.08$'),
+                       ('12', 'ROU724 Valle D\'Oro Rosso .. 2009', '750 ml', '1.59$', '19.08$'),
+                       ('12', 'ROU724 Valle D\'Oro Rosso .. 2009', '750 ml', '1.59$', '19.08$')]
 
-    out_file = '/home/christian/vinum/data/invoice/result.pdf'
+    out_file = '/home/christian/vinum/data/invoice/invoice.pdf'
 
-    ren = Renderer('/home/christian/vinum/data/invoice/invoice_tmpl.odt', params, 
+    ren = Renderer('/home/christian/vinum/data/invoice/vinum_invoice_tmpl.odt', params, 
                    out_file, overwriteExisting=True)
     ren.run()
 
