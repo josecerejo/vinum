@@ -1,5 +1,5 @@
 import psycopg2.extras, json
-import little_pger as db
+import little_pger as pg
 
 
 def get(g, request, table, query_fields):
@@ -24,8 +24,8 @@ def get(g, request, table, query_fields):
         where[('||'.join(query_fields), 'ilike')] = set(['%%%s%%' % v for v in request.args['query'].split()])
 
     json_out = {'success': True}
-    json_out['total'] = db.count(cursor, table, where=where, debug_assert=False)
-    json_out['rows'] = db.select(cursor, table, where=where, offset=request.args['start'],
+    json_out['total'] = pg.count(cursor, table, where=where, debug_assert=False)
+    json_out['rows'] = pg.select(cursor, table, where=where, offset=request.args['start'],
                                  limit=request.args['limit'], order_by=order_by, debug_assert=False)
     return json_out
 
@@ -33,7 +33,7 @@ def get(g, request, table, query_fields):
 def update(g, request, table, id):
     cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
-    db.update(cursor, table, values=request.form, where={id:request.form[id]})
+    pg.update(cursor, table, values=request.form, where={id:request.form[id]})
     g.db.commit()
     return {'success': True}
 
@@ -42,8 +42,8 @@ def create(g, request, table, id):
     cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
     del request.form[id]
-    db.insert(cursor, table, values=request.form)
-    key = db.getCurrentPKeyValue(cursor, table, pkey_seq_name='%s_%s_seq' % (table, id))
+    pg.insert(cursor, table, values=request.form)
+    key = pg.getCurrentPKeyValue(cursor, table, pkey_seq_name='%s_%s_seq' % (table, id))
     g.db.commit()
     return {'success': True, id: key}
 
@@ -51,6 +51,6 @@ def create(g, request, table, id):
 def delete(g, request, table, id):
     cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
-    db.delete(cursor, table, where={id:request.form[id]})
+    pg.delete(cursor, table, where={id:request.form[id]})
     g.db.commit()
     return {'success': True}

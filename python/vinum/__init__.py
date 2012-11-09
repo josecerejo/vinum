@@ -43,6 +43,8 @@ app.debug = True
 
 @app.before_request
 def before_request():
+#    request.parameter_storage_class = dict
+#    request.dict_storage_class = dict
     g.db = psycopg2.connect("dbname=vinum user=christian",
                             connection_factory=psycopg2.extras.RealDictConnection)
 

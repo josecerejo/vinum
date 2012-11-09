@@ -1,4 +1,5 @@
 Ext.define('VIN.view.commande.Form', {
+
     extend: 'Ext.form.Panel',
     alias: 'widget.commande_form',
     requires: ['VIN.view.produit.List', 'VIN.view.client.ProduitList', 
@@ -17,9 +18,7 @@ Ext.define('VIN.view.commande.Form', {
         var produit_search_store = Ext.create('VIN.store.Produits');
         var client_produit_store = Ext.create('VIN.store.Produits');
         var inventaire_store = Ext.create('VIN.store.Inventaires');
-        var commande_store = Ext.create('VIN.store.Commandes', {
-            groupField: 'type_vin'
-        });
+        var commande_store = Ext.create('VIN.store.Commandes');
 
         this.items = {
             bodyStyle: 'background-color:#dfe8f5',
@@ -65,6 +64,7 @@ Ext.define('VIN.view.commande.Form', {
                         flex: 0.2,
                         xtype: 'datefield',
                         fieldLabel: 'Date',
+                        name: 'date_commande',
                         format: 'Y-m-d',
                         value: new Date()
                     }],
@@ -117,6 +117,7 @@ Ext.define('VIN.view.commande.Form', {
                         }, {
                             xtype: 'datefield',
                             hideLabel: true,
+                            name: 'date_direct',
                             format: 'Y-m-d',
                             flex: 0.1,
                             itemId: 'direct_df'
@@ -124,12 +125,13 @@ Ext.define('VIN.view.commande.Form', {
                             xtype: 'radiofield',
                             boxLabel: 'Succursale',
                             name: 'expedition',
-                            inputValue: 'succursale',
+                            inputValue: 'succursale',                            
                             flex: 0.07,
                             itemId: 'succ_rb'
                         }, {
                             xtype: 'textfield',
                             hideLabel: true,
+                            name: 'expedition_succursale',
                             flex: 0.1,
                             itemId: 'succ_tf'
                         }, {
@@ -142,6 +144,7 @@ Ext.define('VIN.view.commande.Form', {
                         }, {
                             xtype: 'datefield',
                             hideLabel: true,
+                            namme: 'date_pickup',
                             format: 'Y-m-d',
                             flex: 0.1,
                             itemId: 'pickup_df'
@@ -219,7 +222,7 @@ Ext.define('VIN.view.commande.Form', {
                         xtype: 'button',
                         text: 'Télécharger la facture',
                         itemId: 'download_facture_btn',
-                        //disabled: true,
+                        disabled: true,
                         iconCls: 'page-save-icon',
                         style: 'margin-bottom: 20px; margin-top: 20px'
                     }]

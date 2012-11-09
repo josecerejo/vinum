@@ -3,6 +3,19 @@ from common import *
 from appy.pod.renderer import Renderer
 
 
+@app.route('/commande/save', methods=['POST'])
+def save():
+    cursor = g.db.cursor()
+    rf = request.form.to_dict()
+    if rf['no_facture_commande']:
+        nfc = rf['no_facture_commande']
+    else:
+        comm = pg.insert(cursor, 'commande', values=rf, filter_values=True, map_values={'': None})
+        nfc = comm['no_commande_facture']
+    #g.db.commit()
+    return {'success': True, 'no_facture_commande': nfc}
+
+
 @app.route('/commande/download_facture', methods=['GET'])
 def download_facture():
 

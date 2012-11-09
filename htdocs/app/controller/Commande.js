@@ -6,13 +6,20 @@ Ext.define('VIN.controller.Commande', {
     stores: ['VIN.store.Produits'],
 
     init: function() {
+
+        this.curr = {
+            client_rec: undefined,
+            produit_rec: undefined,
+            no_commande_facture: undefined
+        };
+
         this.control({
             '#client_combo': {
                 select: function(field, records, eopts) {
                     var view = this._getFormViewInstance(field);
                     this.updateClientProduit(view, records[0]);
-                    this.curr_client_rec = records[0].copy();
-                    var r = this.curr_client_rec;
+                    this.curr.client_rec = records[0].copy();
+                    var r = this.curr.client_rec;
                     var adresse = Ext.String.format('{0} {1} {2} {3}', r.get('no_civique')||'<no?>', 
                                                     r.get('rue')||'<rue?>', r.get('ville')||'<ville?>',
                                                     r.get('code_postal')||'<code_postal?>');
@@ -51,8 +58,8 @@ Ext.define('VIN.controller.Commande', {
                 select: function(field, records, eopts) {
                     var view = this._getFormViewInstance(field);
                     this.updateInventaire(view, records[0]);
-                    this.curr_produit_rec = records[0].copy();
-                    var locked = this.curr_produit_rec.get('locked_by_user') != null;
+                    this.curr.produit_rec = records[0].copy();
+                    var locked = this.curr.produit_rec.get('locked_by_user') != null;
                     view.down('#add_produit_btn').setDisabled(locked);
                     view.down('#add_produit_btn').setIconCls(locked ? 'lock-icon' : 'add-icon');
                 }                               
@@ -61,13 +68,13 @@ Ext.define('VIN.controller.Commande', {
                 selectionchange: function(model, records) {
                     var view = this._getFormViewInstance(model.view);
                     this.updateInventaire(view, records[0]);
-                    this.curr_produit_rec = records[0].copy();
+                    this.curr.produit_rec = records[0].copy();
                 }                
             },
             '#client_produit actioncolumn': {
                 // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
                 remove_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
-                    this.removeClientProduit(this._getFormViewInstance(grid), grid, rec, this.curr_client_rec);
+                    this.removeClientProduit(this._getFormViewInstance(grid), grid, rec, this.curr.client_rec);
                 },
                 add_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     var view = this._getFormViewInstance(grid);
@@ -83,7 +90,7 @@ Ext.define('VIN.controller.Commande', {
                     }
                     var desired_qc = rec.get('quantite_caisse');
                     if (desired_qc) {                        
-                        this.addCommandeProduit(view, desired_qc, this.curr_produit_rec);
+                        this.addCommandeProduit(view, desired_qc, this.curr.produit_rec);
                     } else {
                         Ext.Msg.show({
                             title: 'Vinum',
@@ -106,9 +113,9 @@ Ext.define('VIN.controller.Commande', {
                         }            
                     });
                     if (is_valid) {
-                        this.addClientProduit(view, this.curr_client_rec);
+                        this.addClientProduit(view, this.curr.client_rec);
                         var desired_qc = view.down('#add_produit_qc_nf').getValue();
-                        this.addCommandeProduit(view, desired_qc, this.curr_produit_rec);
+                        this.addCommandeProduit(view, desired_qc, this.curr.produit_rec);
                     }
                 }
             },
@@ -117,7 +124,7 @@ Ext.define('VIN.controller.Commande', {
             //         var view = this._getFormViewInstance(btn);
             //         view.down('#inventaire').getStore().removeAll();
             //         view.down('#commande').getStore().removeAll();
-            //         this.updateInventaire(view, this.curr_produit_rec);
+            //         this.updateInventaire(view, this.curr.produit_rec);
             //     }
             // },
             '#commande rowactions': {
@@ -129,8 +136,8 @@ Ext.define('VIN.controller.Commande', {
                         if (btn == 'yes') {
                             var group_recs = view.down('#commande').getStore().query('type_vin', type_vin);
                             view.down('#commande').getStore().remove(group_recs.items);
-                            if (that.curr_produit_rec.get('type_vin') == type_vin) {
-                                that.updateInventaire(view, that.curr_produit_rec);
+                            if (that.curr.produit_rec.get('type_vin') == type_vin) {
+                                that.updateInventaire(view, that.curr.produit_rec);
                             }
                         }
                     });
@@ -143,7 +150,32 @@ Ext.define('VIN.controller.Commande', {
             },
             '#save_commande_btn': {
                 click: function(btn) {
-                    
+                    var that = this;
+                    var view = this._getFormViewInstance(btn);
+                    // if (view.down('#commande').getStore().getCount() == 0) {
+                    //     Ext.Msg.show({
+                    //         title: 'Vinum',
+                    //         msg: "La commande ne contient aucun produit",
+                    //         icon: Ext.MessageBox.WARNING,
+                    //         buttons: Ext.MessageBox.OK
+                    //     });                                            
+                    //     return;
+                    // }
+                    view.submit({
+                        url: '/vinum_server/commande/save',
+                        params: {
+                            no_client: -1, //this.curr.client_rec.get('no_client'),
+                            no_facture_commande: this.curr.no_facture_commande,
+                            items: Ext.JSON.encode(Ext.Array.pluck(view.down('#commande').getStore().getRange(), 'data'))
+                        },
+                        success: function(_form, action) {
+                            that.curr.no_facture_commande = action.result.no_facture_commande;
+                            alert(that.curr.no_facture_commande);
+                        },
+                        failure: function(_form, action) {
+                            VIN.utils.serverErrorPopup(action.result.error_msg);
+                        }
+                    });                    
                 }
             }
         });
