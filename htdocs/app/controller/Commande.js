@@ -145,32 +145,40 @@ Ext.define('VIN.controller.Commande', {
             },
             '#download_facture_btn': {
                 click: function(btn) {
-                    location.href = '/vinum_server/commande/download_facture?rnd=' + Math.random();
+                    location.href = Ext.String.format('/vinum_server/commande/download_facture?no_commande_facture={0}', 
+                                                      this.curr.no_commande_facture);
                 }
             },
             '#save_commande_btn': {
                 click: function(btn) {
                     var that = this;
                     var view = this._getFormViewInstance(btn);
-                    // if (view.down('#commande').getStore().getCount() == 0) {
-                    //     Ext.Msg.show({
-                    //         title: 'Vinum',
-                    //         msg: "La commande ne contient aucun produit",
-                    //         icon: Ext.MessageBox.WARNING,
-                    //         buttons: Ext.MessageBox.OK
-                    //     });                                            
-                    //     return;
-                    // }
+                    if (view.down('#commande').getStore().getCount() == 0) {
+                        Ext.Msg.show({
+                            title: 'Vinum',
+                            msg: "La commande ne contient aucun produit",
+                            icon: Ext.MessageBox.WARNING,
+                            buttons: Ext.MessageBox.OK
+                        });                                            
+                        return;
+                    }
                     view.submit({
                         url: '/vinum_server/commande/save',
                         params: {
-                            no_client: -1, //this.curr.client_rec.get('no_client'),
-                            no_facture_commande: this.curr.no_facture_commande,
+                            no_client: this.curr.client_rec.get('no_client'),
+                            no_commande_facture: this.curr.no_commande_facture,
                             items: Ext.JSON.encode(Ext.Array.pluck(view.down('#commande').getStore().getRange(), 'data'))
                         },
                         success: function(_form, action) {
-                            that.curr.no_facture_commande = action.result.no_facture_commande;
-                            alert(that.curr.no_facture_commande);
+                            that.curr.no_commande_facture = action.result.no_commande_facture;
+                            view.down('#download_facture_btn').setDisabled(false);
+                            Ext.Msg.show({
+                                title: 'Vinum',
+                                msg: Ext.String.format("La facture #{0} a été enregistrée et peut maintenant être téléchargée",
+                                                       that.curr.no_commande_facture),
+                                icon: Ext.MessageBox.INFO,
+                                buttons: Ext.MessageBox.OK
+                            });                            
                         },
                         failure: function(_form, action) {
                             VIN.utils.serverErrorPopup(action.result.error_msg);
