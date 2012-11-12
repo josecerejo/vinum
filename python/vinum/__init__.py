@@ -24,8 +24,8 @@ class MyFlask(Flask):
         if rv.__class__ is dict:
             rv = json.dumps(rv, default=json_dthandler)
         resp = Flask.make_response(self, rv)
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        resp.headers['Access-Control-Allow-Headers'] = 'X-Requested-With'
+        #resp.headers['Access-Control-Allow-Origin'] = '*'
+        #resp.headers['Access-Control-Allow-Headers'] = 'X-Requested-With'
         #resp.headers['Access-Control-Allow-Methods'] = 'GET'
         return resp
 
