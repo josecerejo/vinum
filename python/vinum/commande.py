@@ -47,15 +47,15 @@ def download_facture():
     sous_total = 0
     for tv, p in produits.items():
         sous_total += p['total']
-        doc_values['items'].append([p['qte'], tv, p['format'], '%0.02f$' % p['prix_unitaire'], 
-                                    '%0.02f$' % p['total']])
+        doc_values['items'].append([p['qte'], tv, p['format'], locale.currency(p['prix_unitaire']), 
+                                    locale.currency(p['total'])])
     tps = sous_total * 0.05
     tvq = (sous_total + tps) * 0.095
     total = sous_total + tps + tvq
-    doc_values['sous_total'] = '%0.02f$' % sous_total
-    doc_values['tps'] = '%0.02f$' % tps
-    doc_values['tvq'] = '%0.02f$' % tvq
-    doc_values['total'] = '%0.02f$' % total
+    doc_values['sous_total'] = locale.currency(sous_total)
+    doc_values['tps'] = locale.currency(tps)
+    doc_values['tvq'] = locale.currency(tvq)
+    doc_values['total'] = locale.currency(total)
     doc_type = 'pdf'
     out_file = '/tmp/vinum_facture_%s.%s' % (ncf, doc_type)
     ren = Renderer('/home/christian/vinum/data/invoice/vinum_invoice_tmpl.odt', doc_values,
