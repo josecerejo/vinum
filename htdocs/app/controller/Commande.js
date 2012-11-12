@@ -305,7 +305,7 @@ Ext.define('VIN.controller.Commande', {
             var inv_comm = rec.copy();
             inv_comm.set('quantite_caisse', qc);
             inv_comm.set('quantite_bouteille', qb);
-            inv_comm.set('commission', -1);
+            inv_comm.set('commission', 0.16);
             inv_comm.set('statut', 'OK');
             var comm = Ext.create('VIN.model.Commande', inv_comm.data);
             cg.store.add(comm);
@@ -324,7 +324,7 @@ Ext.define('VIN.controller.Commande', {
                 no_commande_saq: -1,
                 quantite_caisse: rem_qc,
                 quantite_bouteille: rem_qc * curr_produit_rec.get('quantite_par_caisse'),
-                commission: -1,
+                commission: 0.16,
                 statut: 'BO'
             });
             cg.store.add(comm);

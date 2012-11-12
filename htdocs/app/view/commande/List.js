@@ -31,6 +31,29 @@ Ext.define('VIN.view.commande.List', {
     	    }
         });
 
+        for (var i = 0; i < this.columns.length; i++) {
+            if (this.columns[i].dataIndex == 'commission') {
+                this.columns[i].editor = {
+                    xtype: 'combo',
+                    queryMode: 'local',
+                    triggerAction: 'all',
+                    displayField: 'commission_val',
+                    valueField: 'commission_val',
+                    forceSelection: false,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['commission_val'],
+                        data: [{commission_val: 0.16},
+                               {commission_val: 0.19},
+                               {commission_val: 0.21}]
+                    })
+                };
+            }
+        }
+
+        this.plugins = [Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1
+        })];
+
         this.callParent(arguments);
     },
 
