@@ -1,6 +1,5 @@
-import psycopg2, json, datetime
+import psycopg2, psycopg2.extras, json, datetime, traceback
 from flask import *
-import traceback
 
 
 DEC2FLOAT = psycopg2._psycopg.new_type(
@@ -25,12 +24,19 @@ class MyFlask(Flask):
     def make_response(self, rv):
         if rv.__class__ is dict:
             rv = json.dumps(rv, default=json_dthandler)
-        return Flask.make_response(self, rv)
+        resp = Flask.make_response(self, rv)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        resp.headers['Access-Control-Allow-Headers'] = 'X-Requested-With'
+        #resp.headers['Access-Control-Allow-Methods'] = 'GET'
+        return resp
+
+
+#Flask.make_response(self, rv)
 
 
 app = MyFlask('vinum')
 app.handle_exception = general_error_handler
-app.debug = True
+#app.debug = True
 
 
 # #if app.debug:

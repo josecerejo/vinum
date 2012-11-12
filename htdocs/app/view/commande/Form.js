@@ -1,3 +1,4 @@
+
 Ext.define('VIN.view.commande.Form', {
 
     extend: 'Ext.form.Panel',
@@ -196,7 +197,7 @@ Ext.define('VIN.view.commande.Form', {
                     // table de produits habituels
                     xtype: 'client_produit_grid',
                     itemId: 'client_produit',
-                    title: 'Liste de produits habituels',
+                    title: 'Liste de produits habituels de ce client',
                     resizable: { handles: 's' },
                     store: client_produit_store,
                     column_flex: {
