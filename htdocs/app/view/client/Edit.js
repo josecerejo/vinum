@@ -2,7 +2,7 @@ Ext.define('VIN.view.client.Edit', {
     extend: 'Ext.form.Panel',
     alias: 'widget.client_form_',
     frame: true,
-    url: '/vinum_server/client/update',
+    url: ajax_url_prefix + '/client/update',
     autoScroll: true,
     items: [{
         xtype: 'fieldset',

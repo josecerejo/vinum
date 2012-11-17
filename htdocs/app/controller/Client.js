@@ -54,7 +54,7 @@ Ext.define('VIN.controller.Client', {
         var grid = this.getList();
         var store = grid.getStore();
         form.getForm().submit({
-            url: '/vinum_server/client/create',
+            url: ajax_url_prefix + '/client/create',
             success: function(_form, action) {
                 var new_no_client = Ext.JSON.decode(action.response.responseText).no_client;
                 var new_rec = Ext.create('VIN.model.Client', Ext.override(form.getForm().getFieldValues(), {
@@ -62,9 +62,6 @@ Ext.define('VIN.controller.Client', {
                 }));
                 store.insert(0, new_rec);
                 grid.getSelectionModel().select(0);
-            },
-            failure: function(_form, action) {
-                VIN.utils.serverErrorPopup(action.result.error_msg);
             }
         });        
     },
@@ -103,13 +100,10 @@ Ext.define('VIN.controller.Client', {
             return;
         }
         form.getForm().submit({
-            url: '/vinum_server/client/update',
+            url: ajax_url_prefix + '/client/update',
             success: function(_form, action) {
                 sel_rec.set(form_values);
                 grid.getView().refresh();
-            },
-            failure: function(_form, action) {
-                VIN.utils.serverErrorPopup(action.result.error_msg);
             }
         });
     },
@@ -125,12 +119,9 @@ Ext.define('VIN.controller.Client', {
         Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir détruire le client # {0}?', sel_rec.get('no_client')), function(btn) {
             if (btn == 'yes') {
                 form.getForm().submit({
-                    url: '/vinum_server/client/delete',
+                    url: ajax_url_prefix + '/client/delete',
                     success: function(_form, action) {
                         store.reload();
-                    },
-                    failure: function(_form, action) {
-                        VIN.utils.serverErrorPopup(action.result.error_msg);
                     }
                 });
             }

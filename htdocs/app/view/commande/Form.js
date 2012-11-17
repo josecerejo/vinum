@@ -21,6 +21,66 @@ Ext.define('VIN.view.commande.Form', {
         var inventaire_store = Ext.create('VIN.store.Inventaires');
         var commande_store = Ext.create('VIN.store.Commandes');
 
+        // email form
+        this.email_win = Ext.create('Ext.window.Window', {
+            title: 'Envoyer la facture par courriel',
+            width: 600,
+            height: 500,
+            layout: 'fit',
+            closeAction: 'hide',
+            itemId: 'email_win',
+            items: {
+                xtype: 'form',
+                bodyStyle: 'background-color:#dfe8f5',
+                border: 0,
+                padding: 10,
+                url: ajax_url_prefix + '/commande/email_facture',
+                fieldDefaults: {
+                    anchor: '100%'
+                },                
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'  // Child items are stretched to full width
+                },
+                items: [{
+                    xtype: 'textfield',
+                    fieldLabel: 'Adresse(s)',
+                    name: 'email_addresses',
+                    itemId: 'email_addr_tf',
+                    allowBlank: false
+                }, {
+                    xtype: 'textfield',
+                    fieldLabel: 'Sujet',
+                    name: 'subject',
+                    value: 'Facture',
+                    allowBlank: false
+                }, {
+                    xtype: 'textarea',
+                    hideLabel: true,
+                    name: 'msg',
+                    allowBlank: false,
+                    value: 'Bonjour,\n\nVoici votre facture.\n\nBonne journée,\n\nLa Société Roucet',
+                    style: 'margin:0', // Remove default margin
+                    flex: 1  // Take up all *remaining* vertical space
+                }]
+            },
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                ui: 'footer',
+                layout: {
+                    pack: 'center'
+                },
+                items: [{
+                    text: 'Envoyer',
+                    itemId: 'send_email_btn'
+                },{
+                    text: 'Annuler',
+                    itemId: 'cancel_email_btn'
+                }]
+            }]
+        });
+
         this.items = {
             bodyStyle: 'background-color:#dfe8f5',
             border: false,
@@ -212,20 +272,25 @@ Ext.define('VIN.view.commande.Form', {
                     layout: 'hbox',
                     bodyStyle: 'background-color:#dfe8f5',
                     border: false,
-                    items: [{
+                    defaults: {
                         xtype: 'button',
+                        style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px',
+                        disabled: true
+                    },
+                    items: [{
                         text: 'Enregistrer la commande',
                         itemId: 'save_commande_btn',
-                        //disabled: true,
-                        iconCls: 'cart-go-icon',
-                        style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
+                        disabled: false,
+                        iconCls: 'cart-go-icon'
                     }, {
-                        xtype: 'button',
                         text: 'Télécharger la facture',
                         itemId: 'download_facture_btn',
-                        disabled: true,
-                        iconCls: 'page-save-icon',
-                        style: 'margin-bottom: 20px; margin-top: 20px'
+                        iconCls: 'page-save-icon'
+                    }, {
+                        text: 'Envoyer la facture par courriel',
+                        itemId: 'email_facture_btn',
+                        iconCls: 'email-go-icon',
+                        disabled: false
                     }]
                 }]
             }, {

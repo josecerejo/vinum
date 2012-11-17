@@ -12,26 +12,32 @@ Ext.define('VIN.store.Clients', {
     }],
     proxy: {
         type: 'ajax',
-        url: '/vinum_server/client/get',
-        //url: 'http://localhost:5000/client/get',
+        url: ajax_url_prefix + '/client/get',
         reader: {
             type: 'json',
             root: 'rows'
-        },
-        listeners: {
-            exception: function (thisProxy, responseObj, operation, eventOpts) {
-                //console.log(responseObj.responseText);
-                //var win = window.open('', '_self');
-                //win.document.write(responseObj.responseText);
-                // Ext.Msg.show({
-                //     title: 'Erreur du serveur', 
-                //     msg: responseObj.responseText,
-                //     icon: Ext.MessageBox.ERROR,
-                //     buttons: Ext.MessageBox.OK
-                // });                        
-                VIN.utils.serverErrorPopup(Ext.JSON.decode(responseObj.responseText).error_msg);
-            }
         }
+        // listeners: {
+        //     exception: function (thisProxy, responseObj, operation, eventOpts) {
+        //         var div = document.createElement('div');
+        //         div.id = 'flask_debug_console_div';
+        //         //div.innerHTML = responseObj.responseText;
+        //         document.body.appendChild(div);
+        //         Ext.create('Ext.window.Window', {
+        //             title: 'Flask Debug Console',
+        //             height: 400,
+        //             width: 800,
+        //             layout: 'fit',
+        //             contentEl: div.id,
+        //             autoScroll: true
+        //         }).show();
+        //         //Ext.get(win.contentEl).innerHTML = responseObj.responseText;
+        //         $(div).html(responseObj.responseText);
+        //         //Ext.get(div.id).setHTML(responseObj.responseText);
+        //         //Ext.get(div.id).insertHtml('afterEnd', responseObj.responseText);
+        //         //VIN.utils.serverErrorPopup(Ext.JSON.decode(responseObj.responseText).error_msg);
+        //     }
+        // }
     }    
 });
     

@@ -1,5 +1,7 @@
 Ext.define('VIN.utils', {
+
     statics: {
+
         serverErrorPopup: function(server_error_msg) {
             var msg = "<b>SVP veuillez copier le message d'erreur suivant et l'envoyer à cjauvin@gmail.com</b>:<br /><br />";
             Ext.Msg.show({
@@ -8,6 +10,21 @@ Ext.define('VIN.utils', {
                 icon: Ext.MessageBox.ERROR,
                 buttons: Ext.MessageBox.OK
             });        
+        },
+
+        createFlaskDebugConsoleWindow: function(html) {
+            var div = document.createElement('div');
+            div.id = 'flask_debug_console_div';
+            document.body.appendChild(div);
+            Ext.create('Ext.window.Window', {
+                title: 'Flask Debug Console',
+                width: 800,
+                height: 600,
+                layout: 'fit',
+                contentEl: div.id,
+                autoScroll: true
+            }).show();
+            $(div).html(html);
         },
 
         getGridColumnsFromModel: function(model, column_flex) {

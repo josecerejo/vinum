@@ -145,8 +145,8 @@ Ext.define('VIN.controller.Commande', {
             },
             '#download_facture_btn': {
                 click: function(btn) {
-                    location.href = Ext.String.format('/vinum_server/commande/download_facture?no_commande_facture={0}', 
-                                                      this.curr.no_commande_facture);
+                    location.href = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}', 
+                                                      ajax_url_prefix, this.curr.no_commande_facture);                                                      
                 }
             },
             '#save_commande_btn': {
@@ -163,7 +163,7 @@ Ext.define('VIN.controller.Commande', {
                         return;
                     }
                     view.submit({
-                        url: '/vinum_server/commande/save',
+                        url: ajax_url_prefix + '/commande/save',
                         params: {
                             no_client: this.curr.client_rec.get('no_client'),
                             no_commande_facture: this.curr.no_commande_facture,
@@ -172,6 +172,7 @@ Ext.define('VIN.controller.Commande', {
                         success: function(_form, action) {
                             that.curr.no_commande_facture = action.result.no_commande_facture;
                             view.down('#download_facture_btn').setDisabled(false);
+                            view.down('#email_facture_btn').setDisabled(false);
                             Ext.Msg.show({
                                 title: 'Vinum',
                                 msg: Ext.String.format("La facture #{0} a été enregistrée et peut maintenant être téléchargée",
@@ -179,11 +180,37 @@ Ext.define('VIN.controller.Commande', {
                                 icon: Ext.MessageBox.INFO,
                                 buttons: Ext.MessageBox.OK
                             });                            
-                        },
-                        failure: function(_form, action) {
-                            VIN.utils.serverErrorPopup(action.result.error_msg);
                         }
                     });                    
+                }
+            },
+            '#email_facture_btn': {
+                click: function(btn) {
+                    var that = this;
+                    var view = this._getFormViewInstance(btn);
+                    var courriel = this.curr.client_rec.get('courriel');
+                    if (!courriel) {
+                        Ext.Msg.show({
+                            title: 'Vinum',
+                            msg: "L'adresse courriel de ce client n'est pas définie",
+                            icon: Ext.MessageBox.WARNING,
+                            buttons: Ext.MessageBox.OK,
+                            fn: function() {
+                                view.email_win.down('#email_addr_tf').markInvalid("L'adresse courriel de ce client n'est pas définie");
+                                view.email_win.show();
+                            }
+                        });                               
+                    } else {
+                        view.email_win.down('#email_addr_tf').setValue(courriel);
+                        view.email_win.show();
+                    }
+                }
+            },
+            '#cancel_email_btn': {
+                click: function(btn) {
+                    var that = this;
+                    var email_win = btn.up('#email_win');
+                    email_win.hide();                    
                 }
             }
         });
@@ -211,16 +238,13 @@ Ext.define('VIN.controller.Commande', {
             if (btn == 'yes') {
                 //grid.store.remove(record);
                 view.submit({
-                    url: '/vinum_server/client/remove_produit',
+                    url: ajax_url_prefix + '/client/remove_produit',
                     params: {
                         no_client: curr_client_rec.get('no_client'),
                         no_produit_interne: record.get('no_produit_interne')
                     },
                     success: function(_form, action) {
                         grid.store.reload();
-                    },
-                    failure: function(_form, action) {
-                        VIN.utils.serverErrorPopup(action.result.error_msg);
                     }
                 });
             }
@@ -235,15 +259,12 @@ Ext.define('VIN.controller.Commande', {
             Ext.Msg.confirm('Vinum', msg, function(btn) {
                 if (btn == 'yes') {
                     view.submit({
-                        url: '/vinum_server/client/add_produit',
+                        url: ajax_url_prefix + '//client/add_produit',
                         params: {
                             no_client: curr_client_rec.get('no_client')
                         },
                         success: function(_form, action) {
                             cp_grid.getStore().reload();                            
-                        },
-                        failure: function(_form, action) {
-                            VIN.utils.serverErrorPopup(action.result.error_msg);
                         }
                     });
                 }

@@ -12,16 +12,16 @@ Ext.define('VIN.store.Produits', {
     }],
     proxy: {
         type: 'ajax',
-        url: '/vinum_server/produit/get',
+        url: ajax_url_prefix + '/produit/get',
         reader: {
             type: 'json',
             root: 'rows'
         },
-        listeners: {
-            exception: function (thisProxy, responseObj, operation, eventOpts) {
-                VIN.utils.serverErrorPopup(Ext.JSON.decode(responseObj.responseText).error_msg);
-            }
-        }
+        // listeners: {
+        //     exception: function (thisProxy, responseObj, operation, eventOpts) {
+        //         VIN.utils.serverErrorPopup(Ext.JSON.decode(responseObj.responseText).error_msg);
+        //     }
+        // }
     }    
 });
     

@@ -14,19 +14,9 @@ Ext.define('VIN.store.Commandes', {
     groupField: 'type_vin',
     proxy: {
         type: 'memory',
-        // url: '/vinum_server/commande/save_items',
-        // extraParams: {
-        //     no_facture: -1
-        // },
         reader: {
             type: 'json',
             root: 'rows'
         }
-        // writer: {
-        //     type: 'json',
-        //     root: 'rows',
-        //     encode: true,
-        //     allowSingle: true
-        // }
     }    
 });

@@ -44,6 +44,10 @@
     background: url(../images/icons/page_save.png) no-repeat !important;
 }
 
+.email-go-icon {
+    background: url(../images/icons/email_go.png) no-repeat !important;
+}
+
 .cart-go-icon {
     background: url(../images/icons/cart_go.png) no-repeat !important;
 }

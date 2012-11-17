@@ -31,14 +31,6 @@ class MyFlask(Flask):
 
 app = MyFlask('vinum')
 app.handle_exception = general_error_handler
-#app.debug = True
-
-# #if app.debug:
-# if True:
-#     import logging
-#     file_handler = logging.FileHandler('/tmp/vinum.log')
-#     file_handler.setLevel(logging.NOTSET)
-#     app.logger.addHandler(file_handler)
 
 @app.before_request
 def before_request():
