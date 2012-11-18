@@ -31,24 +31,19 @@ def download_facture():
     doc_values = {'items': []}
     doc_values.update(commande)
     doc_values.update(client)    
-    cursor.execute("""select * from produit p, inventaire i, 
-                          (select no_produit_saq, sum(quantite_bouteille) as qb
-                               from commande_produit where no_commande_facture = %s 
-                              group by no_produit_saq, quantite_bouteille) c 
-                      where p.no_produit_interne = i.no_produit_interne and 
-                      c.no_produit_saq = i.no_produit_saq""", [ncf])
-    produits = defaultdict(lambda: defaultdict(int)) # type_vin -> {}
-    rows = cursor.fetchall()
-    for row in rows:
-        produits[row['type_vin']]['qte'] += row['qb']
-        produits[row['type_vin']]['format'] = row['format']
-        produits[row['type_vin']]['prix_unitaire'] = row['prix_coutant']
-        produits[row['type_vin']]['total'] += (row['qb'] * row['prix_coutant'])
+    cursor.execute("""select * from produit p, 
+                         (select no_produit_interne, 
+                                 sum(quantite_bouteille) as qb, 
+                                 sum(montant_commission * quantite_bouteille) as montant_comm_x_qb,
+                                 avg(montant_commission) as montant_comm_avg
+                             from commande_produit where no_commande_facture = %s 
+                          group by no_produit_interne) f 
+                      where p.no_produit_interne = f.no_produit_interne""", [ncf])
     sous_total = 0
-    for tv, p in produits.items():
-        sous_total += p['total']
-        doc_values['items'].append([p['qte'], tv, p['format'], locale.currency(p['prix_unitaire']), 
-                                    locale.currency(p['total'])])
+    for row in cursor.fetchall():
+        sous_total += row['montant_comm_x_qb']
+        doc_values['items'].append([row['qb'], row['type_vin'], row['format'], locale.currency(row['montant_comm_avg']), 
+                                    locale.currency(row['montant_comm_x_qb'])])               
     tps = sous_total * 0.05
     tvq = (sous_total + tps) * 0.095
     total = sous_total + tps + tvq

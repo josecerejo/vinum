@@ -15,6 +15,7 @@ Ext.define('VIN.view.commande.Form', {
 
     initComponent: function() {
 
+        // stores
         var client_search_store = Ext.create('VIN.store.Clients');
         var produit_search_store = Ext.create('VIN.store.Produits');
         var client_produit_store = Ext.create('VIN.store.Produits');
@@ -55,6 +56,11 @@ Ext.define('VIN.view.commande.Form', {
                     value: 'Facture',
                     allowBlank: false
                 }, {
+                    xtype: 'checkbox',
+                    boxLabel: 'Inclure la facture en fichier PDF',
+                    name: 'include_pdf',
+                    checked: true
+                }, {
                     xtype: 'textarea',
                     hideLabel: true,
                     name: 'msg',
@@ -73,7 +79,8 @@ Ext.define('VIN.view.commande.Form', {
                 },
                 items: [{
                     text: 'Envoyer',
-                    itemId: 'send_email_btn'
+                    itemId: 'send_email_btn',
+                    disabled: true
                 },{
                     text: 'Annuler',
                     itemId: 'cancel_email_btn'
@@ -274,13 +281,13 @@ Ext.define('VIN.view.commande.Form', {
                     border: false,
                     defaults: {
                         xtype: 'button',
-                        style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px',
-                        disabled: true
+                        style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
+                        //disabled: true
                     },
                     items: [{
                         text: 'Enregistrer la commande',
                         itemId: 'save_commande_btn',
-                        disabled: false,
+                        //disabled: false,
                         iconCls: 'cart-go-icon'
                     }, {
                         text: 'Télécharger la facture',
@@ -289,8 +296,8 @@ Ext.define('VIN.view.commande.Form', {
                     }, {
                         text: 'Envoyer la facture par courriel',
                         itemId: 'email_facture_btn',
-                        iconCls: 'email-go-icon',
-                        disabled: false
+                        iconCls: 'email-go-icon'
+                        //disabled: false
                     }]
                 }]
             }, {
@@ -324,10 +331,11 @@ Ext.define('VIN.view.commande.Form', {
                         type_vin: 1,
                         format: 1,
                         no_produit_saq: 1,
-                        quantite_caisse: 1,
-                        quantite_bouteille: 1,
-                        commission: 1,
-                        statut: 1
+                        quantite_caisse: 0.5,
+                        quantite_bouteille: 0.5,
+                        commission: 0.75,
+                        montant_commission: 0.75,
+                        statut: 0.5
                     },
                     height: 300,
                     style: 'margin-bottom: 20px'

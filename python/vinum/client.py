@@ -36,7 +36,7 @@ def get_produits(g, no_client):
 def remove_produit():
     cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
-    db.delete(cursor, 'client_produit', where={'no_client': request.form['no_client'], 
+    pg.delete(cursor, 'client_produit', where={'no_client': request.form['no_client'], 
                                                 'no_produit_interne': request.form['no_produit_interne']})
     g.db.commit()
     return {'success': True}
@@ -46,8 +46,8 @@ def remove_produit():
 def add_produit():
     cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
-    no_produit_interne = db.select1(cursor, 'produit', 'no_produit_interne', where={'type_vin': request.form['type_vin']})
-    db.insert(cursor, 'client_produit', values={'no_client': request.form['no_client'], 
+    no_produit_interne = pg.select1(cursor, 'produit', 'no_produit_interne', where={'type_vin': request.form['type_vin']})
+    pg.insert(cursor, 'client_produit', values={'no_client': request.form['no_client'], 
                                                 'no_produit_interne': no_produit_interne})
     g.db.commit()
     return {'success': True}

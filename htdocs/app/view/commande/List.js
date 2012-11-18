@@ -37,14 +37,13 @@ Ext.define('VIN.view.commande.List', {
                     xtype: 'combo',
                     queryMode: 'local',
                     triggerAction: 'all',
-                    displayField: 'commission_val',
-                    valueField: 'commission_val',
+                    displayField: 'commission',
+                    valueField: 'commission',
                     forceSelection: false,
                     store: Ext.create('Ext.data.Store', {
-                        fields: ['commission_val'],
-                        data: [{commission_val: 0.16},
-                               {commission_val: 0.19},
-                               {commission_val: 0.21}]
+                        fields: ['commission'],
+                        data: [{commission: 0.16},
+                               {commission: 0.23}]
                     })
                 };
             }

@@ -33,7 +33,8 @@ Ext.define('VIN.utils', {
             for (var i = 0; i < items.length; i++) {
                 var name = items[i].name;
                 var col = {
-                    header: items[i].hasOwnProperty('header') ? items[i].header : Ext.String.capitalize(items[i].name),
+                    xtype: 'gridcolumn',
+                    text: items[i].hasOwnProperty('header') ? items[i].header : Ext.String.capitalize(items[i].name),
                     dataIndex: name,
                     type: items[i].type.type,
                     filterable: true,
@@ -42,10 +43,19 @@ Ext.define('VIN.utils', {
                 };
                 if (items[i].type.type == 'date') {
                     col.renderer = Ext.util.Format.dateRenderer('Y-m-d');
+                } else if (items[i].type.type == 'float') {
+                    col.xtype = 'numbercolumn'; // to make sure that format is used
                 }
                 cols.push(col);
             }
             return cols;
+        },
+
+        removeTaxes: function(v) {
+            var tps = 0.05;
+            var tvq = 0.095;
+            var t = tps + (tvq + (tps * tvq));
+            return v / (1 + t);
         }
 
     }

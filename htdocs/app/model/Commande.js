@@ -24,17 +24,28 @@ Ext.define('VIN.model.Commande', {
         header: '# commande SAQ',
         name: 'no_commande_saq'
     }, {
-        header: 'Quantité (c)',
+        header: 'Qté. (c)',
         name: 'quantite_caisse',
         type: 'int',
         useNull: true
     }, {
-        header: 'Quantité (b)',
+        header: 'Qté. (b)',
         name: 'quantite_bouteille',
         type: 'int',
         useNull: true
     }, {
+        header: 'Prix coûtant',
+        name: 'prix_coutant',
+        type: 'float',
+        useNull: true
+    }, {
+        header: 'Comm. (%)',
         name: 'commission',
+        type: 'float',
+        useNull: true        
+    }, {
+        header: 'Comm. ($)',
+        name: 'montant_commission',
         type: 'float',
         useNull: true
     }, {
