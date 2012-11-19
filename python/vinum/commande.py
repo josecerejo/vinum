@@ -75,8 +75,8 @@ def download_facture():
 @app.route('/commande/email_facture', methods=['POST'])
 def email_facture():
     msg = MIMEMultipart()
-    msg['Subject'] = request.form['subject']
-    msg['From'] = 'Société Roucet <commande@roucet.com>'
+    msg['Subject'] = request.form['subject'].encode('utf-8')
+    msg['From'] = u'Société Roucet <commande@roucet.com>'.encode('utf-8')
     to_list = re.split('[ ,;:\t\n]+', request.form['email_addresses'])
     msg['To'] = COMMASPACE.join(to_list)
     msg['Reply-to'] = 'commande@roucet.com'
