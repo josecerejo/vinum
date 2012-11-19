@@ -3,6 +3,7 @@ Ext.define('VIN.utils', {
     statics: {
 
         serverErrorPopup: function(server_error_msg) {
+            wait_mask.hide();
             var msg = "<b>SVP veuillez copier le message d'erreur suivant et l'envoyer à cjauvin@gmail.com</b>:<br /><br />";
             Ext.Msg.show({
                 title: 'Erreur du serveur', 
@@ -13,6 +14,7 @@ Ext.define('VIN.utils', {
         },
 
         createFlaskDebugConsoleWindow: function(html) {
+            wait_mask.hide();
             var div = document.createElement('div');
             div.id = 'flask_debug_console_div';
             document.body.appendChild(div);

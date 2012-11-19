@@ -181,14 +181,13 @@ Ext.define('VIN.controller.Commande', {
             },
             '#send_email_btn': {
                 click: function(btn) {
-                    var mask = new Ext.LoadMask(Ext.getBody(), {msg:"Envoi du message..."});
-                    mask.show();
+                    wait_mask.show();
                     btn.up('#email_win').down('#email_form').submit({
                         params: {
                             no_commande_facture: this.curr.no_commande_facture
                         },
                         success: function(_form, action) {
-                            mask.hide();
+                            wait_mask.hide();
                             btn.up('#email_win').hide();
                             Ext.Msg.show({
                                 title: 'Vinum',

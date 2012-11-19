@@ -37,5 +37,9 @@ Ext.override(Ext.form.action.Submit, {
 Ext.application({
     name: 'VIN',
     controllers: ['MainToolbar', 'Client', 'Commande'],
-    autoCreateViewport: true
+    autoCreateViewport: true,
+    launch: function() {
+        // global!
+        wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Envoi du message..."});
+    }
 });
