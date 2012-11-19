@@ -34,6 +34,7 @@ Ext.define('VIN.view.commande.Form', {
                 xtype: 'form',
                 bodyStyle: 'background-color:#dfe8f5',
                 border: 0,
+                itemId: 'email_form',
                 padding: 10,
                 url: ajax_url_prefix + '/commande/email_facture',
                 fieldDefaults: {
@@ -79,8 +80,7 @@ Ext.define('VIN.view.commande.Form', {
                 },
                 items: [{
                     text: 'Envoyer',
-                    itemId: 'send_email_btn',
-                    disabled: true
+                    itemId: 'send_email_btn'
                 },{
                     text: 'Annuler',
                     itemId: 'cancel_email_btn'

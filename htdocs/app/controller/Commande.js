@@ -179,6 +179,27 @@ Ext.define('VIN.controller.Commande', {
                     email_win.hide();                    
                 }
             },
+            '#send_email_btn': {
+                click: function(btn) {
+                    var mask = new Ext.LoadMask(Ext.getBody(), {msg:"Envoi du message..."});
+                    mask.show();
+                    btn.up('#email_win').down('#email_form').submit({
+                        params: {
+                            no_commande_facture: this.curr.no_commande_facture
+                        },
+                        success: function(_form, action) {
+                            mask.hide();
+                            btn.up('#email_win').hide();
+                            Ext.Msg.show({
+                                title: 'Vinum',
+                                msg: Ext.String.format("Le message a été envoyé"),
+                                icon: Ext.MessageBox.INFO,
+                                buttons: Ext.MessageBox.OK
+                            });                                            
+                        }
+                    });
+                }
+            },
             '#commande': {
                 edit: function(editor, e) {
                     var view = this._getFormViewInstance(editor.grid);
