@@ -141,13 +141,21 @@ Ext.define('VIN.view.commande.Form', {
                     bodyStyle: 'background-color:#dfe8f5',
                     border: false,
                     layout: 'hbox',
+                    defaults: {
+                        style: 'margin-bottom: 20px; margin-right: 20px'                        
+                    },
                     items: [{
                         xtype: 'textfield',
                         fieldLabel: 'Adresse',
                         itemId: 'adresse_tf',
-                        flex: 0.7,
-                        style: 'margin-bottom: 20px; margin-right: 20px',
+                        flex: 0.6,
                         disabled: true
+                    }, {
+                        xtype: 'textfield',
+                        fieldLabel: 'Type',
+                        itemId: 'type_client_tf',
+                        flex: 0.2,
+                        disabled: true                        
                     }, {
                         xtype: 'button',
                         itemId: 'details_client_btn',
@@ -259,6 +267,35 @@ Ext.define('VIN.view.commande.Form', {
                         text: 'Ajouter',
                         iconCls: 'add-icon',
                         style: 'margin-bottom: 20px; margin-top: 20px'
+                    }]
+                }, {
+                    // expedition radiogroup panel
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    defaults: {
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false
+                    },
+                    items: [{
+                        html: 'Commission par défaut pour cette commande (établie en fonction du type de client):',
+                        style: 'margin-bottom: 10px'
+                    }, {
+                        xtype: 'combo',
+                        itemId: 'default_commission_combo',
+                        queryMode: 'local',
+                        triggerAction: 'all',
+                        displayField: 'default_commission',
+                        valueField: 'default_commission',
+                        hideLabel: true,
+                        forceSelection: false,
+                        regex: /^0\.?[0-9]*$/,
+                        regexText: 'La commission doit être une valeur entre 0 et 1',
+                        style: 'margin-bottom: 20px',
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['default_commission'],
+                            data: [{default_commission: 0.16},
+                                   {default_commission: 0.23}]
+                        })                        
                     }]
                 }, {
                     // table de produits habituels

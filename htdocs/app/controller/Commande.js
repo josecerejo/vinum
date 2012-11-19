@@ -23,6 +23,15 @@ Ext.define('VIN.controller.Commande', {
                                                     r.get('rue')||'<rue?>', r.get('ville')||'<ville?>',
                                                     r.get('code_postal')||'<code_postal?>');
                     view.down('#adresse_tf').setValue(adresse);
+                    var tc = '';
+                    if (r.get('type_client') == '1') {
+                        tc = 'restaurant';
+                        view.down('#default_commission_combo').setValue(0.16);
+                    } else if (r.get('type_client') == '2') {
+                        tc = 'particulier';
+                        view.down('#default_commission_combo').setValue(0.23);
+                    }
+                    view.down('#type_client_tf').setValue(tc);
                     view.down('#details_client_btn').setDisabled(false);
                     view.down('#succ_tf').setValue(r.get('no_succursale')||'');
                     this.updateClientProduit(view);
@@ -318,10 +327,10 @@ Ext.define('VIN.controller.Commande', {
             var inv_comm = rec.copy();
             inv_comm.set('quantite_caisse', qc);
             inv_comm.set('quantite_bouteille', qb);
-            var commission = 0.16;
-            inv_comm.set('commission', commission);
+            var default_commission = view.down('#default_commission_combo').getValue();
+            inv_comm.set('commission', default_commission);
             var pc = inv_comm.get('prix_coutant');
-            inv_comm.set('montant_commission', VIN.utils.removeTaxes(pc) * commission);
+            inv_comm.set('montant_commission', VIN.utils.removeTaxes(pc) * default_commission);
             inv_comm.set('statut', 'OK');
             var comm = Ext.create('VIN.model.Commande', inv_comm.data);
             cg.store.add(comm);
