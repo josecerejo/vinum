@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: latin-1 -*-
 
 import re
 from vinum import *
@@ -75,12 +75,13 @@ def download_facture():
 @app.route('/commande/email_facture', methods=['POST'])
 def email_facture():
     msg = MIMEMultipart()
-    msg['Subject'] = request.form['subject'].encode('utf-8')
-    msg['From'] = u'SociÃ©tÃ© Roucet <commande@roucet.com>'.encode('utf-8')
+    enc = 'latin-1'
+    msg['Subject'] = request.form['subject'].encode(enc)
+    msg['From'] = u'Société Roucet <commande@roucet.com>'.encode(enc)
     to_list = re.split('[ ,;:\t\n]+', request.form['email_addresses'])
     msg['To'] = COMMASPACE.join(to_list)
     msg['Reply-to'] = 'commande@roucet.com'
-    msg.attach(MIMEText(request.form['msg'].encode('utf-8'), 'plain', 'utf-8'))
+    msg.attach(MIMEText(request.form['msg'].encode(enc), 'plain', enc))
     if 'include_pdf' in request.form:
         out_fn = _generate_facture(g, request.form['no_commande_facture'])
         part = MIMEApplication(open(out_fn, "rb").read())
