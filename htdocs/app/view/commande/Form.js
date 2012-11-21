@@ -234,9 +234,9 @@ Ext.define('VIN.view.commande.Form', {
                                 loadingText: 'Recherche...',
                                 emptyText: 'Aucune succursale ne correspond à cette recherche..',
                                 getInnerTpl: function() {
-                                    return '<span style="display:inline-block; width:15% !important">{no_succursale}</span>' +
+                                    return '<span style="display:inline-block; width:20% !important">{no_succursale}</span>' +
                                            '<span style="display:inline-block; width:35% !important">{ville}</span>' +
-                                           '<span style="display:inline-block; width:50% !important">{adresse}</span>';
+                                           '<span style="display:inline-block; width:45% !important">{adresse}</span>';
                                 }
                             }
                         }, {
