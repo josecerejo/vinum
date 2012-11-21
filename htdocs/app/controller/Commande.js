@@ -33,7 +33,7 @@ Ext.define('VIN.controller.Commande', {
                     }
                     view.down('#type_client_tf').setValue(tc);
                     view.down('#details_client_btn').setDisabled(false);
-                    view.down('#succ_tf').setValue(r.get('no_succursale')||'');
+                    view.down('#succ_combo').setValue(r.get('no_succursale')||'');
                     this.updateClientProduit(view);
                 }
             },
@@ -51,7 +51,7 @@ Ext.define('VIN.controller.Commande', {
                     view.down('#direct_rb').setValue(true);
                 }
             },
-            '#succ_tf': {
+            '#succ_combo': {
                 focus: function(field) {
                     var view = this._getFormViewInstance(field);
                     view.down('#succ_rb').setValue(true);
@@ -144,21 +144,32 @@ Ext.define('VIN.controller.Commande', {
                                     }, this));
                 }
             },
+            '#preview_facture_btn': {
+                click: function(btn) {
+                    var view = this._getFormViewInstance(btn);
+                    this.saveCommande(view, Ext.bind(function() {
+                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0', 
+                                                    ajax_url_prefix, this.curr.no_commande_facture);
+                        window.open(url, '_blank');
+                    }, this));
+                }
+            },
             '#download_facture_btn': {
                 click: function(btn) {
                     var view = this._getFormViewInstance(btn);
                     this.saveCommande(view, Ext.bind(function() {
-                        location.href = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}', 
-                                                          ajax_url_prefix, this.curr.no_commande_facture);
+                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=1', 
+                                                    ajax_url_prefix, this.curr.no_commande_facture);
+                        location.href = url;
                     }, this));
                 }
             },
-            '#save_commande_btn': {
-                click: function(btn) {
-                    var view = this._getFormViewInstance(btn);
-                    this.saveCommande(view);
-                }
-            },
+            // '#save_commande_btn': {
+            //     click: function(btn) {
+            //         var view = this._getFormViewInstance(btn);
+            //         this.saveCommande(view);
+            //     }
+            // },
             '#email_facture_btn': {
                 click: function(btn) {
                     var view = this._getFormViewInstance(btn);
@@ -170,12 +181,16 @@ Ext.define('VIN.controller.Commande', {
                                 msg: "L'adresse courriel de ce client n'est pas définie",
                                 icon: Ext.MessageBox.WARNING,
                                 buttons: Ext.MessageBox.OK,
-                                fn: function() {
+                                fn: Ext.bind(function() {
+                                    view.email_win.down('#email_subject_tf').setValue(Ext.String.format('Facture #{0}', 
+                                                                                                        this.curr.no_commande_facture));
                                     view.email_win.down('#email_addr_tf').markInvalid("L'adresse courriel de ce client n'est pas définie");
                                     view.email_win.show();
-                                }
+                                }, this)
                             });                               
                         } else {
+                            view.email_win.down('#email_subject_tf').setValue(Ext.String.format('Facture #{0}', 
+                                                                                                this.curr.no_commande_facture));
                             view.email_win.down('#email_addr_tf').setValue(courriel);
                             view.email_win.show();
                         }
@@ -190,22 +205,25 @@ Ext.define('VIN.controller.Commande', {
             },
             '#send_email_btn': {
                 click: function(btn) {
-                    wait_mask.show();
-                    btn.up('#email_win').down('#email_form').submit({
-                        params: {
-                            no_commande_facture: this.curr.no_commande_facture
-                        },
-                        success: function(_form, action) {
-                            wait_mask.hide();
-                            btn.up('#email_win').hide();
-                            Ext.Msg.show({
-                                title: 'Vinum',
-                                msg: Ext.String.format("Le message a été envoyé"),
-                                icon: Ext.MessageBox.INFO,
-                                buttons: Ext.MessageBox.OK
-                            });                                            
-                        }
-                    });
+                    var f = btn.up('#email_win').down('#email_form');
+                    if (f.getForm().isValid()) {
+                        wait_mask.show();
+                        f.submit({
+                            params: {
+                                no_commande_facture: this.curr.no_commande_facture
+                            },
+                            success: function(_form, action) {
+                                wait_mask.hide();
+                                btn.up('#email_win').hide();
+                                Ext.Msg.show({
+                                    title: 'Vinum',
+                                    msg: Ext.String.format("Le message a été envoyé"),
+                                    icon: Ext.MessageBox.INFO,
+                                    buttons: Ext.MessageBox.OK
+                                });                                            
+                            }
+                        });
+                    }
                 }
             },
             '#commande': {

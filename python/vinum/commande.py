@@ -29,7 +29,7 @@ def save():
     return {'success': True, 'no_commande_facture': ncf}
 
 
-def _generate_facture(g, ncf):
+def _generate_facture(g, ncf, doc_type):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
@@ -56,7 +56,6 @@ def _generate_facture(g, ncf):
     doc_values['tps'] = locale.currency(tps)
     doc_values['tvq'] = locale.currency(tvq)
     doc_values['total'] = locale.currency(total)
-    doc_type = 'pdf'
     out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, doc_type)
     ren = Renderer('/home/christian/vinum/data/invoice/vinum_invoice_tmpl.odt', doc_values,
                    out_fn, overwriteExisting=True)
@@ -66,10 +65,12 @@ def _generate_facture(g, ncf):
 
 @app.route('/commande/download_facture', methods=['GET'])
 def download_facture():
-    out_fn = _generate_facture(g, request.args['no_commande_facture'])
+    ncf = request.args['no_commande_facture']
+    out_fn = _generate_facture(g, ncf, 'pdf')
     return send_file(open(out_fn),
-                     attachment_filename='vinum_facture_%s.%s' % (ncf, doc_type),
-                     as_attachment=True)
+                     mimetype='application/pdf',
+                     attachment_filename='vinum_facture_%s.%s' % (ncf, 'pdf'),
+                     as_attachment=request.args['attach']=='1')
 
 
 @app.route('/commande/email_facture', methods=['POST'])
@@ -83,7 +84,7 @@ def email_facture():
     msg['Reply-to'] = 'commande@roucet.com'
     msg.attach(MIMEText(request.form['msg'].encode(enc), 'plain', enc))
     if 'include_pdf' in request.form:
-        out_fn = _generate_facture(g, request.form['no_commande_facture'])
+        out_fn = _generate_facture(g, request.form['no_commande_facture'], 'pdf')
         part = MIMEApplication(open(out_fn, "rb").read())
         part.add_header('Content-Disposition', 'attachment', filename="facture_roucet.pdf")
         msg.attach(part)

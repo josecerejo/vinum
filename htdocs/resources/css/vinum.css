@@ -40,6 +40,14 @@
     background: url(../images/icons/disk.png) no-repeat !important;
 }
 
+.pdf-icon {
+    background: url(../images/icons/page_white_acrobat.png) no-repeat !important;
+}
+
+.monitor-icon {
+    background: url(../images/icons/monitor.png) no-repeat !important;
+}
+
 .page-save-icon {
     background: url(../images/icons/page_save.png) no-repeat !important;
 }

@@ -1,4 +1,3 @@
-
 Ext.define('VIN.view.commande.Form', {
 
     extend: 'Ext.form.Panel',
@@ -54,6 +53,7 @@ Ext.define('VIN.view.commande.Form', {
                     xtype: 'textfield',
                     fieldLabel: 'Sujet',
                     name: 'subject',
+                    itemId: 'email_subject_tf',
                     value: 'Facture',
                     allowBlank: false
                 }, {
@@ -217,6 +217,9 @@ Ext.define('VIN.view.commande.Form', {
                                 }),
                                 proxy: {
                                     type: 'ajax',
+                                    limitParam: undefined,
+                                    pageParam: undefined,
+                                    startParam: undefined,
                                     url: ajax_url_prefix + '/commande/get_succursales',
                                     reader: {
                                         type: 'json',
@@ -226,9 +229,8 @@ Ext.define('VIN.view.commande.Form', {
                             }),
                             itemId: 'succ_combo',
                             hideLabel: true,
-                            minChars: 3,
-                            forceSelection: true,
-                            pageSize: 20,
+                            minChars: 3,                            
+                            forceSelection: false, // to allow setting record field no_succursale alone
                             matchFieldWidth: false,
                             listConfig: {
                                 loadingText: 'Recherche...',
@@ -350,15 +352,19 @@ Ext.define('VIN.view.commande.Form', {
                         style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
                         //disabled: true
                     },
-                    items: [{
+                    items: [/*{
                         text: 'Enregistrer la commande',
                         itemId: 'save_commande_btn',
                         //disabled: false,
                         iconCls: 'cart-go-icon'
-                    }, {
+                    },*/ {
+                        text: 'Visualiser la facture',
+                        itemId: 'preview_facture_btn',
+                        iconCls: 'monitor-icon'                        
+                    },{
                         text: 'Télécharger la facture',
                         itemId: 'download_facture_btn',
-                        iconCls: 'page-save-icon'
+                        iconCls: 'disk-icon'
                     }, {
                         text: 'Envoyer la facture par courriel',
                         itemId: 'email_facture_btn',
