@@ -1,0 +1,102 @@
+33513|455, Sacré-Cœur                                       |Alma                              ||
+23054|284, 1ère avenue                                      |Amos                              ||
+33550|300, Boul. Lasalle Galeries Baie-Comeau               |Baie Comeau                       ||
+23015|90, Boul. Morgan                                      |Baie D'urfé                       ||
+33565|1020-2, Mgr-De-Laval, B.P.4, R.R. 5                   |Baie St-Paul                      ||
+23197|110 Beaurepaire                                       |Beaconsfield                      ||
+23057|522, Boul. Laurier                                    |Beloeil                           ||
+23202|2735, rue D'Annemasse                                 |Boisbriand                        ||
+23371|556, Boul. de Mortagne                                |Boucherville                      ||
+23095|89, boulevard de Bromont                              |Bromont                           ||
+23140|5700, Taschereau                                      |Brossard                          ||
+23229|8300, Boul. Taschereau                                |Brossard                          ||
+23215|220, rue Strasbourg                                   |Candiac                           ||
+33554|569, Boul. Perron                                     |Carleton                          ||
+23060|1285, Boul. de Périgny                                |Chambly                           ||
+33544|500, avenue Daigneault bureau 120                     |Chandler                          ||
+23129|88, boul. D'Anjour                                    |Châteauguay                       ||
+33527|466, 3e rue                                           |Chibougamau                       ||
+33511|1075, boul. Talbot                                    |Chicoutimi                        ||
+23081|235, rue Child                                        |Coaticook                         ||
+23067|1787, du Sud                                          |Cowansville                       ||
+23079|41, boul. Georges-Gagné Suite 101                     |Delson                            ||
+33509|483, route 138                                        |Donnacona                         ||
+33567|500, des Forges                                       |Drummondville                     ||
+23080|430, rue Meigs Nord                                   |Farnham                           ||
+33533|184, Montée de Wakeham                                |Gaspé                             ||
+23301|31, Boul. du Plateau                                  |Gatineau                          ||
+23192|74, St-Jude Nord                                      |Granby                            ||
+33610|798, boulevard de l'Escale, C. P. 610                 |Havre-Saint-Pierre                ||
+23330|501, Champlain                                        |Hemmingford                       ||
+23337|44, Place Commerce                                    |Ile des Sœurs                     ||
+33566|525, Chemin Principal, Cap-Aux-Meules                 |Iles de la Madeleine              ||
+23037|975, Boul. Firestone                                  |Joliette                          ||
+33512|3821, Boul. Harvey E.                                 |Jonquière                         ||
+23177|2955, St-Charles                                      |Kirkland                          ||
+33549|375, Boul. de Comporté                                |La Malbaie                        ||
+33547|1200, Boul. Ducharme                                  |La Tuque                          ||
+23203|472, Chemin de Knowlton                               |Lac-Brome                         ||
+23105|505, Chemin Béthanie                                  |Lachute                           ||
+33523|5570, Frontenac                                       |Lac-Mégantic                      ||
+23218|250, Promenade du Centropolis                         |Laval                             ||
+33615|50 route du Président Kennedy                         |Lévis                             ||
+23180|2403, Chemin de Chambly                               |Longueuil                         ||
+23082|790, Principale Ouest                                 |Magog                             ||
+33624|750, du Phare Ouest                                   |Matane                            ||
+33519|1760 boul Gadoury                                     |Mont-Joli                         ||
+23125|1015, Albiny-Paquette                                 |Mont-Laurier                      ||
+33612|84, Boul. Taché O.                                    |Montmagny                         ||
+23065|390, Avenue Laurier                                   |Montréal                          ||
+23086|4833, Sherbrooke Ouest                                |Montréal                          ||
+23106|12653, Sherbrooke Est                                 |Montréal                          ||
+23111|1947, des Futailles                                   |Montréal                          ||
+23134|440, boulevard De Maisonneuve Ouest                   |Montréal                          ||
+23208|8405, rue Papineau                                    |Montréal                          ||
+23304|6630, St-Jacques                                      |Montréal                          ||
+23346|7275, Sherbrooke Est Place Versailles                 |Montréal                          ||
+23119|1122, rue de Saint-Jovite                             |Mont-Tremblant                    ||
+33856|394, 14e Rue                                          |N-D Guadeloupe                    ||
+23149|146-a rue Papineau                                    |Papineauville                     ||
+23136|4777, Boul. St-Jean                                   |Pierrefonds                       ||
+33619|22, rue Sarto                                         |Pointe-à-la-Croix                 ||
+33535|9085, boulevard de l'Ormière                          |Québec                            ||
+33537|400, boul. Jean Lesage  Bureau 49 Place Jean Lesage   |Québec                            ||
+23104|3240, 1ère avenue                                     |Rawdon                            ||
+23070|319, rue Notre-Dame                                   |Repentigny                        ||
+33505|391, Montée Industrielle et Commerciale               |Rimouski                          ||
+33548|235B, Hôtel-de-Ville                                  |Rivière-du-Loup                   ||
+23361|309 boul Labelle                                      |Rosemère                          ||
+23102|45, Dallaire                                          |Rouyn-Noranda                     ||
+23207|2860, Des Promenades                                  |Sainte-Marthe-sur-le-Lac          ||
+33589|26, avenue de Gaspé Ouest                             |Saint-Jean-Port-Joli              ||
+33542|333, Côte Joyeuse                                     |Saint-Raymond                     ||
+23194|2150, Mgr.Langlois                                    |Salaberry de Valleyfield          ||
+33562|649 Boulevard Laure                                   |Sept-Iles                         ||
+33534|1440, rue Trudel                                      |Shawinigan                        ||
+23148|30, King Ouest                                        |Sherbrooke                        ||
+23306|540, rue Jean-Paul Perrault                           |Sherbrooke                        ||
+23196|340, Peloquin                                         |Sorel                             ||
+23214|284, voie de la Déserte Rte 132                       |St-Constant                       ||
+23176|867, Principale Local A                               |St-Donat                          ||
+23189|1145, Boulevard de Ste-Adèle                          |Ste-Adèle                         ||
+23165|701, Route Principale                                 |Ste-Agathe-des-Monts              ||
+33868|2900, Einstein                                        |Ste-Foy                           ||
+23366|1700, Chemin du Fer à Cheval                          |Ste-Julie                         ||
+33570|1024, boul. Vachon Nord                               |Ste-Marie-de-Beauce               ||
+33518|8984, boul. Lacroix                                   |St-Georges                        ||
+23187|3320, boul. Laframboise                               |St-Hyacinthe                      ||
+23162|1095 du Séminaire Nord                                |St-Jean                           ||
+23183|800, Boul. Grignon                                    |St-Jérôme                         ||
+23131|289, boul. Sir Wilfrid Laurier                        |St-Lambert                        ||
+23166|1919, boul. Marcel-Laurin                             |St-Laurent                        ||
+23362|1811-A, Chemin Sainte-Angéline                        |St-Lazare                         ||
+23334|280, boul St-Luc                                      |St-Luc                            ||
+23380|75, de la Gare Bloc N                                 |St-Sauveur                        ||
+23094|35-2, Principale                                      |Sutton                            ||
+23114|534, Chemin Kipawa, suite 1, c.p.104                  |Témiscaming                       ||
+23144|1100 boul. des Seigneurs Est                          |Terrebonne                        ||
+33571|495, Boul. Smith S.                                   |Thetford-Mines                    ||
+33561|3650, Jaques de Labadie                               |Trois-Rivières                    ||
+23002|1801, 3e Avenue                                       |Val D'Or                          ||
+33611|1081, Boul. Jutras est                                |Victoriaville                     ||
+23151|2305, chemin Rockland, suite 502.1                    |Ville Mont-Royal                  ||

@@ -100,3 +100,4 @@ for row in f:
 cursor.execute("select setval('inventaire_no_inventaire_seq', (select max(no_inventaire) from inventaire)+1)")
 
 conn.commit()
+conn.close()

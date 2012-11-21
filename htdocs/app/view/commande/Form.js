@@ -21,7 +21,7 @@ Ext.define('VIN.view.commande.Form', {
         var client_produit_store = Ext.create('VIN.store.Produits');
         var inventaire_store = Ext.create('VIN.store.Inventaires');
         var commande_store = Ext.create('VIN.store.Commandes');
-
+                
         // email form
         this.email_win = Ext.create('Ext.window.Window', {
             title: 'Envoyer la facture par courriel',
@@ -205,11 +205,40 @@ Ext.define('VIN.view.commande.Form', {
                             flex: 0.07,
                             itemId: 'succ_rb'
                         }, {
-                            xtype: 'textfield',
-                            hideLabel: true,
-                            name: 'expedition_succursale',
+
+                            xtype: 'combo',
                             flex: 0.1,
-                            itemId: 'succ_tf'
+                            displayField: 'no_succursale',
+                            name: 'no_succursale',
+                            store: Ext.create('Ext.data.Store', {
+                                model: Ext.define('VIN.model.Succursale', {
+                                    extend: 'Ext.data.Model',
+                                    fields: ['no_succursale', 'ville', 'adresse']
+                                }),
+                                proxy: {
+                                    type: 'ajax',
+                                    url: ajax_url_prefix + '/commande/get_succursales',
+                                    reader: {
+                                        type: 'json',
+                                        root: 'rows'
+                                    }
+                                }                                    
+                            }),
+                            itemId: 'succ_combo',
+                            hideLabel: true,
+                            minChars: 3,
+                            forceSelection: true,
+                            pageSize: 20,
+                            matchFieldWidth: false,
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucune succursale ne correspond à cette recherche..',
+                                getInnerTpl: function() {
+                                    return '<span style="display:inline-block; width:15% !important">{no_succursale}</span>' +
+                                           '<span style="display:inline-block; width:35% !important">{ville}</span>' +
+                                           '<span style="display:inline-block; width:50% !important">{adresse}</span>';
+                                }
+                            }
                         }, {
                             xtype: 'radiofield',
                             boxLabel: 'Pick up',

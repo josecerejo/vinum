@@ -115,5 +115,13 @@ create table inventaire (
     suc_num integer           
 );
 
+drop table if exists succursale_saq cascade;
+create table succursale_saq (
+    succursale_saq_id serial primary key,
+    no_succursale text,
+    adresse text,
+    ville text
+);
+
 --insert into inventaire (no_produit_interne, no_produit_saq, no_commande_saq, date_commande, millesime, statut, solde) values (178, -1, -1, '2000-01-01', 2000, 'Actif', 23);
 --update produit set locked_by_user = 'test' where type_vin like 'AUS%';
