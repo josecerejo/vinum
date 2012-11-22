@@ -13,6 +13,9 @@ Ext.define('VIN.controller.Commande', {
             no_commande_facture: undefined
         };
 
+        // mechanism to prevent reloading of already modified inventaire records (i.e. being currently part of a commande)
+        this.inventaire_cache = {}; // type_vin -> list of records
+
         this.control({
             '#client_combo': {
                 select: function(field, records, eopts) {
@@ -131,13 +134,14 @@ Ext.define('VIN.controller.Commande', {
             '#commande rowactions': {
                 groupaction: function(grid, records, action, groupValue) {
                     var view = this._getFormViewInstance(grid);
-                    var type_vin = groupValue;
-                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la commande?', type_vin), 
+                    var tv = groupValue;
+                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la commande?', tv), 
                                     Ext.bind(function(btn) {
                                         if (btn == 'yes') {
-                                            var group_recs = view.down('#commande').getStore().query('type_vin', type_vin);
+                                            var group_recs = view.down('#commande').getStore().query('type_vin', tv);
                                             view.down('#commande').getStore().remove(group_recs.items);
-                                            if (this.curr.produit_rec.get('type_vin') == type_vin) {
+                                            delete this.inventaire_cache[tv];
+                                            if (this.curr.produit_rec.get('type_vin') == tv) {
                                                 this.updateInventaire(view, this.curr.produit_rec);
                                             }
                                         }
@@ -297,12 +301,21 @@ Ext.define('VIN.controller.Commande', {
 
     updateInventaire: function(view, record) {
         var g = view.down('#inventaire');
-        g.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', record.get('type_vin')));
-        g.store.load({
-            params: {
-                no_produit_interne: record.get('no_produit_interne')
-            }
-        });
+        var tv = record.get('type_vin');
+        g.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', tv));
+        if (this.inventaire_cache.hasOwnProperty(tv)) {            
+            console.log('cache hit');
+            g.store.loadRecords(this.inventaire_cache[tv]);
+        } else {
+            g.store.load({
+                params: {
+                    no_produit_interne: record.get('no_produit_interne')
+                },
+                callback: Ext.bind(function(recs, op, success) {
+                    this.inventaire_cache[tv] = recs;
+                }, this)
+            });
+        }
     },
 
     addCommandeProduit: function(view, desired_qc) {
