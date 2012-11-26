@@ -40,6 +40,6 @@ Ext.application({
     autoCreateViewport: true,
     launch: function() {
         // global!
-        wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Envoi du message..."});
+        wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Un moment svp..."});
     }
 });

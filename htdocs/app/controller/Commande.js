@@ -17,6 +17,22 @@ Ext.define('VIN.controller.Commande', {
         this.inventaire_cache = {}; // type_vin -> list of records
 
         this.control({
+            'commande_form': {
+                beforeclose: function(panel) {
+                    if (panel.down('#commande').getStore().getCount() > 0) {
+                        Ext.Msg.confirm('Vinum', 
+                                        "La commande n'a pas été envoyée par courriel, êtes-vous certain de vouloir l'annuler?",
+                                        function(btn) {
+                                            if (btn == 'yes') {
+                                                panel.ownerCt.remove(panel);
+                                            }
+                                        });
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            },
             '#client_combo': {
                 select: function(field, records, eopts) {
                     var view = this._getFormViewInstance(field);

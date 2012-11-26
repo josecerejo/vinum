@@ -5,7 +5,7 @@ Ext.define('VIN.view.MainPanel', {
     id: 'main_pnl',
     items: [{
         xtype: 'start_panel'
-    }, {
-        xtype: 'commande_form'
-    }]
+    }/*, {
+        xtype: 'client_form'
+    }*/]
 });

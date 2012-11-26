@@ -18,7 +18,7 @@ def get(g, request, table, query_fields):
     if request.args.get('filter', '').strip():
         for filter_arg in json.loads(request.args['filter']):
             if filter_arg['type'] == 'string':
-                where[(filter_arg['field'], 'ilike')] = '%%%s%%' % filter_arg['value']
+                where[(filter_arg['field'], 'ilike')] = set(['%%%s%%' % v for v in filter_arg['value'].split()])
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
     elif request.args.get('query', '').strip():
