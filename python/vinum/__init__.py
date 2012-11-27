@@ -49,5 +49,6 @@ try:
     import produit
     import inventaire
     import commande
+    import misc
 except:
     pass

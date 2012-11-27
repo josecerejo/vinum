@@ -93,9 +93,3 @@ def email_facture():
     mailer.sendmail(msg['From'], to_list, msg.as_string())
     mailer.close()
     return {'success': True}
-
-
-@app.route('/commande/get_succursales', methods=['GET'])
-def get_succursales():
-    return get(g, request, 'succursale_saq', ('no_succursale', 'ville', 'adresse'))
-    

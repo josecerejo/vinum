@@ -20,6 +20,8 @@ Ext.define('VIN.view.commande.Form', {
         var client_produit_store = Ext.create('VIN.store.Produits');
         var inventaire_store = Ext.create('VIN.store.Inventaires');
         var commande_store = Ext.create('VIN.store.Commandes');
+
+        var grid_height = 326;
                 
         // email form
         this.email_win = Ext.create('Ext.window.Window', {
@@ -93,95 +95,86 @@ Ext.define('VIN.view.commande.Form', {
             border: false,
             defaults: {
                 bodyStyle: 'background-color:#dfe8f5',
-                border: false,
                 padding: 10,
-                flex: .5
+                flex: .5,
+                border: false
             },
             layout: 'hbox',
             items: [{
-                // -----------------------------------------------------
-                // left part panel
-                layout: 'anchor',
                 items: [{
-                    layout: 'hbox',
-                    bodyStyle: 'background-color:#dfe8f5',
-                    border: false,
-                    items: [{
-                        // client combo
-                        xtype: 'combo',
-                        //anchor: '100%',
-                        flex: 0.8,
-                        displayField: 'nom_social',
-                        name: 'nom_social',
-                        store: client_search_store,
-                        itemId: 'client_combo',
-                        fieldLabel: 'Client',
-                        minChars: 3,
-                        forceSelection: true,
-                        listConfig: {
-                            loadingText: 'Recherche...',
-                            emptyText: 'Aucun client ne correspond à cette recherche..',
-                            getInnerTpl: function() {
-                                return '<span style="display:inline-block; width:80% !important">{nom_social}</span>' +
-                                       '<span style="display:inline-block; width:20% !important">{no_client_saq}</span>';
-                            }
-                        },
-                        pageSize: 10,
-                        style: 'margin-bottom: 20px; margin-right: 20px'
-                    }, {
-                        flex: 0.2,
-                        xtype: 'datefield',
-                        fieldLabel: 'Date',
-                        name: 'date_commande',
-                        format: 'Y-m-d',
-                        value: new Date()
-                    }],
-                }, {
-                    // client readonly address + edit btn panel
-                    bodyStyle: 'background-color:#dfe8f5',
-                    border: false,
-                    layout: 'hbox',
-                    defaults: {
-                        style: 'margin-bottom: 20px; margin-right: 20px'                        
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        fieldLabel: 'Adresse',
-                        itemId: 'adresse_tf',
-                        flex: 0.6,
-                        disabled: true
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Type',
-                        itemId: 'type_client_tf',
-                        flex: 0.2,
-                        disabled: true                        
-                    }, {
-                        xtype: 'button',
-                        itemId: 'details_client_btn',
-                        text: 'Détails du client',
-                        disabled: true,
-                        iconCls: 'client-icon',
-                        style: 'margin-bottom: 20px; margin-top: 20px'
-                    }]
-                }, {
-                    // expedition radiogroup panel
-                    bodyStyle: 'background-color:#dfe8f5',
-                    border: false,
+                    // -----------------------------------------------------
+                    // left part panel
+                    xtype: 'fieldset',
+                    title: 'Client',
                     defaults: {
                         bodyStyle: 'background-color:#dfe8f5',
-                        border: false,
+                        border: false
                     },
                     items: [{
-                        html: 'Expédition:'
+                        layout: 'hbox',
+                        defaults: {
+                            padding: 5,
+                        },
+                        items: [{
+                            xtype: 'combo',
+                            flex: 0.8,
+                            displayField: 'nom_social',
+                            name: 'nom_social',
+                            store: client_search_store,
+                            itemId: 'client_combo',
+                            fieldLabel: 'Nom',
+                            minChars: 3,
+                            forceSelection: true,
+                            pageSize: 10,
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucun client ne correspond à cette recherche..',
+                                getInnerTpl: function() {
+                                    return '<span style="display:inline-block; width:80% !important">{nom_social}</span>' +
+                                           '<span style="display:inline-block; width:20% !important">{no_client_saq}</span>';
+                                }
+                            }
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Type',
+                            itemId: 'type_client_tf',
+                            flex: 0.2,
+                            disabled: true                        
+                        }],
                     }, {
+                        layout: 'hbox',
+                        defaults: {
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'textfield',
+                            fieldLabel: 'Adresse',
+                            itemId: 'adresse_tf',
+                            flex: 0.8,
+                            disabled: true
+                        }, {
+                            xtype: 'button',
+                            itemId: 'details_client_btn',
+                            text: 'Détails du client',
+                            disabled: true,
+                            iconCls: 'client-icon',
+                            style: 'margin-top: 20px'
+                        }]
+                    }]
+                }, {
+                    xtype: 'fieldset',
+                    title: 'Expédition',
+                    defaults: {
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false                        
+                    },
+                    items: [{
                         layout: 'hbox',
                         defaults: {
                             bodyStyle: 'background-color:#dfe8f5',
                             border: false,
                             padding: 5
                         },                        
-                        style: 'margin-bottom: 20px',
                         items: [{
                             xtype: 'radiofield',
                             boxLabel: 'Direct',
@@ -199,13 +192,12 @@ Ext.define('VIN.view.commande.Form', {
                             itemId: 'direct_df'
                         }, {
                             xtype: 'radiofield',
-                            boxLabel: 'Succursale',
+                            boxLabel: 'Succ.',
                             name: 'expedition',
                             inputValue: 'succursale',                            
-                            flex: 0.07,
+                            flex: 0.05,
                             itemId: 'succ_rb'
                         }, {
-
                             xtype: 'combo',
                             flex: 0.1,
                             displayField: 'no_succursale',
@@ -220,7 +212,7 @@ Ext.define('VIN.view.commande.Form', {
                                     limitParam: undefined,
                                     pageParam: undefined,
                                     startParam: undefined,
-                                    url: ajax_url_prefix + '/commande/get_succursales',
+                                    url: ajax_url_prefix + '/misc/get_succursales',
                                     reader: {
                                         type: 'json',
                                         root: 'rows'
@@ -237,8 +229,8 @@ Ext.define('VIN.view.commande.Form', {
                                 emptyText: 'Aucune succursale ne correspond à cette recherche..',
                                 getInnerTpl: function() {
                                     return '<span style="display:inline-block; width:20% !important">{no_succursale}</span>' +
-                                           '<span style="display:inline-block; width:35% !important">{ville}</span>' +
-                                           '<span style="display:inline-block; width:45% !important">{adresse}</span>';
+                                        '<span style="display:inline-block; width:35% !important">{ville}</span>' +
+                                        '<span style="display:inline-block; width:45% !important">{adresse}</span>';
                                 }
                             }
                         }, {
@@ -258,10 +250,46 @@ Ext.define('VIN.view.commande.Form', {
                         }]
                     }]
                 }, {
-                    // rangée produit
-                    bodyStyle: 'background-color:#dfe8f5',
                     border: false,
+                    bodyStyle: 'background-color:#dfe8f5',
+                    defaults: {
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        padding: 5
+                    },
                     layout: 'hbox',
+                    items: [{
+                        xtype: 'datefield',
+                        fieldLabel: 'Date',
+                        name: 'date_commande',
+                        format: 'Y-m-d',
+                        value: new Date(),
+                        style: 'margin-right: 20px'
+                    }, {
+                        xtype: 'combo',
+                        itemId: 'default_commission_combo',
+                        queryMode: 'local',
+                        triggerAction: 'all',
+                        displayField: 'default_commission',
+                        valueField: 'default_commission',
+                        fieldLabel: 'Commission par défaut',
+                        forceSelection: false,
+                        regex: /^0\.?[0-9]*$/,
+                        regexText: 'La commission doit être une valeur entre 0 et 1',
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['default_commission'],
+                            data: [{default_commission: 0.16},
+                                   {default_commission: 0.23}]
+                        })                        
+                    }]
+                }, {
+                    border: false,
+                    bodyStyle: 'background-color:#dfe8f5',
+                    layout: 'hbox',
+                    style: 'margin-bottom: 10px',
+                    defaults: {
+                        padding: 5
+                    },
                     items: [{
                         xtype: 'combo',
                         flex: 0.70,
@@ -272,64 +300,31 @@ Ext.define('VIN.view.commande.Form', {
                         fieldLabel: 'Tous les produits',
                         minChars: 3,
                         forceSelection: true,
+                        pageSize: 10,
                         listConfig: {
                             loadingText: 'Recherche...',
                             emptyText: 'Aucun produit ne correspond à cette recherche..',            
                             getInnerTpl: function() {
                                 return '<span style="display:inline-block; width:45%; !important">{type_vin}</span>' +
-                                       '<span style="display:inline-block; width:45%; !important">{nom_domaine}</span>' +
-                                       '<span style="display:inline-block; width:10%; !important">{format}</span>';
+                                    '<span style="display:inline-block; width:45%; !important">{nom_domaine}</span>' +
+                                    '<span style="display:inline-block; width:10%; !important">{format}</span>';
                             }
-                        },
-                        pageSize: 10,
-                        style: 'margin-bottom: 20px; margin-right: 20px'
+                        }
                     }, {
                         xtype: 'numberfield',
                         flex: 0.15,
                         fieldLabel: 'Quantité (c)',
                         itemId: 'add_produit_qc_nf',
-                        minValue: 1,
-                        //enableKeyEvents: true,
-                        style: 'margin-bottom: 20px; margin-right: 20px'
+                        minValue: 1
                     }, {
                         xtype: 'button',
                         itemId: 'add_produit_btn',
                         scale: 'small',
                         text: 'Ajouter',
                         iconCls: 'add-icon',
-                        style: 'margin-bottom: 20px; margin-top: 20px'
+                        style: 'margin-top: 20px'
                     }]
                 }, {
-                    // expedition radiogroup panel
-                    bodyStyle: 'background-color:#dfe8f5',
-                    border: false,
-                    defaults: {
-                        bodyStyle: 'background-color:#dfe8f5',
-                        border: false
-                    },
-                    items: [{
-                        html: 'Commission par défaut pour cette commande (établie en fonction du type de client):',
-                        style: 'margin-bottom: 10px'
-                    }, {
-                        xtype: 'combo',
-                        itemId: 'default_commission_combo',
-                        queryMode: 'local',
-                        triggerAction: 'all',
-                        displayField: 'default_commission',
-                        valueField: 'default_commission',
-                        hideLabel: true,
-                        forceSelection: false,
-                        regex: /^0\.?[0-9]*$/,
-                        regexText: 'La commission doit être une valeur entre 0 et 1',
-                        style: 'margin-bottom: 20px',
-                        store: Ext.create('Ext.data.Store', {
-                            fields: ['default_commission'],
-                            data: [{default_commission: 0.16},
-                                   {default_commission: 0.23}]
-                        })                        
-                    }]
-                }, {
-                    // table de produits habituels
                     xtype: 'client_produit_grid',
                     itemId: 'client_produit',
                     title: 'Liste de produits habituels de ce client',
@@ -341,8 +336,7 @@ Ext.define('VIN.view.commande.Form', {
                         format: 1,
                         quantite_caisse: 1
                     },
-                    height: 300
-                    //style: 'margin-bottom: 20px'
+                    height: grid_height
                 }, {
                     layout: 'hbox',
                     bodyStyle: 'background-color:#dfe8f5',
@@ -350,14 +344,8 @@ Ext.define('VIN.view.commande.Form', {
                     defaults: {
                         xtype: 'button',
                         style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
-                        //disabled: true
                     },
-                    items: [/*{
-                        text: 'Enregistrer la commande',
-                        itemId: 'save_commande_btn',
-                        //disabled: false,
-                        iconCls: 'cart-go-icon'
-                    },*/ {
+                    items: [{
                         text: 'Visualiser la facture',
                         itemId: 'preview_facture_btn',
                         iconCls: 'monitor-icon'                        
@@ -369,13 +357,12 @@ Ext.define('VIN.view.commande.Form', {
                         text: 'Envoyer la facture par courriel',
                         itemId: 'email_facture_btn',
                         iconCls: 'email-go-icon'
-                        //disabled: false
                     }]
                 }]
             }, {
                 // -----------------------------------------------------
                 // right part panel
-                layout: 'anchor',
+                //layout: 'anchor',
                 items: [{
                     xtype: 'inventaire_grid',
                     itemId: 'inventaire',
@@ -391,7 +378,7 @@ Ext.define('VIN.view.commande.Form', {
                         solde: 1,
                         solde_caisse: 1
                     },
-                    height: 300,
+                    height: grid_height,
                     style: 'margin-bottom: 20px'
                 }, {
                     xtype: 'commande_grid',
@@ -409,7 +396,7 @@ Ext.define('VIN.view.commande.Form', {
                         montant_commission: 0.75,
                         statut: 0.5
                     },
-                    height: 300,
+                    height: grid_height,
                     style: 'margin-bottom: 20px'
                 }]
             }]

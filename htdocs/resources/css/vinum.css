@@ -28,6 +28,10 @@
     background: url(../images/icons/house.png) no-repeat !important;
 }
 
+.arrow-right-icon {
+    background: url(../images/icons/arrow_right.png) no-repeat !important;
+}
+
 .clients-icon {
     background: url(../images/icons/group.png) no-repeat !important;
 }

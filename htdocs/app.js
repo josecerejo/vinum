@@ -4,6 +4,7 @@ Ext.Date.defaultFormat = 'Y-m-d';
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = false;
+var initial_tab = 'widget.client_form';
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
