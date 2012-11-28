@@ -39,6 +39,7 @@ Ext.define('VIN.view.client.Form', {
                     },
                     items: [{
                         xtype: 'combo',
+                        allowBlank: false,
                         flex: 0.7,
                         displayField: 'nom_social',
                         name: 'nom_social',
@@ -47,6 +48,8 @@ Ext.define('VIN.view.client.Form', {
                         fieldLabel: 'Client',
                         minChars: 3,
                         forceSelection: false, // important if we want to allow client creation
+                        pageSize: 10,
+                        style: 'margin-bottom: 10px;',
                         listConfig: {
                             loadingText: 'Recherche...',
                             emptyText: 'Aucun client ne correspond à cette recherche..',
@@ -54,32 +57,31 @@ Ext.define('VIN.view.client.Form', {
                                 return '<span style="display:inline-block; width:80% !important">{nom_social}</span>' +
                                        '<span style="display:inline-block; width:20% !important">{no_client_saq}</span>';
                             }
-                        },
-                        pageSize: 10,
-                        style: 'margin-bottom: 10px;'
+                        }
                     }, {
                         xtype: 'combo',
+                        allowBlank: false,
                         name: 'type_client',
                         itemId: 'type_client_combo',
                         queryMode: 'local',
                         triggerAction: 'all',
-                        displayField: 'type_client_desc',
+                        displayField: 'type_client',
                         valueField: 'type_client',
                         fieldLabel: 'Type de client',
                         forceSelection: true,
                         flex: 0.2,
                         store: Ext.create('Ext.data.Store', {
-                            fields: ['type_client_desc', 'type_client'],
-                            data: [{type_client_desc: 'Restaurant', type_client: '1'},
-                                   {type_client_desc: 'Particulier', type_client: '2'}]
+                            fields: ['type_client'],
+                            data: [{type_client: 'restaurant'},
+                                   {type_client: 'particulier'}]
                         })                        
                     }, {
                         flex: 0.2,
                         xtype: 'datefield',
+                        allowBlank: false,
                         fieldLabel: "Création",
                         name: 'date_ouverture_dossier',
-                        format: 'Y-m-d'
-                        //value: new Date()
+                        value: new Date()
                     }],
                 }, {
                     layout: 'hbox',
@@ -91,14 +93,17 @@ Ext.define('VIN.view.client.Form', {
                     },
                     items: [{
                         xtype: 'textfield',
+                        allowBlank: false,
                         fieldLabel: 'No client SAQ',
                         name: 'no_client_saq',
                         flex: 0.3
                     }, {
                         xtype: 'textfield',
                         fieldLabel: 'No client',
-                        disabled: true,
+                        readOnly: true,
+                        cls: 'x-item-disabled',
                         name: 'no_client',
+                        itemId: 'no_client_tf',
                         flex: 0.3
                     }, {
                         xtype: 'combo',
@@ -184,7 +189,7 @@ Ext.define('VIN.view.client.Form', {
                         xtype: 'button',
                         scale: 'small',
                         iconCls: 'arrow-right-icon',
-                        style: 'margin-right: 5px; margin-left: 5px; margin-top: 51px'
+                        style: 'margin-right: 5px; margin-left: 5px; margin-top: 60px'
                     }, {                   
                         xtype: 'fieldset',
                         title: 'Adresse de facturation',
@@ -313,7 +318,7 @@ Ext.define('VIN.view.client.Form', {
                             itemId: 'direct_df'
                         }, {
                             xtype: 'radiofield',
-                            boxLabel: 'Succ.',
+                            boxLabel: 'Succursale',
                             name: 'expedition',
                             inputValue: 'succursale',
                             flex: 0.05,
@@ -333,7 +338,7 @@ Ext.define('VIN.view.client.Form', {
                                     limitParam: undefined,
                                     pageParam: undefined,
                                     startParam: undefined,
-                                    url: ajax_url_prefix + '/commande/get_succursales',
+                                    url: ajax_url_prefix + '/misc/get_succursales',
                                     reader: {
                                         type: 'json',
                                         root: 'rows'
@@ -361,14 +366,14 @@ Ext.define('VIN.view.client.Form', {
                             inputValue: 'pickup',
                             flex: 0.05,
                             itemId: 'pickup_rb'
-                        }, {
+                        }/*, {
                             xtype: 'datefield',
                             hideLabel: true,
                             namme: 'date_pickup',
                             format: 'Y-m-d',
                             flex: 0.1,
                             itemId: 'pickup_df'
-                        }]
+                        }*/]
                     }]
                 }, {                   
                     layout: 'hbox',

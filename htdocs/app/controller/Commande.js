@@ -1,7 +1,7 @@
 Ext.define('VIN.controller.Commande', {
 
     extend: 'Ext.app.Controller',
-    views: ['VIN.view.commande.Form', 'VIN.view.client.Form'],
+    views: ['VIN.view.commande.Form'],//, 'VIN.view.client.Form'],
     models: ['VIN.model.Produit'],
     stores: ['VIN.store.Produits'],
 
@@ -33,7 +33,7 @@ Ext.define('VIN.controller.Commande', {
                     }
                 }
             },
-            '#client_combo': {
+            'commande_form #client_combo': {
                 select: function(field, records, eopts) {
                     var view = this._getFormViewInstance(field);
                     this.curr.client_rec = records[0].copy();
@@ -43,14 +43,12 @@ Ext.define('VIN.controller.Commande', {
                                                     r.get('code_postal')||'<code_postal?>');
                     view.down('#adresse_tf').setValue(adresse);
                     var tc = '';
-                    if (r.get('type_client') == '1') {
-                        tc = 'restaurant';
+                    if (r.get('type_client') == 'restaurant') {
                         view.down('#default_commission_combo').setValue(0.16);
-                    } else if (r.get('type_client') == '2') {
-                        tc = 'particulier';
+                    } else if (r.get('type_client') == 'particulier') {
                         view.down('#default_commission_combo').setValue(0.23);
                     }
-                    view.down('#type_client_tf').setValue(tc);
+                    view.down('#type_client_tf').setValue(r.get('type_client'));
                     view.down('#details_client_btn').setDisabled(false);
                     view.down('#succ_combo').setValue(r.get('no_succursale')||'');
                     this.updateClientProduit(view);
@@ -62,6 +60,12 @@ Ext.define('VIN.controller.Commande', {
                     var mp = Ext.getCmp('main_pnl');
                     mp.add(cf);
                     mp.setActiveTab(cf);
+                    cf.load({
+                        url: ajax_url_prefix + '/client/load',
+                        params: {
+                            no_client: this.curr.client_rec.get('no_client')
+                        }
+                    });
                 }
             },
             '#direct_df': {
@@ -70,13 +74,13 @@ Ext.define('VIN.controller.Commande', {
                     view.down('#direct_rb').setValue(true);
                 }
             },
-            '#succ_combo': {
+            'commande_form #succ_combo': {
                 focus: function(field) {
                     var view = this._getFormViewInstance(field);
                     view.down('#succ_rb').setValue(true);
                 }
             },
-            '#pickup_df': {
+            'commande_form #pickup_df': {
                 focus: function(field) {
                     var view = this._getFormViewInstance(field);
                     view.down('#pickup_rb').setValue(true);

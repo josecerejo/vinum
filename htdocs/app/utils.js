@@ -44,7 +44,7 @@ Ext.define('VIN.utils', {
                     hidden: !column_flex.hasOwnProperty(name)
                 };
                 if (items[i].type.type == 'date') {
-                    col.renderer = Ext.util.Format.dateRenderer('Y-m-d');
+                    col.xtype = 'datecolumn';
                 } else if (items[i].type.type == 'float') {
                     col.xtype = 'numbercolumn'; // to make sure that format is used
                 }

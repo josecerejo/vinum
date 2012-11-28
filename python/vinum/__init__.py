@@ -24,9 +24,6 @@ class MyFlask(Flask):
         if rv.__class__ is dict:
             rv = json.dumps(rv, default=json_dthandler)
         resp = Flask.make_response(self, rv)
-        #resp.headers['Access-Control-Allow-Origin'] = '*'
-        #resp.headers['Access-Control-Allow-Headers'] = 'X-Requested-With'
-        #resp.headers['Access-Control-Allow-Methods'] = 'GET'
         return resp
 
 app = MyFlask('vinum')
@@ -34,8 +31,6 @@ app.handle_exception = general_error_handler
 
 @app.before_request
 def before_request():
-#    request.parameter_storage_class = dict
-#    request.dict_storage_class = dict
     g.db = psycopg2.connect("dbname=vinum user=christian",
                             connection_factory=psycopg2.extras.RealDictConnection)
 

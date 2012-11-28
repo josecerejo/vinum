@@ -13,8 +13,12 @@ print 'client..'
 cols = getColumns(cursor, 'client')
 f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/Clients.txt'))
 f.next()
+expedition_map = {'1':'direct', '2':'succursale', '3':'pickup'}
+type_client_map = {'1':'restaurant', '2':'particulier'}
 for row in f:
     data = dict(zip(cols, [v.strip() if v.strip() else None for v in row]))
+    data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])
+    data['type_client'] = type_client_map.get(data['type_client'], data['type_client'])
     for possible_saq_nb in re.findall('\d+', data['nom_social']):
         if possible_saq_nb == data['no_client_saq']:
             data['nom_social'] = data['nom_social'].replace(possible_saq_nb, '').strip()

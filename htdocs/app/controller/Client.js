@@ -9,7 +9,7 @@ Ext.define('VIN.controller.Client', {
 
         this.control({
 
-            '#client_combo': {
+            'client_form #client_combo': {
                 select: function(field, records, eopts) {
                     var f = this._getFormViewInstance(field);
                     f.load({
@@ -21,14 +21,32 @@ Ext.define('VIN.controller.Client', {
                 }
             },
 
-            '#save_btn': {
+            'client_form #save_btn': {
                 click: function(btn) {
                     var f = this._getFormViewInstance(btn);
-                    f.submit({
-                        url: ajax_url_prefix + '/client/save',
-                        success: function(form, action) {
-                        }
-                    });
+                    if (f.getForm().isValid()) {
+                        f.submit({
+                            url: ajax_url_prefix + '/client/save',
+                            success: function(form, action) {
+                                var no_client = action.result.no_client;
+                                Ext.Msg.show({
+                                    title: 'Vinum',
+                                    msg: Ext.String.format("Le client #{0} a été {1}", no_client, 
+                                                           f.down('#no_client_tf').getValue() ? 'modifié' : 'créé'),
+                                    icon: Ext.MessageBox.WARNING,
+                                    buttons: Ext.MessageBox.OK
+                                });                                            
+                                f.down('#no_client_tf').setValue(no_client);
+                            }
+                        });
+                    }
+                }
+            },
+
+            'client_form #succ_combo': {
+                focus: function(field) {
+                    var view = this._getFormViewInstance(field);
+                    view.down('#succ_rb').setValue(true);
                 }
             }
 

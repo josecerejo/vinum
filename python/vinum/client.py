@@ -15,11 +15,14 @@ def load_client():
 
 
 @app.route('/client/save', methods=['POST'])
-def load_client():
-    
-    return {'success': True}
-   #         'data': pg.select1r(g.db.cursor(), 'client', 
-   #                             where={'no_client': request.form['no_client']})}
+def save_client():    
+    rf = request.form.to_dict()
+    no_client = rf.pop('no_client')
+    if no_client == '': no_client = None
+    client = pg.upsert(g.db.cursor(), 'client', where={'no_client': no_client},
+                       values=rf, filter_values=True, map_values={'': None}, debug_quer=True)
+    g.db.commit()
+    return {'success': True, 'no_client': client['no_client']}
     
     
 @app.route('/client/update', methods=['POST'])

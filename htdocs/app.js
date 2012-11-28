@@ -1,10 +1,9 @@
 Ext.Loader.setConfig({enabled:true});
 Ext.Loader.setPath('Ext.ux', './extjs/examples/ux');
-Ext.Date.defaultFormat = 'Y-m-d';
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = false;
-var initial_tab = 'widget.client_form';
+var initial_tab = 'widget.commande_form';
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
@@ -12,6 +11,13 @@ Ext.window.MessageBox.prototype.buttonText = {
     no: 'Non',
     ok: 'Ok'
 };
+
+Ext.form.field.Text.prototype.blankText = 'Ce champ est requis';
+
+Ext.form.field.Date.prototype.format = 'Y-m-d';
+Ext.grid.column.Date.prototype.format = 'Y-m-d';
+Ext.form.field.Date.prototype.altFormats = 'Y-m-d H:i:s';
+Ext.grid.column.Date.prototype.altFormats = 'Y-m-d H:i:s';
 
 Ext.override(Ext.data.proxy.Ajax, {
     listeners: {
