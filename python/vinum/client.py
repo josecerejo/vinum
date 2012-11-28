@@ -2,10 +2,25 @@ from vinum import *
 from common import *
 
 
-@app.route('/client/get', methods=['GET'])
+@app.route('/client/get', methods=['GET', 'POST'])
 def get_client():
     return get(g, request, 'client', ('nom_social', 'no_client_saq'))
 
+
+@app.route('/client/load', methods=['POST'])
+def load_client():
+    return {'success': True,
+            'data': pg.select1r(g.db.cursor(), 'client', 
+                                where={'no_client': request.form['no_client']})}
+
+
+@app.route('/client/save', methods=['POST'])
+def load_client():
+    
+    return {'success': True}
+   #         'data': pg.select1r(g.db.cursor(), 'client', 
+   #                             where={'no_client': request.form['no_client']})}
+    
     
 @app.route('/client/update', methods=['POST'])
 def update_client():

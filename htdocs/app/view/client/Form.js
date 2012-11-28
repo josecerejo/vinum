@@ -6,6 +6,7 @@ Ext.define('VIN.view.client.Form', {
     title: 'Client',
     closable: true,
     frame: true,
+    url: ajax_url_prefix + '/client/get',
     fieldDefaults: {
         labelAlign: 'top'
     },
@@ -37,7 +38,6 @@ Ext.define('VIN.view.client.Form', {
                         padding: 5
                     },
                     items: [{
-                        // client combo
                         xtype: 'combo',
                         flex: 0.7,
                         displayField: 'nom_social',
@@ -59,28 +59,77 @@ Ext.define('VIN.view.client.Form', {
                         style: 'margin-bottom: 10px;'
                     }, {
                         xtype: 'combo',
+                        name: 'type_client',
                         itemId: 'type_client_combo',
                         queryMode: 'local',
                         triggerAction: 'all',
-                        displayField: 'type_client',
+                        displayField: 'type_client_desc',
                         valueField: 'type_client',
                         fieldLabel: 'Type de client',
                         forceSelection: true,
                         flex: 0.2,
-                        //style: 'margin-bottom: 20px',
                         store: Ext.create('Ext.data.Store', {
-                            fields: ['type_client'],
-                            data: [{type_client: 'Restaurant'},
-                                   {type_client: 'Particulier'}]
+                            fields: ['type_client_desc', 'type_client'],
+                            data: [{type_client_desc: 'Restaurant', type_client: '1'},
+                                   {type_client_desc: 'Particulier', type_client: '2'}]
                         })                        
                     }, {
                         flex: 0.2,
                         xtype: 'datefield',
                         fieldLabel: "Création",
-                        name: 'date_commande',
-                        format: 'Y-m-d',
-                        value: new Date()
+                        name: 'date_ouverture_dossier',
+                        format: 'Y-m-d'
+                        //value: new Date()
                     }],
+                }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    style: 'margin-bottom: 10px',
+                    defaults: {
+                        padding: 5
+                    },
+                    items: [{
+                        xtype: 'textfield',
+                        fieldLabel: 'No client SAQ',
+                        name: 'no_client_saq',
+                        flex: 0.3
+                    }, {
+                        xtype: 'textfield',
+                        fieldLabel: 'No client',
+                        disabled: true,
+                        name: 'no_client',
+                        flex: 0.3
+                    }, {
+                        xtype: 'combo',
+                        flex: 0.4,
+                        fieldLabel: 'Représentant',
+                        displayField: 'representant_nom',
+                        name: 'representant_nom',
+                        store: Ext.create('Ext.data.Store', {
+                            model: Ext.define('VIN.model.Representant', {
+                                extend: 'Ext.data.Model',
+                                fields: ['representant_nom']
+                            }),
+                            proxy: {
+                                type: 'ajax',
+                                limitParam: undefined,
+                                pageParam: undefined,
+                                startParam: undefined,
+                                url: ajax_url_prefix + '/misc/get_representants',
+                                reader: {
+                                    type: 'json',
+                                    root: 'rows'
+                                }
+                            }                                    
+                        }),
+                        minChars: 3,                            
+                        forceSelection: true, 
+                        listConfig: {
+                            loadingText: 'Recherche...',
+                            emptyText: 'Aucun représentant ne correspond à cette recherche..'
+                        }                        
+                    }]                                        
                 }, {
                     layout: 'hbox',
                     bodyStyle: 'background-color:#dfe8f5',
@@ -101,12 +150,12 @@ Ext.define('VIN.view.client.Form', {
                             items: [{
                                 xtype: 'textfield',
                                 fieldLabel: 'No',
-                                name: 'no_rue_tf',
+                                name: 'no_civique',
                                 flex: 0.1
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Rue',
-                                name: 'rue_tf',
+                                name: 'rue',
                                 flex: 0.4
                             }]
                         }, {
@@ -117,17 +166,17 @@ Ext.define('VIN.view.client.Form', {
                             items: [{
                                 xtype: 'textfield',
                                 fieldLabel: 'Ville',
-                                name: 'ville_tf',
+                                name: 'ville',
                                 flex: 1/6
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Province',
-                                name: 'province_tf',
+                                name: 'province',
                                 flex: 1/6
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Code postal',
-                                name: 'code_postal_tf', 
+                                name: 'code_postal', 
                                 flex: 1/6
                             }]
                         }]
@@ -152,12 +201,12 @@ Ext.define('VIN.view.client.Form', {
                             items: [{
                                 xtype: 'textfield',
                                 fieldLabel: 'No',
-                                name: 'no_rue_tf',
+                                name: 'no_civique_fact',
                                 flex: 0.1
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Rue',
-                                name: 'rue_tf',
+                                name: 'rue_fact',
                                 flex: 0.4
                             }]
                         }, {
@@ -168,17 +217,17 @@ Ext.define('VIN.view.client.Form', {
                             items: [{
                                 xtype: 'textfield',
                                 fieldLabel: 'Ville',
-                                name: 'ville_tf',
+                                name: 'ville_fact',
                                 flex: 1/6
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Province',
-                                name: 'province_tf',
+                                name: 'province_fact',
                                 flex: 1/6
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Code postal',
-                                name: 'code_postal_tf', 
+                                name: 'code_postal_fact', 
                                 flex: 1/6
                             }]
                         }]
@@ -198,17 +247,17 @@ Ext.define('VIN.view.client.Form', {
                         items: [{
                             xtype: 'textfield',
                             fieldLabel: 'Nom',
-                            //name: 'no_rue_tf',
+                            name: 'nom_responsable',
                             flex: 0.5
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Téléphone',
-                            //name: 'rue_tf',
+                            name: 'no_tel',
                             flex: 0.25
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Téléphone personnel',
-                            //name: 'rue_tf',
+                            name: 'no_tel_personnel',
                             flex: 0.25                           
                         }]
                     }, {
@@ -219,14 +268,17 @@ Ext.define('VIN.view.client.Form', {
                         items: [{
                             xtype: 'textfield',
                             fieldLabel: 'Fax',
+                            name: 'no_fax',
                             flex: 1/3
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Portable',
+                            name: 'no_cellulaire',
                             flex: 1/3
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Courriel',
+                            name: 'courriel',
                             flex: 1/3
                         }]
                     }]
@@ -318,46 +370,20 @@ Ext.define('VIN.view.client.Form', {
                             itemId: 'pickup_df'
                         }]
                     }]
-                }, {
+                }, {                   
                     layout: 'hbox',
                     bodyStyle: 'background-color:#dfe8f5',
-                    border: false,
+                    border: false,                    
                     defaults: {
-                        padding: 5
+                        xtype: 'button',
+                        padding: 5,
+                        style: 'margin-bottom: 20px; margin-top: 10px; margin-right: 10px'
                     },
                     items: [{
-                        xtype: 'combo',
-                        fieldLabel: 'Représentant',
-                        displayField: 'representant_nom',
-                        name: 'representant_nom',
-                        store: Ext.create('Ext.data.Store', {
-                            model: Ext.define('VIN.model.Representant', {
-                                extend: 'Ext.data.Model',
-                                fields: ['representant_nom']
-                            }),
-                            proxy: {
-                                type: 'ajax',
-                                limitParam: undefined,
-                                pageParam: undefined,
-                                startParam: undefined,
-                                url: ajax_url_prefix + '/misc/get_representants',
-                                reader: {
-                                    type: 'json',
-                                    root: 'rows'
-                                }
-                            }                                    
-                        }),
-                        minChars: 3,                            
-                        forceSelection: true, 
-                        style: 'margin-right: 20px',
-                        listConfig: {
-                            loadingText: 'Recherche...',
-                            emptyText: 'Aucun représentant ne correspond à cette recherche..'
-                        }                        
-                    }, {
-                        xtype: 'numberfield',
-                        fieldLabel: 'No client SAQ'
-                    }]                    
+                        text: 'Sauvegarder',
+                        itemId: 'save_btn',
+                        iconCls: 'disk-icon'                        
+                    }]
                 }]
             }, {
                 // -----------------------------------------------------

@@ -154,11 +154,12 @@ Ext.define('VIN.view.commande.Form', {
                             disabled: true
                         }, {
                             xtype: 'button',
+                            padding: 2,
                             itemId: 'details_client_btn',
                             text: 'Détails du client',
                             disabled: true,
                             iconCls: 'client-icon',
-                            style: 'margin-top: 20px'
+                            style: 'margin-top: 25px'
                         }]
                     }]
                 }, {
@@ -318,11 +319,12 @@ Ext.define('VIN.view.commande.Form', {
                         minValue: 1
                     }, {
                         xtype: 'button',
+                        padding: 2,
                         itemId: 'add_produit_btn',
-                        scale: 'small',
+                        //scale: 'small',
                         text: 'Ajouter',
                         iconCls: 'add-icon',
-                        style: 'margin-top: 20px'
+                        style: 'margin-top: 25px'
                     }]
                 }, {
                     xtype: 'client_produit_grid',
@@ -343,6 +345,7 @@ Ext.define('VIN.view.commande.Form', {
                     border: false,
                     defaults: {
                         xtype: 'button',
+                        padding: 5,
                         style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
                     },
                     items: [{
