@@ -156,11 +156,13 @@ Ext.define('VIN.view.client.Form', {
                                 xtype: 'textfield',
                                 fieldLabel: 'No',
                                 name: 'no_civique',
+                                itemId: 'no_civique_tf',
                                 flex: 0.1
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Rue',
                                 name: 'rue',
+                                itemId: 'rue_tf',
                                 flex: 0.4
                             }]
                         }, {
@@ -172,22 +174,26 @@ Ext.define('VIN.view.client.Form', {
                                 xtype: 'textfield',
                                 fieldLabel: 'Ville',
                                 name: 'ville',
+                                itemId: 'ville_tf',
                                 flex: 1/6
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Province',
                                 name: 'province',
+                                itemId: 'province_tf',
                                 flex: 1/6
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Code postal',
                                 name: 'code_postal', 
+                                itemId: 'code_postal_tf',
                                 flex: 1/6
                             }]
                         }]
                     }, {
                         xtype: 'button',
                         scale: 'small',
+                        itemId: 'copy_addr_btn',
                         iconCls: 'arrow-right-icon',
                         style: 'margin-right: 5px; margin-left: 5px; margin-top: 60px'
                     }, {                   
@@ -207,11 +213,13 @@ Ext.define('VIN.view.client.Form', {
                                 xtype: 'textfield',
                                 fieldLabel: 'No',
                                 name: 'no_civique_fact',
+                                itemId: 'no_civique_fact_tf',
                                 flex: 0.1
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Rue',
                                 name: 'rue_fact',
+                                itemId: 'rue_fact_tf',
                                 flex: 0.4
                             }]
                         }, {
@@ -223,16 +231,19 @@ Ext.define('VIN.view.client.Form', {
                                 xtype: 'textfield',
                                 fieldLabel: 'Ville',
                                 name: 'ville_fact',
+                                itemId: 'ville_fact_tf',
                                 flex: 1/6
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Province',
                                 name: 'province_fact',
+                                itemId: 'province_fact_tf',
                                 flex: 1/6
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Code postal',
                                 name: 'code_postal_fact', 
+                                itemId: 'code_postal_fact_tf',
                                 flex: 1/6
                             }]
                         }]

@@ -48,6 +48,17 @@ Ext.define('VIN.controller.Client', {
                     var view = this._getFormViewInstance(field);
                     view.down('#succ_rb').setValue(true);
                 }
+            },
+
+            'client_form #copy_addr_btn': {
+                click: function(btn) {
+                    var f = this._getFormViewInstance(btn);
+                    Ext.Array.forEach(['no_civique', 'rue', 'ville', 'province', 'code_postal'], function(item) {
+                        var src = f.down(Ext.String.format('#{0}_tf', item));
+                        var dst = f.down(Ext.String.format('#{0}_fact_tf', item));
+                        dst.setValue(src.getValue());
+                    });
+                }
             }
 
         });
