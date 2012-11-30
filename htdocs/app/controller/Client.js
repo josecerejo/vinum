@@ -59,6 +59,35 @@ Ext.define('VIN.controller.Client', {
                         dst.setValue(src.getValue());
                     });
                 }
+            },
+
+            'client_grid actioncolumn': {
+                del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le client #{0} de la base de données', 
+                                                               rec.get('no_client')), 
+                        Ext.bind(function(btn) {
+                            if (btn == 'yes') {
+                                Ext.Ajax.request({
+                                    url: ajax_url_prefix + '/client/delete',
+                                    params: {
+                                        no_client: rec.get('no_client')
+                                    },
+                                    success: function(response) {
+                                        grid.store.reload();
+                                    }
+                                });
+                            }
+                        }, this));
+                },
+                edit_click: function(grid, el, rowIndex, colIndex, e, record, rowEl) {
+                    this.openForm(record);
+                }
+            },
+
+            'client_grid': {
+                itemdblclick: function(view, record, item, index, e, eOpts) {
+                    this.openForm(record);
+                }
             }
 
         });
@@ -66,6 +95,19 @@ Ext.define('VIN.controller.Client', {
 
     _getFormViewInstance: function(any_contained_view) {
         return any_contained_view.up('client_form');
+    },
+
+    openForm: function(client_rec) {
+        var cf = Ext.create('widget.client_form');
+        var mp = Ext.getCmp('main_pnl');
+        mp.add(cf);
+        mp.setActiveTab(cf);
+        cf.load({
+            url: ajax_url_prefix + '/client/load',
+            params: {
+                no_client: client_rec.get('no_client')
+            }
+        });        
     }
 
 });

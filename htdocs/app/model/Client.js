@@ -1,16 +1,22 @@
 Ext.define('VIN.model.Client', {
+
     extend: 'Ext.data.Model',
+
     fields: [{
+        header: '# client',
         name: 'no_client', 
         type: 'int',
         useNull: true
     }, {
+        header: '# SAQ',
         name: 'no_client_saq', 
         type: 'int',
         useNull: true
     }, {
+        header: 'Nom social',
         name: 'nom_social'
     }, {
+        header: '# civique',
         name: 'no_civique',
         type: 'string', // could be an integer
     }, {
@@ -20,34 +26,48 @@ Ext.define('VIN.model.Client', {
     }, {
         name: 'province',
     }, {
+        header: 'Code postal',
         name: 'code_postal',
     }, {
+        header: 'Nom du responsable',
         name: 'nom_responsable',
     }, {
+        header: '# téléphone',
         name: 'no_tel',
     }, {
+        header: '# fax',
         name: 'no_fax',
     }, {
+        header: '# téléphone personnel',
         name: 'no_tel_personnel',
     }, {
+        header: '# portable',
         name: 'no_cellulaire',
     }, {
         name: 'courriel',
     }, {
+        header: 'Type de client',
         name: 'type_client',
     }, {
+        header: 'Spécialité',
         name: 'specialite',
     }, {
+        header: 'Représentant',
         name: 'representant',
     }, {
+        header: 'Expédition',
         name: 'expedition',
     }, {
+        header: '# succursale',
         name: 'no_succursale',
     }, {
         name: 'note',
     }, {
+        header: 'Ouverture du dossier',
         name: 'date_ouverture_dossier',
         type: 'date'
     }],
+
     idProperty: 'no_client'
+
 });

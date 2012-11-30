@@ -105,7 +105,7 @@ Ext.define('VIN.controller.Commande', {
             },
             '#client_produit actioncolumn': {
                 // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
-                remove_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     this.removeClientProduit(this._getFormViewInstance(grid), grid, rec);
                 },
                 add_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {

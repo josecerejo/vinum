@@ -1,4 +1,5 @@
 Ext.define('VIN.view.client.ProduitList', {
+
     extend: 'Ext.grid.Panel',
     alias: 'widget.client_produit_grid',
     requires: ['Ext.ux.grid.FiltersFeature'],
@@ -21,7 +22,7 @@ Ext.define('VIN.view.client.ProduitList', {
                 icon: 'resources/images/icons/delete.png',
                 tooltip: 'Enlever ce produit de la liste',
                 handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
-                    this.fireEvent('remove_click', grid, rowIndex, colIndex, node, e, record, rowNode);
+                    this.fireEvent('del_click', grid, rowIndex, colIndex, node, e, record, rowNode);
                 }
             }]
         });
@@ -63,16 +64,17 @@ Ext.define('VIN.view.client.ProduitList', {
             clicksToEdit: 1
         })];
 
-        this.callParent(arguments);
-    },
+        this.features = [{
+            ftype: 'filters',
+            encode: true,
+            local: false
+        }];
 
-    viewConfig: {
-        preserveScrollOnRefresh: true
-    },
-    features: [{
-        ftype: 'filters',
-        encode: true,
-        local: false
-    }]
+        this.viewConfig = {
+            preserveScrollOnRefresh: true
+        };
+
+        this.callParent(arguments);
+    }
 
 });

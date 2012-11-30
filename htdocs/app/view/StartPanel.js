@@ -2,7 +2,7 @@ Ext.define('VIN.view.StartPanel', {
 
     extend: 'Ext.panel.Panel',
     alias: 'widget.start_panel',
-    views: ['VIN.view.MainPanel', 'VIN.view.client.List', 'VIN.view.commande.Form', 'VIN.view.client.FOrm'],
+    //views: ['VIN.view.MainPanel', 'VIN.view.client.List', 'VIN.view.commande.Form', 'VIN.view.client.Form'],
     layout: 'fit',
     title: 'Démarrer',
     iconCls: 'home-icon',
@@ -23,7 +23,8 @@ Ext.define('VIN.view.StartPanel', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'src', 'text'],
                     data: [{name: 'create_commande', src: 'resources/images/icons/empty-shopping-cart.png', text: 'Créer une commande'},
-                           {name: 'edit_client', src: 'resources/images/icons/about-me.png', text: 'Créer ou modifier un client'}]
+                           {name: 'edit_client', src: 'resources/images/icons/about-me.png', text: 'Créer ou modifier un client'},
+                           {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir la liste de clients'}]
                 }),     
                 tpl: [
                     '<tpl for=".">',
@@ -48,6 +49,12 @@ Ext.define('VIN.view.StartPanel', {
                             var cf = Ext.create('widget.client_form');
                             Ext.getCmp('main_pnl').add(cf);
                             Ext.getCmp('main_pnl').setActiveTab(cf);
+                            break;
+                        case 'list_clients':
+                            var cg = Ext.create('widget.client_grid');
+                            cg.store.load();
+                            Ext.getCmp('main_pnl').add(cg);
+                            Ext.getCmp('main_pnl').setActiveTab(cg);
                             break;
                         }
                     }

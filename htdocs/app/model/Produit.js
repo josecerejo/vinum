@@ -1,5 +1,7 @@
 Ext.define('VIN.model.Produit', {
+
     extend: 'Ext.data.Model',
+
     fields: [{
         header: '# produit interne',
         name: 'no_produit_interne', 
@@ -48,5 +50,7 @@ Ext.define('VIN.model.Produit', {
         header: '',
         name: 'locked_by_user'
     }],
+
     idProperty: 'no_produit_interne'
+
 });
