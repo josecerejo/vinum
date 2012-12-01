@@ -40,6 +40,7 @@ Ext.define('VIN.view.commande.Form', {
             height: 500,
             layout: 'fit',
             closeAction: 'hide',
+            parent_form: this,
             itemId: 'email_win',
             items: {
                 xtype: 'form',

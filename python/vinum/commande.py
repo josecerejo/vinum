@@ -33,11 +33,11 @@ def _generate_facture(g, ncf, doc_type):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
-    client['representant'] = pg.select1(cursor, 'representant', 'representant_nom', 
-                                        where={'representant_id': client['representant']})
     doc_values = {'items': []}
     doc_values.update(commande)
     doc_values.update(client)    
+    doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom', 
+                                                where={'representant_id': client['representant_id']})
     cursor.execute("""select * from produit p, commande_produit cp 
                       where p.no_produit_interne = cp.no_produit_interne
                       and no_commande_facture = %s""", [ncf])

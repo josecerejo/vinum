@@ -208,8 +208,9 @@ Ext.define('VIN.controller.Commande', {
             },
             '#send_email_btn': {
                 click: function(btn) {
-                    var form = this._getFormViewInstance(btn);
-                    var ef = btn.up('#email_win').down('#email_form');
+                    var ew = btn.up('#email_win');
+                    var form = ew.parent_form;
+                    var ef = ew.down('#email_form');
                     if (ef.getForm().isValid()) {
                         wait_mask.show();
                         ef.submit({
