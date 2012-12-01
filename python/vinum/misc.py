@@ -8,4 +8,4 @@ def get_succursales():
 
 @app.route('/misc/get_representants', methods=['GET'])
 def get_representants():
-    return get(g, request, 'representant', ('nom',))
+    return get(g, request, 'representant', ('representant_nom',))

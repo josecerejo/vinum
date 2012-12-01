@@ -19,6 +19,7 @@ for row in f:
     data = dict(zip(cols, [v.strip() if v.strip() else None for v in row]))
     data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])
     data['type_client'] = type_client_map.get(data['type_client'], data['type_client'])
+    data['representant_id'] = selectId(cursor, 'representant', where={'representant_nom': data['representant_id']})
     for possible_saq_nb in re.findall('\d+', data['nom_social']):
         if possible_saq_nb == data['no_client_saq']:
             data['nom_social'] = data['nom_social'].replace(possible_saq_nb, '').strip()

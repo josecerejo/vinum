@@ -129,7 +129,7 @@ Ext.define('VIN.view.client.Form', {
                             }                                    
                         }),
                         minChars: 3,                            
-                        forceSelection: true, 
+                        forceSelection: false, 
                         listConfig: {
                             loadingText: 'Recherche...',
                             emptyText: 'Aucun représentant ne correspond à cette recherche..'
@@ -319,24 +319,17 @@ Ext.define('VIN.view.client.Form', {
                             inputValue: 'direct',
                             itemId: 'direct_rb',
                             checked: true,
-                            flex: 0.05
-                        }, {
-                            xtype: 'datefield',
-                            hideLabel: true,
-                            name: 'date_direct',
-                            format: 'Y-m-d',
-                            flex: 0.1,
-                            itemId: 'direct_df'
+                            flex: 0.2
                         }, {
                             xtype: 'radiofield',
                             boxLabel: 'Succursale',
                             name: 'expedition',
                             inputValue: 'succursale',
-                            flex: 0.05,
+                            flex: 0.2,
                             itemId: 'succ_rb'
                         }, {
                             xtype: 'combo',
-                            flex: 0.1,
+                            flex: 0.4,
                             displayField: 'no_succursale',
                             name: 'no_succursale',
                             store: Ext.create('Ext.data.Store', {
@@ -375,16 +368,9 @@ Ext.define('VIN.view.client.Form', {
                             boxLabel: 'Pick up',
                             name: 'expedition',
                             inputValue: 'pickup',
-                            flex: 0.05,
+                            flex: 0.2,
                             itemId: 'pickup_rb'
-                        }/*, {
-                            xtype: 'datefield',
-                            hideLabel: true,
-                            namme: 'date_pickup',
-                            format: 'Y-m-d',
-                            flex: 0.1,
-                            itemId: 'pickup_df'
-                        }*/]
+                        }]
                     }]
                 }, {                   
                     layout: 'hbox',

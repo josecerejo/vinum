@@ -18,7 +18,7 @@ Ext.define('VIN.controller.Client', {
                             no_client: records[0].get('no_client')
                         }
                     });
-                }
+                },
             },
 
             'client_form #save_btn': {
@@ -28,15 +28,29 @@ Ext.define('VIN.controller.Client', {
                         f.submit({
                             url: ajax_url_prefix + '/client/save',
                             success: function(form, action) {
-                                var no_client = action.result.no_client;
+                                //var no_client = action.result.no_client;
+                                var client_rec = Ext.create('VIN.model.Client', action.result.data);
+                                var no_client = client_rec.get('no_client');
                                 Ext.Msg.show({
                                     title: 'Vinum',
-                                    msg: Ext.String.format("Le client #{0} a été {1}", no_client, 
+                                    msg: Ext.String.format("Le client #{0} a été {1} (et tous les onglets qui y font référence également)", no_client, 
                                                            f.down('#no_client_tf').getValue() ? 'modifié' : 'créé'),
                                     icon: Ext.MessageBox.WARNING,
                                     buttons: Ext.MessageBox.OK
                                 });                                            
                                 f.down('#no_client_tf').setValue(no_client);
+                                var mp = Ext.getCmp('main_pnl');   
+                                for (var i = 0; i < mp.items.length; i++) {
+                                    var tab =  mp.items.getAt(i);
+                                    if (tab.xtype == 'commande_form') {
+                                        if (tab.curr.client_rec !== undefined &&
+                                            tab.curr.client_rec.get('no_client') == no_client) {
+                                            tab.curr.client_rec = client_rec; // this updates the form instance 
+                                            VIN.app.getController('Commande').loadClientPart(tab);
+                                        }
+                                    }
+                                }
+
                             }
                         });
                     }

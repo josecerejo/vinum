@@ -3,7 +3,7 @@ Ext.Loader.setPath('Ext.ux', './extjs/examples/ux');
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = false;
-var initial_tab = 'widget.client_form';
+var initial_tab = ''; //'widget.client_form';
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
@@ -41,12 +41,23 @@ Ext.override(Ext.form.action.Submit, {
     }
 });
 
+Ext.override(Ext.form.action.Load, {
+    failure: function(form, action) {
+        if (use_flask_server) {
+            VIN.utils.createFlaskDebugConsoleWindow(action.response.responseText);
+        } else {
+            VIN.utils.serverErrorPopup(action.result.error_msg);            
+        }
+    }
+});
+
 Ext.application({
     name: 'VIN',
     controllers: ['MainToolbar', 'Client', 'Commande'],
     autoCreateViewport: true,
     launch: function() {
         // global!
+        VIN.app = this;
         wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Un moment svp..."});
     }
 });

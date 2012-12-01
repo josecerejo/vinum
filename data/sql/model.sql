@@ -1,3 +1,22 @@
+drop table if exists representant cascade;
+create table representant (
+    representant_id serial primary key,
+    representant_nom text
+);
+
+insert into representant values (2, 'David Doucet');
+insert into representant values (4, 'Nicolas Giroux');
+insert into representant values (7, 'Jocelyn Racicot');
+insert into representant values (13, 'François Lachapelle');
+insert into representant values (18, 'Annie-C. Gaudreau');
+insert into representant values (19, 'André Baillargeon');
+insert into representant values (20, 'Steve Fradette');
+insert into representant values (22, 'Alain Doucet');
+insert into representant values (23, 'Caroline Chouinard');
+insert into representant values (25, 'Patricia Morin');
+insert into representant values (27, 'Inactif');
+insert into representant values (29, 'bureau');
+
 drop table if exists client cascade;
 create table client (
     no_client serial primary key,
@@ -16,7 +35,7 @@ create table client (
     courriel text,
     type_client text,
     specialite text,
-    representant text,
+    representant_id integer,
     expedition text,
     no_succursale text,
     note text,
@@ -122,26 +141,6 @@ create table succursale_saq (
     adresse text,
     ville text
 );
-
-drop table if exists representant cascade;
-create table representant (
-    representant_id serial primary key,
-    representant_nom text
-);
-
-insert into representant values (2, 'David Doucet');
-insert into representant values (4, 'Nicolas Giroux');
-insert into representant values (7, 'Jocelyn Racicot');
-insert into representant values (13, 'François Lachapelle');
-insert into representant values (18, 'Annie-C. Gaudreau');
-insert into representant values (19, 'André Baillargeon');
-insert into representant values (20, 'Steve Fradette');
-insert into representant values (22, 'Alain Doucet');
-insert into representant values (23, 'Caroline Chouinard');
-insert into representant values (25, 'Patricia Morin');
-insert into representant values (27, '[inactif]');
-insert into representant values (29, '[bureau]');
-
 
 --insert into inventaire (no_produit_interne, no_produit_saq, no_commande_saq, date_commande, millesime, statut, solde) values (178, -1, -1, '2000-01-01', 2000, 'Actif', 23);
 --update produit set locked_by_user = 'test' where type_vin like 'AUS%';

@@ -9,9 +9,13 @@ def get_client():
 
 @app.route('/client/load', methods=['POST'])
 def load_client():
-    return {'success': True,
-            'data': pg.select1r(g.db.cursor(), 'client', 
-                                where={'no_client': request.form['no_client']})}
+    client = pg.select1r(g.db.cursor(), 'client', 
+                               where={'no_client': request.form['no_client']})
+    client['representant_nom'] = pg.select1(g.db.cursor(), 'representant', 'representant_nom',
+                                            where={'representant_id': client['representant_id']})
+    # !!! this should be done here instead of the client
+    #client['default_commission'] = 0.16 if client['type_client'] == 'restaurant' else 0.23
+    return {'success': True, 'data': client}
 
 
 @app.route('/client/save', methods=['POST'])
@@ -19,10 +23,12 @@ def save_client():
     rf = request.form.to_dict()
     no_client = rf.pop('no_client')
     if no_client == '': no_client = None
+    rf['representant_id'] = pg.selectId(g.db.cursor(), 'representant', 
+                                        where={'representant_nom': rf.get('representant_nom')})
     client = pg.upsert(g.db.cursor(), 'client', where={'no_client': no_client},
-                       values=rf, filter_values=True, map_values={'': None}, debug_quer=True)
+                       values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
-    return {'success': True, 'no_client': client['no_client']}
+    return {'success': True, 'data': client}
     
     
 @app.route('/client/update', methods=['POST'])

@@ -14,6 +14,16 @@ Ext.define('VIN.view.commande.Form', {
 
     initComponent: function() {
 
+        // working state variables (that can't be stored in the controller because it's a singleton)
+        this.curr = {
+            client_rec: undefined,
+            produit_rec: undefined,
+            no_commande_facture: undefined
+        };
+
+        // mechanism to prevent reloading of already modified inventaire records (i.e. being currently part of a commande)
+        this.inventaire_cache = {};
+
         // stores
         var client_search_store = Ext.create('VIN.store.Clients');
         var produit_search_store = Ext.create('VIN.store.Produits');
@@ -139,7 +149,7 @@ Ext.define('VIN.view.commande.Form', {
                             fieldLabel: 'Type',
                             itemId: 'type_client_tf',
                             flex: 0.2,
-                            disabled: true                        
+                            disabled: true
                         }],
                     }, {
                         layout: 'hbox',
@@ -272,7 +282,7 @@ Ext.define('VIN.view.commande.Form', {
                         queryMode: 'local',
                         triggerAction: 'all',
                         displayField: 'default_commission',
-                        valueField: 'default_commission',
+                        name: 'default_commission',
                         fieldLabel: 'Commission par défaut',
                         forceSelection: false,
                         regex: /^0\.?[0-9]*$/,
