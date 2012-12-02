@@ -211,6 +211,7 @@ Ext.define('VIN.controller.Commande', {
                         form.email_win.down('#email_addr_tf').setValue('info@saq.com');
                         form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Bon de commande pour la facture #{0}', 
                                                                                             form.curr.no_commande_facture));
+                        form.email_win.down('#email_msg_ta').setValue(form.email_msg_bdc);
                         form.email_win.show();
                     }, this));
                 }                
