@@ -150,26 +150,30 @@ Ext.define('VIN.controller.Commande', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     this.saveCommande(form, Ext.bind(function() {
-                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0', 
-                                                    ajax_url_prefix, form.curr.no_commande_facture);
+                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&_dc={2}', 
+                                                    ajax_url_prefix, form.curr.no_commande_facture, Ext.Number.randomInt(1000, 100000));
                         window.open(url, '_blank');
                     }, this));
                 }
             },
-            '#download_facture_btn': {
+            '#preview_bdc_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     this.saveCommande(form, Ext.bind(function() {
-                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=1', 
-                                                    ajax_url_prefix, form.curr.no_commande_facture);
-                        location.href = url;
+                        var url = Ext.String.format('{0}/commande/download_bdc?no_commande_facture={1}&attach=0&_dc={2}', 
+                                                    ajax_url_prefix, form.curr.no_commande_facture, Ext.Number.randomInt(1000, 100000));
+                        window.open(url, '_blank');
                     }, this));
                 }
             },
-            // '#save_commande_btn': {
+            // '#download_facture_btn': {
             //     click: function(btn) {
             //         var form = this._getFormViewInstance(btn);
-            //         this.saveCommande(form);
+            //         this.saveCommande(form, Ext.bind(function() {
+            //             var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=1', 
+            //                                         ajax_url_prefix, form.curr.no_commande_facture);
+            //             location.href = url;
+            //         }, this));
             //     }
             // },
             '#email_facture_btn': {
@@ -177,28 +181,39 @@ Ext.define('VIN.controller.Commande', {
                     var form = this._getFormViewInstance(btn);
                     this.saveCommande(form, Ext.bind(function() {
                         var courriel = form.curr.client_rec.get('courriel');
+                        form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_facture';
+                        form.email_win.down('#email_addr_tf').setValue(courriel);
+                        form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Facture #{0}', 
+                                                                                            form.curr.no_commande_facture));
+                        form.email_win.down('#email_msg_ta').setValue(form.email_msg_facture);
                         if (!courriel) {
+                            form.email_win.down('#email_addr_tf').markInvalid("L'adresse courriel de ce client n'est pas définie");
                             Ext.Msg.show({
                                 title: 'Vinum',
                                 msg: "L'adresse courriel de ce client n'est pas définie",
                                 icon: Ext.MessageBox.WARNING,
                                 buttons: Ext.MessageBox.OK,
-                                fn: Ext.bind(function() {
-                                    form.email_win.down('#email_addr_tf').setValue('');
-                                    form.email_win.down('#email_addr_tf').markInvalid("L'adresse courriel de ce client n'est pas définie");
-                                    form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Facture #{0}', 
-                                                                                                        form.curr.no_commande_facture));
+                                fn: function() {
                                     form.email_win.show();
-                                }, this)
+                                }
                             });                               
                         } else {
-                            form.email_win.down('#email_addr_tf').setValue(courriel);
-                            form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Facture #{0}', 
-                                                                                                form.curr.no_commande_facture));
                             form.email_win.show();
                         }
                     }, this));
                 }
+            },
+            '#email_bon_de_commande_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    this.saveCommande(form, Ext.bind(function() {
+                        form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_bdc';
+                        form.email_win.down('#email_addr_tf').setValue('info@saq.com');
+                        form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Bon de commande pour la facture #{0}', 
+                                                                                            form.curr.no_commande_facture));
+                        form.email_win.show();
+                    }, this));
+                }                
             },
             '#cancel_email_btn': {
                 click: function(btn) {
@@ -408,7 +423,7 @@ Ext.define('VIN.controller.Commande', {
             },
             success: Ext.bind(function(_form, action) {
                 form.curr.no_commande_facture = action.result.no_commande_facture;
-                form.down('#download_facture_btn').setDisabled(false);
+                //form.down('#download_facture_btn').setDisabled(false);
                 form.down('#email_facture_btn').setDisabled(false);
                 if (callback !== undefined) {
                     callback();

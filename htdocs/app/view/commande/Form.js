@@ -32,10 +32,13 @@ Ext.define('VIN.view.commande.Form', {
         var commande_store = Ext.create('VIN.store.Commandes');
 
         var grid_height = 326;
+
+        this.email_msg_facture = 'Bonjour,\n\nVoici votre facture.\n\nBonne journée,\n\nLa Société Roucet';
+        this.email_msg_bdc = 'Bonjour,\n\nVoici le bon de commande.\n\nBonne journée,\n\nLa Société Roucet';
                 
         // email form
         this.email_win = Ext.create('Ext.window.Window', {
-            title: 'Envoyer la facture par courriel',
+            title: 'Envoyer un document par courriel',
             width: 600,
             height: 500,
             layout: 'fit',
@@ -48,7 +51,6 @@ Ext.define('VIN.view.commande.Form', {
                 border: 0,
                 itemId: 'email_form',
                 padding: 10,
-                url: ajax_url_prefix + '/commande/email_facture',
                 fieldDefaults: {
                     anchor: '100%'
                 },                
@@ -71,16 +73,16 @@ Ext.define('VIN.view.commande.Form', {
                     allowBlank: false
                 }, {
                     xtype: 'checkbox',
-                    boxLabel: 'Inclure la facture en fichier PDF',
+                    boxLabel: 'Inclure le document en fichier PDF',
                     name: 'include_pdf',
                     checked: true
                 }, {
                     xtype: 'textarea',
                     hideLabel: true,
                     name: 'msg',
+                    itemId: 'email_msg_ta',
                     allowBlank: false,
-                    value: 'Bonjour,\n\nVoici votre facture.\n\nBonne journée,\n\nLa Société Roucet',
-                    style: 'margin:0', // Remove default margin
+                    style: 'margin: 0', // Remove default margin
                     flex: 1  // Take up all *remaining* vertical space
                 }]
             },
@@ -366,11 +368,11 @@ Ext.define('VIN.view.commande.Form', {
                         text: 'Visualiser la facture',
                         itemId: 'preview_facture_btn',
                         iconCls: 'monitor-icon'                        
-                    },{
+                    }/*,{
                         text: 'Télécharger la facture',
                         itemId: 'download_facture_btn',
                         iconCls: 'disk-icon'
-                    }, {
+                    }*/, {
                         text: 'Envoyer la facture par courriel',
                         itemId: 'email_facture_btn',
                         iconCls: 'email-go-icon'
@@ -379,7 +381,6 @@ Ext.define('VIN.view.commande.Form', {
             }, {
                 // -----------------------------------------------------
                 // right part panel
-                //layout: 'anchor',
                 items: [{
                     xtype: 'inventaire_grid',
                     itemId: 'inventaire',
@@ -413,8 +414,26 @@ Ext.define('VIN.view.commande.Form', {
                         montant_commission: 0.75,
                         statut: 0.5
                     },
-                    height: grid_height,
-                    style: 'margin-bottom: 20px'
+                    height: grid_height
+                    //style: 'margin-bottom: 20px'
+                }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    defaults: {
+                        xtype: 'button',
+                        padding: 5,
+                        style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
+                    },
+                    items: [{
+                        text: 'Visualiser le bon de commande',
+                        itemId: 'preview_bdc_btn',
+                        iconCls: 'monitor-icon'                        
+                    }, {
+                        text: 'Envoyer le bon de commande par courriel',
+                        itemId: 'email_bon_de_commande_btn',
+                        iconCls: 'email-go-icon'                        
+                    }]
                 }]
             }]
         };
