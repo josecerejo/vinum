@@ -9,10 +9,10 @@ Ext.define('VIN.controller.Client', {
 
         this.control({
 
-            'client_form #client_combo': {
+            'client_form #nom_social_dd': {
                 select: function(field, records, eopts) {
-                    var f = this._getFormViewInstance(field);
-                    f.load({
+                    var form = this._getFormViewInstance(field);
+                    form.load({
                         url: ajax_url_prefix + '/client/load',
                         params: {
                             no_client: records[0].get('no_client')
@@ -23,54 +23,38 @@ Ext.define('VIN.controller.Client', {
 
             'client_form #save_btn': {
                 click: function(btn) {
-                    var f = this._getFormViewInstance(btn);
-                    if (f.getForm().isValid()) {
-                        f.submit({
-                            url: ajax_url_prefix + '/client/save',
-                            success: function(form, action) {
-                                //var no_client = action.result.no_client;
-                                var client_rec = Ext.create('VIN.model.Client', action.result.data);
-                                var no_client = client_rec.get('no_client');
-                                Ext.Msg.show({
-                                    title: 'Vinum',
-                                    msg: Ext.String.format("Le client #{0} a été {1} (et tous les onglets qui y font référence également)", no_client, 
-                                                           f.down('#no_client_tf').getValue() ? 'modifié' : 'créé'),
-                                    icon: Ext.MessageBox.WARNING,
-                                    buttons: Ext.MessageBox.OK
-                                });                                            
-                                f.down('#no_client_tf').setValue(no_client);
-                                var mp = Ext.getCmp('main_pnl');   
-                                for (var i = 0; i < mp.items.length; i++) {
-                                    var tab =  mp.items.getAt(i);
-                                    if (tab.xtype == 'commande_form') {
-                                        if (tab.curr.client_rec !== undefined &&
-                                            tab.curr.client_rec.get('no_client') == no_client) {
-                                            tab.curr.client_rec = client_rec; // this updates the form instance 
-                                            VIN.app.getController('Commande').loadClientPart(tab);
-                                        }
-                                    }
-                                }
-
-                            }
-                        });
-                    }
+                    var form = this._getFormViewInstance(btn);
+                    this.saveClient(form);
                 }
             },
 
             'client_form #succ_combo': {
                 focus: function(field) {
-                    var view = this._getFormViewInstance(field);
-                    view.down('#succ_rb').setValue(true);
+                    var form = this._getFormViewInstance(field);
+                    form.down('#succ_rb').setValue(true);
                 }
             },
 
             'client_form #copy_addr_btn': {
                 click: function(btn) {
-                    var f = this._getFormViewInstance(btn);
+                    var form = this._getFormViewInstance(btn);
                     Ext.Array.forEach(['no_civique', 'rue', 'ville', 'province', 'code_postal'], function(item) {
-                        var src = f.down(Ext.String.format('#{0}_tf', item));
-                        var dst = f.down(Ext.String.format('#{0}_fact_tf', item));
+                        var src = form.down(Ext.String.format('#{0}_tf', item));
+                        var dst = form.down(Ext.String.format('#{0}_fact_tf', item));
                         dst.setValue(src.getValue());
+                    });
+                }
+            },
+
+            'client_form #create_commande_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    this.saveClient(form, function() {
+                        var cf = Ext.create('widget.commande_form');
+                        var mp = Ext.getCmp('main_pnl');
+                        mp.add(cf);
+                        mp.setActiveTab(cf);
+                        VIN.app.getController('Commande').loadClientPart(cf, form.down('#no_client_tf').getValue());
                     });
                 }
             },
@@ -94,15 +78,15 @@ Ext.define('VIN.controller.Client', {
                         }, this));
                 },
                 edit_click: function(grid, el, rowIndex, colIndex, e, record, rowEl) {
-                    this.openForm(record);
+                    this.openClient(record);
                 }
             },
 
             'client_grid': {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
-                    this.openForm(record);
+                    this.openClient(record);
                 }
-            }
+            }            
 
         });
     },
@@ -111,7 +95,7 @@ Ext.define('VIN.controller.Client', {
         return any_contained_view.up('client_form');
     },
 
-    openForm: function(client_rec) {
+    openClient: function(client_rec) {
         var cf = Ext.create('widget.client_form');
         var mp = Ext.getCmp('main_pnl');
         mp.add(cf);
@@ -122,6 +106,41 @@ Ext.define('VIN.controller.Client', {
                 no_client: client_rec.get('no_client')
             }
         });        
-    }
+    },
 
+    saveClient: function(form, callback) {
+        if (form.getForm().isValid()) {
+            form.submit({
+                url: ajax_url_prefix + '/client/save',
+                success: function(_form, action) {
+                    var client_rec = Ext.create('VIN.model.Client', action.result.data);
+                    var no_client = client_rec.get('no_client');
+                    form.down('#no_client_tf').setValue(no_client);
+                    var mp = Ext.getCmp('main_pnl');   
+                    // cycle through every tab: if a commande_form is found and it's loaded with 
+                    // this client, update its values (and importantly, let the user know)
+                    for (var i = 0; i < mp.items.length; i++) {
+                        var tab =  mp.items.getAt(i);
+                        if (tab.xtype == 'commande_form') {
+                            if (tab.curr.client_rec !== undefined &&
+                                tab.curr.client_rec.get('no_client') == no_client) {
+                                VIN.app.getController('Commande').loadClientPart(tab, no_client);
+                            }
+                        }
+                    }                    
+                    if (callback !== undefined) {
+                        callback();
+                    } else {
+                        Ext.Msg.show({
+                            title: 'Vinum',
+                            msg: Ext.String.format("Le client #{0} a été {1} (et tous les onglets qui y font référence également)", no_client, 
+                                                   form.down('#no_client_tf').getValue() ? 'modifié' : 'créé'),
+                            icon: Ext.MessageBox.WARNING,
+                            buttons: Ext.MessageBox.OK
+                        });                                                                
+                    }
+                }
+            });
+        }
+    }
 });

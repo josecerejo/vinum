@@ -132,7 +132,7 @@ Ext.define('VIN.view.commande.Form', {
                             displayField: 'nom_social',
                             name: 'nom_social',
                             store: client_search_store,
-                            itemId: 'client_combo',
+                            itemId: 'nom_social_dd',
                             fieldLabel: 'Nom',
                             minChars: 3,
                             forceSelection: true,
@@ -149,8 +149,10 @@ Ext.define('VIN.view.commande.Form', {
                             xtype: 'textfield',
                             fieldLabel: 'Type',
                             itemId: 'type_client_tf',
+                            name: 'type_client',
                             flex: 0.2,
-                            disabled: true
+                            readOnly: true,
+                            cls: 'x-item-disabled'
                         }],
                     }, {
                         layout: 'hbox',
@@ -290,6 +292,7 @@ Ext.define('VIN.view.commande.Form', {
                         regexText: 'La commission doit être une valeur entre 0 et 1',
                         store: Ext.create('Ext.data.Store', {
                             fields: ['default_commission'],
+                            // !!! this should ideally come from the backend, not be hardcoded here
                             data: [{default_commission: 0.16},
                                    {default_commission: 0.23}]
                         })                        

@@ -44,7 +44,7 @@ Ext.define('VIN.view.client.Form', {
                         displayField: 'nom_social',
                         name: 'nom_social',
                         store: client_search_store,
-                        itemId: 'client_combo',
+                        itemId: 'nom_social_dd',
                         fieldLabel: 'Client',
                         minChars: 3,
                         forceSelection: false, // important if we want to allow client creation
@@ -385,6 +385,10 @@ Ext.define('VIN.view.client.Form', {
                         text: 'Sauvegarder',
                         itemId: 'save_btn',
                         iconCls: 'disk-icon'                        
+                    }, {
+                        text: 'Créer une commande pour ce client',
+                        itemId: 'create_commande_btn',
+                        iconCls: 'commandes-add-icon'
                     }]
                 }]
             }, {

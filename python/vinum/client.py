@@ -13,8 +13,8 @@ def load_client():
                                where={'no_client': request.form['no_client']})
     client['representant_nom'] = pg.select1(g.db.cursor(), 'representant', 'representant_nom',
                                             where={'representant_id': client['representant_id']})
-    # !!! this should be done here instead of the client
-    #client['default_commission'] = 0.16 if client['type_client'] == 'restaurant' else 0.23
+    # !!! this should be in the database
+    client['default_commission'] = 0.16 if client['type_client'] == 'restaurant' else 0.23
     return {'success': True, 'data': client}
 
 

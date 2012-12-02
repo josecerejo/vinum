@@ -24,11 +24,11 @@ Ext.define('VIN.controller.Commande', {
                     }
                 }
             },
-            'commande_form #client_combo': {
+            'commande_form #nom_social_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
-                    form.curr.client_rec = records[0].copy();
-                    this.loadClientPart(form);
+                    //form.curr.client_rec = records[0].copy();
+                    this.loadClientPart(form, records[0].get('no_client'));
                 }
             },
             '#details_client_btn': {
@@ -116,7 +116,7 @@ Ext.define('VIN.controller.Commande', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     var is_valid = true;
-                    Ext.Array.each(['#client_combo', '#produit_combo', '#add_produit_qc_nf'], function(item_id) {
+                    Ext.Array.each(['#nom_social_dd', '#produit_combo', '#add_produit_qc_nf'], function(item_id) {
                         if (!form.down(item_id).getValue()) {
                             form.down(item_id).markInvalid('Ce champ est requis');
                             is_valid = false;
@@ -337,6 +337,7 @@ Ext.define('VIN.controller.Commande', {
                          {property:'date_commande', direction:'ASC', root:'data'}]);
 
         var rem_qc = desired_qc;
+        var default_commission = form.down('#default_commission_combo').getValue();
         for (var i = 0; i < actif_recs.getCount(); i++) {
 
             var rec = actif_recs.getAt(i);
@@ -358,7 +359,6 @@ Ext.define('VIN.controller.Commande', {
             var inv_comm = rec.copy();
             inv_comm.set('quantite_caisse', qc);
             inv_comm.set('quantite_bouteille', qb);
-            var default_commission = form.down('#default_commission_combo').getValue();
             inv_comm.set('commission', default_commission);
             var pc = inv_comm.get('prix_coutant');
             inv_comm.set('montant_commission', VIN.utils.removeTaxes(pc) * default_commission);
@@ -372,6 +372,7 @@ Ext.define('VIN.controller.Commande', {
         }
         
         if (rem_qc > 0) {
+            // backorders
             var comm = Ext.create('VIN.model.Commande', {
                 no_produit_interne: form.curr.produit_rec.get('no_produit_interne'),
                 type_vin: form.curr.produit_rec.get('type_vin'),
@@ -380,7 +381,7 @@ Ext.define('VIN.controller.Commande', {
                 no_commande_saq: -1,
                 quantite_caisse: rem_qc,
                 quantite_bouteille: rem_qc * form.curr.produit_rec.get('quantite_par_caisse'),
-                commission: 0.16,
+                commission: default_commission,
                 statut: 'BO'
             });
             cg.store.add(comm);
@@ -424,21 +425,25 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    loadClientPart: function(form) {
-        var r = form.curr.client_rec;
-        var adresse = Ext.String.format('{0} {1} {2} {3}', r.get('no_civique')||'<no?>', 
-                                        r.get('rue')||'<rue?>', r.get('ville')||'<ville?>',
-                                        r.get('code_postal')||'<code_postal?>');
-        form.down('#adresse_tf').setValue(adresse);
-        if (r.get('type_client') == 'restaurant') {
-            form.down('#default_commission_combo').setValue(0.16);
-        } else if (r.get('type_client') == 'particulier') {
-            form.down('#default_commission_combo').setValue(0.23);
-        }
-        form.down('#type_client_tf').setValue(r.get('type_client'));
-        form.down('#details_client_btn').setDisabled(false);
-        form.loadRecord(r);
-        this.updateClientProduit(form);
+    loadClientPart: function(form, no_client) {
+        form.down('#nom_social_dd').forceSelection = false;
+        form.load({
+            url: ajax_url_prefix + '/client/load',
+            params: {
+                no_client: no_client
+            },
+            success: Ext.bind(function(_form, action) {
+                form.down('#nom_social_dd').forceSelection = true;
+                form.down('#details_client_btn').setDisabled(false);
+                var r = Ext.create('VIN.model.Client', action.result.data);
+                form.curr.client_rec = r; // save client state in form instance
+                var adresse = Ext.String.format('{0} {1} {2} {3}', r.get('no_civique')||'<no?>', 
+                                                r.get('rue')||'<rue?>', r.get('ville')||'<ville?>',
+                                                r.get('code_postal')||'<code_postal?>');
+                form.down('#adresse_tf').setValue(adresse);
+                this.updateClientProduit(form);
+            }, this)
+        });
     }
 
 });
