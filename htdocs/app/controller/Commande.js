@@ -10,7 +10,7 @@ Ext.define('VIN.controller.Commande', {
         this.control({
             'commande_form': {
                 beforeclose: function(panel) {
-                    if (panel.down('#commande').getStore().getCount() > 0) {
+                    if (panel.down('#commande_item_grid').getStore().getCount() > 0) {
                         Ext.Msg.confirm('Vinum', 
                                         "La commande n'a pas été envoyée par courriel, êtes-vous certain de vouloir l'annuler?",
                                         function(btn) {
@@ -52,7 +52,7 @@ Ext.define('VIN.controller.Commande', {
                     form.down('#direct_rb').setValue(true);
                 }
             },
-            'commande_form #succ_combo': {
+            'commande_form #succ_dd': {
                 focus: function(field) {
                     var form = this._getFormViewInstance(field);
                     form.down('#succ_rb').setValue(true);
@@ -64,7 +64,7 @@ Ext.define('VIN.controller.Commande', {
                     form.down('#pickup_rb').setValue(true);
                 }
             },
-            '#produit_combo': {
+            '#produit_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
                     this.updateInventaire(form, records[0]);
@@ -116,7 +116,7 @@ Ext.define('VIN.controller.Commande', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     var is_valid = true;
-                    Ext.Array.each(['#nom_social_dd', '#produit_combo', '#add_produit_qc_nf'], function(item_id) {
+                    Ext.Array.each(['#nom_social_dd', '#produit_dd', '#add_produit_qc_nf'], function(item_id) {
                         if (!form.down(item_id).getValue()) {
                             form.down(item_id).markInvalid('Ce champ est requis');
                             is_valid = false;
@@ -129,15 +129,15 @@ Ext.define('VIN.controller.Commande', {
                     }
                 }
             },
-            '#commande rowactions': {
+            '#commande_item_grid rowactions': {
                 groupaction: function(grid, records, action, groupValue) {
                     var form = this._getFormViewInstance(grid);
                     var tv = groupValue;
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la commande?', tv), 
                                     Ext.bind(function(btn) {
                                         if (btn == 'yes') {
-                                            var group_recs = form.down('#commande').getStore().query('type_vin', tv);
-                                            form.down('#commande').getStore().remove(group_recs.items);
+                                            var group_recs = form.down('#commande_item_grid').getStore().query('type_vin', tv);
+                                            form.down('#commande_item_grid').getStore().remove(group_recs.items);
                                             delete form.inventaire_cache[tv];
                                             if (form.curr.produit_rec.get('type_vin') == tv) {
                                                 this.updateInventaire(form, form.curr.produit_rec);
@@ -247,7 +247,7 @@ Ext.define('VIN.controller.Commande', {
                     }
                 }
             },
-            '#commande': {
+            '#commande_item_grid': {
                 edit: function(editor, e) {
                     var form = this._getFormViewInstance(editor.grid);
                     var r = e.record;
@@ -297,7 +297,7 @@ Ext.define('VIN.controller.Commande', {
     
     addClientProduit: function(form) {
         var cp_grid = form.down('#client_produit');
-        var produit = form.down('#produit_combo').getValue();
+        var produit = form.down('#produit_dd').getValue();
         if (!cp_grid.getStore().findRecord('type_vin', produit)) {
             var msg = Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit);
             Ext.Msg.confirm('Vinum', msg, Ext.bind(function(btn) {
@@ -317,7 +317,7 @@ Ext.define('VIN.controller.Commande', {
     },
 
     updateInventaire: function(form, record) {
-        var g = form.down('#inventaire');
+        var g = form.down('#inventaire_grid');
         var tv = record.get('type_vin');
         g.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', tv));
         if (form.inventaire_cache.hasOwnProperty(tv)) {            
@@ -335,10 +335,10 @@ Ext.define('VIN.controller.Commande', {
     },
 
     addCommandeProduit: function(form, desired_qc) {
-        var ig = form.down('#inventaire');
-        var cg = form.down('#commande');
+        var ig = form.down('#inventaire_grid');
+        var cig = form.down('#commande_item_grid');
 
-        if (cg.store.find('no_produit_interne', form.curr.produit_rec.get('no_produit_interne')) != -1) {
+        if (cig.store.find('no_produit_interne', form.curr.produit_rec.get('no_produit_interne')) != -1) {
             Ext.Msg.show({
                 title: 'Vinum',
                 msg: "Ce produit existe déjà dans la commande",
@@ -353,7 +353,7 @@ Ext.define('VIN.controller.Commande', {
                          {property:'date_commande', direction:'ASC', root:'data'}]);
 
         var rem_qc = desired_qc;
-        var default_commission = form.down('#default_commission_combo').getValue();
+        var default_commission = form.down('#default_commission_dd').getValue();
         for (var i = 0; i < actif_recs.getCount(); i++) {
 
             var rec = actif_recs.getAt(i);
@@ -380,7 +380,7 @@ Ext.define('VIN.controller.Commande', {
             inv_ci.set('montant_commission', VIN.utils.removeTaxes(pc) * default_commission);
             inv_ci.set('statut', 'OK');
             var ci = Ext.create('VIN.model.CommandeItem', inv_ci.data);
-            cg.store.add(ci);
+            cig.store.add(ci);
 
             if (rec.get('solde_caisse') == 0) {
                 rec.set('statut', 'Inactif');
@@ -400,13 +400,13 @@ Ext.define('VIN.controller.Commande', {
                 commission: default_commission,
                 statut: 'BO'
             });
-            cg.store.add(ci);
+            cig.store.add(ci);
             
         }
     },
 
     saveCommande: function(form, callback) {
-        if (form.down('#commande').getStore().getCount() == 0) {
+        if (form.down('#commande_item_grid').getStore().getCount() == 0) {
             Ext.Msg.show({
                 title: 'Vinum',
                 msg: "La commande ne contient aucun produit",
@@ -420,7 +420,7 @@ Ext.define('VIN.controller.Commande', {
             params: {
                 no_client: form.curr.client_rec.get('no_client'),
                 no_commande_facture: form.curr.no_commande_facture,
-                items: Ext.JSON.encode(Ext.Array.pluck(form.down('#commande').getStore().getRange(), 'data'))
+                items: Ext.JSON.encode(Ext.Array.pluck(form.down('#commande_item_grid').getStore().getRange(), 'data'))
             },
             success: Ext.bind(function(_form, action) {
                 form.curr.no_commande_facture = action.result.no_commande_facture;

@@ -160,11 +160,11 @@ Ext.define('VIN.view.commande.Form', {
                         },
                         items: [{
                             xtype: 'combo',
+                            itemId: 'nom_social_dd',
                             flex: 0.8,
                             displayField: 'nom_social',
                             name: 'nom_social',
                             store: client_search_store,
-                            itemId: 'nom_social_dd',
                             fieldLabel: 'Nom',
                             minChars: 3,
                             forceSelection: true,
@@ -245,6 +245,7 @@ Ext.define('VIN.view.commande.Form', {
                             itemId: 'succ_rb'
                         }, {
                             xtype: 'combo',
+                            itemId: 'succ_dd',
                             flex: 0.1,
                             displayField: 'no_succursale',
                             name: 'no_succursale',
@@ -265,7 +266,6 @@ Ext.define('VIN.view.commande.Form', {
                                     }
                                 }                                    
                             }),
-                            itemId: 'succ_combo',
                             hideLabel: true,
                             minChars: 3,                            
                             forceSelection: false, // to allow setting record field no_succursale alone
@@ -313,7 +313,7 @@ Ext.define('VIN.view.commande.Form', {
                         style: 'margin-right: 20px'
                     }, {
                         xtype: 'combo',
-                        itemId: 'default_commission_combo',
+                        itemId: 'default_commission_dd',
                         queryMode: 'local',
                         triggerAction: 'all',
                         displayField: 'default_commission',
@@ -343,7 +343,7 @@ Ext.define('VIN.view.commande.Form', {
                         displayField: 'type_vin',
                         name: 'type_vin',
                         store: produit_search_store,
-                        itemId: 'produit_combo',
+                        itemId: 'produit_dd',
                         fieldLabel: 'Tous les produits',
                         minChars: 3,
                         forceSelection: true,
@@ -367,7 +367,6 @@ Ext.define('VIN.view.commande.Form', {
                         xtype: 'button',
                         padding: 2,
                         itemId: 'add_produit_btn',
-                        //scale: 'small',
                         text: 'Ajouter',
                         iconCls: 'add-icon',
                         style: 'margin-top: 25px'
@@ -385,35 +384,13 @@ Ext.define('VIN.view.commande.Form', {
                         quantite_caisse: 1
                     },
                     height: grid_height
-                }/*, {
-                    layout: 'hbox',
-                    bodyStyle: 'background-color:#dfe8f5',
-                    border: false,
-                    defaults: {
-                        xtype: 'button',
-                        padding: 5,
-                        style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
-                    },
-                    items: [{
-                        text: 'Visualiser la facture',
-                        itemId: 'preview_facture_btn',
-                        iconCls: 'monitor-icon'                        
-                    },{
-                        text: 'Télécharger la facture',
-                        itemId: 'download_facture_btn',
-                        iconCls: 'disk-icon'
-                    }, {
-                        text: 'Envoyer la facture par courriel',
-                        itemId: 'email_facture_btn',
-                        iconCls: 'email-go-icon'
-                    }]
-                }*/]
+                }]
             }, {
                 // -----------------------------------------------------
                 // right part panel
                 items: [{
                     xtype: 'inventaire_grid',
-                    itemId: 'inventaire',
+                    itemId: 'inventaire_grid',
                     title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
                     store: inventaire_store,
                     resizable: { handles: 's' },
@@ -429,9 +406,9 @@ Ext.define('VIN.view.commande.Form', {
                     height: grid_height,
                     style: 'margin-bottom: 20px'
                 }, {
-                    xtype: 'commande_grid',
+                    xtype: 'commande_item_grid',
                     title: 'Produits commandés',
-                    itemId: 'commande',
+                    itemId: 'commande_item_grid',
                     store: commande_store,
                     resizable: { handles: 's' },
                     column_flex: {
@@ -445,26 +422,7 @@ Ext.define('VIN.view.commande.Form', {
                         statut: 0.5
                     },
                     height: grid_height
-                    //style: 'margin-bottom: 20px'
-                }/*, {
-                    layout: 'hbox',
-                    bodyStyle: 'background-color:#dfe8f5',
-                    border: false,
-                    defaults: {
-                        xtype: 'button',
-                        padding: 5,
-                        style: 'margin-bottom: 20px; margin-top: 20px; margin-right: 10px'
-                    },
-                    items: [{
-                        text: 'Visualiser le bon de commande',
-                        itemId: 'preview_bdc_btn',
-                        iconCls: 'monitor-icon'                        
-                    }, {
-                        text: 'Envoyer le bon de commande par courriel',
-                        itemId: 'email_bon_de_commande_btn',
-                        iconCls: 'email-go-icon'                        
-                    }]
-                }*/]
+                }]
             }]
         };
         this.callParent(arguments);

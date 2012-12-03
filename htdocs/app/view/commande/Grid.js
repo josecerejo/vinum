@@ -1,7 +1,7 @@
-Ext.define('VIN.view.commande.ItemGrid', {
+Ext.define('VIN.view.commande.Grid', {
 
     extend: 'Ext.grid.Panel',
-    alias: 'widget.commande_item_grid',
+    alias: 'widget.commande_grid',
     requires: ['Ext.ux.grid.RowActions'],
     column_flex: {
     },
@@ -9,7 +9,7 @@ Ext.define('VIN.view.commande.ItemGrid', {
     initComponent: function() {
         
         if (!this.store) {
-            this.store = Ext.create('VIN.store.CommandeItems');
+            this.store = Ext.create('VIN.store.Commandes');
         } 
 
         // this.store.groupField must be set!
