@@ -56,8 +56,8 @@ Ext.application({
     controllers: ['MainToolbar', 'Client', 'Commande'],
     autoCreateViewport: true,
     launch: function() {
+        VIN.app = this; // to access the controllers with VIN.app.getController
         // global!
-        VIN.app = this;
         wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Un moment svp..."});
     }
 });

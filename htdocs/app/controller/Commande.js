@@ -27,7 +27,6 @@ Ext.define('VIN.controller.Commande', {
             'commande_form #nom_social_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
-                    //form.curr.client_rec = records[0].copy();
                     this.loadClientPart(form, records[0].get('no_client'));
                 }
             },
@@ -74,14 +73,14 @@ Ext.define('VIN.controller.Commande', {
                     form.down('#add_produit_btn').setIconCls(locked ? 'lock-icon' : 'add-icon');
                 }                               
             },
-            '#client_produit': {
+            '#client_produit_grid': {
                 selectionchange: function(model, records) {
                     var form = this._getFormViewInstance(model.view);
                     this.updateInventaire(form, records[0]);
                     form.curr.produit_rec = records[0].copy();
                 }                
             },
-            '#client_produit actioncolumn': {
+            '#client_produit_grid actioncolumn': {
                 // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
                 del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     this.removeClientProduit(this._getFormViewInstance(grid), grid, rec);
@@ -262,13 +261,13 @@ Ext.define('VIN.controller.Commande', {
         return any_contained_view.up('commande_form');
     },
 
-    updateClientProduit: function(form) {
-        form.down('#client_produit').store.load({
+    loadClientProduits: function(form) {
+        form.down('#client_produit_grid').store.load({
             params: {
                 no_client: form.curr.client_rec.get('no_client')
             },
             callback: Ext.bind(function(records, operation, success) {
-                var g = form.down('#client_produit');
+                var g = form.down('#client_produit_grid');
                 g.setTitle(Ext.String.format('Liste de produits habituels pour le client "{0}" ({1})', 
                                              form.curr.client_rec.get('nom_social'), g.store.getCount()));
             }, this)
@@ -296,7 +295,7 @@ Ext.define('VIN.controller.Commande', {
     },
     
     addClientProduit: function(form) {
-        var cp_grid = form.down('#client_produit');
+        var cp_grid = form.down('#client_produit_grid');
         var produit = form.down('#produit_dd').getValue();
         if (!cp_grid.getStore().findRecord('type_vin', produit)) {
             var msg = Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit);
@@ -317,13 +316,13 @@ Ext.define('VIN.controller.Commande', {
     },
 
     updateInventaire: function(form, record) {
-        var g = form.down('#inventaire_grid');
+        var ig = form.down('#inventaire_grid');
         var tv = record.get('type_vin');
-        g.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', tv));
+        ig.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', tv));
         if (form.inventaire_cache.hasOwnProperty(tv)) {            
-            g.store.loadRecords(form.inventaire_cache[tv]);
+            ig.store.loadRecords(form.inventaire_cache[tv]);
         } else {
-            g.store.load({
+            ig.store.load({
                 params: {
                     no_produit_interne: record.get('no_produit_interne')
                 },
@@ -441,7 +440,7 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    loadClientPart: function(form, no_client) {
+    loadClientPart: function(form, no_client, dont_load_client_produits) {
         form.down('#nom_social_dd').forceSelection = false;
         form.load({
             url: ajax_url_prefix + '/client/load',
@@ -457,7 +456,9 @@ Ext.define('VIN.controller.Commande', {
                                                 r.get('rue')||'<rue?>', r.get('ville')||'<ville?>',
                                                 r.get('code_postal')||'<code_postal?>');
                 form.down('#adresse_tf').setValue(adresse);
-                this.updateClientProduit(form);
+                if (dont_load_client_produits === undefined || !dont_load_client_produits) {
+                    this.loadClientProduits(form);
+                }
             }, this)
         });
     }

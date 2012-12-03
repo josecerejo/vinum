@@ -12,7 +12,7 @@ from smtplib import SMTP
 
 
 @app.route('/commande/save', methods=['POST'])
-def save():
+def save_commande():
     cursor = g.db.cursor()
     rf = request.form.to_dict()
     if rf['no_commande_facture']:
@@ -27,6 +27,11 @@ def save():
         pg.insert(cursor, 'commande_produit', values=item, filter_values=True)
     g.db.commit()
     return {'success': True, 'no_commande_facture': ncf}
+
+
+@app.route('/commande/get', methods=['GET'])
+def get_commandes_for_client():
+    return get(g, request, 'commande', ('no_client',), query_op='=')
 
 
 def _generate_facture(g, ncf, doc_type):

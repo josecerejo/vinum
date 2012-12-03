@@ -12,12 +12,23 @@ Ext.define('VIN.controller.Client', {
             'client_form #nom_social_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
+                    var no_client = records[0].get('no_client');
+                    // load client form
                     form.load({
                         url: ajax_url_prefix + '/client/load',
                         params: {
-                            no_client: records[0].get('no_client')
+                            no_client: no_client
                         }
                     });
+                    // load client commandes
+                    form.down('#commande_grid').store.load({
+                        params: {
+                            query: no_client
+                        },
+                        callback: function(records, operation, success) {
+                        }
+                    });
+
                 },
             },
 
@@ -28,7 +39,7 @@ Ext.define('VIN.controller.Client', {
                 }
             },
 
-            'client_form #succ_combo': {
+            'client_form #succ_dd': {
                 focus: function(field) {
                     var form = this._getFormViewInstance(field);
                     form.down('#succ_rb').setValue(true);
@@ -115,7 +126,6 @@ Ext.define('VIN.controller.Client', {
                 success: function(_form, action) {
                     var client_rec = Ext.create('VIN.model.Client', action.result.data);
                     var no_client = client_rec.get('no_client');
-                    form.down('#no_client_tf').setValue(no_client);
                     var mp = Ext.getCmp('main_pnl');   
                     // cycle through every tab: if a commande_form is found and it's loaded with 
                     // this client, update its values (and importantly, let the user know)
@@ -124,7 +134,8 @@ Ext.define('VIN.controller.Client', {
                         if (tab.xtype == 'commande_form') {
                             if (tab.curr.client_rec !== undefined &&
                                 tab.curr.client_rec.get('no_client') == no_client) {
-                                VIN.app.getController('Commande').loadClientPart(tab, no_client);
+                                // 3rd bool arg: don't reload client produits
+                                VIN.app.getController('Commande').loadClientPart(tab, no_client, true);
                             }
                         }
                     }                    
@@ -133,12 +144,14 @@ Ext.define('VIN.controller.Client', {
                     } else {
                         Ext.Msg.show({
                             title: 'Vinum',
-                            msg: Ext.String.format("Le client #{0} a été {1} (et tous les onglets qui y font référence également)", no_client, 
-                                                   form.down('#no_client_tf').getValue() ? 'modifié' : 'créé'),
+                            msg: Ext.String.format("Le client #{0} a été {1}{2}", no_client, 
+                                                   form.down('#no_client_tf').getValue() ? 'modifié' : 'créé',
+                                                   form.down('#no_client_tf').getValue() ? ' (et tous les onglets qui y font référence également)' : ''),
                             icon: Ext.MessageBox.WARNING,
                             buttons: Ext.MessageBox.OK
                         });                                                                
                     }
+                    form.down('#no_client_tf').setValue(no_client);
                 }
             });
         }

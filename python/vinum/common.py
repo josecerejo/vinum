@@ -3,7 +3,7 @@ import sys; sys.path.append('/home/christian/gh/little_pger')
 import little_pger as pg
 
 
-def get(g, request, table, query_fields):
+def get(g, request, table, query_fields, query_op='ilike'):
     assert query_fields.__class__ is tuple
     cursor = g.db.cursor()
     order_by = None
@@ -22,7 +22,12 @@ def get(g, request, table, query_fields):
             if filter_arg['type'] == 'numeric':
                 where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
     elif request.args.get('query', '').strip():
-        where[('||'.join(query_fields), 'ilike')] = set(['%%%s%%' % v for v in request.args['query'].split()])
+        # autocomplete query
+        if query_op.lower() in ['ilike', 'like']:
+            where[('||'.join(query_fields), query_op)] = set(['%%%s%%' % v for v in request.args['query'].split()])
+        # exact field query
+        else:
+            where[(query_fields[0], query_op)] = request.args['query']
 
     json_out = {'success': True}
     json_out['total'] = pg.count(cursor, table, where=where, debug_assert=False)

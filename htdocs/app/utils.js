@@ -46,7 +46,10 @@ Ext.define('VIN.utils', {
                 if (items[i].type.type == 'date') {
                     col.xtype = 'datecolumn';
                 } else if (items[i].type.type == 'float') {
-                    col.xtype = 'numbercolumn'; // to make sure that format is used
+                    col.xtype = 'numbercolumn'; // to fix formatting issue
+                    col.useNull = false; 
+                } else if (items[i].type.type == 'int') {
+                    col.useNull = false;
                 }
                 cols.push(col);
             }
