@@ -382,7 +382,7 @@ Ext.define('VIN.view.client.Form', {
                                     }
                                 }                                    
                             }),
-                            itemId: 'succ_combo',
+                            itemId: 'succ_dd',
                             hideLabel: true,
                             minChars: 3,                            
                             forceSelection: false, // to allow setting record field no_succursale alone
