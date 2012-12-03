@@ -1,4 +1,4 @@
-Ext.define('VIN.view.client.List', {
+Ext.define('VIN.view.client.Grid', {
 
     extend: 'Ext.grid.Panel',
     alias: 'widget.client_grid',
@@ -13,6 +13,7 @@ Ext.define('VIN.view.client.List', {
     },
 
     initComponent: function() {
+
         this.store = Ext.create('VIN.store.Clients');
 
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);

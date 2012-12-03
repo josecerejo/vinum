@@ -1,4 +1,4 @@
-Ext.define('VIN.view.client.ProduitList', {
+Ext.define('VIN.view.client.ProduitGrid', {
 
     extend: 'Ext.grid.Panel',
     alias: 'widget.client_produit_grid',

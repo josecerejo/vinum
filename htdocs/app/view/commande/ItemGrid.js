@@ -1,4 +1,5 @@
-Ext.define('VIN.view.commande.List', {
+Ext.define('VIN.view.commande.ItemGrid', {
+
     extend: 'Ext.grid.Panel',
     alias: 'widget.commande_grid',
     requires: ['Ext.ux.grid.RowActions'],

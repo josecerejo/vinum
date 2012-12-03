@@ -2,8 +2,8 @@ Ext.define('VIN.view.commande.Form', {
 
     extend: 'Ext.form.Panel',
     alias: 'widget.commande_form',
-    requires: ['VIN.view.produit.List', 'VIN.view.client.ProduitList', 
-               'VIN.view.inventaire.List', 'VIN.view.commande.List'],
+    requires: ['VIN.view.produit.Grid', 'VIN.view.client.ProduitGrid', 
+               'VIN.view.inventaire.Grid', 'VIN.view.commande.ItemGrid'],
     frame: true,
     autoScroll: true,
     title: 'Commande',
@@ -29,7 +29,7 @@ Ext.define('VIN.view.commande.Form', {
         var produit_search_store = Ext.create('VIN.store.Produits');
         var client_produit_store = Ext.create('VIN.store.Produits');
         var inventaire_store = Ext.create('VIN.store.Inventaires');
-        var commande_store = Ext.create('VIN.store.Commandes');
+        var commande_store = Ext.create('VIN.store.CommandeItems');
 
         var grid_height = 326;
 
@@ -102,6 +102,36 @@ Ext.define('VIN.view.commande.Form', {
                 }]
             }]
         });
+
+        this.dockedItems = {
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
+                xtype: 'buttongroup',
+                title: 'Facture',
+                items: [{
+                    text: 'Visualiser',
+                    itemId: 'preview_facture_btn',
+                    iconCls: 'monitor-icon'                        
+                }, {
+                    text: 'Envoyer par courriel',
+                    itemId: 'email_facture_btn',
+                    iconCls: 'email-go-icon'
+                }]
+            }, {
+                xtype: 'buttongroup',
+                title: 'Bon de commande',
+                items: [{
+                    text: 'Visualiser',
+                    itemId: 'preview_bdc_btn',
+                    iconCls: 'monitor-icon'                        
+                }, {
+                    text: 'Envoyer par courriel',
+                    itemId: 'email_bon_de_commande_btn',
+                    iconCls: 'email-go-icon'                        
+                }]                
+            }]
+        };
 
         this.items = {
             bodyStyle: 'background-color:#dfe8f5',
@@ -355,7 +385,7 @@ Ext.define('VIN.view.commande.Form', {
                         quantite_caisse: 1
                     },
                     height: grid_height
-                }, {
+                }/*, {
                     layout: 'hbox',
                     bodyStyle: 'background-color:#dfe8f5',
                     border: false,
@@ -368,16 +398,16 @@ Ext.define('VIN.view.commande.Form', {
                         text: 'Visualiser la facture',
                         itemId: 'preview_facture_btn',
                         iconCls: 'monitor-icon'                        
-                    }/*,{
+                    },{
                         text: 'Télécharger la facture',
                         itemId: 'download_facture_btn',
                         iconCls: 'disk-icon'
-                    }*/, {
+                    }, {
                         text: 'Envoyer la facture par courriel',
                         itemId: 'email_facture_btn',
                         iconCls: 'email-go-icon'
                     }]
-                }]
+                }*/]
             }, {
                 // -----------------------------------------------------
                 // right part panel
@@ -416,7 +446,7 @@ Ext.define('VIN.view.commande.Form', {
                     },
                     height: grid_height
                     //style: 'margin-bottom: 20px'
-                }, {
+                }/*, {
                     layout: 'hbox',
                     bodyStyle: 'background-color:#dfe8f5',
                     border: false,
@@ -434,7 +464,7 @@ Ext.define('VIN.view.commande.Form', {
                         itemId: 'email_bon_de_commande_btn',
                         iconCls: 'email-go-icon'                        
                     }]
-                }]
+                }*/]
             }]
         };
         this.callParent(arguments);

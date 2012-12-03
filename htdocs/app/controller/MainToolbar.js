@@ -1,7 +1,7 @@
 Ext.define('VIN.controller.MainToolbar', {
 
     extend: 'Ext.app.Controller',
-    views: ['VIN.view.MainToolbar', 'VIN.view.MainPanel', 'VIN.view.client.List',
+    views: ['VIN.view.MainToolbar', 'VIN.view.MainPanel', 'VIN.view.client.Grid',
             'VIN.view.commande.Form'],
     refs: [{
         ref: 'toolbar',

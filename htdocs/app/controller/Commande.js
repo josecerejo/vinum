@@ -371,16 +371,16 @@ Ext.define('VIN.controller.Commande', {
             var qb = Ext.Array.min([qc * rec.get('quantite_par_caisse'), rec.get('solde')]);
             rec.set('solde', rec.get('solde') - qb);            
 
-            // new commande record
-            var inv_comm = rec.copy();
-            inv_comm.set('quantite_caisse', qc);
-            inv_comm.set('quantite_bouteille', qb);
-            inv_comm.set('commission', default_commission);
-            var pc = inv_comm.get('prix_coutant');
-            inv_comm.set('montant_commission', VIN.utils.removeTaxes(pc) * default_commission);
-            inv_comm.set('statut', 'OK');
-            var comm = Ext.create('VIN.model.Commande', inv_comm.data);
-            cg.store.add(comm);
+            // new CommandeItem record
+            var inv_ci = rec.copy();
+            inv_ci.set('quantite_caisse', qc);
+            inv_ci.set('quantite_bouteille', qb);
+            inv_ci.set('commission', default_commission);
+            var pc = inv_ci.get('prix_coutant');
+            inv_ci.set('montant_commission', VIN.utils.removeTaxes(pc) * default_commission);
+            inv_ci.set('statut', 'OK');
+            var ci = Ext.create('VIN.model.CommandeItem', inv_ci.data);
+            cg.store.add(ci);
 
             if (rec.get('solde_caisse') == 0) {
                 rec.set('statut', 'Inactif');
@@ -389,7 +389,7 @@ Ext.define('VIN.controller.Commande', {
         
         if (rem_qc > 0) {
             // backorders
-            var comm = Ext.create('VIN.model.Commande', {
+            var ci = Ext.create('VIN.model.CommandeItem', {
                 no_produit_interne: form.curr.produit_rec.get('no_produit_interne'),
                 type_vin: form.curr.produit_rec.get('type_vin'),
                 format: form.curr.produit_rec.get('format'),
@@ -400,7 +400,7 @@ Ext.define('VIN.controller.Commande', {
                 commission: default_commission,
                 statut: 'BO'
             });
-            cg.store.add(comm);
+            cg.store.add(ci);
             
         }
     },

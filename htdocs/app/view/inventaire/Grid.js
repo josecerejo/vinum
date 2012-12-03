@@ -1,4 +1,5 @@
-Ext.define('VIN.view.inventaire.List', {
+Ext.define('VIN.view.inventaire.Grid', {
+
     extend: 'Ext.grid.Panel',
     alias: 'widget.inventaire_grid',
     requires: ['Ext.ux.grid.FiltersFeature'],

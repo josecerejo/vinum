@@ -1,5 +1,7 @@
-Ext.define('VIN.model.Commande', {
+Ext.define('VIN.model.CommandeItem', {
+
     extend: 'Ext.data.Model',
+
     fields: [{
         header: '# inventaire',
         name: 'no_inventaire', 
@@ -51,5 +53,7 @@ Ext.define('VIN.model.Commande', {
     }, {
         name: 'statut'
     }],
+
     idProperty: 'no_produit_saq'
+
 });
