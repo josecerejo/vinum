@@ -37,13 +37,13 @@ Ext.define('VIN.model.Commande', {
         name: 'date_envoi',
         type: 'date'
     }, {
+        name: 'montant',
+        type: 'float'
+    }, {
         header: 'Statut (commande)',
         name: 'statut_commande'
     }, {
         name: 'sous-total',
-        type: 'float'
-    }, {
-        name: 'montant',
         type: 'float'
     }, {
         header: 'TPS',

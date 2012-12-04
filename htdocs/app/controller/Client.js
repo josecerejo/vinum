@@ -13,29 +13,14 @@ Ext.define('VIN.controller.Client', {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
                     var no_client = records[0].get('no_client');
-                    // load client form
-                    form.load({
-                        url: ajax_url_prefix + '/client/load',
-                        params: {
-                            no_client: no_client
-                        }
-                    });
-                    // load client commandes
-                    form.down('#commande_grid').store.load({
-                        params: {
-                            query: no_client
-                        },
-                        callback: function(records, operation, success) {
-                        }
-                    });
-
+                    this.loadClientForm(form, no_client);
                 },
             },
 
             'client_form #save_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveClient(form);
+                    this.saveClientForm(form);
                 }
             },
 
@@ -60,12 +45,26 @@ Ext.define('VIN.controller.Client', {
             'client_form #create_commande_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveClient(form, function() {
+                    this.saveClientForm(form, function() {
                         var cf = Ext.create('widget.commande_form');
                         var mp = Ext.getCmp('main_pnl');
                         mp.add(cf);
                         mp.setActiveTab(cf);
-                        VIN.app.getController('Commande').loadClientPart(cf, form.down('#no_client_tf').getValue());
+                        VIN.app.getController('Commande').loadClientForm(cf, form.down('#no_client_tf').getValue());
+                    });
+                }
+            },
+
+            'client_form #commande_grid': {
+                selectionchange: function(model, records) {
+                    var form = this._getFormViewInstance(model.view);
+                    var cig = form.down('#commande_item_grid');
+                    cig.store.load({
+                        params: {
+                            no_commande_facture: records[0].get('no_commande_facture')
+                        },
+                        callback: Ext.bind(function(recs, op, success) {
+                        }, this)
                     });
                 }
             },
@@ -89,13 +88,13 @@ Ext.define('VIN.controller.Client', {
                         }, this));
                 },
                 edit_click: function(grid, el, rowIndex, colIndex, e, record, rowEl) {
-                    this.openClient(record);
+                    this.createClientForm(record);
                 }
             },
 
             'client_grid': {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
-                    this.openClient(record);
+                    this.createClientForm(record);
                 }
             }            
 
@@ -106,20 +105,33 @@ Ext.define('VIN.controller.Client', {
         return any_contained_view.up('client_form');
     },
 
-    openClient: function(client_rec) {
+    createClientForm: function(client_rec) {
         var cf = Ext.create('widget.client_form');
         var mp = Ext.getCmp('main_pnl');
         mp.add(cf);
         mp.setActiveTab(cf);
-        cf.load({
+        this.loadClientForm(cf, client_rec.get('no_client'));
+    },
+
+    loadClientForm: function(form, no_client) {
+        // load client form
+        form.load({
             url: ajax_url_prefix + '/client/load',
             params: {
-                no_client: client_rec.get('no_client')
+                no_client: no_client
+            }
+        });
+        // load client commandes
+        form.down('#commande_grid').store.load({
+            params: {
+                query: no_client // !!! I should explain why I use query here..
+            },
+            callback: function(records, operation, success) {
             }
         });        
     },
 
-    saveClient: function(form, callback) {
+    saveClientForm: function(form, callback) {
         if (form.getForm().isValid()) {
             form.submit({
                 url: ajax_url_prefix + '/client/save',
@@ -135,7 +147,7 @@ Ext.define('VIN.controller.Client', {
                             if (tab.curr.client_rec !== undefined &&
                                 tab.curr.client_rec.get('no_client') == no_client) {
                                 // 3rd bool arg: don't reload client produits
-                                VIN.app.getController('Commande').loadClientPart(tab, no_client, true);
+                                VIN.app.getController('Commande').loadClient(tab, no_client, true);
                             }
                         }
                     }                    

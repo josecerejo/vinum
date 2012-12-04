@@ -5,7 +5,8 @@ Ext.define('VIN.store.CommandeItems', {
     model: 'VIN.model.CommandeItem',
     groupField: 'type_vin',
     proxy: {
-        type: 'memory',
+        type: 'ajax',
+        url: ajax_url_prefix + '/commande/get_items',
         reader: {
             type: 'json',
             root: 'rows'

@@ -27,22 +27,13 @@ Ext.define('VIN.controller.Commande', {
             'commande_form #nom_social_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
-                    this.loadClientPart(form, records[0].get('no_client'));
+                    this.loadClientForm(form, records[0].get('no_client'));
                 }
             },
             '#details_client_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    var cf = Ext.create('widget.client_form');
-                    var mp = Ext.getCmp('main_pnl');
-                    mp.add(cf);
-                    mp.setActiveTab(cf);
-                    cf.load({
-                        url: ajax_url_prefix + '/client/load',
-                        params: {
-                            no_client: form.curr.client_rec.get('no_client')
-                        }
-                    });
+                    VIN.app.getController('Client').createClientForm(form.curr.client_rec);
                 }
             },
             '#direct_df': {
@@ -148,7 +139,7 @@ Ext.define('VIN.controller.Commande', {
             '#preview_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommande(form, Ext.bind(function() {
+                    this.saveCommandeForm(form, Ext.bind(function() {
                         var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&_dc={2}', 
                                                     ajax_url_prefix, form.curr.no_commande_facture, Ext.Number.randomInt(1000, 100000));
                         window.open(url, '_blank');
@@ -158,7 +149,7 @@ Ext.define('VIN.controller.Commande', {
             '#preview_bdc_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommande(form, Ext.bind(function() {
+                    this.saveCommandeForm(form, Ext.bind(function() {
                         var url = Ext.String.format('{0}/commande/download_bdc?no_commande_facture={1}&attach=0&_dc={2}', 
                                                     ajax_url_prefix, form.curr.no_commande_facture, Ext.Number.randomInt(1000, 100000));
                         window.open(url, '_blank');
@@ -178,7 +169,7 @@ Ext.define('VIN.controller.Commande', {
             '#email_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommande(form, Ext.bind(function() {
+                    this.saveCommandeForm(form, Ext.bind(function() {
                         var courriel = form.curr.client_rec.get('courriel');
                         form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_facture';
                         form.email_win.down('#email_addr_tf').setValue(courriel);
@@ -205,7 +196,7 @@ Ext.define('VIN.controller.Commande', {
             '#email_bon_de_commande_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommande(form, Ext.bind(function() {
+                    this.saveCommandeForm(form, Ext.bind(function() {
                         form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_bdc';
                         form.email_win.down('#email_addr_tf').setValue('info@saq.com');
                         form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Bon de commande pour la facture #{0}', 
@@ -404,7 +395,7 @@ Ext.define('VIN.controller.Commande', {
         }
     },
 
-    saveCommande: function(form, callback) {
+    saveCommandeForm: function(form, callback) {
         if (form.down('#commande_item_grid').getStore().getCount() == 0) {
             Ext.Msg.show({
                 title: 'Vinum',
@@ -440,7 +431,7 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    loadClientPart: function(form, no_client, dont_load_client_produits) {
+    loadClientForm: function(form, no_client, dont_load_client_produits) {
         form.down('#nom_social_dd').forceSelection = false;
         form.load({
             url: ajax_url_prefix + '/client/load',

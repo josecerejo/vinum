@@ -34,6 +34,16 @@ def get_commandes_for_client():
     return get(g, request, 'commande', ('no_client',), query_op='=')
 
 
+@app.route('/commande/get_items', methods=['GET'])
+def get_items_for_commande():
+    cursor = g.db.cursor()
+    cursor.execute("""select * from commande_produit cp, produit p
+                      where cp.no_produit_interne = p.no_produit_interne
+                      and cp.no_commande_facture = %s
+                   """, [request.args['no_commande_facture']])
+    return {'success': True, 'rows': cursor.fetchall()}
+
+
 def _generate_facture(g, ncf, doc_type):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})

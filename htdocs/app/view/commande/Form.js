@@ -384,6 +384,7 @@ Ext.define('VIN.view.commande.Form', {
                 items: [{
                     xtype: 'inventaire_grid',
                     itemId: 'inventaire_grid',
+                    collapsible: true,
                     title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
                     store: Ext.create('VIN.store.Inventaires'),
                     resizable: { handles: 's' },

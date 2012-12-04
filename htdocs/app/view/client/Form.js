@@ -112,7 +112,7 @@ Ext.define('VIN.view.client.Form', {
                         flex: 0.3
                     }, {
                         xtype: 'textfield',
-                        fieldLabel: 'No client',
+                        fieldLabel: 'No client Roucet',
                         readOnly: true,
                         cls: 'x-item-disabled',
                         name: 'no_client',
