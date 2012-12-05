@@ -104,7 +104,7 @@ create table commande_produit (
     no_commande_facture integer,
     no_produit_interne integer,
     no_produit_saq integer,
-    no_commande_saq text,
+    no_commande_saq text, -- ?? should it be in commande?
     quantite_caisse integer,
     quantite_bouteille integer,
     statut text,

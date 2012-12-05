@@ -44,6 +44,20 @@ def get_items_for_commande():
     return {'success': True, 'rows': cursor.fetchall()}
 
 
+@app.route('/commande/add', methods=['POST'])
+def add_item_to_commande():
+    rf = request.form.to_dict()
+    cursor = g.db.cursor()
+    if rf['no_commande_facture']:
+        ncf = rf['no_commande_facture']
+    else:
+        del rf['no_commande_facture']
+        comm = pg.insert(cursor, 'commande', values=rf, filter_values=True, map_values={'': None})
+        ncf = comm['no_commande_facture']
+    g.db.commit()
+    return {'success': True, 'data': {'no_commande_facture':ncf}}
+
+
 def _generate_facture(g, ncf, doc_type):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})

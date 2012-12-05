@@ -14,16 +14,6 @@ Ext.define('VIN.view.commande.Form', {
 
     initComponent: function() {
 
-        // working state variables (that can't be stored in the controller because it's a singleton)
-        this.curr = {
-            client_rec: undefined,
-            produit_rec: undefined,
-            no_commande_facture: undefined
-        };
-
-        // mechanism to prevent reloading of already modified inventaire records (i.e. being currently part of a commande)
-        this.inventaire_cache = {};
-
         var grid_height = 326;
 
         this.email_msg_facture = 'Bonjour,\n\nVoici votre facture.\n\nBonne journée,\n\nLa Société Roucet';
@@ -153,7 +143,7 @@ Ext.define('VIN.view.commande.Form', {
                         },
                         items: [{
                             xtype: 'combo',
-                            itemId: 'nom_social_dd',
+                            itemId: 'client_dd',
                             flex: 0.8,
                             displayField: 'nom_social',
                             name: 'nom_social',
@@ -303,10 +293,12 @@ Ext.define('VIN.view.commande.Form', {
                         name: 'date_commande',
                         format: 'Y-m-d',
                         value: new Date(),
-                        style: 'margin-right: 20px'
+                        flex: 0.25
+                        //style: 'margin-right: 20px'
                     }, {
                         xtype: 'combo',
                         itemId: 'default_commission_dd',
+                        flex: 0.25,
                         queryMode: 'local',
                         triggerAction: 'all',
                         displayField: 'default_commission',
@@ -321,6 +313,20 @@ Ext.define('VIN.view.commande.Form', {
                             data: [{default_commission: 0.16},
                                    {default_commission: 0.23}]
                         })                        
+                    }, {
+                        xtype: 'textfield',
+                        fieldLabel: 'No facture Roucet',
+                        flex: 0.25,
+                        readOnly: true,
+                        cls: 'x-item-disabled',
+                        name: 'no_commande_facture',
+                        itemId: 'no_commande_facture_tf'
+                    }, {
+                        xtype: 'textfield',
+                        flex: 0.25,
+                        fieldLabel: 'No facture SAQ',
+                        name: 'no_commande_saq',
+                        itemId: 'no_commande_saq_tf'                        
                     }]
                 }, {
                     border: false,

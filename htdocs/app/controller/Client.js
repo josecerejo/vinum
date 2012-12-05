@@ -144,10 +144,13 @@ Ext.define('VIN.controller.Client', {
                     for (var i = 0; i < mp.items.length; i++) {
                         var tab =  mp.items.getAt(i);
                         if (tab.xtype == 'commande_form') {
-                            if (tab.curr.client_rec !== undefined &&
-                                tab.curr.client_rec.get('no_client') == no_client) {
-                                // 3rd bool arg: don't reload client produits
-                                VIN.app.getController('Commande').loadClient(tab, no_client, true);
+                            var cdd = tab.down('#client_dd');
+                            if (cdd.getValue()) {
+                                var cr = cdd.findRecordByDisplay(cdd.getValue());
+                                if (cr.get('no_client') == no_client) {
+                                    // 3rd bool arg: don't reload client produits
+                                    VIN.app.getController('Commande').loadClientForm(tab, no_client, true);
+                                }
                             }
                         }
                     }                    

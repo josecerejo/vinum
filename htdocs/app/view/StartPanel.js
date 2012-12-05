@@ -24,7 +24,8 @@ Ext.define('VIN.view.StartPanel', {
                     fields: ['name', 'src', 'text'],
                     data: [{name: 'create_commande', src: 'resources/images/icons/empty-shopping-cart.png', text: 'Créer une commande'},
                            {name: 'edit_client', src: 'resources/images/icons/about-me.png', text: 'Créer ou modifier un client'},
-                           {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir la liste de clients'}]
+                           {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir la liste de clients'},
+                           {name: 'list_commandes', src: 'resources/images/icons/clipboard_64.png', text: 'Voir la liste de commandes'}]
                 }),     
                 tpl: [
                     '<tpl for=".">',
