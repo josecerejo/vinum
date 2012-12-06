@@ -95,7 +95,9 @@ create table commande (
     statut_facture text,
     note text,
     suc_num integer,
-    jour_livraison text
+    jour_livraison text,
+    courriel_est_envoye bool,
+    bon_de_commande_est_envoye bool
 );
 
 drop table if exists commande_produit cascade;

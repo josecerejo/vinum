@@ -34,6 +34,13 @@ def get_commandes_for_client():
     return get(g, request, 'commande', ('no_client',), query_op='=')
 
 
+@app.route('/commande/load', methods=['POST'])
+def load_commande():
+    commande = pg.select1r(g.db.cursor(), 'commande', 
+                               where={'no_commande_facture': request.form['no_commande_facture']})
+    return {'success': True, 'data': commande}
+    
+
 @app.route('/commande/get_items', methods=['GET'])
 def get_items_for_commande():
     cursor = g.db.cursor()
@@ -164,12 +171,15 @@ def _generate_bdc(g, ncf, doc_type):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
-    doc_values = {'items': []}
+    doc_values = {'left_items': [], 'right_items': []}
     doc_values.update(commande)
     doc_values.update(client)    
     doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom', 
                                                 where={'representant_id': client['representant_id']})
     doc_values['pu'] = 'X'
+
+
+
     # cursor.execute("""select * from produit p, commande_produit cp 
     #                   where p.no_produit_interne = cp.no_produit_interne
     #                   and no_commande_facture = %s""", [ncf])

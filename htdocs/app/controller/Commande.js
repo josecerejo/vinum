@@ -425,26 +425,40 @@ Ext.define('VIN.controller.Commande', {
                 no_client: no_client
             },
             success: Ext.bind(function(_form, action) {
-                // the form.load has only filled the display part (single string) of the client combo; 
-                // to get the underlying client record part, we need to explicitly reload from its value
-                cdd.getStore().load({
-                    params: {
-                        no_client: 1,
-                        query: no_client
-                    },
-                    callback: Ext.bind(function(records, operation, success) {
-                        cdd.forceSelection = true;
-                        form.down('#details_client_btn').setDisabled(false);
-                        var cr = cdd.findRecordByDisplay(cdd.getValue());                
-                        var adresse = Ext.String.format('{0} {1} {2} {3}', cr.get('no_civique')||'<no?>', 
-                                                        cr.get('rue')||'<rue?>', cr.get('ville')||'<ville?>',
-                                                        cr.get('code_postal')||'<code_postal?>');
-                        form.down('#adresse_tf').setValue(adresse);
-                        if (dont_load_client_produits === undefined || !dont_load_client_produits) {
-                            this.loadClientProduits(form);
-                        }                        
-                    }, this)
-                });
+                cdd.forceSelection = true;
+                var cr = Ext.create('VIN.model.Client', action.result.data);
+                /* Even though the form.load above have filled #client_dd with a proper value, it hasn't 
+                   loaded it with a full client record, which is needed throughout the client controller, 
+                   because the commande form itself doesn't contain the full set of client fields; for this 
+                   purpose, we load the client rec returned by form.load into its store, using loadData()
+                 */
+                cdd.getStore().loadData([cr]);
+                form.down('#details_client_btn').setDisabled(false);
+                var adresse = Ext.String.format('{0} {1} {2} {3}', cr.get('no_civique')||'<no?>', 
+                                                cr.get('rue')||'<rue?>', cr.get('ville')||'<ville?>',
+                                                cr.get('code_postal')||'<code_postal?>');
+                form.down('#adresse_tf').setValue(adresse);
+                if (dont_load_client_produits === undefined || !dont_load_client_produits) {
+                    this.loadClientProduits(form);
+                }                        
+            }, this)
+        });
+    },
+
+    loadCommandePartOfCommandeForm: function(form, commande_rec) {
+        form.load({
+            url: ajax_url_prefix + '/commande/load',
+            params: {
+                no_commande_facture: commande_rec.get('no_commande_facture')
+            },
+            success: Ext.bind(function(_form, action) {
+            }, this)
+        });
+        form.down('#commande_item_g').getStore().load({
+            params: {
+                no_commande_facture: commande_rec.get('no_commande_facture')
+            },
+            callback: Ext.bind(function(recs, op, success) {
             }, this)
         });
     },
@@ -455,24 +469,7 @@ Ext.define('VIN.controller.Commande', {
         mp.add(cf);
         mp.setActiveTab(cf);
         this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'));
-    },
-
-    loadCommandeForm: function(form, commande_rec) {
-        // load client form
-        form.load({
-            url: ajax_url_prefix + '/client/load',
-            params: {
-                no_client: commande_rec.get('no_client')
-            }
-        });
-        // // load client commandes
-        // form.down('#commande_grid').store.load({
-        //     params: {
-        //         query: no_client // !!! I should explain why I use query here..
-        //     },
-        //     callback: function(records, operation, success) {
-        //     }
-        // });        
+        this.loadCommandePartOfCommandeForm(cf, commande_rec);
     }
     
 });
