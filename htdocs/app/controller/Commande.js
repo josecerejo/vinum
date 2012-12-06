@@ -10,7 +10,7 @@ Ext.define('VIN.controller.Commande', {
         this.control({
             'commande_form': {
                 beforeclose: function(panel) {
-                    if (panel.down('#commande_item_grid').getStore().getCount() > 0) {
+                    if (panel.down('#commande_item_g').getStore().getCount() > 0) {
                         Ext.Msg.confirm('Vinum', 
                                         "La commande n'a pas été envoyée par courriel, êtes-vous certain de vouloir l'annuler?",
                                         function(btn) {
@@ -27,7 +27,7 @@ Ext.define('VIN.controller.Commande', {
             'commande_form #client_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
-                    this.loadClientForm(form, records[0].get('no_client'));
+                    this.loadClientPartOfCommandeForm(form, records[0].get('no_client'));
                 }
             },
             '#details_client_btn': {
@@ -64,13 +64,13 @@ Ext.define('VIN.controller.Commande', {
                     this.updateInventaire(form, pr);
                 }                               
             },
-            '#client_produit_grid': {
+            '#client_produit_g': {
                 selectionchange: function(model, records) {
                     var form = this._getFormViewInstance(model.view);
                     this.updateInventaire(form, records[0]);
                 }                
             },
-            '#client_produit_grid actioncolumn': {
+            '#client_produit_g actioncolumn': {
                 // see: http://mitchellsimoens.com/2012/02/ext-js-4/actioncolumn-and-mvc/
                 del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     this.removeClientProduit(this._getFormViewInstance(grid), grid, rec);
@@ -120,7 +120,7 @@ Ext.define('VIN.controller.Commande', {
                     }
                 }
             },
-            '#commande_item_grid rowactions': {
+            '#commande_item_g rowactions': {
                 groupaction: function(grid, records, action, groupValue) {
                     var form = this._getFormViewInstance(grid);
                     var tv = groupValue;
@@ -133,10 +133,10 @@ Ext.define('VIN.controller.Commande', {
                                                     type_vin: tv
                                                 },
                                                 success: Ext.bind(function(_form, action) {
-                                                    form.down('#commande_item_grid').getStore().reload();
+                                                    form.down('#commande_item_g').getStore().reload();
                                                     // check if inventaire needs update: in the inventaire grid, all rows/recs should 
                                                     // correspond to the same produit, so just take the 1rst, if it exists
-                                                    var pr = form.down('#inventaire_grid').getStore().getAt(0);
+                                                    var pr = form.down('#inventaire_g').getStore().getAt(0);
                                                     if (pr !== undefined && pr.get('type_vin') == tv) {
                                                         this.updateInventaire(form, pr);
                                                     }     
@@ -252,11 +252,16 @@ Ext.define('VIN.controller.Commande', {
                     }
                 }
             },
-            '#commande_item_grid': {
+            '#commande_item_g': {
                 edit: function(editor, e) {
                     var form = this._getFormViewInstance(editor.grid);
                     var r = e.record;
                     r.set('montant_commission', r.get('commission') * VIN.utils.removeTaxes(r.get('prix_coutant')));
+                }
+            },
+            '#commande_g': {
+                itemdblclick: function(view, record, item, index, e, eOpts) {
+                    this.createCommandeForm(record);
                 }
             }
 
@@ -270,12 +275,12 @@ Ext.define('VIN.controller.Commande', {
     loadClientProduits: function(form) {
         var cdd = form.down('#client_dd');        
         var cr = cdd.findRecordByDisplay(cdd.getValue());
-        form.down('#client_produit_grid').store.load({
+        form.down('#client_produit_g').store.load({
             params: {
                 no_client: cr.get('no_client')
             },
             callback: Ext.bind(function(records, operation, success) {
-                var g = form.down('#client_produit_grid');
+                var g = form.down('#client_produit_g');
                 g.setTitle(Ext.String.format('Liste de produits habituels pour le client "{0}" ({1})', 
                                              cr.get('nom_social'), g.store.getCount()));
             }, this)
@@ -304,9 +309,9 @@ Ext.define('VIN.controller.Commande', {
     },
     
     addClientProduit: function(form) {
-        var cp_grid = form.down('#client_produit_grid');
+        var cpg = form.down('#client_produit_g');
         var produit = form.down('#produit_dd').getValue();
-        if (!cp_grid.getStore().findRecord('type_vin', produit)) {
+        if (!cpg.getStore().findRecord('type_vin', produit)) {
             var msg = Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit);
             Ext.Msg.confirm('Vinum', msg, Ext.bind(function(btn) {
                 if (btn == 'yes') {
@@ -318,7 +323,7 @@ Ext.define('VIN.controller.Commande', {
                             no_client: cr.get('no_client')
                         },
                         success: function(_form, action) {
-                            cp_grid.getStore().reload();                            
+                            cpg.getStore().reload();                            
                         }
                     });
                 }
@@ -327,7 +332,7 @@ Ext.define('VIN.controller.Commande', {
     },
 
     updateInventaire: function(form, produit_rec) {
-        var ig = form.down('#inventaire_grid');
+        var ig = form.down('#inventaire_g');
         ig.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', produit_rec.get('type_vin')));
         ig.store.load({
             params: {
@@ -339,8 +344,8 @@ Ext.define('VIN.controller.Commande', {
     },
 
     addCommandeItem: function(form, produit_rec, desired_qc) {
-        var ig = form.down('#inventaire_grid');
-        var cig = form.down('#commande_item_grid');
+        var ig = form.down('#inventaire_g');
+        var cig = form.down('#commande_item_g');
         
         if (cig.store.find('no_produit_interne', produit_rec.get('no_produit_interne')) != -1) {
             Ext.Msg.show({
@@ -364,7 +369,7 @@ Ext.define('VIN.controller.Commande', {
             success: Ext.bind(function(_form, action) {
                 form.loadRecord(action.result);
                 this.updateInventaire(form, produit_rec);
-                form.down('#commande_item_grid').store.load({
+                form.down('#commande_item_g').store.load({
                     params: {
                         no_commande_facture: form.down('#no_commande_facture_tf').getValue()
                     },
@@ -376,7 +381,7 @@ Ext.define('VIN.controller.Commande', {
     },
 
     saveCommandeForm: function(form, callback) {
-        if (form.down('#commande_item_grid').getStore().getCount() == 0) {
+        if (form.down('#commande_item_g').getStore().getCount() == 0) {
             Ext.Msg.show({
                 title: 'Vinum',
                 msg: "La commande ne contient aucun produit",
@@ -390,7 +395,7 @@ Ext.define('VIN.controller.Commande', {
             params: {
                 no_client: form.curr.client_rec.get('no_client'),
                 no_commande_facture: form.curr.no_commande_facture,
-                items: Ext.JSON.encode(Ext.Array.pluck(form.down('#commande_item_grid').getStore().getRange(), 'data'))
+                items: Ext.JSON.encode(Ext.Array.pluck(form.down('#commande_item_g').getStore().getRange(), 'data'))
             },
             success: Ext.bind(function(_form, action) {
                 form.curr.no_commande_facture = action.result.no_commande_facture;
@@ -411,7 +416,7 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    loadClientForm: function(form, no_client, dont_load_client_produits) {
+    loadClientPartOfCommandeForm: function(form, no_client, dont_load_client_produits) {
         var cdd = form.down('#client_dd');
         cdd.forceSelection = false;
         form.load({
@@ -420,18 +425,54 @@ Ext.define('VIN.controller.Commande', {
                 no_client: no_client
             },
             success: Ext.bind(function(_form, action) {
-                cdd.forceSelection = true;
-                form.down('#details_client_btn').setDisabled(false);
-                var cr = cdd.findRecordByDisplay(cdd.getValue());                
-                var adresse = Ext.String.format('{0} {1} {2} {3}', cr.get('no_civique')||'<no?>', 
-                                                cr.get('rue')||'<rue?>', cr.get('ville')||'<ville?>',
-                                                cr.get('code_postal')||'<code_postal?>');
-                form.down('#adresse_tf').setValue(adresse);
-                if (dont_load_client_produits === undefined || !dont_load_client_produits) {
-                    this.loadClientProduits(form);
-                }
+                // the form.load has only filled the display part (single string) of the client combo; 
+                // to get the underlying client record part, we need to explicitly reload from its value
+                cdd.getStore().load({
+                    params: {
+                        no_client: 1,
+                        query: no_client
+                    },
+                    callback: Ext.bind(function(records, operation, success) {
+                        cdd.forceSelection = true;
+                        form.down('#details_client_btn').setDisabled(false);
+                        var cr = cdd.findRecordByDisplay(cdd.getValue());                
+                        var adresse = Ext.String.format('{0} {1} {2} {3}', cr.get('no_civique')||'<no?>', 
+                                                        cr.get('rue')||'<rue?>', cr.get('ville')||'<ville?>',
+                                                        cr.get('code_postal')||'<code_postal?>');
+                        form.down('#adresse_tf').setValue(adresse);
+                        if (dont_load_client_produits === undefined || !dont_load_client_produits) {
+                            this.loadClientProduits(form);
+                        }                        
+                    }, this)
+                });
             }, this)
         });
-    }
+    },
 
+    createCommandeForm: function(commande_rec) {
+        var cf = Ext.create('widget.commande_form');
+        var mp = Ext.getCmp('main_pnl');
+        mp.add(cf);
+        mp.setActiveTab(cf);
+        this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'));
+    },
+
+    loadCommandeForm: function(form, commande_rec) {
+        // load client form
+        form.load({
+            url: ajax_url_prefix + '/client/load',
+            params: {
+                no_client: commande_rec.get('no_client')
+            }
+        });
+        // // load client commandes
+        // form.down('#commande_grid').store.load({
+        //     params: {
+        //         query: no_client // !!! I should explain why I use query here..
+        //     },
+        //     callback: function(records, operation, success) {
+        //     }
+        // });        
+    }
+    
 });

@@ -2,7 +2,6 @@ Ext.define('VIN.view.StartPanel', {
 
     extend: 'Ext.panel.Panel',
     alias: 'widget.start_panel',
-    //views: ['VIN.view.MainPanel', 'VIN.view.client.List', 'VIN.view.commande.Form', 'VIN.view.client.Form'],
     layout: 'fit',
     title: 'Démarrer',
     iconCls: 'home-icon',
@@ -53,6 +52,17 @@ Ext.define('VIN.view.StartPanel', {
                             break;
                         case 'list_clients':
                             var cg = Ext.create('widget.client_grid');
+                            cg.store.load();
+                            Ext.getCmp('main_pnl').add(cg);
+                            Ext.getCmp('main_pnl').setActiveTab(cg);
+                            break;
+                        case 'list_commandes':
+                            var cg = Ext.create('widget.commande_grid', {
+                                itemId: 'commande_g',
+                                title: 'Toutes les commandes',
+                                column_flex: 'all',
+                                closable: true
+                            });                            
                             cg.store.load();
                             Ext.getCmp('main_pnl').add(cg);
                             Ext.getCmp('main_pnl').setActiveTab(cg);

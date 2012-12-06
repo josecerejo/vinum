@@ -372,7 +372,7 @@ Ext.define('VIN.view.commande.Form', {
                     }]
                 }, {
                     xtype: 'client_produit_grid',
-                    itemId: 'client_produit_grid',
+                    itemId: 'client_produit_g',
                     title: 'Liste de produits habituels de ce client',
                     resizable: { handles: 's' },
                     store: Ext.create('VIN.store.Produits'),
@@ -389,7 +389,7 @@ Ext.define('VIN.view.commande.Form', {
                 // right part panel
                 items: [{
                     xtype: 'inventaire_grid',
-                    itemId: 'inventaire_grid',
+                    itemId: 'inventaire_g',
                     collapsible: true,
                     title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
                     store: Ext.create('VIN.store.Inventaires'),
@@ -407,8 +407,8 @@ Ext.define('VIN.view.commande.Form', {
                     style: 'margin-bottom: 20px'
                 }, {
                     xtype: 'commande_item_grid',
+                    itemId: 'commande_item_g',
                     title: 'Produits commandés',
-                    itemId: 'commande_item_grid',
                     store: Ext.create('VIN.store.CommandeItems'),
                     resizable: { handles: 's' },
                     column_flex: {

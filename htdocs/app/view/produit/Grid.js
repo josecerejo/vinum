@@ -12,13 +12,6 @@ Ext.define('VIN.view.produit.Grid', {
             this.store = Ext.create('VIN.store.Produits');
         } 
 
-        // this.dockedItems = {
-        //     xtype: 'pagingtoolbar',
-        //     store: this.store,
-        //     dock: 'bottom',
-        //     displayInfo: true
-        // };
-
         this.columns = [{
             header: '# produit', 
             dataIndex: 'no_produit_interne', 

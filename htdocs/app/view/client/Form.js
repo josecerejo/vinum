@@ -263,7 +263,7 @@ Ext.define('VIN.view.client.Form', {
                     }]
                 }, {
                     xtype: 'commande_grid',
-                    itemId: 'commande_grid',
+                    itemId: 'commande_g',
                     title: 'Commandes faites par ce client',
                     resizable: { handles: 's' },
                     store: Ext.create('VIN.store.Commandes'),
@@ -407,7 +407,7 @@ Ext.define('VIN.view.client.Form', {
                     }]
                 }, {
                     xtype: 'commande_item_grid',
-                    itemId: 'commande_item_grid',
+                    itemId: 'commande_item_g',
                     title: 'Produits commandés',
                     store: Ext.create('VIN.store.CommandeItems'),
                     resizable: { handles: 's' },

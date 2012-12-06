@@ -4,7 +4,10 @@ from common import *
 
 @app.route('/client/get', methods=['GET', 'POST'])
 def get_client():
-    return get(g, request, 'client', ('nom_social', 'no_client_saq'))
+    if 'no_client' in request.args:
+        return get(g, request, 'client', ('no_client',), '=')
+    else:
+        return get(g, request, 'client', ('nom_social', 'no_client_saq'))
 
 
 @app.route('/client/load', methods=['POST'])

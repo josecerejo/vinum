@@ -34,14 +34,21 @@ Ext.define('VIN.utils', {
             var items = model.prototype.fields.items;
             for (var i = 0; i < items.length; i++) {
                 var name = items[i].name;
+                if (column_flex == 'all') {
+                    flex = 1;
+                    hidden = false;
+                } else {
+                    flex = column_flex.hasOwnProperty(name) ? column_flex[name] : 0;
+                    hidden = !column_flex.hasOwnProperty(name);
+                }
                 var col = {
                     xtype: 'gridcolumn',
                     text: items[i].hasOwnProperty('header') ? items[i].header : Ext.String.capitalize(items[i].name),
                     dataIndex: name,
                     type: items[i].type.type,
                     filterable: true,
-                    flex: column_flex.hasOwnProperty(name) ? column_flex[name] : 0,
-                    hidden: !column_flex.hasOwnProperty(name)
+                    flex: flex,
+                    hidden: hidden
                 };
                 if (items[i].type.type == 'date') {
                     col.xtype = 'datecolumn';

@@ -50,15 +50,15 @@ Ext.define('VIN.controller.Client', {
                         var mp = Ext.getCmp('main_pnl');
                         mp.add(cf);
                         mp.setActiveTab(cf);
-                        VIN.app.getController('Commande').loadClientForm(cf, form.down('#no_client_tf').getValue());
+                        VIN.app.getController('Commande').loadClientPartOfCommandeForm(cf, form.down('#no_client_tf').getValue());
                     });
                 }
             },
 
-            'client_form #commande_grid': {
+            'client_form #commande_g': {
                 selectionchange: function(model, records) {
                     var form = this._getFormViewInstance(model.view);
-                    var cig = form.down('#commande_item_grid');
+                    var cig = form.down('#commande_item_g');
                     cig.store.load({
                         params: {
                             no_commande_facture: records[0].get('no_commande_facture')
@@ -119,10 +119,13 @@ Ext.define('VIN.controller.Client', {
             url: ajax_url_prefix + '/client/load',
             params: {
                 no_client: no_client
-            }
+            },
+            callback: Ext.bind(function(records, operation, success) {
+                form.down('#client_dd').getStore().reload();
+            }, this)
         });
         // load client commandes
-        form.down('#commande_grid').store.load({
+        form.down('#commande_g').store.load({
             params: {
                 query: no_client // !!! I should explain why I use query here..
             },
@@ -149,7 +152,7 @@ Ext.define('VIN.controller.Client', {
                                 var cr = cdd.findRecordByDisplay(cdd.getValue());
                                 if (cr.get('no_client') == no_client) {
                                     // 3rd bool arg: don't reload client produits
-                                    VIN.app.getController('Commande').loadClientForm(tab, no_client, true);
+                                    VIN.app.getController('Commande').loadClientPartOfCommandeForm(tab, no_client, true);
                                 }
                             }
                         }

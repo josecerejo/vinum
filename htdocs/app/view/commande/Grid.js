@@ -26,6 +26,11 @@ Ext.define('VIN.view.commande.Grid', {
 
     viewConfig: {
         preserveScrollOnRefresh: true
-    }
+    },
+    features: [{
+        ftype: 'filters',
+        encode: true,
+        local: false
+    }]
 
 });
