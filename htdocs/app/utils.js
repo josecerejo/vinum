@@ -54,13 +54,6 @@ Ext.define('VIN.utils', {
                 cols.push(col);
             }
             return cols;
-        },
-
-        removeTaxes: function(v) {
-            var tps = 0.05;
-            var tvq = 0.095;
-            var t = tps + (tvq + (tps * tvq));
-            return v / (1 + t);
         }
 
     }

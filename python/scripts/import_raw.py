@@ -86,6 +86,7 @@ cursor.execute("select setval('commande_no_commande_facture_seq', (select max(no
 
 print 'commande_produit..'
 cols = getColumns(cursor, 'commande_produit')
+cols.remove('commission')
 f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/ProduitsCommandes.txt'))
 f.next()
 for row in f:
@@ -106,3 +107,5 @@ cursor.execute("select setval('inventaire_no_inventaire_seq', (select max(no_inv
 
 conn.commit()
 conn.close()
+
+from import_succ import *

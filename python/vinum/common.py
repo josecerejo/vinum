@@ -60,3 +60,10 @@ def delete(g, request, table, id):
     pg.delete(cursor, table, where={id:request.form[id]})
     g.db.commit()
     return {'success': True}
+
+
+def removeTaxes_(v):
+    tps = 0.05;
+    tvq = 0.095;
+    t = tps + (tvq + (tps * tvq));
+    return v / (1 + t);

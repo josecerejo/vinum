@@ -1,5 +1,7 @@
 Ext.define('VIN.model.Inventaire', {
+
     extend: 'Ext.data.Model',
+
     fields: [{
         header: '# inventaire', // to be used with VIN.utils.getGridColumnsFromModel
         name: 'no_inventaire', 
@@ -64,7 +66,7 @@ Ext.define('VIN.model.Inventaire', {
         header: 'Statut',
         name: 'statut'
     }, {
-        header: 'Solde (c)',
+        header: 'Solde (c)', // computed on the fly (i.e. not in the model)
         name: 'solde_caisse',
         type: 'int',
         useNull: true
@@ -89,5 +91,7 @@ Ext.define('VIN.model.Inventaire', {
         type: 'int',
         useNull: true
     }],
+
     idProperty: 'no_inventaire'
+
 });

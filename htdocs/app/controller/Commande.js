@@ -127,14 +127,22 @@ Ext.define('VIN.controller.Commande', {
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la commande?', tv), 
                                     Ext.bind(function(btn) {
                                         if (btn == 'yes') {
-                                            var group_recs = form.down('#commande_item_grid').getStore().query('type_vin', tv);
-                                            form.down('#commande_item_grid').getStore().remove(group_recs.items);
-                                            // check if inventaire needs update: in the inventaire grid, all rows/recs should 
-                                            // correspond to the same produit, so just take the 1rst, if it exists
-                                            var pr = form.down('#inventaire_grid').getStore().getAt(0);
-                                            if (pr !== undefined && pr.get('type_vin') == tv) {
-                                                this.updateInventaire(form, pr);
-                                            }                                                
+                                            form.submit({
+                                                url: ajax_url_prefix + '/commande/remove',
+                                                params: {
+                                                    type_vin: tv
+                                                },
+                                                success: Ext.bind(function(_form, action) {
+                                                    form.down('#commande_item_grid').getStore().reload();
+                                                    // check if inventaire needs update: in the inventaire grid, all rows/recs should 
+                                                    // correspond to the same produit, so just take the 1rst, if it exists
+                                                    var pr = form.down('#inventaire_grid').getStore().getAt(0);
+                                                    if (pr !== undefined && pr.get('type_vin') == tv) {
+                                                        this.updateInventaire(form, pr);
+                                                    }     
+                                                }, this)
+                                            });
+
                                         }
                                     }, this));
                 }
@@ -344,76 +352,27 @@ Ext.define('VIN.controller.Commande', {
             return;
         }
 
+        var cdd = form.down('#client_dd');
+        var cr = cdd.findRecordByDisplay(cdd.getValue());
         form.submit({
             url: ajax_url_prefix + '/commande/add',
             params: {
+                no_client: cr.get('no_client'),
                 no_produit_interne: produit_rec.get('no_produit_interne'),
                 qc: desired_qc
             },
             success: Ext.bind(function(_form, action) {
                 form.loadRecord(action.result);
                 this.updateInventaire(form, produit_rec);
+                form.down('#commande_item_grid').store.load({
+                    params: {
+                        no_commande_facture: form.down('#no_commande_facture_tf').getValue()
+                    },
+                    callback: Ext.bind(function(recs, op, success) {
+                    }, this)
+                });                
             }, this)
         });
-        
-        return;
-        //////////////////////
-
-        var actif_recs = ig.getStore().query('statut', /Actif|En réserve/);
-        actif_recs.sort([{property:'statut', direction:'ASC', root:'data'}, 
-                         {property:'date_commande', direction:'ASC', root:'data'}]);
-
-        var rem_qc = desired_qc;
-        var default_commission = form.down('#default_commission_dd').getValue();
-        for (var i = 0; i < actif_recs.getCount(); i++) {
-
-            var rec = actif_recs.getAt(i);
-            rec.set('statut', 'Actif');
-            if (rem_qc == 0) {                
-                break;
-            }
-            
-            // solde caisses
-            var qc = Ext.Array.min([rem_qc, rec.get('solde_caisse')]);
-            rem_qc -= qc;
-            rec.set('solde_caisse', rec.get('solde_caisse') - qc);
-            
-            // solde bouteilles
-            var qb = Ext.Array.min([qc * rec.get('quantite_par_caisse'), rec.get('solde')]);
-            rec.set('solde', rec.get('solde') - qb);            
-
-            // new CommandeItem record
-            var inv_ci = rec.copy();
-            inv_ci.set('quantite_caisse', qc);
-            inv_ci.set('quantite_bouteille', qb);
-            inv_ci.set('commission', default_commission);
-            var pc = inv_ci.get('prix_coutant');
-            inv_ci.set('montant_commission', VIN.utils.removeTaxes(pc) * default_commission);
-            inv_ci.set('statut', 'OK');
-            var ci = Ext.create('VIN.model.CommandeItem', inv_ci.data);
-            cig.store.add(ci);
-
-            if (rec.get('solde_caisse') == 0) {
-                rec.set('statut', 'Inactif');
-            } 
-        }
-        
-        if (rem_qc > 0) {
-            // backorders
-            var ci = Ext.create('VIN.model.CommandeItem', {
-                no_produit_interne: form.curr.produit_rec.get('no_produit_interne'),
-                type_vin: form.curr.produit_rec.get('type_vin'),
-                format: form.curr.produit_rec.get('format'),
-                no_produit_saq: -1,
-                no_commande_saq: -1,
-                quantite_caisse: rem_qc,
-                quantite_bouteille: rem_qc * form.curr.produit_rec.get('quantite_par_caisse'),
-                commission: default_commission,
-                statut: 'BO'
-            });
-            cig.store.add(ci);
-            
-        }
     },
 
     saveCommandeForm: function(form, callback) {

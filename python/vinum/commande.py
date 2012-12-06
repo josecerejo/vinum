@@ -54,9 +54,78 @@ def add_item_to_commande():
         del rf['no_commande_facture']
         comm = pg.insert(cursor, 'commande', values=rf, filter_values=True, map_values={'': None})
         ncf = comm['no_commande_facture']
-    g.db.commit()
-    return {'success': True, 'data': {'no_commande_facture':ncf}}
 
+    rem_qc = int(rf['qc'])
+    default_commission = float(rf['default_commission'])
+    cursor.execute(u"""select *, ceil(solde::real / quantite_par_caisse) as solde_caisse
+                       from inventaire i, produit p
+                       where i.no_produit_interne = %s and p.no_produit_interne = i.no_produit_interne and
+                       statut in ('Actif', 'En réserve')
+                       order by date_commande asc   
+                    """, [rf['no_produit_interne']])
+    prev_statut = None
+    for inv in cursor.fetchall():
+        inv_id = inv['no_inventaire']
+        if prev_statut == 'Inactif':
+            pg.update(cursor, 'inventaire', set={'statut':'Actif'}, where={'no_inventaire': inv_id})
+        if rem_qc == 0: 
+            break        
+        # solde caisses
+        qc = min(rem_qc, inv['solde_caisse'])
+        rem_qc -= qc
+        # solde bouteilles
+        qb = min(qc * inv['quantite_par_caisse'], inv['solde'])
+        inv_update = {'solde': inv['solde'] - qb}
+        if inv_update['solde'] == 0:
+            inv_update['statut'] = 'Inactif'
+        pg.update(cursor, 'inventaire', set=inv_update, where={'no_inventaire': inv_id})
+        prev_statut = inv_update.get('statut', None)
+        # new commande_produit 
+        cp = inv.copy()
+        cp['no_commande_facture'] = ncf
+        cp['quantite_caisse'] = qc
+        cp['quantite_bouteille'] = qb
+        cp['commission'] = default_commission
+        pc = cp['prix_coutant']
+        cp['montant_commission'] = removeTaxes_(inv['prix_coutant']) * default_commission
+        cp['statut'] = 'OK'
+        cp['statut_inventaire'] = inv['statut'] # in case we need to revert it
+        pg.insert(cursor, 'commande_produit', values=cp, filter_values=True)
+        
+    if rem_qc > 0:
+        # backorders
+        qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
+        cp = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
+              'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut': 'BO'}
+        pg.insert(cursor, 'commande_produit', values=cp)
+                                     
+    g.db.commit()
+    return {'success': True, 'data': {'no_commande_facture': ncf}}
+
+
+@app.route('/commande/remove', methods=['POST'])
+def remove_item_from_commande():
+    rf = request.form.to_dict()
+    cursor = g.db.cursor()
+    ncf = rf['no_commande_facture']
+    npi = pg.select1(cursor, 'produit', 'no_produit_interne', where={'type_vin': rf['type_vin']})
+    pg.update(cursor, 'inventaire', set={'statut': u'En réserve'}, where={'no_produit_interne': npi,
+                                                                         'statut': 'Actif'})
+    cursor.execute("""select cp.*, i.no_inventaire, i.solde, i.date_commande as dc_inv
+                      from commande_produit cp, inventaire i
+                      where cp.no_produit_saq = i.no_produit_saq
+                      and cp.no_produit_interne = i.no_produit_interne
+                      and no_commande_facture = %s and cp.no_produit_interne = %s
+                      order by dc_inv asc
+                   """, [ncf, npi])
+    for i, cpi in enumerate(cursor.fetchall()):
+        pg.update(cursor, 'inventaire', set={'solde': cpi['solde'] + cpi['quantite_bouteille'], 
+                                             'statut': 'Actif' if i == 0 else u'En réserve'},
+                  where={'no_inventaire': cpi['no_inventaire']})
+    pg.delete(cursor, 'commande_produit', where={'no_commande_facture':ncf, 'no_produit_interne':npi})
+    g.db.commit()
+    return {'success': True}
+    
 
 def _generate_facture(g, ncf, doc_type):
     cursor = g.db.cursor()

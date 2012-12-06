@@ -39,7 +39,7 @@ create table client (
     expedition text,
     no_succursale text,
     note text,
-    no_client_saq text,
+    no_client_saq integer not null,
     no_civique_fact text,
     rue_fact text,
     ville_fact text,
@@ -64,15 +64,15 @@ create table produit (
     couleur text,
     quantite_par_caisse integer,
     pays text,
-    suc_num integer,
-    locked_by_user text
+    suc_num integer
+    --locked_by_user text
 );
 
 drop table if exists client_produit cascade;
 create table client_produit (
     client_produit_id serial primary key,
-    no_client integer,    
-    no_produit_interne integer,
+    no_client integer not null,
+    no_produit_interne integer not null,
     suc_num integer
 );
 
@@ -80,7 +80,7 @@ drop table if exists commande cascade;
 create table commande (
     no_commande_facture serial primary key,    
     ancien_no_commande_facture integer,
-    no_client integer,
+    no_client integer not null,
     date_commande date,
     expedition text,
     no_succursale integer,
@@ -101,14 +101,15 @@ create table commande (
 drop table if exists commande_produit cascade;
 create table commande_produit (
     commande_produit_id serial primary key,
-    no_commande_facture integer,
-    no_produit_interne integer,
+    no_commande_facture integer not null,
+    no_produit_interne integer not null,
     no_produit_saq integer,
     no_commande_saq text, -- ?? should it be in commande?
     quantite_caisse integer,
     quantite_bouteille integer,
     statut text,
     no_client integer,
+    commission numeric, -- added
     montant_commission numeric,
     date_commande date, -- ??
     suc_num integer
@@ -117,7 +118,7 @@ create table commande_produit (
 drop table if exists inventaire cascade;
 create table inventaire (
     no_inventaire serial primary key,
-    no_produit_interne integer,
+    no_produit_interne integer not null,
     no_produit_saq integer,
     no_commande_saq text,
     quantite_commandee integer,
@@ -128,7 +129,7 @@ create table inventaire (
     millesime integer,
     commission numeric,
     statut text,
-    solde integer,
+    solde integer, -- en # de bouteilles
     solde_30_jours numeric,
     solde_60_jours numeric,
     suc_num integer           
@@ -137,7 +138,7 @@ create table inventaire (
 drop table if exists succursale_saq cascade;
 create table succursale_saq (
     succursale_saq_id serial primary key,
-    no_succursale text,
+    no_succursale text not null,
     adresse text,
     ville text
 );
