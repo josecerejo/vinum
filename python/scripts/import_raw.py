@@ -79,6 +79,7 @@ f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/Comma
 f.next()
 for row in f:
     data = dict(zip(cols, [v.strip().replace('$', '') if v.strip() else None for v in row]))
+    data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])    
     insert(cursor, 'commande', values=data)
 cursor.execute("select setval('commande_no_commande_facture_seq', (select max(no_commande_facture) from commande)+1)")
 
@@ -102,6 +103,7 @@ f = csv.reader(open('/home/christian/vinum/data/raw/data_export_2012-08-29/Inven
 f.next()
 for row in f:
     data = dict(zip(cols, [v.strip().replace('$', '') if v.strip() else None for v in row]))
+    data['statut'] = data['statut'].lower()
     insert(cursor, 'inventaire', values=data)
 cursor.execute("select setval('inventaire_no_inventaire_seq', (select max(no_inventaire) from inventaire)+1)")
 

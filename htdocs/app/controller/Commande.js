@@ -390,30 +390,33 @@ Ext.define('VIN.controller.Commande', {
             });                                            
             return;
         }
-        form.submit({
-            url: ajax_url_prefix + '/commande/save',
-            params: {
-                no_client: form.curr.client_rec.get('no_client'),
-                no_commande_facture: form.curr.no_commande_facture,
-                items: Ext.JSON.encode(Ext.Array.pluck(form.down('#commande_item_g').getStore().getRange(), 'data'))
-            },
-            success: Ext.bind(function(_form, action) {
-                form.curr.no_commande_facture = action.result.no_commande_facture;
-                //form.down('#download_facture_btn').setDisabled(false);
-                form.down('#email_facture_btn').setDisabled(false);
-                if (callback !== undefined) {
-                    callback();
-                } else {
-                    Ext.Msg.show({
-                        title: 'Vinum',
-                        msg: Ext.String.format("La facture #{0} a été enregistrée et peut maintenant être téléchargée",
-                                               form.curr.no_commande_facture),
-                        icon: Ext.MessageBox.INFO,
-                        buttons: Ext.MessageBox.OK
-                    });                            
-                }
-            }, this)
-        });
+        if (callback !== undefined) {
+            callback();
+        }
+        // form.submit({
+        //     url: ajax_url_prefix + '/commande/save',
+        //     params: {
+        //         no_client: form.curr.client_rec.get('no_client'),
+        //         no_commande_facture: form.curr.no_commande_facture,
+        //         items: Ext.JSON.encode(Ext.Array.pluck(form.down('#commande_item_g').getStore().getRange(), 'data'))
+        //     },
+        //     success: Ext.bind(function(_form, action) {
+        //         form.curr.no_commande_facture = action.result.no_commande_facture;
+        //         //form.down('#download_facture_btn').setDisabled(false);
+        //         form.down('#email_facture_btn').setDisabled(false);
+        //         if (callback !== undefined) {
+        //             callback();
+        //         } else {
+        //             Ext.Msg.show({
+        //                 title: 'Vinum',
+        //                 msg: Ext.String.format("La facture #{0} a été enregistrée et peut maintenant être téléchargée",
+        //                                        form.curr.no_commande_facture),
+        //                 icon: Ext.MessageBox.INFO,
+        //                 buttons: Ext.MessageBox.OK
+        //             });                            
+        //         }
+        //     }, this)
+        // });
     },
 
     loadClientPartOfCommandeForm: function(form, no_client, dont_load_client_produits) {

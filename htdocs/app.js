@@ -2,7 +2,7 @@ Ext.Loader.setConfig({enabled:true});
 Ext.Loader.setPath('Ext.ux', './extjs/examples/ux');
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
-var use_flask_server = true;
+var use_flask_server = false;
 var initial_tab = undefined; //'widget.commande_form';
 
 Ext.window.MessageBox.prototype.buttonText = {
