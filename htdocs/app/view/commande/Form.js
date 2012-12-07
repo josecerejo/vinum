@@ -90,6 +90,11 @@ Ext.define('VIN.view.commande.Form', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
+                xtype: 'button',
+                text: 'Sauvegarder la commande',
+                iconCls: 'disk-icon',
+                itemId: 'save_commande_btn'
+            }, {
                 xtype: 'buttongroup',
                 title: 'Facture',
                 items: [{
@@ -144,6 +149,7 @@ Ext.define('VIN.view.commande.Form', {
                         items: [{
                             xtype: 'combo',
                             itemId: 'client_dd',
+                            allowBlank: false,
                             flex: 0.8,
                             displayField: 'nom_social',
                             name: 'nom_social',

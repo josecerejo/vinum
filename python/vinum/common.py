@@ -8,8 +8,8 @@ def get(g, request, table, query_fields, query_op='ilike'):
     cursor = g.db.cursor()
     order_by = None
     if 'sort' in request.args:
-        sort_arg = json.loads(request.args['sort'])[0]
-        order_by = '%s %s' % (sort_arg['property'], sort_arg['direction'])
+        sort_args = json.loads(request.args['sort'])
+        order_by = ','.join(['%s %s' % (sa['property'], sa['direction']) for sa in sort_args])
 
     # todo: put that somewhere that makes more sense
     comp_op_map = {'lt':'<', 'gt':'>', 'le':'<=', 'ge':'>=', 'eq':'='}

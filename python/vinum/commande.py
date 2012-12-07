@@ -15,18 +15,22 @@ from smtplib import SMTP
 def save_commande():
     cursor = g.db.cursor()
     rf = request.form.to_dict()
-    if rf['no_commande_facture']:
-        ncf = rf['no_commande_facture']
-    else:
-        del rf['no_commande_facture']
-        comm = pg.insert(cursor, 'commande', values=rf, filter_values=True, map_values={'': None})
-        ncf = comm['no_commande_facture']
-    pg.delete(cursor, 'commande_produit', where={'no_commande_facture': ncf})
-    for item in json.loads(rf['items']):
-        item['no_commande_facture'] = ncf
-        pg.insert(cursor, 'commande_produit', values=item, filter_values=True)
+    ncf = rf.pop('no_commande_facture')
+    if ncf == '': ncf = None
+    # !!! not sure of this.. could be done in the client as well, or not at all
+    if rf['expedition'] == 'direct':
+        rf['no_succursale'] = None
+        rf['date_pickup'] = None
+    elif rf['expedition'] == 'succursale':
+        rf['date_direct'] = None
+        rf['date_pickup'] = None
+    elif rf['expedition'] == 'pickup':
+        rf['date_direct'] = None
+        rf['no_succursale'] = None        
+    commande = pg.upsert(cursor, 'commande', where={'no_commande_facture': ncf},
+                         values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
-    return {'success': True, 'no_commande_facture': ncf}
+    return {'success': True, 'data': commande}
 
 
 @app.route('/commande/get', methods=['GET'])
@@ -97,15 +101,13 @@ def add_item_to_commande():
         cp['montant_commission'] = removeTaxes_(inv['prix_coutant']) * default_commission
         cp['statut'] = 'OK'
         cp['statut_inventaire'] = inv['statut'] # in case we need to revert it
-        pg.insert(cursor, 'commande_produit', values=cp, filter_values=True)
-        
+        pg.insert(cursor, 'commande_produit', values=cp, filter_values=True)    
     if rem_qc > 0:
         # backorders
         qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
         cp = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
               'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut': 'BO'}
-        pg.insert(cursor, 'commande_produit', values=cp)
-                                     
+        pg.insert(cursor, 'commande_produit', values=cp)                                     
     g.db.commit()
     return {'success': True, 'data': {'no_commande_facture': ncf}}
 
@@ -127,7 +129,7 @@ def remove_item_from_commande():
                    """, [ncf, npi])
     for i, cpi in enumerate(cursor.fetchall()):
         pg.update(cursor, 'inventaire', set={'solde': cpi['solde'] + cpi['quantite_bouteille'], 
-                                             'statut': 'actif' if i == 0 else u'En réserve'},
+                                             'statut': 'actif' if i == 0 else u'en réserve'},
                   where={'no_inventaire': cpi['no_inventaire']})
     pg.delete(cursor, 'commande_produit', where={'no_commande_facture':ncf, 'no_produit_interne':npi})
     g.db.commit()
@@ -176,7 +178,6 @@ def _generate_bdc(g, ncf, doc_type):
     doc_values.update(client)    
     doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom', 
                                                 where={'representant_id': client['representant_id']})
-    for f in ['pu', 'dr', 'sc']: doc_values[f] = ' '
     if commande['expedition'] == 'pickup':
         doc_values['pu'] = 'X'
         doc_values['date_expedition'] = commande['date_pickup']
@@ -186,7 +187,6 @@ def _generate_bdc(g, ncf, doc_type):
     elif commande['expedition'] == 'succursale':
         doc_values['sc'] = 'X'
         doc_values['no_succursale'] = commande['no_succursale']
-
     cps = pg.select(cursor, 'commande_produit', where={'no_commande_facture': ncf})
     n_left = int(math.ceil(len(cps) / 2.))
     doc_values['left_items'] = [(cp['no_produit_saq'], cp['quantite_bouteille']) for cp in cps[:n_left]]

@@ -20,6 +20,7 @@ for row in f:
     data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])
     data['type_client'] = type_client_map.get(data['type_client'], data['type_client'])
     data['representant_id'] = selectId(cursor, 'representant', where={'representant_nom': data['representant_id']})
+    data['no_succursale'] = data['no_succursale'] if data['no_succursale'] != '0' else None
     for possible_saq_nb in re.findall('\d+', data['nom_social']):
         if possible_saq_nb == data['no_client_saq']:
             data['nom_social'] = data['nom_social'].replace(possible_saq_nb, '').strip()
@@ -80,6 +81,7 @@ f.next()
 for row in f:
     data = dict(zip(cols, [v.strip().replace('$', '') if v.strip() else None for v in row]))
     data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])    
+    data['no_succursale'] = data['no_succursale'] if data['no_succursale'] != '0' else None
     insert(cursor, 'commande', values=data)
 cursor.execute("select setval('commande_no_commande_facture_seq', (select max(no_commande_facture) from commande)+1)")
 

@@ -4,8 +4,12 @@ Ext.define('VIN.store.Commandes', {
     requires: ['VIN.utils'],
     model: 'VIN.model.Commande',
     pageSize: 50,
+    remoteSort: true,
     sorters: [{
         property: 'date_commande',
+        direction: 'DESC'
+    }, {
+        property: 'no_commande_facture',
         direction: 'DESC'
     }],
     proxy: {

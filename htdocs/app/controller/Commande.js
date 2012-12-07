@@ -147,6 +147,12 @@ Ext.define('VIN.controller.Commande', {
                                     }, this));
                 }
             },
+            '#save_commande_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    this.saveCommandeForm(form);
+                }
+            },
             '#preview_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
@@ -236,7 +242,7 @@ Ext.define('VIN.controller.Commande', {
                         wait_mask.show();
                         ef.submit({
                             params: {
-                                no_commande_facture: form.down('#no_commande_facture').getValue()
+                                no_commande_facture: form.down('#no_commande_facture_tf').getValue()
                             },
                             success: function(_form, action) {
                                 wait_mask.hide();
@@ -367,8 +373,8 @@ Ext.define('VIN.controller.Commande', {
                 qc: desired_qc
             },
             success: Ext.bind(function(_form, action) {
-                form.loadRecord(action.result);
-                this.updateInventaire(form, produit_rec);
+                form.loadRecord(action.result); // to load no_commande_facture
+                this.updateInventaire(form, produit_rec); 
                 form.down('#commande_item_g').store.load({
                     params: {
                         no_commande_facture: form.down('#no_commande_facture_tf').getValue()
@@ -381,42 +387,39 @@ Ext.define('VIN.controller.Commande', {
     },
 
     saveCommandeForm: function(form, callback) {
-        if (form.down('#commande_item_g').getStore().getCount() == 0) {
-            Ext.Msg.show({
-                title: 'Vinum',
-                msg: "La commande ne contient aucun produit",
-                icon: Ext.MessageBox.WARNING,
-                buttons: Ext.MessageBox.OK
-            });                                            
-            return;
+        // if (form.down('#commande_item_g').getStore().getCount() == 0) {
+        //     Ext.Msg.show({
+        //         title: 'Vinum',
+        //         msg: "La commande ne contient aucun produit",
+        //         icon: Ext.MessageBox.WARNING,
+        //         buttons: Ext.MessageBox.OK
+        //     });                                            
+        //     return;
+        // }
+        if (form.getForm().isValid()) {
+            var cdd = form.down('#client_dd');
+            var cr = cdd.findRecordByDisplay(cdd.getValue());
+            form.submit({
+                url: ajax_url_prefix + '/commande/save',
+                params: {
+                    no_client: cr.get('no_client')
+                },
+                success: Ext.bind(function(_form, action) {
+                    form.loadRecord(action.result); // to load no_commande_facture
+                    if (callback !== undefined) {
+                        callback();
+                    } else {
+                        Ext.Msg.show({
+                            title: 'Vinum',
+                            msg: Ext.String.format("La commande #{0} a été sauvegardée",
+                                                   form.down('#no_commande_facture_tf').getValue()),
+                            icon: Ext.MessageBox.INFO,
+                            buttons: Ext.MessageBox.OK
+                        });                            
+                    }
+                }, this)
+            });
         }
-        if (callback !== undefined) {
-            callback();
-        }
-        // form.submit({
-        //     url: ajax_url_prefix + '/commande/save',
-        //     params: {
-        //         no_client: form.curr.client_rec.get('no_client'),
-        //         no_commande_facture: form.curr.no_commande_facture,
-        //         items: Ext.JSON.encode(Ext.Array.pluck(form.down('#commande_item_g').getStore().getRange(), 'data'))
-        //     },
-        //     success: Ext.bind(function(_form, action) {
-        //         form.curr.no_commande_facture = action.result.no_commande_facture;
-        //         //form.down('#download_facture_btn').setDisabled(false);
-        //         form.down('#email_facture_btn').setDisabled(false);
-        //         if (callback !== undefined) {
-        //             callback();
-        //         } else {
-        //             Ext.Msg.show({
-        //                 title: 'Vinum',
-        //                 msg: Ext.String.format("La facture #{0} a été enregistrée et peut maintenant être téléchargée",
-        //                                        form.curr.no_commande_facture),
-        //                 icon: Ext.MessageBox.INFO,
-        //                 buttons: Ext.MessageBox.OK
-        //             });                            
-        //         }
-        //     }, this)
-        // });
     },
 
     loadClientPartOfCommandeForm: function(form, no_client, dont_load_client_produits) {
