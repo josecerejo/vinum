@@ -45,6 +45,16 @@ def load_commande():
     return {'success': True, 'data': commande}
     
 
+@app.route('/commande/delete', methods=['POST'])
+def delete_commande():
+    cursor = g.db.cursor()
+    rf = request.form.to_dict()
+    pg.delete(cursor, 'commande_produit', where={'no_commande_facture': rf['no_commande_facture']})
+    pg.delete(cursor, 'commande', where={'no_commande_facture': rf['no_commande_facture']})
+    g.db.commit()    
+    return {'success': True}
+
+
 @app.route('/commande/get_items', methods=['GET'])
 def get_items_for_commande():
     cursor = g.db.cursor()

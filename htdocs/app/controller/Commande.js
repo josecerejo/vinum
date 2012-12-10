@@ -266,7 +266,27 @@ Ext.define('VIN.controller.Commande', {
             '#commande_g': {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
                     this.createCommandeForm(record);
-                }
+                },
+                
+            },
+            '#commande_g actioncolumn': {
+                del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir détruire la commande {0}?', 
+                                                               rec.get('no_commande_facture')), 
+                                    Ext.bind(function(btn) {
+                                        if (btn == 'yes') {
+                                            Ext.Ajax.request({
+                                                url: ajax_url_prefix + '/commande/delete',
+                                                params: {
+                                                    no_commande_facture: rec.get('no_commande_facture')
+                                                },
+                                                success: function(response) {
+                                                    grid.store.reload();
+                                                }
+                                            });
+                                        }
+                                    }, this));
+                }                
             }
 
         });
