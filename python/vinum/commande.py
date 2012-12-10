@@ -261,9 +261,12 @@ def email_facture():
         part.add_header('Content-Disposition', 'attachment', filename="facture_roucet.pdf")
         msg.attach(part)
     mailer = SMTP('mail.roucet.com')
-    mailer.login('commande@roucet.com', '836121234')
+    mailer.login('commande@roucet.com', '836121234') # !!! 
     mailer.sendmail(msg['From'], to_list, msg.as_string())
     mailer.close()
+    pg.update(g.db.cursor(), 'commande', set={'facture_est_envoyee': True}, 
+              where={'no_commande_facture': request.form['no_commande_facture']})
+    g.db.commit()
     return {'success': True}
 
 
@@ -283,7 +286,10 @@ def email_bdc():
         part.add_header('Content-Disposition', 'attachment', filename="bon_de_commande_roucet.pdf")
         msg.attach(part)
     mailer = SMTP('mail.roucet.com')
-    mailer.login('commande@roucet.com', '836121234')
+    mailer.login('commande@roucet.com', '836121234') # !!! 
     mailer.sendmail(msg['From'], to_list, msg.as_string())
     mailer.close()
+    pg.update(g.db.cursor(), 'commande', set={'bon_de_commande_est_envoye': True}, 
+              where={'no_commande_facture': request.form['no_commande_facture']})
+    g.db.commit()
     return {'success': True}

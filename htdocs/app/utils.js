@@ -1,5 +1,7 @@
 Ext.define('VIN.utils', {
 
+    requires: ['Ext.ux.CheckColumn'],
+
     statics: {
 
         serverErrorPopup: function(server_error_msg) {
@@ -57,6 +59,11 @@ Ext.define('VIN.utils', {
                     col.useNull = false; 
                 } else if (items[i].type.type == 'int') {
                     col.useNull = false;
+                } else if (items[i].type.type == 'bool') {
+                    col.xtype = 'checkcolumn';
+                    col.processEvent = function() {
+                        return false;
+                    }
                 }
                 cols.push(col);
             }

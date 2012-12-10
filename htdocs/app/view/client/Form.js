@@ -271,8 +271,8 @@ Ext.define('VIN.view.client.Form', {
                         no_commande_facture: 1,
                         date_commande: 1,
                         montant: 1,
-                        statut_commande: 1,
-                        statut_facture: 1
+                        facture_est_envoyee: 1,
+                        bon_de_commande_est_envoye: 1
                     },
                     height: grid_height                    
                 }]

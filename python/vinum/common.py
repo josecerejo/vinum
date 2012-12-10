@@ -19,8 +19,9 @@ def get(g, request, table, query_fields, query_op='ilike'):
         for filter_arg in json.loads(request.args['filter']):
             if filter_arg['type'] == 'string':
                 where[(filter_arg['field'], 'ilike')] = set(['%%%s%%' % v for v in filter_arg['value'].split()])
-            if filter_arg['type'] == 'numeric':
-                where[(filter_arg['field'], comp_op_map[filter_arg['comparison']])] = filter_arg['value']
+            #if filter_arg['type'] == 'numeric':
+            else:
+                where[(filter_arg['field'], comp_op_map[filter_arg.get('comparison', 'eq')])] = filter_arg['value']
     elif request.args.get('query', '').strip():
         # autocomplete query
         if query_op.lower() in ['ilike', 'like']:

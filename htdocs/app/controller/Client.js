@@ -166,7 +166,7 @@ Ext.define('VIN.controller.Client', {
                             title: 'Vinum',
                             msg: Ext.String.format("Le client #{0} a été {1}{2}", no_client, 
                                                    form.down('#no_client_tf').getValue() ? 'modifié' : 'créé',
-                                                   form.down('#no_client_tf').getValue() ? ' (et tous les onglets qui y font référence également)' : ''),
+                                                   form.down('#no_client_tf').getValue() ? ' (ainsi que tous les onglets qui y font référence)' : ''),
                             icon: Ext.MessageBox.WARNING,
                             buttons: Ext.MessageBox.OK
                         });                                                                
