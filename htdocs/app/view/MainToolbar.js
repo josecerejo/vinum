@@ -8,6 +8,10 @@ Ext.define('VIN.view.MainToolbar', {
             text: 'Créer une commande', 
             iconCls: 'commandes-add-icon',
             id: 'create_commande_menu_itm'
+        }, {
+            text: 'Voir la liste de commandes', 
+            iconCls: 'clients-list-icon',
+            id: 'list_commandes_menu_itm'
         }]
     }, {
         text: 'Clients',

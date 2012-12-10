@@ -23,10 +23,10 @@ Ext.define('VIN.controller.MainToolbar', {
                         VIN.app.getController('Client').createClientForm();
                         break;
                     case 'list_clients_menu_itm':
-                        var cg = Ext.create('widget.client_grid');
-                        cg.store.load();
-                        this.getMain().add(cg);
-                        this.getMain().setActiveTab(cg);
+                        VIN.app.getController('Client').createClientGrid();
+                        break;
+                    case 'list_commandes_menu_itm':
+                        VIN.app.getController('Commande').createCommandeGrid();
                         break;
                     };                    
                 }

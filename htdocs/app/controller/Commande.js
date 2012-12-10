@@ -496,6 +496,18 @@ Ext.define('VIN.controller.Commande', {
             this.loadCommandePartOfCommandeForm(cf, commande_rec);
             cf.setTitle(Ext.String.format('Commande {0}', commande_rec.get('no_commande_facture')));
         }
+    },
+
+    createCommandeGrid: function() {
+        var cg = Ext.create('widget.commande_grid', {
+            itemId: 'commande_g',
+            title: 'Toutes les commandes',
+            column_flex: 'all',
+            closable: true
+        });                            
+        cg.store.load();
+        Ext.getCmp('main_pnl').add(cg);
+        Ext.getCmp('main_pnl').setActiveTab(cg);        
     }
     
 });

@@ -175,5 +175,13 @@ Ext.define('VIN.controller.Client', {
                 }
             });
         }
+    },
+
+    createClientGrid: function() {
+        var cg = Ext.create('widget.client_grid');
+        cg.store.load();
+        Ext.getCmp('main_pnl').add(cg);
+        Ext.getCmp('main_pnl').setActiveTab(cg);        
     }
+
 });

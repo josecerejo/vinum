@@ -47,21 +47,10 @@ Ext.define('VIN.view.StartPanel', {
                             VIN.app.getController('Client').createClientForm();
                             break;
                         case 'list_clients':
-                            var cg = Ext.create('widget.client_grid');
-                            cg.store.load();
-                            Ext.getCmp('main_pnl').add(cg);
-                            Ext.getCmp('main_pnl').setActiveTab(cg);
+                            VIN.app.getController('Client').createClientGrid();                            
                             break;
                         case 'list_commandes':
-                            var cg = Ext.create('widget.commande_grid', {
-                                itemId: 'commande_g',
-                                title: 'Toutes les commandes',
-                                column_flex: 'all',
-                                closable: true
-                            });                            
-                            cg.store.load();
-                            Ext.getCmp('main_pnl').add(cg);
-                            Ext.getCmp('main_pnl').setActiveTab(cg);
+                            VIN.app.getController('Commande').createCommandeGrid();
                             break;
                         }
                     }
