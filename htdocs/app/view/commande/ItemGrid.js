@@ -41,6 +41,8 @@ Ext.define('VIN.view.commande.ItemGrid', {
                     displayField: 'commission',
                     valueField: 'commission',
                     forceSelection: false,
+                    allowBlank: false,
+                    regex: /^0\.?[0-9]*$/,
                     store: Ext.create('Ext.data.Store', {
                         fields: ['commission'],
                         data: [{commission: 0.16},

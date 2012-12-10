@@ -17,14 +17,10 @@ Ext.define('VIN.controller.MainToolbar', {
                 click: function(itm, e, opts) {
                     switch (itm.id) {
                     case 'create_commande_menu_itm':
-                        var cf = Ext.create('widget.commande_form');
-                        this.getMain().add(cf);
-                        this.getMain().setActiveTab(cf);                        
+                        VIN.app.getController('Commande').createCommandeForm();
                         break;
                     case 'edit_client_menu_itm':
-                        var cf = Ext.create('widget.client_form');
-                        this.getMain().add(cf);
-                        this.getMain().setActiveTab(cf);
+                        VIN.app.getController('Client').createClientForm();
                         break;
                     case 'list_clients_menu_itm':
                         var cg = Ext.create('widget.client_grid');

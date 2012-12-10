@@ -55,7 +55,7 @@ def get_items_for_commande():
     return {'success': True, 'rows': cursor.fetchall()}
 
 
-@app.route('/commande/add', methods=['POST'])
+@app.route('/commande/add_item', methods=['POST'])
 def add_item_to_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
@@ -112,7 +112,7 @@ def add_item_to_commande():
     return {'success': True, 'data': {'no_commande_facture': ncf}}
 
 
-@app.route('/commande/remove', methods=['POST'])
+@app.route('/commande/remove_item', methods=['POST'])
 def remove_item_from_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
@@ -135,6 +135,22 @@ def remove_item_from_commande():
     g.db.commit()
     return {'success': True}
     
+
+@app.route('/commande/update_item', methods=['POST'])
+def update_item_from_commande():
+    rf = request.form.to_dict()
+    cursor = g.db.cursor()
+    ncf = rf['no_commande_facture']
+    item = json.loads(rf['item'])
+    prix_coutant = pg.select1(cursor, 'inventaire', 'prix_coutant', 
+                              where={'no_produit_saq': item['no_produit_saq']})
+    item['montant_commission'] = removeTaxes_(float(prix_coutant)) * float(item['commission'])
+    cp = pg.update(cursor, 'commande_produit', where={'no_commande_facture': rf['no_commande_facture'], 
+                                                      'no_produit_saq': item['no_produit_saq']},
+                   set=item, filter_values=True)
+    g.db.commit()
+    return {'success': True, 'data': cp}
+
 
 def _generate_facture(g, ncf, doc_type):
     cursor = g.db.cursor()

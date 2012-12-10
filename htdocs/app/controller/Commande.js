@@ -128,7 +128,7 @@ Ext.define('VIN.controller.Commande', {
                                     Ext.bind(function(btn) {
                                         if (btn == 'yes') {
                                             form.submit({
-                                                url: ajax_url_prefix + '/commande/remove',
+                                                url: ajax_url_prefix + '/commande/remove_item',
                                                 params: {
                                                     type_vin: tv
                                                 },
@@ -145,7 +145,7 @@ Ext.define('VIN.controller.Commande', {
 
                                         }
                                     }, this));
-                }
+                },
             },
             '#save_commande_btn': {
                 click: function(btn) {
@@ -175,16 +175,6 @@ Ext.define('VIN.controller.Commande', {
                     }, this));
                 }
             },
-            // '#download_facture_btn': {
-            //     click: function(btn) {
-            //         var form = this._getFormViewInstance(btn);
-            //         this.saveCommande(form, Ext.bind(function() {
-            //             var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=1', 
-            //                                         ajax_url_prefix, form.curr.no_commande_facture);
-            //             location.href = url;
-            //         }, this));
-            //     }
-            // },
             '#email_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
@@ -261,8 +251,16 @@ Ext.define('VIN.controller.Commande', {
             '#commande_item_g': {
                 edit: function(editor, e) {
                     var form = this._getFormViewInstance(editor.grid);
-                    var r = e.record;
-                    r.set('montant_commission', r.get('commission') * VIN.utils.removeTaxes(r.get('prix_coutant')));
+                    var ir = e.record;                    
+                    form.submit({
+                        url: ajax_url_prefix + '/commande/update_item',
+                        params: {
+                            item: Ext.JSON.encode(ir.data)
+                        },
+                        success: Ext.bind(function(_form, action) {
+                            ir.set('montant_commission', action.result.data.montant_commission);
+                        }, this)
+                    });
                 }
             },
             '#commande_g': {
@@ -351,8 +349,7 @@ Ext.define('VIN.controller.Commande', {
 
     addCommandeItem: function(form, produit_rec, desired_qc) {
         var ig = form.down('#inventaire_g');
-        var cig = form.down('#commande_item_g');
-        
+        var cig = form.down('#commande_item_g');        
         if (cig.store.find('no_produit_interne', produit_rec.get('no_produit_interne')) != -1) {
             Ext.Msg.show({
                 title: 'Vinum',
@@ -362,12 +359,12 @@ Ext.define('VIN.controller.Commande', {
             });
             return;
         }
-
         var cdd = form.down('#client_dd');
         var cr = cdd.findRecordByDisplay(cdd.getValue());
         form.submit({
-            url: ajax_url_prefix + '/commande/add',
+            url: ajax_url_prefix + '/commande/add_item',
             params: {
+                // no_commande_facture is not necessarily defined at this point
                 no_client: cr.get('no_client'),
                 no_produit_interne: produit_rec.get('no_produit_interne'),
                 qc: desired_qc
@@ -474,8 +471,11 @@ Ext.define('VIN.controller.Commande', {
         var mp = Ext.getCmp('main_pnl');
         mp.add(cf);
         mp.setActiveTab(cf);
-        this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'));
-        this.loadCommandePartOfCommandeForm(cf, commande_rec);
+        if (commande_rec !== undefined) {
+            this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'));
+            this.loadCommandePartOfCommandeForm(cf, commande_rec);
+            cf.setTitle(Ext.String.format('Commande {0}', commande_rec.get('no_commande_facture')));
+        }
     }
     
 });

@@ -110,7 +110,9 @@ Ext.define('VIN.controller.Client', {
         var mp = Ext.getCmp('main_pnl');
         mp.add(cf);
         mp.setActiveTab(cf);
-        this.loadClientForm(cf, client_rec.get('no_client'));
+        if (client_rec !== undefined) {
+            this.loadClientForm(cf, client_rec.get('no_client'));
+        }
     },
 
     loadClientForm: function(form, no_client) {

@@ -41,14 +41,10 @@ Ext.define('VIN.view.StartPanel', {
                     itemclick: function(dvm, rec) {
                         switch (rec.get('name')) {
                         case 'create_commande':
-                            var cf = Ext.create('widget.commande_form');
-                            Ext.getCmp('main_pnl').add(cf);
-                            Ext.getCmp('main_pnl').setActiveTab(cf);
+                            VIN.app.getController('Commande').createCommandeForm();
                             break;
                         case 'edit_client':
-                            var cf = Ext.create('widget.client_form');
-                            Ext.getCmp('main_pnl').add(cf);
-                            Ext.getCmp('main_pnl').setActiveTab(cf);
+                            VIN.app.getController('Client').createClientForm();
                             break;
                         case 'list_clients':
                             var cg = Ext.create('widget.client_grid');
