@@ -19,6 +19,19 @@ Ext.define('VIN.view.commande.Grid', {
             width: 30,
             sortable: false,
             items: [{
+                icon: 'resources/images/icons/application_form_edit.png',
+                tooltip: 'Détails de la commande',
+                handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
+                    this.fireEvent('edit_click', grid, rowIndex, colIndex, node, e, record, rowNode);
+                }                
+            }]
+        });
+
+        this.columns.push({
+            xtype: 'actioncolumn',
+            width: 30,
+            sortable: false,
+            items: [{
                 icon: 'resources/images/icons/delete.png',
                 tooltip: 'Détruire cette commande',
                 handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {

@@ -179,6 +179,7 @@ Ext.define('VIN.controller.Commande', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     this.saveCommandeForm(form, Ext.bind(function() {
+                        form.email_win.document_type = 'facture';
                         var cdd = form.down('#client_dd');
                         var cr = cdd.findRecordByDisplay(cdd.getValue());
                         var courriel = cr.get('courriel');
@@ -208,6 +209,7 @@ Ext.define('VIN.controller.Commande', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     this.saveCommandeForm(form, Ext.bind(function() {
+                        form.email_win.document_type = 'bon_de_commande';
                         form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_bdc';
                         form.email_win.down('#email_addr_tf').setValue('info_@saq.com');
                         form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Bon de commande pour la facture #{0}', 
@@ -242,7 +244,9 @@ Ext.define('VIN.controller.Commande', {
                                     msg: Ext.String.format("Le courriel a été envoyé"),
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
-                                });                                            
+                                });
+                                form.down(Ext.String.format('#email_{0}_btn', 
+                                                            form.email_win.document_type)).setIconCls('accept-icon');
                             }
                         });
                     }
@@ -286,7 +290,10 @@ Ext.define('VIN.controller.Commande', {
                                             });
                                         }
                                     }, this));
-                }                
+                },
+                edit_click: function(grid, el, rowIndex, colIndex, e, record, rowEl) {
+                    this.createCommandeForm(record);                    
+                }
             }
 
         });
@@ -469,14 +476,13 @@ Ext.define('VIN.controller.Commande', {
     },
 
     loadCommandePartOfCommandeForm: function(form, commande_rec) {
-        form.load({
-            url: ajax_url_prefix + '/commande/load',
-            params: {
-                no_commande_facture: commande_rec.get('no_commande_facture')
-            },
-            success: Ext.bind(function(_form, action) {
-            }, this)
-        });
+        form.loadRecord(commande_rec);
+        if (commande_rec.get('facture_est_envoyee')) {
+            form.down('#email_facture_btn').setIconCls('accept-icon');
+        }
+        if (commande_rec.get('bon_de_commande_est_envoye')) {
+            form.down('#email_bon_de_commande_btn').setIconCls('accept-icon');            
+        }
         form.down('#commande_item_g').getStore().load({
             params: {
                 no_commande_facture: commande_rec.get('no_commande_facture')
@@ -502,10 +508,18 @@ Ext.define('VIN.controller.Commande', {
         var cg = Ext.create('widget.commande_grid', {
             itemId: 'commande_g',
             title: 'Toutes les commandes',
-            column_flex: 'all',
+            column_flex: {
+                no_commande_facture: 0.1,
+                no_client: 0.1,
+                no_client_saq: 0.1,
+                nom_social: 0.3,
+                date_commande: 0.1,
+                facture_est_envoyee: 0.05,
+                bon_de_commande_est_envoye: 0.05
+            },
             closable: true
         });                            
-        cg.store.load();
+        cg.getStore().load();
         Ext.getCmp('main_pnl').add(cg);
         Ext.getCmp('main_pnl').setActiveTab(cg);        
     }

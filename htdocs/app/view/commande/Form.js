@@ -104,7 +104,7 @@ Ext.define('VIN.view.commande.Form', {
                 }, {
                     text: 'Envoyer par courriel',
                     itemId: 'email_facture_btn',
-                    iconCls: 'email-go-icon'
+                    iconCls: 'email-attach-icon'
                 }]
             }, {
                 xtype: 'buttongroup',
@@ -116,7 +116,7 @@ Ext.define('VIN.view.commande.Form', {
                 }, {
                     text: 'Envoyer par courriel',
                     itemId: 'email_bon_de_commande_btn',
-                    iconCls: 'email-go-icon'                        
+                    iconCls: 'email-attach-icon'                        
                 }]                
             }]
         };

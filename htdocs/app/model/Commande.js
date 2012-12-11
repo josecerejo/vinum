@@ -15,6 +15,13 @@ Ext.define('VIN.model.Commande', {
         type: 'int',
         name: 'no_client'
     }, {
+        header: '# client SAQ',
+        type: 'int',
+        name: 'no_client_saq'        
+    }, {
+        header: 'Nom social',
+        name: 'nom_social'        
+    }, {
         header: 'Date de la commande',
         name: 'date_commande',
         type: 'date'

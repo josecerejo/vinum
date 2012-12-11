@@ -35,7 +35,8 @@ def save_commande():
 
 @app.route('/commande/get', methods=['GET'])
 def get_commandes_for_client():
-    return get(g, request, 'commande', ('no_client',), query_op='=')
+    return get(g, request, ['commande c', 'client d'], ('no_client',), query_op='=', 
+               join={'c.no_client': 'd.no_client'})
 
 
 @app.route('/commande/load', methods=['POST'])

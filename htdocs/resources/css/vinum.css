@@ -32,6 +32,10 @@
     background: url(../images/icons/arrow_right.png) no-repeat !important;
 }
 
+.accept-icon {
+    background: url(../images/icons/accept.png) no-repeat !important;
+}
+
 .clients-icon {
     background: url(../images/icons/group.png) no-repeat !important;
 }
@@ -56,8 +60,8 @@
     background: url(../images/icons/page_save.png) no-repeat !important;
 }
 
-.email-go-icon {
-    background: url(../images/icons/email_go.png) no-repeat !important;
+.email-attach-icon {
+    background: url(../images/icons/email_attach.png) no-repeat !important;
 }
 
 .cart-go-icon {
