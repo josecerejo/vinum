@@ -26,7 +26,7 @@ def save_commande():
         rf['date_pickup'] = None
     elif rf['expedition'] == 'pickup':
         rf['date_direct'] = None
-        rf['no_succursale'] = None        
+        rf['no_succursale'] = None
     commande = pg.upsert(cursor, 'commande', where={'no_commande_facture': ncf},
                          values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
@@ -35,16 +35,17 @@ def save_commande():
 
 @app.route('/commande/get', methods=['GET'])
 def get_commandes_for_client():
-    return get(g, request, ['commande c', 'client d'], ('no_client',), query_op='=', 
-               join={'c.no_client': 'd.no_client'})
+       return get(g, request, ['commande c', 'client d'], ('no_client',), query_op='=',
+                  what=['c.*', 'd.no_client_saq', 'd.nom_social'],
+                  join={'c.no_client': 'd.no_client'})
 
 
 @app.route('/commande/load', methods=['POST'])
 def load_commande():
-    commande = pg.select1r(g.db.cursor(), 'commande', 
+    commande = pg.select1r(g.db.cursor(), 'commande',
                                where={'no_commande_facture': request.form['no_commande_facture']})
     return {'success': True, 'data': commande}
-    
+
 
 @app.route('/commande/delete', methods=['POST'])
 def delete_commande():
@@ -52,7 +53,7 @@ def delete_commande():
     rf = request.form.to_dict()
     pg.delete(cursor, 'commande_produit', where={'no_commande_facture': rf['no_commande_facture']})
     pg.delete(cursor, 'commande', where={'no_commande_facture': rf['no_commande_facture']})
-    g.db.commit()    
+    g.db.commit()
     return {'success': True}
 
 
@@ -83,15 +84,15 @@ def add_item_to_commande():
                        from inventaire i, produit p
                        where i.no_produit_interne = %s and p.no_produit_interne = i.no_produit_interne and
                        statut in ('actif', 'en réserve')
-                       order by date_commande asc   
+                       order by date_commande asc
                     """, [rf['no_produit_interne']])
     prev_statut = None
     for inv in cursor.fetchall():
         inv_id = inv['no_inventaire']
         if prev_statut == 'inactif':
             pg.update(cursor, 'inventaire', set={'statut':'actif'}, where={'no_inventaire': inv_id})
-        if rem_qc == 0: 
-            break        
+        if rem_qc == 0:
+            break
         # solde caisses
         qc = min(rem_qc, inv['solde_caisse'])
         rem_qc -= qc
@@ -102,7 +103,7 @@ def add_item_to_commande():
             inv_update['statut'] = 'inactif'
         pg.update(cursor, 'inventaire', set=inv_update, where={'no_inventaire': inv_id})
         prev_statut = inv_update.get('statut', None)
-        # new commande_produit 
+        # new commande_produit
         cp = inv.copy()
         cp['no_commande_facture'] = ncf
         cp['quantite_caisse'] = qc
@@ -112,13 +113,13 @@ def add_item_to_commande():
         cp['montant_commission'] = removeTaxes_(inv['prix_coutant']) * default_commission
         cp['statut'] = 'OK'
         cp['statut_inventaire'] = inv['statut'] # in case we need to revert it
-        pg.insert(cursor, 'commande_produit', values=cp, filter_values=True)    
+        pg.insert(cursor, 'commande_produit', values=cp, filter_values=True)
     if rem_qc > 0:
         # backorders
         qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
         cp = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
               'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut': 'BO'}
-        pg.insert(cursor, 'commande_produit', values=cp)                                     
+        pg.insert(cursor, 'commande_produit', values=cp)
     g.db.commit()
     return {'success': True, 'data': {'no_commande_facture': ncf}}
 
@@ -139,13 +140,13 @@ def remove_item_from_commande():
                       order by dc_inv asc
                    """, [ncf, npi])
     for i, cpi in enumerate(cursor.fetchall()):
-        pg.update(cursor, 'inventaire', set={'solde': cpi['solde'] + cpi['quantite_bouteille'], 
+        pg.update(cursor, 'inventaire', set={'solde': cpi['solde'] + cpi['quantite_bouteille'],
                                              'statut': 'actif' if i == 0 else u'en réserve'},
                   where={'no_inventaire': cpi['no_inventaire']})
     pg.delete(cursor, 'commande_produit', where={'no_commande_facture':ncf, 'no_produit_interne':npi})
     g.db.commit()
     return {'success': True}
-    
+
 
 @app.route('/commande/update_item', methods=['POST'])
 def update_item_from_commande():
@@ -153,10 +154,10 @@ def update_item_from_commande():
     cursor = g.db.cursor()
     ncf = rf['no_commande_facture']
     item = json.loads(rf['item'])
-    prix_coutant = pg.select1(cursor, 'inventaire', 'prix_coutant', 
+    prix_coutant = pg.select1(cursor, 'inventaire', 'prix_coutant',
                               where={'no_produit_saq': item['no_produit_saq']})
     item['montant_commission'] = removeTaxes_(float(prix_coutant)) * float(item['commission'])
-    cp = pg.update(cursor, 'commande_produit', where={'no_commande_facture': rf['no_commande_facture'], 
+    cp = pg.update(cursor, 'commande_produit', where={'no_commande_facture': rf['no_commande_facture'],
                                                       'no_produit_saq': item['no_produit_saq']},
                    set=item, filter_values=True)
     g.db.commit()
@@ -169,18 +170,18 @@ def _generate_facture(g, ncf, doc_type):
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
     doc_values = {'items': []}
     doc_values.update(commande)
-    doc_values.update(client)    
-    doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom', 
+    doc_values.update(client)
+    doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom',
                                                 where={'representant_id': client['representant_id']})
-    cursor.execute("""select * from produit p, commande_produit cp 
+    cursor.execute("""select * from produit p, commande_produit cp
                       where p.no_produit_interne = cp.no_produit_interne
                       and no_commande_facture = %s""", [ncf])
     sous_total = 0
     for row in cursor.fetchall():
         montant_comm_x_qb = row['montant_commission'] * row['quantite_bouteille']
         sous_total += montant_comm_x_qb
-        doc_values['items'].append([row['quantite_bouteille'], row['type_vin'], row['no_produit_saq'], 
-                                    row['format'], locale.currency(row['montant_commission']), 
+        doc_values['items'].append([row['quantite_bouteille'], row['type_vin'], row['no_produit_saq'],
+                                    row['format'], locale.currency(row['montant_commission']),
                                     locale.currency(montant_comm_x_qb)])
     tps = sous_total * 0.05
     tvq = (sous_total + tps) * 0.095
@@ -202,8 +203,8 @@ def _generate_bdc(g, ncf, doc_type):
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
     doc_values = {'left_items': [], 'right_items': []}
     doc_values.update(commande)
-    doc_values.update(client)    
-    doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom', 
+    doc_values.update(client)
+    doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom',
                                                 where={'representant_id': client['representant_id']})
     if commande['expedition'] == 'pickup':
         doc_values['pu'] = 'X'
@@ -224,7 +225,7 @@ def _generate_bdc(g, ncf, doc_type):
                    out_fn, overwriteExisting=True)
     ren.run()
     return out_fn
-    
+
 
 @app.route('/commande/download_facture', methods=['GET'])
 def download_facture():
@@ -262,10 +263,10 @@ def email_facture():
         part.add_header('Content-Disposition', 'attachment', filename="facture_roucet.pdf")
         msg.attach(part)
     mailer = SMTP('mail.roucet.com')
-    mailer.login('commande@roucet.com', '836121234') # !!! 
+    mailer.login('commande@roucet.com', '836121234') # !!!
     mailer.sendmail(msg['From'], to_list, msg.as_string())
     mailer.close()
-    pg.update(g.db.cursor(), 'commande', set={'facture_est_envoyee': True}, 
+    pg.update(g.db.cursor(), 'commande', set={'facture_est_envoyee': True},
               where={'no_commande_facture': request.form['no_commande_facture']})
     g.db.commit()
     return {'success': True}
@@ -287,10 +288,10 @@ def email_bdc():
         part.add_header('Content-Disposition', 'attachment', filename="bon_de_commande_roucet.pdf")
         msg.attach(part)
     mailer = SMTP('mail.roucet.com')
-    mailer.login('commande@roucet.com', '836121234') # !!! 
+    mailer.login('commande@roucet.com', '836121234') # !!!
     mailer.sendmail(msg['From'], to_list, msg.as_string())
     mailer.close()
-    pg.update(g.db.cursor(), 'commande', set={'bon_de_commande_est_envoye': True}, 
+    pg.update(g.db.cursor(), 'commande', set={'bon_de_commande_est_envoye': True},
               where={'no_commande_facture': request.form['no_commande_facture']})
     g.db.commit()
     return {'success': True}

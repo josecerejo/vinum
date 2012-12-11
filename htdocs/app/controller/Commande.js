@@ -429,17 +429,19 @@ Ext.define('VIN.controller.Commande', {
                     no_client: cr.get('no_client')
                 },
                 success: Ext.bind(function(_form, action) {
+                    console.log(action.result);
                     form.loadRecord(action.result); // to load no_commande_facture
+                    var ncf = action.result.data.no_commande_facture;
                     if (callback !== undefined) {
                         callback();
                     } else {
                         Ext.Msg.show({
                             title: 'Vinum',
-                            msg: Ext.String.format("La commande #{0} a été sauvegardée",
-                                                   form.down('#no_commande_facture_tf').getValue()),
+                            msg: Ext.String.format("La commande #{0} a été sauvegardée", ncf),
                             icon: Ext.MessageBox.INFO,
                             buttons: Ext.MessageBox.OK
-                        });                            
+                        });
+                        form.setTitle(Ext.String.format('Commande {0}', ncf));
                     }
                 }, this)
             });
@@ -476,7 +478,20 @@ Ext.define('VIN.controller.Commande', {
     },
 
     loadCommandePartOfCommandeForm: function(form, commande_rec) {
-        form.loadRecord(commande_rec);
+        form.load({
+            url: ajax_url_prefix + '/commande/load',
+            params: {
+                no_commande_facture: commande_rec.get('no_commande_facture')
+            },
+            success: Ext.bind(function(_form, action) {
+            }, this)
+        });   
+        /* ??? there's something I really don't understand here: since commande_rec is 
+           already in the state we want, we should be able to simply load the form with it, 
+           using form.loadRecord, instead of doing the above ajax call; but for some reason 
+           it doesn't play well with the "expedition" rbg 
+        */
+        //form.loadRecord(commande_rec);
         if (commande_rec.get('facture_est_envoyee')) {
             form.down('#email_facture_btn').setIconCls('accept-icon');
         }

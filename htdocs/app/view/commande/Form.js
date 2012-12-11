@@ -294,6 +294,20 @@ Ext.define('VIN.view.commande.Form', {
                     },
                     layout: 'hbox',
                     items: [{
+                        xtype: 'textfield',
+                        fieldLabel: 'No commande Roucet',
+                        flex: 0.25,
+                        readOnly: true,
+                        cls: 'x-item-disabled',
+                        name: 'no_commande_facture',
+                        itemId: 'no_commande_facture_tf'
+                    }, {
+                        xtype: 'textfield',
+                        flex: 0.25,
+                        fieldLabel: 'No commande SAQ',
+                        name: 'no_commande_saq',
+                        itemId: 'no_commande_saq_tf'                        
+                    }, {
                         xtype: 'datefield',
                         fieldLabel: 'Date',
                         name: 'date_commande',
@@ -319,20 +333,6 @@ Ext.define('VIN.view.commande.Form', {
                             data: [{default_commission: 0.16},
                                    {default_commission: 0.23}]
                         })                        
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'No facture Roucet',
-                        flex: 0.25,
-                        readOnly: true,
-                        cls: 'x-item-disabled',
-                        name: 'no_commande_facture',
-                        itemId: 'no_commande_facture_tf'
-                    }, {
-                        xtype: 'textfield',
-                        flex: 0.25,
-                        fieldLabel: 'No facture SAQ',
-                        name: 'no_commande_saq',
-                        itemId: 'no_commande_saq_tf'                        
                     }]
                 }, {
                     border: false,

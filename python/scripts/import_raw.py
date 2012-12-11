@@ -85,7 +85,7 @@ for row in f:
     insert(cursor, 'commande', values=data)
 cursor.execute("select setval('commande_no_commande_facture_seq', (select max(no_commande_facture) from commande)+1)")
 
-cursor.execute('create index commande_no_client_idx on commande (no_client')
+cursor.execute('create index commande_no_client_idx on commande (no_client)')
 
 # commande-produit
 

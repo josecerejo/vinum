@@ -3,7 +3,7 @@ import sys; sys.path.append('/home/christian/gh/little_pger')
 import little_pger as pg
 
 
-def get(g, request, tables, query_fields, query_op='ilike', join={}):
+def get(g, request, tables, query_fields, query_op='ilike', what={'*':1}, join={}):
     assert query_fields.__class__ is tuple
     cursor = g.db.cursor()
     order_by = None
@@ -30,8 +30,8 @@ def get(g, request, tables, query_fields, query_op='ilike', join={}):
             where[(query_fields[0], query_op)] = request.args['query']
 
     json_out = {'success': True}
-    json_out['total'] = pg.count(cursor, tables, join=join, where=where, debug_assert=False)
-    json_out['rows'] = pg.select(cursor, tables, join=join, where=where, offset=request.args.get('start', None),
+    json_out['total'] = pg.count(cursor, tables, what=what, join=join, where=where, debug_assert=False)
+    json_out['rows'] = pg.select(cursor, tables, what=what, join=join, where=where, offset=request.args.get('start', None),
                                  limit=request.args.get('limit', None), order_by=order_by, debug_assert=False)
     return json_out
 
