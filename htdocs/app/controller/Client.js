@@ -129,7 +129,8 @@ Ext.define('VIN.controller.Client', {
         // load client commandes
         form.down('#commande_g').store.load({
             params: {
-                query: no_client // !!! I should explain why I use query here..
+                is_single_client_query: true,
+                query: no_client
             },
             callback: function(records, operation, success) {
             }

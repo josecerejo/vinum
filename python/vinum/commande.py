@@ -35,9 +35,12 @@ def save_commande():
 
 @app.route('/commande/get', methods=['GET'])
 def get_commandes_for_client():
-       return get(g, request, ['commande c', 'client d'], ('no_client',), query_op='=',
-                  what=['c.*', 'd.no_client_saq', 'd.nom_social'],
-                  join={'c.no_client': 'd.no_client'})
+    if 'is_single_client_query' in request.args:
+        return get(g, request, 'commande', ('no_client',), query_op='=')
+    else:
+        return get(g, request, ['commande c', 'client d'], ('no_client',), query_op='=',
+                   what=['c.*', 'd.no_client_saq', 'd.nom_social'],
+                   join={'c.no_client': 'd.no_client'})
 
 
 @app.route('/commande/load', methods=['POST'])
