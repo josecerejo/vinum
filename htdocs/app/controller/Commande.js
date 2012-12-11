@@ -8,22 +8,22 @@ Ext.define('VIN.controller.Commande', {
     init: function() {
 
         this.control({
-            'commande_form': {
-                beforeclose: function(panel) {
-                    if (panel.down('#commande_item_g').getStore().getCount() > 0) {
-                        Ext.Msg.confirm('Vinum', 
-                                        "La commande n'a pas été envoyée par courriel, êtes-vous certain de vouloir l'annuler?",
-                                        function(btn) {
-                                            if (btn == 'yes') {
-                                                panel.ownerCt.remove(panel);
-                                            }
-                                        });
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-            },
+            // 'commande_form': {
+            //     beforeclose: function(panel) {
+            //         if (panel.down('#commande_item_g').getStore().getCount() > 0) {
+            //             Ext.Msg.confirm('Vinum', 
+            //                             "La commande n'a pas été envoyée par courriel, êtes-vous certain de vouloir l'annuler?",
+            //                             function(btn) {
+            //                                 if (btn == 'yes') {
+            //                                     panel.ownerCt.remove(panel);
+            //                                 }
+            //                             });
+            //             return false;
+            //         } else {
+            //             return true;
+            //         }
+            //     }
+            // },
             'commande_form #client_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
