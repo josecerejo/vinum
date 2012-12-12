@@ -3,8 +3,8 @@ Ext.define('VIN.view.commande.ItemGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.commande_item_grid',
     requires: ['Ext.ux.grid.RowActions'],
-    column_flex: {
-    },
+    column_flex: 'all',
+    is_commission_field_editable: true,
 
     initComponent: function() {
         
@@ -32,23 +32,26 @@ Ext.define('VIN.view.commande.ItemGrid', {
     	    }
         });
 
-        for (var i = 0; i < this.columns.length; i++) {
-            if (this.columns[i].dataIndex == 'commission') {
-                this.columns[i].editor = {
-                    xtype: 'combo',
-                    queryMode: 'local',
-                    triggerAction: 'all',
-                    displayField: 'commission',
-                    valueField: 'commission',
-                    forceSelection: false,
-                    allowBlank: false,
-                    regex: /^0\.?[0-9]*$/,
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['commission'],
-                        data: [{commission: 0.16},
-                               {commission: 0.23}]
-                    })
-                };
+        if (this.is_commission_field_editable) {
+            for (var i = 0; i < this.columns.length; i++) {
+                if (this.columns[i].dataIndex == 'commission') {
+                    this.columns[i].editor = {
+                        xtype: 'combo',
+                        queryMode: 'local',
+                        triggerAction: 'all',
+                        displayField: 'commission',
+                        valueField: 'commission',
+                        forceSelection: false,
+                        allowBlank: false,
+                        regex: /^0\.?[0-9]*$/,
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['commission'],
+                            data: [{commission: 0.16},
+                                   {commission: 0.23}]
+                        })
+                    };
+                    break;
+                }
             }
         }
 

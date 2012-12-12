@@ -411,6 +411,7 @@ Ext.define('VIN.view.client.Form', {
                     title: 'Produits commandés',
                     store: Ext.create('VIN.store.CommandeItems'),
                     resizable: { handles: 's' },
+                    is_commission_field_editable: false,
                     column_flex: {
                         type_vin: 1,
                         format: 1,
