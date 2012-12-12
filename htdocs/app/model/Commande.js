@@ -3,11 +3,11 @@ Ext.define('VIN.model.Commande', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        header: '# facture',
+        header: '# commande',
         name: 'no_commande_facture', 
         type: 'int'
     }, {
-        header: 'Ancien # facture',
+        header: 'Ancien # commande',
         name: 'ancien_no_commande_facture', 
         type: 'int'
     }, {
