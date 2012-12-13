@@ -347,22 +347,37 @@ Ext.define('VIN.view.client.Form', {
                         },                        
                         items: [{
                             xtype: 'radiofield',
+                            flex: 0.1,
                             boxLabel: 'Direct',
                             name: 'expedition',
                             inputValue: 'direct',
                             itemId: 'direct_rb',
-                            checked: true,
-                            flex: 0.2
-                        }, {
+                            checked: true
+                        }, {                   
+                            xtype: 'combo',
+                            flex: 0.3,
+                            multiSelect: true,
+                            queryMode: 'local',
+                            triggerAction: 'all',
+                            hideLabel: true,
+                            displayField: 'jour',
+                            name: 'jours_livraison',
+                            forceSelection: true,
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['jour'],
+                                data: [{jour: 'lundi'}, {jour: 'mardi'}, {jour: 'mercredi'},
+                                       {jour: 'jeudi'}, {jour: 'vendredi'}, {jour: 'samedi'}, {jour: 'dimanche'}]
+                            })
+                        }, {                        
                             xtype: 'radiofield',
+                            flex: 0.15,
                             boxLabel: 'Succursale',
                             name: 'expedition',
                             inputValue: 'succursale',
-                            flex: 0.2,
                             itemId: 'succ_rb'
                         }, {
                             xtype: 'combo',
-                            flex: 0.4,
+                            flex: 0.3,
                             displayField: 'no_succursale',
                             name: 'no_succursale',
                             store: Ext.create('Ext.data.Store', {
@@ -398,10 +413,10 @@ Ext.define('VIN.view.client.Form', {
                             }
                         }, {
                             xtype: 'radiofield',
+                            flex: 0.15,
                             boxLabel: 'Pick up',
                             name: 'expedition',
                             inputValue: 'pickup',
-                            flex: 0.2,
                             itemId: 'pickup_rb'
                         }]
                     }]

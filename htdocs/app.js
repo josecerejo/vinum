@@ -7,7 +7,7 @@ Ext.Loader.setConfig({
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = false;
-var initial_tab = undefined; //'widget.commande_form';
+var initial_tab = 'widget.commande_form';
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',

@@ -21,6 +21,7 @@ def load_client():
 @app.route('/client/save', methods=['POST'])
 def save_client():    
     rf = request.form.to_dict()
+    rf['jours_livraison'] = request.form.getlist('jours_livraison')
     no_client = rf.pop('no_client')
     if no_client == '': no_client = None
     rf['representant_id'] = pg.selectId(g.db.cursor(), 'representant', 

@@ -184,10 +184,17 @@ Ext.define('VIN.view.commande.Form', {
                             xtype: 'textfield',
                             fieldLabel: 'Adresse',
                             itemId: 'adresse_tf',
-                            flex: 0.8,
+                            flex: 0.5,
                             disabled: true
                         }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Jours de livraison',
+                            name: 'jours_livraison',
+                            flex: 0.3,
+                            disabled: true                            
+                        }, {
                             xtype: 'button',
+                            flex: 0.2,
                             padding: 2,
                             itemId: 'details_client_btn',
                             text: 'Détails du client',

@@ -46,9 +46,9 @@ create table client (
     province_fact text,
     code_postal_fact text,
     suc_num text,
-    jours_livraison text,
-    date_ouverture_dossier date,
-    jour_livraison text    
+    jours_livraison text[],
+    date_ouverture_dossier date
+    --jour_livraison text    
 );
 
 drop table if exists produit cascade;
