@@ -139,7 +139,7 @@ def remove_produit_from_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
     ncf = rf['no_commande_facture']
-    npi = pg.select1(cursor, 'produit', 'no_produit_interne', where={'type_vin': rf['type_vin']})
+    npi = rf['no_produit_interne']
     _remove_produit_from_commande(cursor, ncf, npi)
     g.db.commit()
     return {'success': True}

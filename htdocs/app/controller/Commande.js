@@ -11,22 +11,21 @@ Ext.define('VIN.controller.Commande', {
     init: function() {
 
         this.control({
-            // 'commande_form': {
-            //     beforeclose: function(panel) {
-            //         if (panel.down('#commande_item_g').getStore().getCount() > 0) {
-            //             Ext.Msg.confirm('Vinum',
-            //                             "La commande n'a pas été envoyée par courriel, êtes-vous certain de vouloir l'annuler?",
-            //                             function(btn) {
-            //                                 if (btn == 'yes') {
-            //                                     panel.ownerCt.remove(panel);
-            //                                 }
-            //                             });
-            //             return false;
-            //         } else {
-            //             return true;
-            //         }
-            //     }
-            // },
+            'commande_form': {
+                beforeclose: function(form) {
+                    Ext.Msg.confirm('Vinum', "Voulez-vous sauvegarder cette commande avant de la fermer?",
+                                    Ext.bind(function(btn) {
+                                        if (btn == 'yes') {
+                                            this.saveCommandeFormPart(form, function() {
+                                                form.ownerCt.remove(form);
+                                            }, 'both'); // will both both created/saved msgs
+                                        } else {
+                                            form.ownerCt.remove(form);
+                                        }
+                                    }, this));
+                    return false;
+                }
+            },
             'commande_form #client_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
@@ -69,6 +68,9 @@ Ext.define('VIN.controller.Commande', {
             },
             '#client_produit_g': {
                 selectionchange: function(model, records) {
+                    if (records.length == 0) {
+                        return;
+                    }
                     var form = this._getFormViewInstance(model.view);
                     this.updateInventaire(form, records[0]);
                 }
@@ -80,16 +82,6 @@ Ext.define('VIN.controller.Commande', {
                 },
                 add_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     var form = this._getFormViewInstance(grid);
-                    if (rec.get('locked_by_user')) {
-                        Ext.Msg.show({
-                            title: 'Vinum',
-                            msg: Ext.String.format("Ce produit est présentement utilisé dans une commande effectuée par l'usager '{0}'",
-                                                   rec.get('locked_by_user')),
-                            icon: Ext.MessageBox.WARNING,
-                            buttons: Ext.MessageBox.OK
-                        });
-                        return;
-                    }
                     var desired_qc = rec.get('quantite_caisse');
                     if (desired_qc) {
                         this.addCommandeProduit(form, rec, desired_qc);
@@ -115,51 +107,53 @@ Ext.define('VIN.controller.Commande', {
                         }
                     });
                     if (is_valid) {
-                        this.addClientProduit(form);
-                        var desired_qc = form.down('#add_produit_qc_nf').getValue();
-                        var pdd = form.down('#produit_dd');
-                        var pr = pdd.findRecordByDisplay(pdd.getValue());
-                        this.addCommandeProduit(form, pr, desired_qc);
+                        this.addClientProduit(form, Ext.bind(function() {
+                            var desired_qc = form.down('#add_produit_qc_nf').getValue();
+                            var pdd = form.down('#produit_dd');
+                            var pr = pdd.findRecordByDisplay(pdd.getValue());
+                            this.addCommandeProduit(form, pr, desired_qc);
+                        }, this));
                     }
                 }
             },
             '#commande_item_g rowactions': {
                 groupaction: function(grid, records, action, groupValue) {
+                    console.log(records[0]);
                     var form = this._getFormViewInstance(grid);
                     var tv = groupValue;
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la commande?', tv),
+                                    // no need to save commande form part at this point i'm pretty sure
                                     Ext.bind(function(btn) {
                                         if (btn == 'yes') {
                                             form.submit({
                                                 url: ajax_url_prefix + '/commande/remove_produit',
                                                 params: {
-                                                    type_vin: tv
+                                                    no_produit_interne: records[0].get('no_produit_interne')
                                                 },
                                                 success: Ext.bind(function(_form, action) {
                                                     form.down('#commande_item_g').getStore().reload();
                                                     // check if inventaire needs update: in the inventaire grid, all rows/recs should
                                                     // correspond to the same produit, so just take the 1rst, if it exists
                                                     var pr = form.down('#inventaire_g').getStore().getAt(0);
-                                                    if (pr !== undefined && pr.get('type_vin') == tv) {
+                                                    if (pr !== undefined && pr.get('type_vin') === tv) {
                                                         this.updateInventaire(form, pr);
                                                     }
                                                 }, this)
                                             });
-
                                         }
                                     }, this));
                 },
             },
-            '#save_commande_btn': {
-                click: function(btn) {
-                    var form = this._getFormViewInstance(btn);
-                    this.saveCommandeForm(form);
-                }
-            },
+            // '#save_commande_btn': {
+            //     click: function(btn) {
+            //         var form = this._getFormViewInstance(btn);
+            //         this.saveCommandeFormPart(form);
+            //     }
+            // },
             '#preview_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommandeForm(form, Ext.bind(function() {
+                    this.saveCommandeFormPart(form, Ext.bind(function() {
                         var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&_dc={2}',
                                                     ajax_url_prefix, form.down('#no_commande_facture_tf').getValue(),
                                                     Ext.Number.randomInt(1000, 100000));
@@ -170,7 +164,7 @@ Ext.define('VIN.controller.Commande', {
             '#preview_bdc_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommandeForm(form, Ext.bind(function() {
+                    this.saveCommandeFormPart(form, Ext.bind(function() {
                         var url = Ext.String.format('{0}/commande/download_bdc?no_commande_facture={1}&attach=0&_dc={2}',
                                                     ajax_url_prefix, form.down('#no_commande_facture_tf').getValue(),
                                                     Ext.Number.randomInt(1000, 100000));
@@ -181,7 +175,7 @@ Ext.define('VIN.controller.Commande', {
             '#email_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommandeForm(form, Ext.bind(function() {
+                    this.saveCommandeFormPart(form, Ext.bind(function() {
                         form.email_win.document_type = 'facture';
                         var cdd = form.down('#client_dd');
                         var cr = cdd.findRecordByDisplay(cdd.getValue());
@@ -211,7 +205,7 @@ Ext.define('VIN.controller.Commande', {
             '#email_bon_de_commande_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommandeForm(form, Ext.bind(function() {
+                    this.saveCommandeFormPart(form, Ext.bind(function() {
                         form.email_win.document_type = 'bon_de_commande';
                         form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_bdc';
                         form.email_win.down('#email_addr_tf').setValue('info_@saq.com');
@@ -343,7 +337,7 @@ Ext.define('VIN.controller.Commande', {
                         }, this));
     },
 
-    addClientProduit: function(form) {
+    addClientProduit: function(form, callback) {
         var cpg = form.down('#client_produit_g');
         var produit = form.down('#produit_dd').getValue();
         if (!cpg.getStore().findRecord('type_vin', produit)) {
@@ -353,16 +347,21 @@ Ext.define('VIN.controller.Commande', {
                     var cdd = form.down('#client_dd');
                     var cr = cdd.findRecordByDisplay(cdd.getValue());
                     form.submit({
-                        url: ajax_url_prefix + '//client/add_produit',
+                        url: ajax_url_prefix + '/client/add_produit',
                         params: {
                             no_client: cr.get('no_client')
                         },
                         success: function(_form, action) {
                             cpg.getStore().reload();
+                            callback();
                         }
                     });
+                } else {
+                    callback();
                 }
             }, this));
+        } else {
+            callback();
         }
     },
 
@@ -381,7 +380,7 @@ Ext.define('VIN.controller.Commande', {
     addCommandeProduit: function(form, produit_rec, desired_qc) {
         var ig = form.down('#inventaire_g');
         var cig = form.down('#commande_item_g');
-        if (cig.store.find('no_produit_interne', produit_rec.get('no_produit_interne')) != -1) {
+        if (cig.store.find('no_produit_interne', produit_rec.get('no_produit_interne')) !== -1) {
             Ext.Msg.show({
                 title: 'Vinum',
                 msg: "Ce produit existe déjà dans la commande",
@@ -390,50 +389,32 @@ Ext.define('VIN.controller.Commande', {
             });
             return;
         }
-        var cdd = form.down('#client_dd');
-        var cr = cdd.findRecordByDisplay(cdd.getValue());
-        form.submit({
-            url: ajax_url_prefix + '/commande/add_produit',
-            params: {
-                // no_commande_facture is not necessarily defined at this point
-                no_client: cr.get('no_client'),
-                no_produit_interne: produit_rec.get('no_produit_interne'),
-                qc: desired_qc
-            },
-            success: Ext.bind(function(_form, action) {
-                form.loadRecord(action.result); // to load no_commande_facture
-                if (form.title == 'Commande') {
-                    var ncf = form.down('#no_commande_facture_tf').getValue();
-                    Ext.Msg.show({
-                        title: 'Vinum',
-                        msg: Ext.String.format("La commande #{0} a été créée", ncf),
-                        icon: Ext.MessageBox.INFO,
-                        buttons: Ext.MessageBox.OK
+        this.saveCommandeFormPart(form, Ext.bind(function() {
+            var cdd = form.down('#client_dd');
+            var cr = cdd.findRecordByDisplay(cdd.getValue());
+            form.submit({
+                url: ajax_url_prefix + '/commande/add_produit',
+                params: {
+                    // no_commande_facture is not necessarily defined at this point
+                    no_client: cr.get('no_client'),
+                    no_produit_interne: produit_rec.get('no_produit_interne'),
+                    qc: desired_qc
+                },
+                success: Ext.bind(function(_form, action) {
+                    this.updateInventaire(form, produit_rec);
+                    form.down('#commande_item_g').store.load({
+                        params: {
+                            no_commande_facture: form.down('#no_commande_facture_tf').getValue()
+                        },
+                        callback: Ext.bind(function(recs, op, success) {
+                        }, this)
                     });
-                    form.setTitle(Ext.String.format('Commande {0}', ncf));
-                }
-                this.updateInventaire(form, produit_rec);
-                form.down('#commande_item_g').store.load({
-                    params: {
-                        no_commande_facture: form.down('#no_commande_facture_tf').getValue()
-                    },
-                    callback: Ext.bind(function(recs, op, success) {
-                    }, this)
-                });
-            }, this)
-        });
+                }, this)
+            });
+        }, this), 'creation'); // will only show msg first time commande is created
     },
 
-    saveCommandeForm: function(form, callback) {
-        // if (form.down('#commande_item_g').getStore().getCount() == 0) {
-        //     Ext.Msg.show({
-        //         title: 'Vinum',
-        //         msg: "La commande ne contient aucun produit",
-        //         icon: Ext.MessageBox.WARNING,
-        //         buttons: Ext.MessageBox.OK
-        //     });
-        //     return;
-        // }
+    saveCommandeFormPart: function(form, callback, save_status_msg) {
         if (form.getForm().isValid()) {
             var cdd = form.down('#client_dd');
             var cr = cdd.findRecordByDisplay(cdd.getValue());
@@ -443,18 +424,23 @@ Ext.define('VIN.controller.Commande', {
                     no_client: cr.get('no_client')
                 },
                 success: Ext.bind(function(_form, action) {
-                    form.loadRecord(action.result); // to load no_commande_facture
+                    var was_created = form.down('#no_commande_facture_tf').getValue() == '';
+                    form.loadRecord(action.result); // to load no_commande_facture_tf
                     var ncf = action.result.data.no_commande_facture;
-                    if (callback !== undefined) {
+                    form.setTitle(Ext.String.format('Commande {0}', ncf));
+                    if (typeof save_status_msg !== 'undefined') {
+                        if (save_status_msg === 'both' || (save_status_msg === 'creation' && was_created)) {
+                            Ext.Msg.show({
+                                title: 'Vinum',
+                                msg: Ext.String.format("La commande #{0} a été {1}",
+                                                       ncf, was_created ? 'créée' : 'sauvegardée'),
+                                icon: Ext.MessageBox.INFO,
+                                buttons: Ext.MessageBox.OK
+                            });
+                        }
+                    }
+                    if (typeof callback !== 'undefined') {
                         callback();
-                    } else {
-                        Ext.Msg.show({
-                            title: 'Vinum',
-                            msg: Ext.String.format("La commande #{0} a été sauvegardée", ncf),
-                            icon: Ext.MessageBox.INFO,
-                            buttons: Ext.MessageBox.OK
-                        });
-                        form.setTitle(Ext.String.format('Commande {0}', ncf));
                     }
                 }, this)
             });

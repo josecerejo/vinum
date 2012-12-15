@@ -89,12 +89,12 @@ Ext.define('VIN.view.commande.Form', {
         this.dockedItems = {
             xtype: 'toolbar',
             dock: 'top',
-            items: [{
+            items: [/*{
                 xtype: 'button',
                 text: 'Sauvegarder la commande',
                 iconCls: 'disk-icon',
                 itemId: 'save_commande_btn'
-            }, {
+            },*/ {
                 xtype: 'buttongroup',
                 title: 'Facture',
                 items: [{
