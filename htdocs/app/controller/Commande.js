@@ -402,6 +402,16 @@ Ext.define('VIN.controller.Commande', {
             },
             success: Ext.bind(function(_form, action) {
                 form.loadRecord(action.result); // to load no_commande_facture
+                if (form.title == 'Commande') {
+                    var ncf = form.down('#no_commande_facture_tf').getValue();
+                    Ext.Msg.show({
+                        title: 'Vinum',
+                        msg: Ext.String.format("La commande #{0} a été créée", ncf),
+                        icon: Ext.MessageBox.INFO,
+                        buttons: Ext.MessageBox.OK
+                    });
+                    form.setTitle(Ext.String.format('Commande {0}', ncf));
+                }
                 this.updateInventaire(form, produit_rec);
                 form.down('#commande_item_g').store.load({
                     params: {

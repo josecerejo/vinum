@@ -53,6 +53,9 @@ Ext.define('VIN.controller.Client', {
 
             'client_form #commande_g': {
                 selectionchange: function(model, records) {
+                    if (records.length == 0) {
+                        return;
+                    }
                     var form = this._getFormViewInstance(model.view);
                     var cig = form.down('#commande_item_g');
                     cig.store.load({
