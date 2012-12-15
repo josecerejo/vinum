@@ -1,5 +1,8 @@
 # -*- coding: latin-1 -*-
 
+# IMPORTANT: for an important distinction between the "produit" and "item" concepts,
+#            refer to a note in model.sql, at the level of the commande_item table. 
+
 import re, math
 from vinum import *
 from common import *
@@ -34,11 +37,11 @@ def save_commande():
 
 
 @app.route('/commande/get', methods=['GET'])
-def get_commandes_for_client():
-    if 'is_single_client_query' in request.args:
+def get_commandes():
+    if 'is_client_query' in request.args:
         return get(g, request, 'commande', ('no_client',), query_op='=')
     else:
-        return get(g, request, ['commande c', 'client d'], ('no_client',), query_op='=',
+        return get(g, request, {'commande': 'c', 'client': 'd'}, ('no_client',), query_op='=',
                    what=['c.*', 'd.no_client_saq', 'd.nom_social'],
                    join={'c.no_client': 'd.no_client'})
 
@@ -54,24 +57,28 @@ def load_commande():
 def delete_commande():
     cursor = g.db.cursor()
     rf = request.form.to_dict()
-    pg.delete(cursor, 'commande_produit', where={'no_commande_facture': rf['no_commande_facture']})
-    pg.delete(cursor, 'commande', where={'no_commande_facture': rf['no_commande_facture']})
+    ncf = rf['no_commande_facture']
+    # here it's easier to delete iteratively by distinct produit (i.e. no_produit_interne), to play well
+    # with the complicated inventaire.statut restoring logic (see comment in _remove_produit_from_commande below)
+    rows = pg.select(cursor, 'commande_item', what='distinct no_produit_interne',
+                     where={'no_commande_facture': ncf})
+    for row in rows:
+        _remove_produit_from_commande(cursor, ncf, row['no_produit_interne'])
+    pg.delete(cursor, 'commande', where={'no_commande_facture': ncf})
     g.db.commit()
     return {'success': True}
 
 
 @app.route('/commande/get_items', methods=['GET'])
 def get_items_for_commande():
-    cursor = g.db.cursor()
-    cursor.execute("""select * from commande_produit cp, produit p
-                      where cp.no_produit_interne = p.no_produit_interne
-                      and cp.no_commande_facture = %s
-                   """, [request.args['no_commande_facture']])
-    return {'success': True, 'rows': cursor.fetchall()}
+    rows = pg.select(g.db.cursor(), {'commande_item': 'ci', 'produit': 'p'},
+                     join={'ci.no_produit_interne': 'p.no_produit_interne'},
+                     where={'ci.no_commande_facture': request.args['no_commande_facture']})
+    return {'success': True, 'rows': rows}
 
 
-@app.route('/commande/add_item', methods=['POST'])
-def add_item_to_commande():
+@app.route('/commande/add_produit', methods=['POST'])
+def add_produit_to_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
     if rf['no_commande_facture']:
@@ -83,14 +90,13 @@ def add_item_to_commande():
 
     rem_qc = int(rf['qc'])
     default_commission = float(rf['default_commission'])
-    cursor.execute(u"""select *, ceil(solde::real / quantite_par_caisse) as solde_caisse
-                       from inventaire i, produit p
-                       where i.no_produit_interne = %s and p.no_produit_interne = i.no_produit_interne and
-                       statut in ('actif', 'en réserve')
-                       order by date_commande asc
-                    """, [rf['no_produit_interne']])
+    rows = pg.select(g.db.cursor(), {'inventaire': 'i', 'produit': 'p'},
+                     join={'p.no_produit_interne':'i.no_produit_interne'},
+                     where={'statut': ('actif', u'en réserve'),
+                            'i.no_produit_interne': rf['no_produit_interne']},
+                     order_by='date_commande asc')
     prev_statut = None
-    for inv in cursor.fetchall():
+    for inv in rows:
         inv_id = inv['no_inventaire']
         if prev_statut == 'inactif':
             pg.update(cursor, 'inventaire', set={'statut':'actif'}, where={'no_inventaire': inv_id})
@@ -100,59 +106,67 @@ def add_item_to_commande():
         qc = min(rem_qc, inv['solde_caisse'])
         rem_qc -= qc
         # solde bouteilles
-        qb = min(qc * inv['quantite_par_caisse'], inv['solde'])
-        inv_update = {'solde': inv['solde'] - qb}
-        if inv_update['solde'] == 0:
+        qb = min(qc * inv['quantite_par_caisse'], inv['solde_bouteille'])
+        inv_update = {'solde_bouteille': inv['solde_bouteille'] - qb,
+                      'solde_caisse': inv['solde_caisse'] - qc}
+        if inv_update['solde_bouteille'] == 0:
             inv_update['statut'] = 'inactif'
         pg.update(cursor, 'inventaire', set=inv_update, where={'no_inventaire': inv_id})
         prev_statut = inv_update.get('statut', None)
-        # new commande_produit
-        cp = inv.copy()
-        cp['no_commande_facture'] = ncf
-        cp['quantite_caisse'] = qc
-        cp['quantite_bouteille'] = qb
-        cp['commission'] = default_commission
-        pc = cp['prix_coutant']
-        cp['montant_commission'] = removeTaxes_(inv['prix_coutant']) * default_commission
-        cp['statut'] = 'OK'
-        cp['statut_inventaire'] = inv['statut'] # in case we need to revert it
-        pg.insert(cursor, 'commande_produit', values=cp, filter_values=True)
+        # new commande_item
+        ci = inv.copy()
+        ci['no_commande_facture'] = ncf
+        ci['quantite_caisse'] = qc
+        ci['quantite_bouteille'] = qb
+        ci['commission'] = default_commission
+        pc = ci['prix_coutant']
+        ci['montant_commission'] = removeTaxes_(inv['prix_coutant']) * default_commission
+        ci['statut'] = 'OK'
+        ci['statut_inventaire'] = inv['statut'] # in case we need to revert it
+        pg.insert(cursor, 'commande_item', values=ci, filter_values=True)
     if rem_qc > 0:
         # backorders
         qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
-        cp = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
+        ci = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
               'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut': 'BO'}
-        pg.insert(cursor, 'commande_produit', values=cp)
+        pg.insert(cursor, 'commande_item', values=ci)
     g.db.commit()
     return {'success': True, 'data': {'no_commande_facture': ncf}}
 
 
-@app.route('/commande/remove_item', methods=['POST'])
-def remove_item_from_commande():
+@app.route('/commande/remove_produit', methods=['POST'])
+def remove_produit_from_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
     ncf = rf['no_commande_facture']
     npi = pg.select1(cursor, 'produit', 'no_produit_interne', where={'type_vin': rf['type_vin']})
-    pg.update(cursor, 'inventaire', set={'statut': u'en réserve'}, where={'no_produit_interne': npi,
-                                                                         'statut': 'actif'})
-    cursor.execute("""select cp.*, i.no_inventaire, i.solde, i.date_commande as dc_inv
-                      from commande_produit cp, inventaire i
-                      where cp.no_produit_saq = i.no_produit_saq
-                      and cp.no_produit_interne = i.no_produit_interne
-                      and no_commande_facture = %s and cp.no_produit_interne = %s
-                      order by dc_inv asc
-                   """, [ncf, npi])
-    for i, cpi in enumerate(cursor.fetchall()):
-        pg.update(cursor, 'inventaire', set={'solde': cpi['solde'] + cpi['quantite_bouteille'],
-                                             'statut': 'actif' if i == 0 else u'en réserve'},
-                  where={'no_inventaire': cpi['no_inventaire']})
-    pg.delete(cursor, 'commande_produit', where={'no_commande_facture':ncf, 'no_produit_interne':npi})
+    _remove_produit_from_commande(cursor, ncf, npi)
     g.db.commit()
     return {'success': True}
 
 
+# the logic is a little convoluted here because we need to restore the statut of inventaire records,
+# as well as their quantity fields, for a given produit
+# (1) for a given product's statut=actif inventaire records, set them all to statut=en reserve
+# (2) for all commande_item records, restore the corresponding inventaire record quantities,
+#     and only set the oldest one (the first) to statut=actif
+def _remove_produit_from_commande(cursor, ncf, npi):
+    pg.update(cursor, 'inventaire', set={'statut': u'en réserve'}, where={'no_produit_interne': npi,
+                                                                         'statut': 'actif'})
+    rows = pg.select(cursor, {'commande_item': 'ci', 'inventaire': 'i'},
+                     join={'ci.no_produit_saq': 'i.no_produit_saq'},
+                     where={'no_commande_facture': ncf, 'ci.no_produit_interne': npi},
+                     order_by='i.date_commande asc')
+    for i, cii in enumerate(rows):
+        pg.update(cursor, 'inventaire', set={'solde_bouteille': cii['solde_bouteille'] + cii['quantite_bouteille'],
+                                             'solde_caisse': cii['solde_caisse'] + cii['quantite_caisse'],
+                                             'statut': 'actif' if i == 0 else u'en réserve'},
+                  where={'no_inventaire': cii['no_inventaire']})
+    pg.delete(cursor, 'commande_item', where={'no_commande_facture':ncf, 'no_produit_interne':npi})
+
+
 @app.route('/commande/update_item', methods=['POST'])
-def update_item_from_commande():
+def update_commande_item():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
     ncf = rf['no_commande_facture']
@@ -160,11 +174,11 @@ def update_item_from_commande():
     prix_coutant = pg.select1(cursor, 'inventaire', 'prix_coutant',
                               where={'no_produit_saq': item['no_produit_saq']})
     item['montant_commission'] = removeTaxes_(float(prix_coutant)) * float(item['commission'])
-    cp = pg.update(cursor, 'commande_produit', where={'no_commande_facture': rf['no_commande_facture'],
-                                                      'no_produit_saq': item['no_produit_saq']},
+    ci = pg.update(cursor, 'commande_item', where={'no_commande_facture': rf['no_commande_facture'],
+                                                   'no_produit_saq': item['no_produit_saq']},
                    set=item, filter_values=True)
     g.db.commit()
-    return {'success': True, 'data': cp}
+    return {'success': True, 'data': ci}
 
 
 def _generate_facture(g, ncf, doc_type):
@@ -176,8 +190,8 @@ def _generate_facture(g, ncf, doc_type):
     doc_values.update(client)
     doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom',
                                                 where={'representant_id': client['representant_id']})
-    cursor.execute("""select * from produit p, commande_produit cp
-                      where p.no_produit_interne = cp.no_produit_interne
+    cursor.execute("""select * from produit p, commande_item ci
+                      where p.no_produit_interne = ci.no_produit_interne
                       and no_commande_facture = %s""", [ncf])
     sous_total = 0
     for row in cursor.fetchall():
@@ -218,10 +232,10 @@ def _generate_bdc(g, ncf, doc_type):
     elif commande['expedition'] == 'succursale':
         doc_values['sc'] = 'X'
         doc_values['no_succursale'] = commande['no_succursale']
-    cps = pg.select(cursor, 'commande_produit', where={'no_commande_facture': ncf})
-    n_left = int(math.ceil(len(cps) / 2.))
-    doc_values['left_items'] = [(cp['no_produit_saq'], cp['quantite_bouteille']) for cp in cps[:n_left]]
-    doc_values['right_items'] = [(cp['no_produit_saq'], cp['quantite_bouteille']) for cp in cps[n_left:]]
+    cis = pg.select(cursor, 'commande_item', where={'no_commande_facture': ncf})
+    n_left = int(math.ceil(len(cis) / 2.))
+    doc_values['left_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[:n_left]]
+    doc_values['right_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[n_left:]]
     doc_values['no_commande_facture'] = ncf
     out_fn = '/tmp/vinum_bdc_%s.%s' % (ncf, doc_type)
     ren = Renderer('/home/christian/vinum/data/templates/bon_de_commande.odt', doc_values,

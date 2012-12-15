@@ -6,8 +6,8 @@ Ext.Loader.setConfig({
 });
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
-var use_flask_server = false;
-var initial_tab = 'widget.commande_form';
+var use_flask_server = window.location.hostname == 'localhost'
+var initial_tab = null; //'widget.inventaire_grid';
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
@@ -32,7 +32,7 @@ Ext.override(Ext.data.proxy.Ajax, {
                 VIN.utils.serverErrorPopup(Ext.JSON.decode(response.responseText).error_msg);
             }
         }
-    }    
+    }
 });
 
 Ext.override(Ext.form.action.Submit, {
@@ -40,7 +40,7 @@ Ext.override(Ext.form.action.Submit, {
         if (use_flask_server) {
             VIN.utils.createFlaskDebugConsoleWindow(action.response.responseText);
         } else {
-            VIN.utils.serverErrorPopup(action.result.error_msg);            
+            VIN.utils.serverErrorPopup(action.result.error_msg);
         }
     }
 });
@@ -50,14 +50,14 @@ Ext.override(Ext.form.action.Load, {
         if (use_flask_server) {
             VIN.utils.createFlaskDebugConsoleWindow(action.response.responseText);
         } else {
-            VIN.utils.serverErrorPopup(action.result.error_msg);            
+            VIN.utils.serverErrorPopup(action.result.error_msg);
         }
     }
 });
 
 Ext.application({
     name: 'VIN',
-    controllers: ['MainToolbar', 'Client', 'Commande'],
+    controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire'],
     autoCreateViewport: true,
     launch: function() {
         VIN.app = this; // to access the controllers with VIN.app.getController

@@ -15,6 +15,6 @@ Ext.define('VIN.store.Produits', {
             type: 'json',
             root: 'rows'
         }
-    }    
+    }
 
 });

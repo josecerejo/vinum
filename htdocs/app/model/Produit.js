@@ -4,17 +4,14 @@ Ext.define('VIN.model.Produit', {
 
     fields: [{
         header: '# produit interne',
-        name: 'no_produit_interne', 
+        name: 'no_produit_interne',
         type: 'int',
         useNull: true
     }, {
         header: 'ancien # produit',
-        name: 'ancien_no_produit', 
+        name: 'ancien_no_produit',
         type: 'int',
         useNull: true
-    }, {             
-        header: 'Nom du producteur',
-        name: 'nom_producteur'
     }, {
         header: 'Type de vin',
         name: 'type_vin'
@@ -46,9 +43,6 @@ Ext.define('VIN.model.Produit', {
         name: 'quantite_bouteille',
         type: 'int',
         useNull: true
-    }, {
-        header: '',
-        name: 'locked_by_user'
     }],
 
     idProperty: 'no_produit_interne'

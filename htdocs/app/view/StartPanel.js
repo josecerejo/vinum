@@ -17,15 +17,16 @@ Ext.define('VIN.view.StartPanel', {
                 border: false,
                 padding: 10,
                 flex: .5
-            },       
+            },
             items: Ext.create('Ext.view.View', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'src', 'text'],
                     data: [{name: 'create_commande', src: 'resources/images/icons/empty-shopping-cart.png', text: 'Créer une commande'},
                            {name: 'edit_client', src: 'resources/images/icons/about-me.png', text: 'Créer ou modifier un client'},
                            {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir la liste de clients'},
-                           {name: 'list_commandes', src: 'resources/images/icons/clipboard_64.png', text: 'Voir la liste de commandes'}]
-                }),     
+                           {name: 'list_commandes', src: 'resources/images/icons/clipboard_64.png', text: 'Voir la liste de commandes'},
+                           {name: 'inventaire', src: 'resources/images/icons/Database.png', text: 'Voir l\'inventaire'}]
+                }),
                 tpl: [
                     '<tpl for=".">',
                     '<div class="thumb-wrap" id="{id}">',
@@ -47,18 +48,21 @@ Ext.define('VIN.view.StartPanel', {
                             VIN.app.getController('Client').createClientForm();
                             break;
                         case 'list_clients':
-                            VIN.app.getController('Client').createClientGrid();                            
+                            VIN.app.getController('Client').createClientGrid();
                             break;
                         case 'list_commandes':
                             VIN.app.getController('Commande').createCommandeGrid();
+                            break;
+                        case 'inventaire':
+                            VIN.app.getController('Inventaire').createInventaireForm();
                             break;
                         }
                     }
                 }
             })
         };
-
         this.callParent(arguments);
+
     }
 
 });

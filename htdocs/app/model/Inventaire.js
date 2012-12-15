@@ -4,12 +4,12 @@ Ext.define('VIN.model.Inventaire', {
 
     fields: [{
         header: '# inventaire', // to be used with VIN.utils.getGridColumnsFromModel
-        name: 'no_inventaire', 
+        name: 'no_inventaire',
         type: 'int',
         useNull: true
     }, {
         header: '# produit interne',
-        name: 'no_produit_interne', 
+        name: 'no_produit_interne',
         type: 'int',
         useNull: true
     }, {
@@ -21,7 +21,7 @@ Ext.define('VIN.model.Inventaire', {
     }, {
         header: 'Quantité par caisse',
         name: 'quantite_par_caisse'
-    }, {            
+    }, {
         header: '# produit SAQ',
         name: 'no_produit_saq',
         type: 'int',
@@ -42,7 +42,7 @@ Ext.define('VIN.model.Inventaire', {
     }, {
         header: 'Date de commande',
         name: 'date_commande',
-        type: 'date'        
+        type: 'date'
     }, {
         header: 'Date reçue',
         name: 'date_recue',
@@ -72,7 +72,7 @@ Ext.define('VIN.model.Inventaire', {
         useNull: true
     }, {
         header: 'Solde (b)',
-        name: 'solde',
+        name: 'solde_bouteille',
         type: 'int',
         useNull: true
     }, {

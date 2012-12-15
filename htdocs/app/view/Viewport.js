@@ -11,8 +11,8 @@ Ext.define('VIN.view.Viewport', {
             items: {
                 xtype: 'component',
                 cls: 'title',
-                html: 'Prototype Vinum (code: 2012-12-13, données: 2012-12-11)'
-            }            
+                html: 'Prototype Vinum (code: 2012-12-15, données: 2012-12-11)'
+            }
         }, {
             xtype: 'main_toolbar'
         }]
@@ -20,6 +20,7 @@ Ext.define('VIN.view.Viewport', {
         region: 'center',
         xtype: 'main_panel'
     }],
+
     initComponent: function() {
         this.callParent(arguments);
     }

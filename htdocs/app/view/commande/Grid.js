@@ -7,10 +7,10 @@ Ext.define('VIN.view.commande.Grid', {
     },
 
     initComponent: function() {
-        
+
         if (!this.store) {
             this.store = Ext.create('VIN.store.Commandes');
-        } 
+        }
 
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
@@ -23,7 +23,7 @@ Ext.define('VIN.view.commande.Grid', {
                 tooltip: 'Détails de la commande',
                 handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
                     this.fireEvent('edit_click', grid, rowIndex, colIndex, node, e, record, rowNode);
-                }                
+                }
             }]
         });
 
@@ -36,7 +36,7 @@ Ext.define('VIN.view.commande.Grid', {
                 tooltip: 'Détruire cette commande',
                 handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
                     this.fireEvent('del_click', grid, rowIndex, colIndex, node, e, record, rowNode);
-                }                
+                }
             }]
         });
 
@@ -50,9 +50,10 @@ Ext.define('VIN.view.commande.Grid', {
         this.callParent(arguments);
     },
 
-    viewConfig: {
-        preserveScrollOnRefresh: true
-    },
+    // viewConfig: {
+    //     preserveScrollOnRefresh: true
+    // },
+
     features: [{
         ftype: 'filters',
         encode: true,

@@ -46,11 +46,7 @@ Ext.define('VIN.controller.Client', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     this.saveClientForm(form, function() {
-                        var cf = Ext.create('widget.commande_form');
-                        var mp = Ext.getCmp('main_pnl');
-                        mp.add(cf);
-                        mp.setActiveTab(cf);
-                        VIN.app.getController('Commande').loadClientPartOfCommandeForm(cf, form.down('#no_client_tf').getValue());
+                        VIN.app.getController('Commande').createCommandeForm(form.down('#no_client_tf').getValue());
                     });
                 }
             },
@@ -71,8 +67,8 @@ Ext.define('VIN.controller.Client', {
 
             'client_grid actioncolumn': {
                 del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
-                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le client #{0} de la base de données', 
-                                                               rec.get('no_client')), 
+                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le client #{0} de la base de données',
+                                                               rec.get('no_client')),
                         Ext.bind(function(btn) {
                             if (btn == 'yes') {
                                 Ext.Ajax.request({
@@ -96,7 +92,7 @@ Ext.define('VIN.controller.Client', {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
                     this.createClientForm(record);
                 }
-            }            
+            }
 
         });
     },
@@ -129,12 +125,12 @@ Ext.define('VIN.controller.Client', {
         // load client commandes
         form.down('#commande_g').store.load({
             params: {
-                is_single_client_query: true,
+                is_client_query: true,
                 query: no_client
             },
             callback: function(records, operation, success) {
             }
-        });        
+        });
     },
 
     saveClientForm: function(form, callback) {
@@ -144,8 +140,8 @@ Ext.define('VIN.controller.Client', {
                 success: function(_form, action) {
                     var client_rec = Ext.create('VIN.model.Client', action.result.data);
                     var no_client = client_rec.get('no_client');
-                    var mp = Ext.getCmp('main_pnl');   
-                    // cycle through every tab: if a commande_form is found and it's loaded with 
+                    var mp = Ext.getCmp('main_pnl');
+                    // cycle through every tab: if a commande_form is found and it's loaded with
                     // this client, update its values (and importantly, let the user know)
                     for (var i = 0; i < mp.items.length; i++) {
                         var tab =  mp.items.getAt(i);
@@ -159,18 +155,18 @@ Ext.define('VIN.controller.Client', {
                                 }
                             }
                         }
-                    }                    
+                    }
                     if (callback !== undefined) {
                         callback();
                     } else {
                         Ext.Msg.show({
                             title: 'Vinum',
-                            msg: Ext.String.format("Le client #{0} a été {1}{2}", no_client, 
+                            msg: Ext.String.format("Le client #{0} a été {1}{2}", no_client,
                                                    form.down('#no_client_tf').getValue() ? 'modifié' : 'créé',
                                                    form.down('#no_client_tf').getValue() ? ' (ainsi que tous les onglets qui y font référence)' : ''),
                             icon: Ext.MessageBox.WARNING,
                             buttons: Ext.MessageBox.OK
-                        });                                                                
+                        });
                     }
                     form.down('#no_client_tf').setValue(no_client);
                 }
@@ -182,7 +178,7 @@ Ext.define('VIN.controller.Client', {
         var cg = Ext.create('widget.client_grid');
         cg.store.load();
         Ext.getCmp('main_pnl').add(cg);
-        Ext.getCmp('main_pnl').setActiveTab(cg);        
+        Ext.getCmp('main_pnl').setActiveTab(cg);
     }
 
 });

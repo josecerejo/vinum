@@ -1,22 +1,3 @@
-drop table if exists representant cascade;
-create table representant (
-    representant_id serial primary key,
-    representant_nom text
-);
-
-insert into representant values (2, 'David Doucet');
-insert into representant values (4, 'Nicolas Giroux');
-insert into representant values (7, 'Jocelyn Racicot');
-insert into representant values (13, 'François Lachapelle');
-insert into representant values (18, 'Annie-C. Gaudreau');
-insert into representant values (19, 'André Baillargeon');
-insert into representant values (20, 'Steve Fradette');
-insert into representant values (22, 'Alain Doucet');
-insert into representant values (23, 'Caroline Chouinard');
-insert into representant values (25, 'Patricia Morin');
-insert into representant values (27, 'Inactif');
-insert into representant values (29, 'bureau');
-
 drop table if exists client cascade;
 create table client (
     no_client serial primary key,
@@ -48,7 +29,7 @@ create table client (
     suc_num text,
     jours_livraison text[],
     date_ouverture_dossier date
-    --jour_livraison text    
+    --jour_livraison text
 );
 
 drop table if exists produit cascade;
@@ -56,16 +37,30 @@ create table produit (
     no_produit_interne serial primary key,
     ancien_no_produit integer,
     no_producteur integer,
-    nom_producteur text,
     type_vin text,
     nom_domaine text,
-    format_id integer,
     format text,
     couleur text,
     quantite_par_caisse integer,
     pays text,
     suc_num integer
-    --locked_by_user text
+);
+
+drop table if exists producteur cascade;
+create table producteur (
+    no_producteur serial primary key,
+    ancien_no_producteur integer,
+    nom_producteur text,
+    no_civique text,
+    rue text,
+    ville text,
+    comte text,
+    code_postal text,
+    pays text,
+    no_tel text,
+    no_fax text,
+    note text,
+    suc_num integer
 );
 
 drop table if exists client_produit cascade;
@@ -78,7 +73,7 @@ create table client_produit (
 
 drop table if exists commande cascade;
 create table commande (
-    no_commande_facture serial primary key,    
+    no_commande_facture serial primary key,
     ancien_no_commande_facture integer,
     no_client integer not null,
     date_commande date,
@@ -100,9 +95,15 @@ create table commande (
     bon_de_commande_est_envoye bool default false
 );
 
-drop table if exists commande_produit cascade;
-create table commande_produit (
-    commande_produit_id serial primary key,
+-- IMPORTANT: I renamed the original commande_produit table to commande_item, to put
+-- emphasis on the fact that it works at the inventaire record level (no_produit_saq),
+-- not at the produit record level (no_produit_interne); in the app code, when manipulating
+-- data related to this table, I distinguish between "items", which can only correspond to a
+-- single row, and "produit", which can correspond to many.
+
+drop table if exists commande_item cascade;
+create table commande_item (
+    commande_item_id serial primary key,
     no_commande_facture integer not null,
     no_produit_interne integer not null,
     no_produit_saq integer,
@@ -131,10 +132,11 @@ create table inventaire (
     millesime integer,
     commission numeric,
     statut text check (statut in ('en attente', 'en réserve', 'actif', 'inactif')),
-    solde integer, -- en # de bouteilles
+    solde_bouteille integer, -- en # de bouteilles
+    solde_caisse integer,
     solde_30_jours numeric,
     solde_60_jours numeric,
-    suc_num integer           
+    suc_num integer
 );
 
 drop table if exists succursale_saq cascade;
@@ -145,5 +147,21 @@ create table succursale_saq (
     ville text
 );
 
---insert into inventaire (no_produit_interne, no_produit_saq, no_commande_saq, date_commande, millesime, statut, solde) values (178, -1, -1, '2000-01-01', 2000, 'Actif', 23);
---update produit set locked_by_user = 'test' where type_vin like 'AUS%';
+drop table if exists representant cascade;
+create table representant (
+    representant_id serial primary key,
+    representant_nom text
+);
+
+insert into representant values (2, 'David Doucet');
+insert into representant values (4, 'Nicolas Giroux');
+insert into representant values (7, 'Jocelyn Racicot');
+insert into representant values (13, 'François Lachapelle');
+insert into representant values (18, 'Annie-C. Gaudreau');
+insert into representant values (19, 'André Baillargeon');
+insert into representant values (20, 'Steve Fradette');
+insert into representant values (22, 'Alain Doucet');
+insert into representant values (23, 'Caroline Chouinard');
+insert into representant values (25, 'Patricia Morin');
+insert into representant values (27, 'Inactif');
+insert into representant values (29, 'bureau');

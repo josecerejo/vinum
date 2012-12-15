@@ -2,7 +2,7 @@ Ext.define('VIN.view.commande.Form', {
 
     extend: 'Ext.form.Panel',
     alias: 'widget.commande_form',
-    requires: ['VIN.view.produit.Grid', 'VIN.view.client.ProduitGrid', 
+    requires: ['VIN.view.produit.Grid', 'VIN.view.client.ProduitGrid',
                'VIN.view.inventaire.Grid', 'VIN.view.commande.ItemGrid'],
     frame: true,
     autoScroll: true,
@@ -18,7 +18,7 @@ Ext.define('VIN.view.commande.Form', {
 
         this.email_msg_facture = 'Bonjour,\n\nVoici votre facture.\n\nBonne journée,\n\nLa Société Roucet';
         this.email_msg_bdc = 'Bonjour,\n\nVoici le bon de commande.\n\nBonne journée,\n\nLa Société Roucet';
-                
+
         // email form
         this.email_win = Ext.create('Ext.window.Window', {
             title: 'Envoyer un document par courriel',
@@ -36,7 +36,7 @@ Ext.define('VIN.view.commande.Form', {
                 padding: 10,
                 fieldDefaults: {
                     anchor: '100%'
-                },                
+                },
                 layout: {
                     type: 'vbox',
                     align: 'stretch'  // Child items are stretched to full width
@@ -100,7 +100,7 @@ Ext.define('VIN.view.commande.Form', {
                 items: [{
                     text: 'Visualiser',
                     itemId: 'preview_facture_btn',
-                    iconCls: 'monitor-icon'                        
+                    iconCls: 'monitor-icon'
                 }, {
                     text: 'Envoyer par courriel',
                     itemId: 'email_facture_btn',
@@ -112,12 +112,12 @@ Ext.define('VIN.view.commande.Form', {
                 items: [{
                     text: 'Visualiser',
                     itemId: 'preview_bdc_btn',
-                    iconCls: 'monitor-icon'                        
+                    iconCls: 'monitor-icon'
                 }, {
                     text: 'Envoyer par courriel',
                     itemId: 'email_bon_de_commande_btn',
-                    iconCls: 'email-attach-icon'                        
-                }]                
+                    iconCls: 'email-attach-icon'
+                }]
             }]
         };
 
@@ -191,7 +191,7 @@ Ext.define('VIN.view.commande.Form', {
                             fieldLabel: 'Jours de livraison',
                             name: 'jours_livraison',
                             flex: 0.3,
-                            disabled: true                            
+                            disabled: true
                         }, {
                             xtype: 'button',
                             flex: 0.2,
@@ -208,7 +208,7 @@ Ext.define('VIN.view.commande.Form', {
                     title: 'Expédition',
                     defaults: {
                         bodyStyle: 'background-color:#dfe8f5',
-                        border: false                        
+                        border: false
                     },
                     items: [{
                         layout: 'hbox',
@@ -216,7 +216,7 @@ Ext.define('VIN.view.commande.Form', {
                             bodyStyle: 'background-color:#dfe8f5',
                             border: false,
                             padding: 5
-                        },                        
+                        },
                         items: [{
                             xtype: 'radiofield',
                             boxLabel: 'Direct',
@@ -236,7 +236,7 @@ Ext.define('VIN.view.commande.Form', {
                             xtype: 'radiofield',
                             boxLabel: 'Succ.',
                             name: 'expedition',
-                            inputValue: 'succursale',                            
+                            inputValue: 'succursale',
                             flex: 0.05,
                             itemId: 'succ_rb'
                         }, {
@@ -260,10 +260,10 @@ Ext.define('VIN.view.commande.Form', {
                                         type: 'json',
                                         root: 'rows'
                                     }
-                                }                                    
+                                }
                             }),
                             hideLabel: true,
-                            minChars: 3,                            
+                            minChars: 3,
                             forceSelection: false, // to allow setting record field no_succursale alone
                             matchFieldWidth: false,
                             listConfig: {
@@ -313,7 +313,7 @@ Ext.define('VIN.view.commande.Form', {
                         flex: 0.25,
                         fieldLabel: 'No commande SAQ',
                         name: 'no_commande_saq',
-                        itemId: 'no_commande_saq_tf'                        
+                        itemId: 'no_commande_saq_tf'
                     }, {
                         xtype: 'datefield',
                         fieldLabel: 'Date',
@@ -339,7 +339,7 @@ Ext.define('VIN.view.commande.Form', {
                             // !!! this should ideally come from the backend, not be hardcoded here
                             data: [{default_commission: 0.16},
                                    {default_commission: 0.23}]
-                        })                        
+                        })
                     }]
                 }, {
                     border: false,
@@ -362,7 +362,7 @@ Ext.define('VIN.view.commande.Form', {
                         pageSize: 10,
                         listConfig: {
                             loadingText: 'Recherche...',
-                            emptyText: 'Aucun produit ne correspond à cette recherche..',            
+                            emptyText: 'Aucun produit ne correspond à cette recherche..',
                             getInnerTpl: function() {
                                 return '<span style="display:inline-block; width:45%; !important">{type_vin}</span>' +
                                     '<span style="display:inline-block; width:45%; !important">{nom_domaine}</span>' +
@@ -403,7 +403,9 @@ Ext.define('VIN.view.commande.Form', {
                 items: [{
                     xtype: 'inventaire_grid',
                     itemId: 'inventaire_g',
-                    collapsible: true,
+                    collapsible: false,
+                    closable: false,
+                    use_paging_toolbar: false,
                     title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
                     store: Ext.create('VIN.store.Inventaires'),
                     resizable: { handles: 's' },
@@ -413,7 +415,7 @@ Ext.define('VIN.view.commande.Form', {
                         statut: 1,
                         date_commande: 1,
                         millesime: 1,
-                        solde: 1,
+                        solde_bouteille: 1,
                         solde_caisse: 1
                     },
                     height: grid_height,
@@ -424,7 +426,7 @@ Ext.define('VIN.view.commande.Form', {
                     title: 'Produits commandés',
                     store: Ext.create('VIN.store.CommandeItems'),
                     resizable: { handles: 's' },
-                    is_commission_field_editable: true,
+                    is_editable: true,
                     column_flex: {
                         type_vin: 1,
                         format: 1,

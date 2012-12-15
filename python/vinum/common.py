@@ -3,7 +3,7 @@ import sys; sys.path.append('/home/christian/gh/little_pger')
 import little_pger as pg
 
 
-def get(g, request, tables, query_fields, query_op='ilike', what={'*':1}, join={}):
+def get(g, request, tables, query_fields, query_op='ilike', what='*', join={}):
     assert query_fields.__class__ is tuple
     cursor = g.db.cursor()
     order_by = None

@@ -7,10 +7,10 @@ Ext.define('VIN.view.client.ProduitGrid', {
     },
 
     initComponent: function() {
-        
+
         if (!this.store) {
             this.store = Ext.create('VIN.store.Produits');
-        } 
+        }
 
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
@@ -46,7 +46,7 @@ Ext.define('VIN.view.client.ProduitGrid', {
                 tooltip: 'Ajouter à la commande',
                 handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
                     this.fireEvent('add_click', grid, rowIndex, colIndex, node, e, record, rowNode);
-                }                
+                }
             }]
         });
 

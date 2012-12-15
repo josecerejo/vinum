@@ -4,13 +4,13 @@ Ext.define('VIN.view.commande.ItemGrid', {
     alias: 'widget.commande_item_grid',
     requires: ['Ext.ux.grid.RowActions'],
     column_flex: 'all',
-    is_commission_field_editable: true,
+    is_editable: true,
 
     initComponent: function() {
-        
+
         if (!this.store) {
             this.store = Ext.create('VIN.store.CommandeItems');
-        } 
+        }
 
         // this.store.groupField must be set!
         this.features = [Ext.create('Ext.grid.feature.Grouping',{
@@ -20,19 +20,20 @@ Ext.define('VIN.view.commande.ItemGrid', {
 
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
-        this.columns.push({
-            xtype: 'rowactions',
-            actions: [],
-            keepSelection: true,
-            groupActions: { 
-    	    	iconCls: 'del-icon', 
-    	    	qtip: 'Supprimer ce produit de la commande', 
-    	    	align: 'left', 
-                callback: Ext.emptyFn
-    	    }
-        });
+        if (this.is_editable) {
 
-        if (this.is_commission_field_editable) {
+            this.columns.push({
+                xtype: 'rowactions',
+                actions: [],
+                keepSelection: true,
+                groupActions: {
+    	    	    iconCls: 'del-icon',
+    	    	    qtip: 'Supprimer ce produit de la commande',
+    	    	    align: 'left',
+                    callback: Ext.emptyFn
+    	        }
+            });
+
             for (var i = 0; i < this.columns.length; i++) {
                 if (this.columns[i].dataIndex == 'commission') {
                     this.columns[i].editor = {

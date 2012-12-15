@@ -5,6 +5,10 @@ Ext.define('VIN.store.Inventaires', {
     model: 'VIN.model.Inventaire',
     pageSize: 50,
     remoteSort: true,
+    sorters: [{
+        property: 'date_commande',
+        direction: 'desc'
+    }],
     proxy: {
         type: 'ajax',
         url: ajax_url_prefix + '/inventaire/get',
@@ -12,6 +16,6 @@ Ext.define('VIN.store.Inventaires', {
             type: 'json',
             root: 'rows'
         }
-    }    
+    }
 
 });

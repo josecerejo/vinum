@@ -34,7 +34,7 @@ Ext.define('VIN.view.client.Grid', {
                 tooltip: 'Détails du client',
                 handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
                     this.fireEvent('edit_click', grid, rowIndex, colIndex, node, e, record, rowNode);
-                }                
+                }
             }]
         });
 
@@ -47,7 +47,7 @@ Ext.define('VIN.view.client.Grid', {
                 tooltip: 'Enlever ce client de la base de données',
                 handler: function(grid, rowIndex, colIndex, node, e, record, rowNode) {
                     this.fireEvent('del_click', grid, rowIndex, colIndex, node, e, record, rowNode);
-                }                
+                }
             }]
         });
 
@@ -57,9 +57,9 @@ Ext.define('VIN.view.client.Grid', {
             local: false
         }];
 
-        this.viewConfig = {
-            preserveScrollOnRefresh: true
-        };
+        // this.viewConfig = {
+        //     preserveScrollOnRefresh: true
+        // };
 
         this.callParent(arguments);
     }

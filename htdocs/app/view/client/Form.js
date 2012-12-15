@@ -22,7 +22,7 @@ Ext.define('VIN.view.client.Form', {
             items: [{
                 text: 'Sauvegarder',
                 itemId: 'save_btn',
-                iconCls: 'disk-icon'                        
+                iconCls: 'disk-icon'
             }, {
                 text: 'Créer une commande pour ce client',
                 itemId: 'create_commande_btn',
@@ -87,7 +87,7 @@ Ext.define('VIN.view.client.Form', {
                             fields: ['type_client'],
                             data: [{type_client: 'restaurant'},
                                    {type_client: 'particulier'}]
-                        })                        
+                        })
                     }, {
                         flex: 0.2,
                         xtype: 'datefield',
@@ -139,20 +139,20 @@ Ext.define('VIN.view.client.Form', {
                                     type: 'json',
                                     root: 'rows'
                                 }
-                            }                                    
+                            }
                         }),
-                        minChars: 3,                            
-                        forceSelection: false, 
+                        minChars: 3,
+                        forceSelection: false,
                         listConfig: {
                             loadingText: 'Recherche...',
                             emptyText: 'Aucun représentant ne correspond à cette recherche..'
-                        }                        
-                    }]                                        
+                        }
+                    }]
                 }, {
                     layout: 'hbox',
                     bodyStyle: 'background-color:#dfe8f5',
                     border: false,
-                    items: [{                   
+                    items: [{
                         xtype: 'fieldset',
                         title: 'Adresse de livraison',
                         flex: 0.5,
@@ -198,7 +198,7 @@ Ext.define('VIN.view.client.Form', {
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Code postal',
-                                name: 'code_postal', 
+                                name: 'code_postal',
                                 itemId: 'code_postal_tf',
                                 flex: 1/6
                             }]
@@ -209,7 +209,7 @@ Ext.define('VIN.view.client.Form', {
                         itemId: 'copy_addr_btn',
                         iconCls: 'arrow-right-icon',
                         style: 'margin-right: 5px; margin-left: 5px; margin-top: 60px'
-                    }, {                   
+                    }, {
                         xtype: 'fieldset',
                         title: 'Adresse de facturation',
                         flex: 0.5,
@@ -255,7 +255,7 @@ Ext.define('VIN.view.client.Form', {
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Code postal',
-                                name: 'code_postal_fact', 
+                                name: 'code_postal_fact',
                                 itemId: 'code_postal_fact_tf',
                                 flex: 1/6
                             }]
@@ -274,7 +274,7 @@ Ext.define('VIN.view.client.Form', {
                         facture_est_envoyee: 1,
                         bon_de_commande_est_envoye: 1
                     },
-                    height: grid_height                    
+                    height: grid_height
                 }]
             }, {
                 // -----------------------------------------------------
@@ -282,7 +282,7 @@ Ext.define('VIN.view.client.Form', {
                 layout: 'anchor',
                 style: 'margin-top: 44px', // align bottom with left column
                 items: [{
-                    xtype: 'fieldset',                    
+                    xtype: 'fieldset',
                     title: 'Coordonnées de la personne en charge',
                     defaults: {
                         bodyStyle: 'background-color:#dfe8f5',
@@ -307,7 +307,7 @@ Ext.define('VIN.view.client.Form', {
                             xtype: 'textfield',
                             fieldLabel: 'Téléphone personnel',
                             name: 'no_tel_personnel',
-                            flex: 0.25                           
+                            flex: 0.25
                         }]
                     }, {
                         layout: 'hbox',
@@ -344,7 +344,7 @@ Ext.define('VIN.view.client.Form', {
                             bodyStyle: 'background-color:#dfe8f5',
                             border: false,
                             padding: 5
-                        },                        
+                        },
                         items: [{
                             xtype: 'radiofield',
                             flex: 0.1,
@@ -353,7 +353,7 @@ Ext.define('VIN.view.client.Form', {
                             inputValue: 'direct',
                             itemId: 'direct_rb',
                             checked: true
-                        }, {                   
+                        }, {
                             xtype: 'combo',
                             flex: 0.3,
                             multiSelect: true,
@@ -368,7 +368,7 @@ Ext.define('VIN.view.client.Form', {
                                 data: [{jour: 'lundi'}, {jour: 'mardi'}, {jour: 'mercredi'},
                                        {jour: 'jeudi'}, {jour: 'vendredi'}, {jour: 'samedi'}, {jour: 'dimanche'}]
                             })
-                        }, {                        
+                        }, {
                             xtype: 'radiofield',
                             flex: 0.15,
                             boxLabel: 'Succursale',
@@ -395,11 +395,11 @@ Ext.define('VIN.view.client.Form', {
                                         type: 'json',
                                         root: 'rows'
                                     }
-                                }                                    
+                                }
                             }),
                             itemId: 'succ_dd',
                             hideLabel: true,
-                            minChars: 3,                            
+                            minChars: 3,
                             forceSelection: false, // to allow setting record field no_succursale alone
                             matchFieldWidth: false,
                             listConfig: {
@@ -426,7 +426,7 @@ Ext.define('VIN.view.client.Form', {
                     title: 'Produits commandés',
                     store: Ext.create('VIN.store.CommandeItems'),
                     resizable: { handles: 's' },
-                    is_commission_field_editable: false,
+                    is_editable: false,
                     column_flex: {
                         type_vin: 1,
                         format: 1,
@@ -441,7 +441,7 @@ Ext.define('VIN.view.client.Form', {
                 }]
             }]
         };
-                    
+
         this.callParent(arguments);
     }
 
