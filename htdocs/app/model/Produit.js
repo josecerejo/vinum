@@ -25,7 +25,8 @@ Ext.define('VIN.model.Produit', {
     }, {
         header: 'Quantité (c)',
         name: 'quantite_par_caisse',
-        type: 'int'
+        type: 'int',
+        useNull: true
     }, {
         name: 'pays'
     }, {

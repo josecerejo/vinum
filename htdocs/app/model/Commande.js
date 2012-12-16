@@ -4,33 +4,39 @@ Ext.define('VIN.model.Commande', {
 
     fields: [{
         header: '# commande',
-        name: 'no_commande_facture', 
-        type: 'int'
+        name: 'no_commande_facture',
+        type: 'int',
+        useNull: true
     }, {
         header: 'Ancien # commande',
-        name: 'ancien_no_commande_facture', 
-        type: 'int'
+        name: 'ancien_no_commande_facture',
+        type: 'int',
+        useNull: true
     }, {
         header: '# client',
         type: 'int',
-        name: 'no_client'
+        name: 'no_client',
+        useNull: true
     }, {
         header: '# client SAQ',
         type: 'int',
-        name: 'no_client_saq'        
+        name: 'no_client_saq',
+        useNull: true
     }, {
         header: 'Nom social',
-        name: 'nom_social'        
+        name: 'nom_social'
     }, {
         header: 'Date de la commande',
         name: 'date_commande',
         type: 'date'
-    }, {            
+    }, {
         header: 'Expédition',
         name: 'expedition'
     }, {
         header: 'Succursale',
-        name: 'no_succursale'
+        name: 'no_succursale',
+        type: 'int',
+        useNull: true
     }, {
         header: 'Date de pickup',
         name: 'date_pickup',
@@ -45,21 +51,25 @@ Ext.define('VIN.model.Commande', {
         type: 'date'
     }, {
         name: 'montant',
-        type: 'float'
+        type: 'float',
+        useNull: true
     }, {
         header: 'Statut (commande)',
         name: 'statut_commande'
     }, {
         name: 'sous-total',
-        type: 'float'
+        type: 'float',
+        useNull: true
     }, {
         header: 'TPS',
         name: 'tps',
-        type: 'float'
+        type: 'float',
+        useNull: true
     }, {
         header: 'TVQ',
         name: 'tvq',
-        type: 'float'
+        type: 'float',
+        useNull: true
     }, {
         header: 'Statut (facture)',
         name: 'statut_facture'

@@ -4,12 +4,12 @@ Ext.define('VIN.model.CommandeItem', {
 
     fields: [{
         header: '# inventaire',
-        name: 'no_inventaire', 
+        name: 'no_inventaire',
         type: 'int',
         useNull: true
     }, {
         header: '# produit interne',
-        name: 'no_produit_interne', 
+        name: 'no_produit_interne',
         type: 'int',
         useNull: true
     }, {
@@ -17,7 +17,7 @@ Ext.define('VIN.model.CommandeItem', {
         name: 'type_vin'
     }, {
         name: 'format'
-    }, {            
+    }, {
         header: '# produit SAQ',
         name: 'no_produit_saq',
         type: 'int',
@@ -44,7 +44,7 @@ Ext.define('VIN.model.CommandeItem', {
         header: 'Comm. (%)',
         name: 'commission',
         type: 'float',
-        useNull: true        
+        useNull: true
     }, {
         header: 'Comm. ($)',
         name: 'montant_commission',
