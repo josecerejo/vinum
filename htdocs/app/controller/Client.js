@@ -125,15 +125,14 @@ Ext.define('VIN.controller.Client', {
                 form.down('#client_dd').getStore().reload();
             }, this)
         });
+        var cg = form.down('#commande_g');
+        // bind this commande grid to this particular client, so that every operation
+        // on it (filter, sort, etc) remembers to take it into consideration
+        cg.getStore().getProxy().extraParams = {
+            no_client: no_client
+        };
         // load client commandes
-        form.down('#commande_g').store.load({
-            params: {
-                is_client_query: true,
-                query: no_client
-            },
-            callback: function(records, operation, success) {
-            }
-        });
+        cg.getStore().load();
     },
 
     saveClientForm: function(form, callback) {

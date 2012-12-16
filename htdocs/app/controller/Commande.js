@@ -367,14 +367,13 @@ Ext.define('VIN.controller.Commande', {
 
     updateInventaire: function(form, produit_rec) {
         var ig = form.down('#inventaire_g');
+        // bind this inventaire grid to this particular produit, so that every operation
+        // on it (filter, sort, etc) remembers to take it into consideration
+        ig.getStore().getProxy().extraParams = {
+            no_produit_interne: produit_rec.get('no_produit_interne')
+        };
+        ig.getStore().load();
         ig.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', produit_rec.get('type_vin')));
-        ig.store.load({
-            params: {
-                no_produit_interne: produit_rec.get('no_produit_interne')
-            },
-            callback: Ext.bind(function(recs, op, success) {
-            }, this)
-        });
     },
 
     // this saves the commande form part and add the desired produit in the same submit
