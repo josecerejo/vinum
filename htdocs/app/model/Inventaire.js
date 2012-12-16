@@ -5,13 +5,11 @@ Ext.define('VIN.model.Inventaire', {
     fields: [{
         header: '# inventaire', // to be used with VIN.utils.getGridColumnsFromModel
         name: 'no_inventaire',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }, {
         header: '# produit interne',
         name: 'no_produit_interne',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }, {
         header: 'Type de vin',
         name: 'type_vin'
@@ -20,25 +18,23 @@ Ext.define('VIN.model.Inventaire', {
         name: 'format'
     }, {
         header: 'Qté par caisse',
-        name: 'quantite_par_caisse'
+        name: 'quantite_par_caisse',
+        type: 'int',
     }, {
         header: '# produit SAQ',
         name: 'no_produit_saq',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }, {
         header: '# commande SAQ',
         name: 'no_commande_saq'
     }, {
         header: 'Qté commandée',
         name: 'quantite_commandee',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }, {
         header: 'Qté reçue',
         name: 'quantite_recue',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }, {
         header: 'Date de commande',
         name: 'date_commande',
@@ -50,38 +46,31 @@ Ext.define('VIN.model.Inventaire', {
     }, {
         header: 'Prix coûtant',
         name: 'prix_coutant',
-        type: 'float',
-        useNull: true
+        type: 'float'
     }, {
         header: 'Millésime',
         name: 'millesime',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }, {
         header: 'Commission',
         name: 'commission',
-        type: 'float',
-        useNull: true
+        type: 'float'
     }, {
         header: 'Solde (c)', // computed on the fly (i.e. not in the model)
         name: 'solde_caisse',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }, {
         header: 'Solde (b)',
         name: 'solde_bouteille',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }, {
         header: 'Solde 30 jours',
         name: 'solde_30_jours',
-        type: 'float',
-        useNull: true
+        type: 'float'
     }, {
         header: 'Solde 60 jours',
         name: 'solde_60_jours',
-        type: 'float',
-        useNull: true
+        type: 'float'
     }, {
         header: 'Statut',
         name: 'statut',
@@ -92,8 +81,7 @@ Ext.define('VIN.model.Inventaire', {
     }, {
         header: 'SucNum',
         name: 'suc_num',
-        type: 'int',
-        useNull: true
+        type: 'int'
     }],
 
     idProperty: 'no_inventaire'
