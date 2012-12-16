@@ -19,7 +19,7 @@ Ext.define('VIN.model.Inventaire', {
         header: 'Format',
         name: 'format'
     }, {
-        header: 'Quantité par caisse',
+        header: 'Qté par caisse',
         name: 'quantite_par_caisse'
     }, {
         header: '# produit SAQ',
@@ -30,12 +30,12 @@ Ext.define('VIN.model.Inventaire', {
         header: '# commande SAQ',
         name: 'no_commande_saq'
     }, {
-        header: 'Quantité commandée',
+        header: 'Qté commandée',
         name: 'quantite_commandee',
         type: 'int',
         useNull: true
     }, {
-        header: 'Quantité reçue',
+        header: 'Qté reçue',
         name: 'quantite_recue',
         type: 'int',
         useNull: true
@@ -63,9 +63,6 @@ Ext.define('VIN.model.Inventaire', {
         type: 'float',
         useNull: true
     }, {
-        header: 'Statut',
-        name: 'statut'
-    }, {
         header: 'Solde (c)', // computed on the fly (i.e. not in the model)
         name: 'solde_caisse',
         type: 'int',
@@ -85,6 +82,13 @@ Ext.define('VIN.model.Inventaire', {
         name: 'solde_60_jours',
         type: 'float',
         useNull: true
+    }, {
+        header: 'Statut',
+        name: 'statut',
+        filter: {
+            type: 'list',
+            options: ['actif', 'en réserve', 'en attente', 'inactif']
+        }
     }, {
         header: 'SucNum',
         name: 'suc_num',

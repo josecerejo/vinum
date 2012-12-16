@@ -8,11 +8,11 @@ Ext.define('VIN.utils', {
             wait_mask.hide();
             var msg = "<b>SVP veuillez copier le message d'erreur suivant et l'envoyer à cjauvin@gmail.com</b>:<br /><br />";
             Ext.Msg.show({
-                title: 'Erreur du serveur', 
+                title: 'Erreur du serveur',
                 msg: msg + server_error_msg,
                 icon: Ext.MessageBox.ERROR,
                 buttons: Ext.MessageBox.OK
-            });        
+            });
         },
 
         createFlaskDebugConsoleWindow: function(html) {
@@ -52,11 +52,14 @@ Ext.define('VIN.utils', {
                     flex: flex,
                     hidden: hidden
                 };
+                if (items[i].hasOwnProperty('filter')) {
+                    col.filter = items[i].filter;
+                }
                 if (items[i].type.type == 'date') {
                     col.xtype = 'datecolumn';
                 } else if (items[i].type.type == 'float') {
                     col.xtype = 'numbercolumn'; // to fix formatting issue
-                    col.useNull = false; 
+                    col.useNull = false;
                 } else if (items[i].type.type == 'int') {
                     col.useNull = false;
                 } else if (items[i].type.type == 'bool') {

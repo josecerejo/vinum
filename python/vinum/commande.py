@@ -1,7 +1,7 @@
 # -*- coding: latin-1 -*-
 
 # IMPORTANT: for an important distinction between the "produit" and "item" concepts,
-#            refer to a note in model.sql, at the level of the commande_item table. 
+#            refer to a note in model.sql, at the level of the commande_item table.
 
 import re, math
 from vinum import *
@@ -14,10 +14,17 @@ from email.utils import COMMASPACE
 from smtplib import SMTP
 
 
+# save only commande part, i.e. does not deal with commande_items
 @app.route('/commande/save', methods=['POST'])
 def save_commande():
     cursor = g.db.cursor()
     rf = request.form.to_dict()
+    commande = _save_commande(cursor, rf)
+    g.db.commit()
+    return {'success': True, 'data': commande}
+
+
+def _save_commande(cursor, rf):
     ncf = rf.pop('no_commande_facture')
     if ncf == '': ncf = None
     # !!! not sure of this.. could be done in the client as well, or not at all
@@ -30,10 +37,8 @@ def save_commande():
     elif rf['expedition'] == 'pickup':
         rf['date_direct'] = None
         rf['no_succursale'] = None
-    commande = pg.upsert(cursor, 'commande', where={'no_commande_facture': ncf},
-                         values=rf, filter_values=True, map_values={'': None})
-    g.db.commit()
-    return {'success': True, 'data': commande}
+    return pg.upsert(cursor, 'commande', where={'no_commande_facture': ncf},
+                     values=rf, filter_values=True, map_values={'': None})
 
 
 @app.route('/commande/get', methods=['GET'])
@@ -77,17 +82,14 @@ def get_items_for_commande():
     return {'success': True, 'rows': rows}
 
 
+# save commande + commande_items
 @app.route('/commande/add_produit', methods=['POST'])
 def add_produit_to_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
-    if rf['no_commande_facture']:
-        ncf = rf['no_commande_facture']
-    else:
-        del rf['no_commande_facture']
-        comm = pg.insert(cursor, 'commande', values=rf, filter_values=True, map_values={'': None})
-        ncf = comm['no_commande_facture']
-
+    # upsert commande part (i.e. possibly creating it)
+    commande = _save_commande(cursor, rf)
+    ncf = commande['no_commande_facture']
     rem_qc = int(rf['qc'])
     default_commission = float(rf['default_commission'])
     rows = pg.select(g.db.cursor(), {'inventaire': 'i', 'produit': 'p'},
@@ -131,7 +133,7 @@ def add_produit_to_commande():
               'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut': 'BO'}
         pg.insert(cursor, 'commande_item', values=ci)
     g.db.commit()
-    return {'success': True, 'data': {'no_commande_facture': ncf}}
+    return {'success': True, 'data': commande}
 
 
 @app.route('/commande/remove_produit', methods=['POST'])

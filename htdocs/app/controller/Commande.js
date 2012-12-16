@@ -377,6 +377,7 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
+    // this saves the commande form part and add the desired produit in the same submit
     addCommandeProduit: function(form, produit_rec, desired_qc) {
         var ig = form.down('#inventaire_g');
         var cig = form.down('#commande_item_g');
@@ -389,7 +390,7 @@ Ext.define('VIN.controller.Commande', {
             });
             return;
         }
-        this.saveCommandeFormPart(form, Ext.bind(function() {
+        if (form.getForm().isValid()) {
             var cdd = form.down('#client_dd');
             var cr = cdd.findRecordByDisplay(cdd.getValue());
             form.submit({
@@ -401,6 +402,17 @@ Ext.define('VIN.controller.Commande', {
                     qc: desired_qc
                 },
                 success: Ext.bind(function(_form, action) {
+                    var ncf = action.result.data.no_commande_facture;
+                    if (form.down('#no_commande_facture_tf').getValue() === '') {
+                        Ext.Msg.show({
+                            title: 'Vinum',
+                            msg: Ext.String.format("La commande #{0} a été créée", ncf),
+                            icon: Ext.MessageBox.INFO,
+                            buttons: Ext.MessageBox.OK
+                        });
+                    }
+                    form.loadRecord(action.result); // to load no_commande_facture_tf
+                    form.setTitle(Ext.String.format('Commande {0}', ncf));
                     this.updateInventaire(form, produit_rec);
                     form.down('#commande_item_g').store.load({
                         params: {
@@ -411,7 +423,7 @@ Ext.define('VIN.controller.Commande', {
                     });
                 }, this)
             });
-        }, this), 'creation'); // will only show msg first time commande is created
+        }
     },
 
     saveCommandeFormPart: function(form, callback, save_status_msg) {

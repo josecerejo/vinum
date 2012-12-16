@@ -285,7 +285,7 @@ Ext.define('VIN.view.commande.Form', {
                         }, {
                             xtype: 'datefield',
                             hideLabel: true,
-                            namme: 'date_pickup',
+                            name: 'date_pickup',
                             format: 'Y-m-d',
                             flex: 0.1,
                             itemId: 'pickup_df'
