@@ -11,6 +11,6 @@ Ext.define('VIN.store.CommandeItems', {
             type: 'json',
             root: 'rows'
         }
-    }    
+    }
 
 });

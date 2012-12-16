@@ -7,7 +7,7 @@ Ext.define('VIN.store.Inventaires', {
     remoteSort: true,
     sorters: [{
         property: 'date_commande',
-        direction: 'desc'
+        direction: 'DESC'
     }],
     proxy: {
         type: 'ajax',
