@@ -18,48 +18,52 @@ Ext.define('VIN.view.StartPanel', {
                 padding: 10,
                 flex: .5
             },
-            items: Ext.create('Ext.view.View', {
-                store: Ext.create('Ext.data.Store', {
-                    fields: ['name', 'src', 'text'],
-                    data: [{name: 'create_commande', src: 'resources/images/icons/empty-shopping-cart.png', text: 'Créer une commande'},
-                           {name: 'edit_client', src: 'resources/images/icons/about-me.png', text: 'Créer ou modifier un client'},
-                           {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir la liste de clients'},
-                           {name: 'list_commandes', src: 'resources/images/icons/clipboard_64.png', text: 'Voir la liste de commandes'},
-                           {name: 'inventaire', src: 'resources/images/icons/Database.png', text: 'Voir l\'inventaire'}]
-                }),
-                tpl: [
-                    '<tpl for=".">',
-                    '<div class="thumb-wrap" id="{id}">',
-                    '<div class="thumb"><img src="{src}" title="{text}" /></div>',
-                    '<span>{text}</span></div>',
-                    '</tpl>',
-                    '<div class="x-clear"></div>'
-                ],
-                trackOver: true,
-                overItemCls: 'x-item-over',
-                itemSelector: 'div.thumb-wrap',
-                listeners: {
-                    itemclick: function(dvm, rec) {
-                        switch (rec.get('name')) {
-                        case 'create_commande':
-                            VIN.app.getController('Commande').createCommandeForm();
-                            break;
-                        case 'edit_client':
-                            VIN.app.getController('Client').createClientForm();
-                            break;
-                        case 'list_clients':
-                            VIN.app.getController('Client').createClientGrid();
-                            break;
-                        case 'list_commandes':
-                            VIN.app.getController('Commande').createCommandeGrid();
-                            break;
-                        case 'inventaire':
-                            VIN.app.getController('Inventaire').createInventaireForm();
-                            break;
+            items: {
+                width: 400,
+                items: Ext.create('Ext.view.View', {
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['name', 'src', 'text'],
+                        data: [{name: 'create_commande', src: 'resources/images/icons/empty-shopping-cart.png', text: 'Créer une commande'},
+                               {name: 'edit_client', src: 'resources/images/icons/about-me.png', text: 'Créer ou modifier un client'},
+                               {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir la liste de clients'},
+                               {name: 'list_commandes', src: 'resources/images/icons/clipboard_64.png', text: 'Voir la liste de commandes'},
+                               {name: 'list_produits', src: 'resources/images/icons/wine_glass64.png', text: 'Voir la liste de produits'},
+                               {name: 'inventaire', src: 'resources/images/icons/inventaire_boite_64.png', text: 'Voir l\'inventaire'}]
+                    }),
+                    tpl: [
+                        '<tpl for=".">',
+                        '<div class="thumb-wrap" id="{id}">',
+                        '<div class="thumb"><img src="{src}" title="{text}" /></div>',
+                        '<span>{text}</span></div>',
+                        '</tpl>',
+                        '<div class="x-clear"></div>'
+                    ],
+                    trackOver: true,
+                    overItemCls: 'x-item-over',
+                    itemSelector: 'div.thumb-wrap',
+                    listeners: {
+                        itemclick: function(dvm, rec) {
+                            switch (rec.get('name')) {
+                            case 'create_commande':
+                                VIN.app.getController('Commande').createCommandeForm();
+                                break;
+                            case 'edit_client':
+                                VIN.app.getController('Client').createClientForm();
+                                break;
+                            case 'list_clients':
+                                VIN.app.getController('Client').createClientGrid();
+                                break;
+                            case 'list_commandes':
+                                VIN.app.getController('Commande').createCommandeGrid();
+                                break;
+                            case 'inventaire':
+                                VIN.app.getController('Inventaire').createInventaireForm();
+                                break;
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
         };
         this.callParent(arguments);
 
