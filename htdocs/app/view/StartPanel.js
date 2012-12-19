@@ -27,7 +27,7 @@ Ext.define('VIN.view.StartPanel', {
                                {name: 'edit_client', src: 'resources/images/icons/about-me.png', text: 'Créer ou modifier un client'},
                                {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir la liste de clients'},
                                {name: 'list_commandes', src: 'resources/images/icons/clipboard_64.png', text: 'Voir la liste de commandes'},
-                               {name: 'list_produits', src: 'resources/images/icons/wine_glass64.png', text: 'Voir la liste de produits'},
+                               {name: 'list_produits', src: 'resources/images/icons/wine_glass_64.png', text: 'Voir la liste de produits'},
                                {name: 'inventaire', src: 'resources/images/icons/inventaire_boite_64.png', text: 'Voir l\'inventaire'}]
                     }),
                     tpl: [

@@ -128,6 +128,8 @@ create table inventaire (
     quantite_recue integer,
     date_commande date,
     date_recue date,
+    prix_restaurant numeric, -- prix_coutant / 1.14975 + 16% + 0.81$
+    prix_particulier numeric, -- prix_coutant + 23%
     prix_coutant numeric,
     millesime integer,
     commission numeric,

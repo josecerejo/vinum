@@ -28,4 +28,4 @@ if __name__ == '__main__':
 
     app.wsgi_app = SharedDataMiddleware(CherrokeeFix(app.wsgi_app, '/vinum_server'), 
                                         {'/vinum': '/home/christian/vinum/htdocs'})
-    app.run(debug=True, port=80)
+    app.run(debug=True, port=81)

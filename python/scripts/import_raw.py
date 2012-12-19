@@ -148,6 +148,13 @@ for row in f:
 cursor.execute("select setval('inventaire_no_inventaire_seq', (select max(no_inventaire) from inventaire)+1)")
 cursor.execute('create index inventaire_no_produit_interne_idx on inventaire (no_produit_interne)')
 
+cursor.execute("""
+alter table inventaire add column prix_particulier numeric;
+alter table inventaire add column prix_restaurant numeric;
+update inventaire set prix_particulier = (prix_coutant * 0.23) + prix_coutant;
+update inventaire set prix_restaurant =  (prix_coutant / 1.14975) * 0.16 + (prix_coutant / 1.14975) + 0.81;
+""")
+
 ####################################################################################################
 
 conn.commit()

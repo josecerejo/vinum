@@ -29,9 +29,14 @@ Ext.define('VIN.view.inventaire.Grid', {
 
     },
 
-    // viewConfig: {
-    //     preserveScrollOnRefresh: true
-    // },
+    listeners: {
+        // must create the filters after grid is rendered
+        // for the filters default value to be set; loading must follow, not precede
+        afterrender: function(grid) {
+            grid.filters.createFilters();
+            grid.getStore().load();
+        }
+    },
 
     features: [{
         ftype: 'filters',

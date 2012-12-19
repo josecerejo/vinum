@@ -15,12 +15,37 @@ Ext.define('VIN.model.Inventaire', {
     }, {
         header: 'Type de vin',
         name: 'type_vin'
+    },  {
+        header: 'Millésime',
+        name: 'millesime',
+        type: 'int',
+        useNull: true
     }, {
         header: 'Format',
         name: 'format'
     }, {
-        header: 'Qté par caisse',
-        name: 'quantite_par_caisse',
+        header: 'Prix (resto)',
+        name: 'prix_restaurant',
+        type: 'float',
+        useNull: true
+    }, {
+        header: 'Prix (particulier)',
+        name: 'prix_particulier',
+        type: 'float',
+        useNull: true
+    }, {
+        header: 'Prix coûtant',
+        name: 'prix_coutant',
+        type: 'float',
+        useNull: true
+    }, {
+        header: 'Solde (c)', // computed on the fly (i.e. not in the model)
+        name: 'solde_caisse',
+        type: 'int',
+        useNull: true
+    }, {
+        header: 'Solde (b)',
+        name: 'solde_bouteille',
         type: 'int',
         useNull: true
     }, {
@@ -51,29 +76,23 @@ Ext.define('VIN.model.Inventaire', {
         name: 'date_recue',
         type: 'date'
     }, {
-        header: 'Prix coûtant',
-        name: 'prix_coutant',
-        type: 'float',
-        useNull: true
+        header: 'Statut',
+        name: 'statut',
+        filter: {
+            type: 'list',
+            options: ['actif', 'en réserve', 'en attente', 'inactif'],
+            value: ['actif', 'en réserve', 'en attente'],
+            active: true
+        }
     }, {
-        header: 'Millésime',
-        name: 'millesime',
+        header: 'Qté par caisse',
+        name: 'quantite_par_caisse',
         type: 'int',
         useNull: true
     }, {
         header: 'Commission',
         name: 'commission',
         type: 'float',
-        useNull: true
-    }, {
-        header: 'Solde (c)', // computed on the fly (i.e. not in the model)
-        name: 'solde_caisse',
-        type: 'int',
-        useNull: true
-    }, {
-        header: 'Solde (b)',
-        name: 'solde_bouteille',
-        type: 'int',
         useNull: true
     }, {
         header: 'Solde 30 jours',
@@ -85,13 +104,6 @@ Ext.define('VIN.model.Inventaire', {
         name: 'solde_60_jours',
         type: 'float',
         useNull: true
-    }, {
-        header: 'Statut',
-        name: 'statut',
-        filter: {
-            type: 'list',
-            options: ['actif', 'en réserve', 'en attente', 'inactif']
-        }
     }, {
         header: 'SucNum',
         name: 'suc_num',
