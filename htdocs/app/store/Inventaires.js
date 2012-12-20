@@ -3,11 +3,11 @@ Ext.define('VIN.store.Inventaires', {
     extend: 'Ext.data.Store',
     requires: ['VIN.utils'],
     model: 'VIN.model.Inventaire',
-    pageSize: 50,
+    pageSize: 100,
     remoteSort: true,
     sorters: [{
-        property: 'date_commande',
-        direction: 'DESC'
+        property: 'type_vin',
+        direction: 'ASC'
     }],
     proxy: {
         type: 'ajax',

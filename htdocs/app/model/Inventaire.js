@@ -109,6 +109,10 @@ Ext.define('VIN.model.Inventaire', {
         name: 'suc_num',
         type: 'int',
         useNull: true
+    }, {
+        name: 'fraicheur',
+        type: 'int',
+        useNull: true
     }],
 
     idProperty: 'no_inventaire'

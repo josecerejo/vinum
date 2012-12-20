@@ -38,6 +38,13 @@ Ext.define('VIN.view.inventaire.Grid', {
         }
     },
 
+    viewConfig: {
+        getRowClass: function(record, index, rowParams, store) {
+            var f = record.get('fraicheur');
+            return (f >= 0 && f < 7) ? Ext.String.format('grid-row-inv-fraicheur-{0}', f) : '';
+        }
+    },
+
     features: [{
         ftype: 'filters',
         encode: true,

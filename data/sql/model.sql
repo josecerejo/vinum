@@ -167,3 +167,7 @@ insert into representant values (23, 'Caroline Chouinard');
 insert into representant values (25, 'Patricia Morin');
 insert into representant values (27, 'Inactif');
 insert into representant values (29, 'bureau');
+
+create or replace function diff_in_days(date) returns int as $$
+    select date_part('day', now() - $1)::int
+$$ language sql immutable;
