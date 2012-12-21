@@ -26,6 +26,12 @@ Ext.define('VIN.view.inventaire.Grid', {
                 itemId: 'show_colors_btn',
                 iconCls: 'color-icon',
                 pressed: true
+            }, {
+                xtype: 'textfield',
+                enableKeyEvents: true,
+                fieldLabel: 'Filtrer par type de vin',
+                itemId: 'type_vin_external_filter_tf',
+                labelWidth: 120
             }]
         }];
 

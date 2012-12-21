@@ -15,6 +15,20 @@ Ext.define('VIN.controller.Inventaire', {
                     g.use_colors = !g.use_colors;
                     g.getView().refresh();
                 }
+            },
+
+            'inventaire_grid #type_vin_external_filter_tf': {
+                keyup: function(tf, e, opts) {
+                    var g = this._getFormViewInstance(tf);
+                    var tv_filter = g.filters.getFilter('type_vin');
+                    if (tf.getValue()) {
+                        tv_filter.setValue(tf.getValue());
+                        tv_filter.setActive(true);
+                    } else {
+                        tv_filter.setValue('');
+                        tv_filter.setActive(false);
+                    }
+                }
             }
 
         });
