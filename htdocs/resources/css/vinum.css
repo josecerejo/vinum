@@ -112,6 +112,10 @@
     background: url(../images/icons/lock.png) no-repeat !important;
 }
 
+.color-icon {
+    background: url(../images/icons/color_wheel.png) no-repeat !important;
+}
+
 .nav-menu {
     padding: 0 3px 0 3px;
 }

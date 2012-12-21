@@ -37,6 +37,7 @@ Ext.define('VIN.view.inventaire.Form', {
         //         padding: 10,
         //         flex: .5
         //     },
+
         this.items = [{
             xtype: 'inventaire_grid',
             itemId: 'inventaire_g',

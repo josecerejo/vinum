@@ -7,6 +7,7 @@ Ext.define('VIN.view.inventaire.Grid', {
     closable: true,
     column_flex: 'all',
     use_paging_toolbar: true,
+    use_colors: true,
 
     initComponent: function() {
 
@@ -16,14 +17,37 @@ Ext.define('VIN.view.inventaire.Grid', {
 
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
+                text: 'Colorer en fonction de l\'âge',
+                enableToggle: true,
+                itemId: 'show_colors_btn',
+                iconCls: 'color-icon',
+                pressed: true
+            }]
+        }];
+
         if (this.use_paging_toolbar) {
-            this.dockedItems = {
+            this.dockedItems.push({
                 xtype: 'pagingtoolbar',
                 dock: 'bottom',
                 store: this.store,
                 displayInfo: true
-            };
+            });
         }
+
+        this.viewConfig = {
+            getRowClass: Ext.bind(function(record, index, rowParams, store) {
+                var a = parseInt(record.get('age_in_days'));
+                if (isNaN(a) || !this.use_colors || a < 0 || a > 210) {
+                    return '';
+                } else{
+                    return Ext.String.format('grid-row-inv-fraicheur-{0}', Math.floor(a / 30));
+                }
+            }, this)
+        };
 
         this.callParent(arguments);
 
@@ -35,17 +59,6 @@ Ext.define('VIN.view.inventaire.Grid', {
         afterrender: function(grid) {
             grid.filters.createFilters();
             grid.getStore().load();
-        }
-    },
-
-    viewConfig: {
-        getRowClass: function(record, index, rowParams, store) {
-            var a = parseInt(record.get('age_in_days'));
-            if (a >= 0 && a <= 210) {
-                return Ext.String.format('grid-row-inv-fraicheur-{0}', Math.floor(a / 30));
-            } else {
-                return '';
-            }
         }
     },
 

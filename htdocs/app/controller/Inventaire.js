@@ -9,11 +9,19 @@ Ext.define('VIN.controller.Inventaire', {
 
         this.control({
 
+            'inventaire_grid #show_colors_btn': {
+                toggle: function(btn, pressed) {
+                    var g = this._getFormViewInstance(btn);
+                    g.use_colors = !g.use_colors;
+                    g.getView().refresh();
+                }
+            }
+
         });
     },
 
     _getFormViewInstance: function(any_contained_view) {
-        return any_contained_view.up('inventaire_form');
+        return any_contained_view.up('inventaire_grid');
     },
 
     createInventaireForm: function() {
