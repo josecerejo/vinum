@@ -34,8 +34,8 @@ Ext.define('VIN.controller.Inventaire', {
                 date_commande: 2,
                 date_recue: 2,
                 statut: 1.5,
-                quantite_par_caisse: 1
-                //fraicheur: 1
+                quantite_par_caisse: 1,
+                age_in_days: 1
             }
         });
         Ext.getCmp('main_pnl').add(ig);

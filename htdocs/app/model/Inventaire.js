@@ -49,6 +49,11 @@ Ext.define('VIN.model.Inventaire', {
         type: 'int',
         useNull: true
     }, {
+        header: 'Qté reçue',
+        name: 'quantite_recue',
+        type: 'int',
+        useNull: true
+    }, {
         header: '# produit SAQ',
         name: 'no_produit_saq',
         type: 'int',
@@ -60,11 +65,6 @@ Ext.define('VIN.model.Inventaire', {
     }, {
         header: 'Qté commandée',
         name: 'quantite_commandee',
-        type: 'int',
-        useNull: true
-    }, {
-        header: 'Qté reçue',
-        name: 'quantite_recue',
         type: 'int',
         useNull: true
     }, {
@@ -110,7 +110,8 @@ Ext.define('VIN.model.Inventaire', {
         type: 'int',
         useNull: true
     }, {
-        name: 'fraicheur',
+        header: 'Âge (en jours)',
+        name: 'age_in_days',
         type: 'int',
         useNull: true
     }],

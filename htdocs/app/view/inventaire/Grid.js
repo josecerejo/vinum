@@ -40,8 +40,12 @@ Ext.define('VIN.view.inventaire.Grid', {
 
     viewConfig: {
         getRowClass: function(record, index, rowParams, store) {
-            var f = record.get('fraicheur');
-            return (f >= 0 && f < 7) ? Ext.String.format('grid-row-inv-fraicheur-{0}', f) : '';
+            var a = parseInt(record.get('age_in_days'));
+            if (a >= 0 && a <= 210) {
+                return Ext.String.format('grid-row-inv-fraicheur-{0}', Math.floor(a / 30));
+            } else {
+                return '';
+            }
         }
     },
 
