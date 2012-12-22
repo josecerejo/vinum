@@ -40,12 +40,12 @@ Ext.define('VIN.view.commande.Grid', {
             }]
         });
 
-        this.dockedItems = {
-            xtype: 'pagingtoolbar',
-            dock: 'bottom',
-            store: this.store,
-            displayInfo: true
-        };
+        // this.dockedItems = {
+        //     xtype: 'pagingtoolbar',
+        //     dock: 'bottom',
+        //     store: this.store,
+        //     displayInfo: true
+        // };
 
         this.callParent(arguments);
     },

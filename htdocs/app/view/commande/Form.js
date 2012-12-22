@@ -386,7 +386,7 @@ Ext.define('VIN.view.commande.Form', {
                 }, {
                     xtype: 'client_produit_grid',
                     itemId: 'client_produit_g',
-                    title: 'Liste de produits habituels de ce client',
+                    title: 'Liste de produits habituels pour le client',
                     resizable: { handles: 's' },
                     store: Ext.create('VIN.store.Produits'),
                     column_flex: {

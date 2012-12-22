@@ -3,7 +3,8 @@ Ext.define('VIN.store.Commandes', {
     extend: 'Ext.data.Store',
     requires: ['VIN.utils'],
     model: 'VIN.model.Commande',
-    pageSize: 50,
+    pageSize: 100,
+    buffered: true,
     remoteSort: true,
     sorters: [{
         property: 'date_commande',

@@ -6,7 +6,7 @@ Ext.define('VIN.view.inventaire.Grid', {
     title: 'Inventaire',
     closable: true,
     column_flex: 'all',
-    use_paging_toolbar: true,
+    use_paging_toolbar: false,
     use_colors: true,
     is_master_grid: true,
 

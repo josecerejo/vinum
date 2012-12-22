@@ -18,12 +18,12 @@ Ext.define('VIN.view.client.Grid', {
 
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
-        this.dockedItems = {
-            xtype: 'pagingtoolbar',
-            store: this.store,
-            dock: 'bottom',
-            displayInfo: true
-        };
+        // this.dockedItems = {
+        //     xtype: 'pagingtoolbar',
+        //     store: this.store,
+        //     dock: 'bottom',
+        //     displayInfo: true
+        // };
 
         this.columns.push({
             xtype: 'actioncolumn',

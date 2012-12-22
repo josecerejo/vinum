@@ -309,9 +309,9 @@ Ext.define('VIN.controller.Commande', {
                 no_client: cr.get('no_client')
             },
             callback: Ext.bind(function(records, operation, success) {
-                var g = form.down('#client_produit_g');
-                g.setTitle(Ext.String.format('Liste de produits habituels pour le client "{0}" ({1})',
-                                             cr.get('nom_social'), g.store.getCount()));
+                //var g = form.down('#client_produit_g');
+                //g.setTitle(Ext.String.format('Liste de produits habituels pour le client "{0}" ({1})',
+                //                             cr.get('nom_social'), g.store.getCount()));
             }, this)
         });
     },

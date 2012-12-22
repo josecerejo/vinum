@@ -3,7 +3,8 @@ Ext.define('VIN.store.Inventaires', {
     extend: 'Ext.data.Store',
     requires: ['VIN.utils'],
     model: 'VIN.model.Inventaire',
-    pageSize: is_dev_version ? 50 : 500,
+    pageSize: 100,
+    buffered: true,
     remoteSort: true,
     sorters: [{
         property: 'type_vin',

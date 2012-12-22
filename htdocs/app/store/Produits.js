@@ -3,7 +3,8 @@ Ext.define('VIN.store.Produits', {
     extend: 'Ext.data.Store',
     requires: ['VIN.utils'],
     model: 'VIN.model.Produit',
-    pageSize: 50,
+    pageSize: 100,
+    buffered: true,
     sorters: [{
         property: 'type_vin',
         direction: 'ASC'

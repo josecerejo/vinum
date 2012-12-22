@@ -2,7 +2,8 @@ Ext.define('VIN.store.Clients', {
 
     extend: 'Ext.data.Store',
     model: 'VIN.model.Client',
-    pageSize: 50,
+    pageSize: 100,
+    buffered: true,
     remoteSort: true,
     sorters: [{
         property: 'nom_social',
@@ -15,6 +16,6 @@ Ext.define('VIN.store.Clients', {
             type: 'json',
             root: 'rows'
         }
-    }    
+    }
 
 });
