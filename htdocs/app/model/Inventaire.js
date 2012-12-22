@@ -113,7 +113,8 @@ Ext.define('VIN.model.Inventaire', {
         header: 'Âge (en jours)',
         name: 'age_in_days',
         type: 'int',
-        useNull: true
+        useNull: true,
+        filterable: false
     }],
 
     idProperty: 'no_inventaire'

@@ -14,6 +14,6 @@ def get_inventaire():
     # full inventaire query
     else:
         return get(g, request, {'inventaire': 'i', 'produit': 'p'},
-                   what=['i.*', 'p.type_vin', 'p.format', 'p.quantite_par_caisse', 
+                   what=['i.*', 'p.type_vin', 'p.format', 'p.quantite_par_caisse',
                          'age_in_days(date_recue)'],
                    join={'i.no_produit_interne': 'p.no_produit_interne'})

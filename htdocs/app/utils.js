@@ -36,19 +36,20 @@ Ext.define('VIN.utils', {
             var items = model.prototype.fields.items;
             for (var i = 0; i < items.length; i++) {
                 var name = items[i].name;
-                if (column_flex == 'all') {
-                    flex = 1;
-                    hidden = false;
-                } else {
+                var flex = 1;
+                var hidden = false;
+                var filterable = true;
+                if (column_flex != 'all') {
                     flex = column_flex.hasOwnProperty(name) ? column_flex[name] : 0;
                     hidden = !column_flex.hasOwnProperty(name);
+                    filterable = items[i].hasOwnProperty('filterable') ? items[i].filterable : true;
                 }
                 var col = {
                     xtype: 'gridcolumn',
                     text: items[i].hasOwnProperty('header') ? items[i].header : Ext.String.capitalize(items[i].name),
                     dataIndex: name,
                     type: items[i].type.type,
-                    filterable: true,
+                    filterable: filterable,
                     flex: flex,
                     hidden: hidden
                 };
