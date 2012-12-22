@@ -4,12 +4,12 @@ Ext.define('VIN.model.Client', {
 
     fields: [{
         header: '# client',
-        name: 'no_client', 
+        name: 'no_client',
         type: 'int',
         useNull: true
     }, {
         header: '# SAQ',
-        name: 'no_client_saq', 
+        name: 'no_client_saq',
         type: 'int',
         useNull: true
     }, {

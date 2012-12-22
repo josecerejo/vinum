@@ -41,9 +41,10 @@ def teardown_request(exception):
 
 try:
     import client
-    import produit
-    import inventaire
     import commande
+    import produit
+    import producteur
+    import inventaire
     import misc
 except:
     pass
