@@ -402,6 +402,7 @@ Ext.define('VIN.view.commande.Form', {
                 // right part panel
                 items: [{
                     xtype: 'inventaire_grid',
+                    is_master_grid: false,
                     itemId: 'inventaire_g',
                     collapsible: false,
                     closable: false,

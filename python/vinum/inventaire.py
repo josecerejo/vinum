@@ -9,8 +9,7 @@ def get_inventaire():
         return get(g, request, {'inventaire': 'i', 'produit': 'p'},
                    what=['i.*', 'p.type_vin', 'p.format', 'p.quantite_par_caisse'],
                    join={'p.no_produit_interne':'i.no_produit_interne'},
-                   where={('statut', '!='): 'inactif',
-                          'i.no_produit_interne': request.args['no_produit_interne']})
+                   where={'i.no_produit_interne': request.args['no_produit_interne']})
     # full inventaire query
     else:
         return get(g, request, {'inventaire': 'i', 'produit': 'p'},

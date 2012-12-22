@@ -536,7 +536,7 @@ Ext.define('VIN.controller.Commande', {
     createCommandeGrid: function() {
         var cg = Ext.create('widget.commande_grid', {
             itemId: 'commande_g',
-            title: 'Toutes les commandes',
+            title: 'Commandes',
             column_flex: {
                 no_commande_facture: 0.1,
                 no_client: 0.1,

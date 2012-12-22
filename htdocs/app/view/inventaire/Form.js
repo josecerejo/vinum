@@ -41,6 +41,7 @@ Ext.define('VIN.view.inventaire.Form', {
         this.items = [{
             xtype: 'inventaire_grid',
             itemId: 'inventaire_g',
+            is_master_grid: true,
             //title: 'Commandes faites par ce client',
             resizable: { handles: 's' },
             store: Ext.create('VIN.store.Inventaires'),
