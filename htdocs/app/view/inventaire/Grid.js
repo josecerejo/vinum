@@ -1,22 +1,14 @@
 Ext.define('VIN.view.inventaire.Grid', {
 
-    extend: 'Ext.grid.Panel',
+    extend: 'VIN.view.Grid',
     alias: 'widget.inventaire_grid',
-    requires: ['Ext.ux.grid.FiltersFeature'],
     title: 'Inventaire',
     closable: true,
-    column_flex: 'all',
     use_paging_toolbar: false,
     use_colors: true,
     is_master_grid: true,
 
     initComponent: function() {
-
-        if (!this.store) {
-            this.store = Ext.create('VIN.store.Inventaires');
-        }
-
-        this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
         if (this.is_master_grid) {
             this.dockedItems = [{
@@ -71,13 +63,6 @@ Ext.define('VIN.view.inventaire.Grid', {
 
         this.callParent(arguments);
 
-    },
-
-
-    features: [{
-        ftype: 'filters',
-        encode: true,
-        local: false
-    }]
+    }
 
 });

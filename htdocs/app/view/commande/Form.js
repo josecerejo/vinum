@@ -2,7 +2,7 @@ Ext.define('VIN.view.commande.Form', {
 
     extend: 'Ext.form.Panel',
     alias: 'widget.commande_form',
-    requires: ['VIN.view.produit.Grid', 'VIN.view.client.ProduitGrid',
+    requires: ['VIN.view.client.ProduitGrid',
                'VIN.view.inventaire.Grid', 'VIN.view.commande.ItemGrid'],
     frame: true,
     autoScroll: true,
@@ -404,11 +404,11 @@ Ext.define('VIN.view.commande.Form', {
                     xtype: 'inventaire_grid',
                     is_master_grid: false,
                     itemId: 'inventaire_g',
+                    store: Ext.create('VIN.store.Inventaires'),
                     collapsible: false,
                     closable: false,
                     use_paging_toolbar: false,
                     title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
-                    store: Ext.create('VIN.store.Inventaires'),
                     resizable: { handles: 's' },
                     column_flex: {
                         no_produit_saq: 1,

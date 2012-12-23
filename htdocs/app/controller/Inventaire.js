@@ -40,6 +40,7 @@ Ext.define('VIN.controller.Inventaire', {
 
     createInventaireForm: function() {
         var ig = Ext.create('widget.inventaire_grid', {
+            store: Ext.create('VIN.store.Inventaires'),
             column_flex: {
                 type_vin: 3,
                 millesime: 1,

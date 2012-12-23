@@ -1,16 +1,9 @@
 Ext.define('VIN.view.client.ProduitGrid', {
 
-    extend: 'Ext.grid.Panel',
+    extend: 'VIN.view.Grid',
     alias: 'widget.client_produit_grid',
-    requires: ['Ext.ux.grid.FiltersFeature'],
-    column_flex: {
-    },
 
     initComponent: function() {
-
-        if (!this.store) {
-            this.store = Ext.create('VIN.store.Produits');
-        }
 
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
@@ -63,12 +56,6 @@ Ext.define('VIN.view.client.ProduitGrid', {
         this.plugins = [Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
         })];
-
-        this.features = [{
-            ftype: 'filters',
-            encode: true,
-            local: false
-        }];
 
         this.viewConfig = {
             preserveScrollOnRefresh: true

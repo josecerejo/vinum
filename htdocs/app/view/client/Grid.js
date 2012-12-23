@@ -1,29 +1,13 @@
 Ext.define('VIN.view.client.Grid', {
 
-    extend: 'Ext.grid.Panel',
+    extend: 'VIN.view.Grid',
     alias: 'widget.client_grid',
     title: 'Clients',
     closable: true,
-    requires: ['Ext.ux.grid.FiltersFeature'],
-    column_flex: {
-        no_client: 0.1,
-        no_client_saq: 0.1,
-        nom_social: 0.7,
-        date_ouverture_dossier: 0.1
-    },
 
     initComponent: function() {
 
-        this.store = Ext.create('VIN.store.Clients');
-
         this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
-
-        // this.dockedItems = {
-        //     xtype: 'pagingtoolbar',
-        //     store: this.store,
-        //     dock: 'bottom',
-        //     displayInfo: true
-        // };
 
         this.columns.push({
             xtype: 'actioncolumn',
@@ -50,16 +34,6 @@ Ext.define('VIN.view.client.Grid', {
                 }
             }]
         });
-
-        this.features = [{
-            ftype: 'filters',
-            encode: true,
-            local: false
-        }];
-
-        // this.viewConfig = {
-        //     preserveScrollOnRefresh: true
-        // };
 
         this.callParent(arguments);
     }

@@ -177,8 +177,16 @@ Ext.define('VIN.controller.Client', {
     },
 
     createClientGrid: function() {
-        var cg = Ext.create('widget.client_grid');
-        cg.store.load();
+        var cg = Ext.create('VIN.view.client.Grid', {
+            store: Ext.create('VIN.store.Clients'),
+            column_flex: {
+                no_client: 0.1,
+                no_client_saq: 0.1,
+                nom_social: 0.7,
+                date_ouverture_dossier: 0.1
+            }
+        });
+        cg.getStore().load();
         Ext.getCmp('main_pnl').add(cg);
         Ext.getCmp('main_pnl').setActiveTab(cg);
     }

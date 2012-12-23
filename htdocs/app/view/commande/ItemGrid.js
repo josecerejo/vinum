@@ -1,16 +1,11 @@
 Ext.define('VIN.view.commande.ItemGrid', {
 
-    extend: 'Ext.grid.Panel',
+    extend: 'VIN.view.Grid',
     alias: 'widget.commande_item_grid',
     requires: ['Ext.ux.grid.RowActions'],
-    column_flex: 'all',
     is_editable: true,
 
     initComponent: function() {
-
-        if (!this.store) {
-            this.store = Ext.create('VIN.store.CommandeItems');
-        }
 
         // this.store.groupField must be set!
         this.features = [Ext.create('Ext.grid.feature.Grouping',{
@@ -61,10 +56,6 @@ Ext.define('VIN.view.commande.ItemGrid', {
         })];
 
         this.callParent(arguments);
-    },
-
-    viewConfig: {
-        preserveScrollOnRefresh: true
     }
 
 });

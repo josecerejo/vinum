@@ -2,7 +2,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
 
     extend: 'Ext.form.Panel',
     alias: 'widget.pp_form',
-    requires: ['VIN.view.produit.Grid', 'VIN.view.producteur.Grid'],
+    //requires: ['VIN.view.produit.Grid', 'VIN.view.producteur.Grid'],
     autoScroll: true,
     title: 'Produits et producteurs',
     closable: true,
@@ -46,18 +46,19 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                 // left part panel
                 layout: 'anchor',
                 items: [{
-                    xtype: 'produit_grid',
+                    xtype: 'vin_grid',
                     itemId: 'produit_g',
+                    store: Ext.create('VIN.store.Produits'),
                     title: 'Produits',
                     resizable: { handles: 's' },
-                    store: Ext.create('VIN.store.Produits'),
-                    height: grid_height
+                    height: grid_height,
+                    style: 'margin-bottom: 20px'
                 }, {
-                    xtype: 'producteur_grid',
+                    xtype: 'vin_grid',
                     itemId: 'producteur_g',
+                    store: Ext.create('VIN.store.Producteurs'),
                     title: 'Producteurs',
                     resizable: { handles: 's' },
-                    store: Ext.create('VIN.store.Producteurs'),
                     height: grid_height
                 }]
             }, {

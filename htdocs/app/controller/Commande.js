@@ -118,7 +118,6 @@ Ext.define('VIN.controller.Commande', {
             },
             '#commande_item_g rowactions': {
                 groupaction: function(grid, records, action, groupValue) {
-                    console.log(records[0]);
                     var form = this._getFormViewInstance(grid);
                     var tv = groupValue;
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit "{0}" de la commande?', tv),
@@ -144,12 +143,6 @@ Ext.define('VIN.controller.Commande', {
                                     }, this));
                 },
             },
-            // '#save_commande_btn': {
-            //     click: function(btn) {
-            //         var form = this._getFormViewInstance(btn);
-            //         this.saveCommandeFormPart(form);
-            //     }
-            // },
             '#preview_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
@@ -537,6 +530,7 @@ Ext.define('VIN.controller.Commande', {
         var cg = Ext.create('widget.commande_grid', {
             itemId: 'commande_g',
             title: 'Commandes',
+            store: Ext.create('VIN.store.Commandes'),
             column_flex: {
                 no_commande_facture: 0.1,
                 no_client: 0.1,
