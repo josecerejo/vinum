@@ -1,7 +1,7 @@
 Ext.define('VIN.controller.Inventaire', {
 
     extend: 'Ext.app.Controller',
-    views: ['VIN.view.inventaire.Form'],
+    views: ['VIN.view.inventaire.Grid'],
     models: ['VIN.model.Inventaire'],
     stores: ['VIN.store.Inventaires'],
 
@@ -38,8 +38,8 @@ Ext.define('VIN.controller.Inventaire', {
         return any_contained_view.up('inventaire_grid');
     },
 
-    createInventaireForm: function() {
-        var ig = Ext.create('widget.inventaire_grid', {
+    createInventaireGrid: function() {
+        var ig = Ext.create('VIN.view.inventaire.Grid', {
             store: Ext.create('VIN.store.Inventaires'),
             column_flex: {
                 type_vin: 3,

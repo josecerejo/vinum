@@ -60,7 +60,7 @@ Ext.define('VIN.view.StartPanel', {
                                 VIN.app.getController('ProduitEtProducteur').createForm();
                                 break;
                             case 'inventaire':
-                                VIN.app.getController('Inventaire').createInventaireForm();
+                                VIN.app.getController('Inventaire').createInventaireGrid();
                                 break;
                             }
                         }

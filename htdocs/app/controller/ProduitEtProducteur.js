@@ -9,6 +9,10 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
 
         this.control({
 
+            'pp_form': {
+                
+            }
+
         });
     },
 
