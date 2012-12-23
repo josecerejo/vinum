@@ -105,23 +105,23 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             padding: 5
                         },
                         items: [{
-
                             xtype: 'combo',
                             flex: 0.6,
                             fieldLabel: 'Nom du domaine',
                             displayField: 'nom_domaine',
-                            name: 'representant_nom',
+                            name: 'nom_domaine',
+                            allowBlank: false,
                             store: Ext.create('Ext.data.Store', {
-                                model: Ext.define('VIN.model.Representant', {
+                                model: Ext.define('VIN.model.Produit.NomDomaine', {
                                     extend: 'Ext.data.Model',
-                                    fields: ['representant_nom']
+                                    fields: ['nom_domaine']
                                 }),
                                 proxy: {
                                     type: 'ajax',
                                     limitParam: undefined,
                                     pageParam: undefined,
                                     startParam: undefined,
-                                    url: ajax_url_prefix + '/misc/get_representants',
+                                    url: ajax_url_prefix + '/produit/get_nom_domaine',
                                     reader: {
                                         type: 'json',
                                         root: 'rows'
@@ -132,15 +132,8 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             forceSelection: false,
                             listConfig: {
                                 loadingText: 'Recherche...',
-                                emptyText: 'Aucun représentant ne correspond à cette recherche..'
+                                emptyText: 'Aucun domaine avec ce nom..'
                             }
-
-
-                            xtype: 'combo',
-                            allowBlank: false,
-                            fieldLabel: 'Nom du domaine',
-                            name: 'nom_domaine',
-                            flex: 0.6
                         }, {
                             xtype: 'textfield',
                             allowBlank: false,

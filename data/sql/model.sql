@@ -171,3 +171,6 @@ insert into representant values (29, 'bureau');
 create or replace function age_in_days(date) returns int as $$
     select date_part('day', now() - $1)::int
 $$ language sql immutable;
+
+-- requires postgresql-contrib, allows: select unaccent('école')
+create extension unaccent;

@@ -21,7 +21,7 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
     if request.args.get('filter', '').strip():
         for filter_arg in json.loads(request.args['filter']):
             if filter_arg['type'] == 'string':
-                where[(filter_arg['field'], 'ilike')] = set(['%%%s%%' % v for v in filter_arg['value'].split()])
+                where[(filter_arg['field'], 'ilike', 'unaccent')] = set(['%%%s%%' % v for v in filter_arg['value'].split()])
             elif filter_arg['type'] == 'list':
                 where[filter_arg['field']] = tuple(filter_arg['value'])
             else:
@@ -29,7 +29,7 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
     elif request.args.get('query', '').strip():
         # autocomplete query
         if query_op.lower() in ['ilike', 'like']:
-            where[('||'.join(query_fields), query_op)] = set(['%%%s%%' % v for v in request.args['query'].split()])
+            where[('||'.join(query_fields), query_op, 'unaccent')] = set(['%%%s%%' % v for v in request.args['query'].split()])
         # exact field query: assumes only 1 field, because there is only 1 query value
         else:
             assert len(query_fields) == 1
