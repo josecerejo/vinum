@@ -172,5 +172,14 @@ create or replace function age_in_days(date) returns int as $$
     select date_part('day', now() - $1)::int
 $$ language sql immutable;
 
--- requires postgresql-contrib, allows: select unaccent('école')
+-- if PG >= 9, use this (requires postgresql-contrib)
 create extension unaccent;
+
+-- else, comment previous, uncomment these 2 functions:
+-- taken from: http://www.laudatio.com/wordpress/2008/11/05/postgresql-83-to_ascii-utf8/
+-- create or replace function to_ascii(bytea, name)
+-- returns text strict as 'to_ascii_encname' language internal;
+
+-- create or replace function unaccent(text) returns text as $$
+--     select to_ascii(convert_to($1, 'latin1'), 'latin1')
+-- $$ language sql immutable;

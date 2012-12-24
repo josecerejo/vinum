@@ -125,10 +125,7 @@ Ext.define('VIN.view.client.Form', {
                         displayField: 'representant_nom',
                         name: 'representant_nom',
                         store: Ext.create('Ext.data.Store', {
-                            model: Ext.define('VIN.model.Representant', {
-                                extend: 'Ext.data.Model',
-                                fields: ['representant_nom']
-                            }),
+                            fields: ['representant_nom'],
                             proxy: {
                                 type: 'ajax',
                                 limitParam: undefined,

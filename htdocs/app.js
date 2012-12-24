@@ -58,7 +58,7 @@ Ext.override(Ext.form.action.Load, {
 
 Ext.application({
     name: 'VIN',
-    controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire'],
+    controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur'],
     autoCreateViewport: true,
     launch: function() {
         VIN.app = this; // to access the controllers with VIN.app.getController

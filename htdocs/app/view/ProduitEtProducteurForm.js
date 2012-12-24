@@ -1,35 +1,15 @@
 Ext.define('VIN.view.ProduitEtProducteurForm', {
 
     extend: 'Ext.form.Panel',
-    alias: 'widget.pp_form',
-    //requires: ['VIN.view.produit.Grid', 'VIN.view.producteur.Grid'],
+    alias: 'widget.pp_forms',
     autoScroll: true,
     title: 'Produits et producteurs',
     closable: true,
     frame: true,
-    fieldDefaults: {
-        labelAlign: 'top'
-    },
 
     initComponent: function() {
 
         var grid_height = 326;
-
-            /*
-        this.dockedItems = {
-            xtype: 'toolbar',
-            dock: 'top',
-            items: [{
-                text: 'Sauvegarder',
-                itemId: 'save_btn',
-                iconCls: 'disk-icon'
-            }, {
-                text: 'Créer une commande pour ce client',
-                itemId: 'create_commande_btn',
-                iconCls: 'commandes-add-icon'
-            }]
-        };
-        */
 
         this.items = {
             bodyStyle: 'background-color:#dfe8f5',
@@ -44,7 +24,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
             items: [{
                 // -----------------------------------------------------
                 // left part panel
-                layout: 'anchor',
                 items: [{
                     xtype: 'vin_grid',
                     itemId: 'produit_g',
@@ -64,15 +43,22 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
             }, {
                 // -----------------------------------------------------
                 // right part panel
-                layout: 'anchor',
                 items: [{
                     xtype: 'fieldset',
                     title: 'Produit',
+                    height: grid_height,
                     defaults: {
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false
                     },
-                    items: [{
+                    items: {
+                        xtype: 'form',
+                        header: false,
+                        fieldDefaults: {
+                            labelAlign: 'top'
+                        },
+                        itemId: 'pp_produit_form',
+                        items: [{
                         layout: 'hbox',
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false,
@@ -106,16 +92,13 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         },
                         items: [{
                             xtype: 'combo',
-                            flex: 0.6,
+                            flex: 0.75,
                             fieldLabel: 'Nom du domaine',
                             displayField: 'nom_domaine',
                             name: 'nom_domaine',
                             allowBlank: false,
                             store: Ext.create('Ext.data.Store', {
-                                model: Ext.define('VIN.model.Produit.NomDomaine', {
-                                    extend: 'Ext.data.Model',
-                                    fields: ['nom_domaine']
-                                }),
+                                fields: ['nom_domaine'],
                                 proxy: {
                                     type: 'ajax',
                                     limitParam: undefined,
@@ -135,25 +118,197 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                                 emptyText: 'Aucun domaine avec ce nom..'
                             }
                         }, {
-                            xtype: 'textfield',
+                            xtype: 'combo',
                             allowBlank: false,
+                            flex: 0.25,
                             fieldLabel: 'Format',
+                            displayField: 'format',
                             name: 'format',
-                            flex: 0.2
-                        }, {
-                            xtype: 'textfield',
                             allowBlank: false,
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['format'],
+                                proxy: {
+                                    type: 'ajax',
+                                    limitParam: undefined,
+                                    pageParam: undefined,
+                                    startParam: undefined,
+                                    url: ajax_url_prefix + '/produit/get_format',
+                                    reader: {
+                                        type: 'json',
+                                        root: 'rows'
+                                    }
+                                }
+                            }),
+                            minChars: 2,
+                            forceSelection: false,
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucun format trouvé..'
+                            }
+                        }]
+                    }, {
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        style: 'margin-bottom: 10px',
+                        defaults: {
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'combo',
+                            allowBlank: false,
+                            name: 'couleur',
+                            queryMode: 'local',
+                            triggerAction: 'all',
+                            displayField: 'couleur',
+                            valueField: 'couleur',
+                            fieldLabel: 'Couleur',
+                            forceSelection: true,
+                            flex: 0.2,
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['couleur'],
+                                data: [{couleur: 'Blanc'},
+                                       {couleur: 'Rouge'},
+                                       {couleur: 'Rosé'}]
+                            }),
                             fieldLabel: 'Couleur',
                             name: 'couleur',
-                            flex: 0.2
+                            flex: 0.3
+                        }, {
+                            xtype: 'combo',
+                            allowBlank: false,
+                            flex: 0.4,
+                            fieldLabel: 'Pays',
+                            displayField: 'pays',
+                            name: 'pays',
+                            allowBlank: false,
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['pays'],
+                                proxy: {
+                                    type: 'ajax',
+                                    limitParam: undefined,
+                                    pageParam: undefined,
+                                    startParam: undefined,
+                                    url: ajax_url_prefix + '/produit/get_pays',
+                                    reader: {
+                                        type: 'json',
+                                        root: 'rows'
+                                    }
+                                }
+                            }),
+                            minChars: 2,
+                            forceSelection: false,
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucun pays trouvé..'
+                            }
+                        }, {
+                            xtype: 'numberfield',
+                            fieldLabel: 'Quantité par caisse',
+                            name: 'quantite_par_caisse',
+                            flex: 0.3
                         }]
+                    }, {
+                        xtype: 'button',
+                        text: 'Sauvegarder le produit',
+                        iconCls: 'disk-icon',
+                        style: 'margin-top: 10px'
                     }]
+                    },
                 }, {
                     xtype: 'fieldset',
                     title: 'Producteur',
+                    height: grid_height,
                     defaults: {
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false
+                    },
+                    items: {
+                        xtype: 'form',
+                        header: false,
+                        fieldDefaults: {
+                            labelAlign: 'top'
+                        },
+                        itemId: 'pp_producteur_form',
+                        items: [{
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        style: 'margin-bottom: 10px',
+                        defaults: {
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'textfield',
+                            allowBlank: false,
+                            fieldLabel: 'No producteur',
+                            readOnly: true,
+                            cls: 'x-item-disabled',
+                            name: 'no_producteur',
+                            flex: 0.25
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Nom du producteur',
+                            allowBlank: false,
+                            name: 'nom_producteur',
+                            flex: 0.75
+                        }]
+                    }, {
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        style: 'margin-bottom: 10px',
+                        defaults: {
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'textfield',
+                            fieldLabel: 'No civique',
+                            name: 'no_civique'
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Rue',
+                            name: 'rue'
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Ville',
+                            name: 'ville'
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Code postal',
+                            name: 'code_postal'
+                        }]
+                    }, {
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        style: 'margin-bottom: 10px',
+                        defaults: {
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'textfield',
+                            fieldLabel: 'Comté',
+                            name: 'comte'
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Pays',
+                            name: 'pays'
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'No téléphone',
+                            name: 'no_tel'
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'No fax',
+                            name: 'no_fax'
+                        }]
+                    }, {
+                        xtype: 'button',
+                        text: 'Sauvegarder le producteur',
+                        iconCls: 'disk-icon',
+                        style: 'margin-top: 10px'
+                    }]
                     }
                 }]
             }]
