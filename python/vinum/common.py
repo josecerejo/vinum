@@ -5,10 +5,11 @@ import little_pger as pg
 
 
 # get everything! handles every single possible select query required by the app..
-def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=None, where=None):
+def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=None, where=None, field_map=None):
     if query_fields is None: query_fields = ()
     if join is None: join = {}
     if where is None: where = {}
+    if field_map is None: field_map = {}
     assert query_fields.__class__ is tuple
     cursor = g.db.cursor()
     order_by = None
@@ -21,12 +22,13 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
 
     if request.args.get('filter', '').strip():
         for filter_arg in json.loads(request.args['filter']):
+            f = filter_arg['field']
             if filter_arg['type'] == 'string':
-                where[(filter_arg['field'], 'ilike', 'unaccent')] = set(['%%%s%%' % v for v in filter_arg['value'].split()])
+                where[(field_map.get(f, f), 'ilike', 'unaccent')] = set(['%%%s%%' % v for v in filter_arg['value'].split()])
             elif filter_arg['type'] == 'list':
-                where[filter_arg['field']] = tuple(filter_arg['value'])
+                where[field_map.get(f, f)] = tuple(filter_arg['value'])
             else:
-                where[(filter_arg['field'], comp_op_map[filter_arg.get('comparison', 'eq')])] = filter_arg['value']
+                where[(field_map.get(f, f), comp_op_map[filter_arg.get('comparison', 'eq')])] = filter_arg['value']
     elif request.args.get('query', '').strip():
         # autocomplete query
         if query_op.lower() in ['ilike', 'like']:

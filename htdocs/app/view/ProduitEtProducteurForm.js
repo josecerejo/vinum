@@ -31,14 +31,33 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                     title: 'Produits',
                     resizable: { handles: 's' },
                     height: grid_height,
-                    style: 'margin-bottom: 20px'
+                    style: 'margin-bottom: 20px',
+                    column_flex: {
+                        type_vin: 2,
+                        nom_domaine: 2,
+                        format: 1,
+                        couleur: 1,
+                        quantite_par_caisse: 1,
+                        nom_producteur: 2
+                    },
+                    dockedItems: {
+                        xtype: 'toolbar',
+                        dock: 'top',
+                        items: [{
+                            text: 'Tous les produits',
+                            itemId: 'all_produits_btn'
+                        }]
+                    }
                 }, {
                     xtype: 'vin_grid',
                     itemId: 'producteur_g',
                     store: Ext.create('VIN.store.Producteurs'),
                     title: 'Producteurs',
                     resizable: { handles: 's' },
-                    height: grid_height
+                    height: grid_height,
+                    column_flex: {
+                        nom_producteur: 1
+                    }
                 }]
             }, {
                 // -----------------------------------------------------
@@ -210,12 +229,21 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             flex: 0.3
                         }]
                     }, {
-                        xtype: 'button',
-                        text: 'Sauvegarder le produit',
-                        iconCls: 'disk-icon',
-                        style: 'margin-top: 10px'
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        defaults: {
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'button',
+                            text: 'Sauvegarder le produit',
+                            iconCls: 'disk-icon',
+                            style: 'margin-top: 10px',
+                            disabled: true
+                        }]
                     }]
-                    },
+                    }
                 }, {
                     xtype: 'fieldset',
                     title: 'Producteur',
@@ -246,6 +274,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             readOnly: true,
                             cls: 'x-item-disabled',
                             name: 'no_producteur',
+                            itemId: 'no_producteur_tf',
                             flex: 0.25
                         }, {
                             xtype: 'textfield',
@@ -254,7 +283,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             name: 'nom_producteur',
                             flex: 0.75
                         }]
-                    }, {
+                        }, {
                         layout: 'hbox',
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false,
@@ -305,10 +334,25 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             name: 'no_fax'
                         }]
                     }, {
-                        xtype: 'button',
-                        text: 'Sauvegarder le producteur',
-                        iconCls: 'disk-icon',
-                        style: 'margin-top: 10px'
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        defaults: {
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'button',
+                            text: 'Sauvegarder le producteur',
+                            disabled: true,
+                            iconCls: 'disk-icon',
+                            style: 'margin-top: 10px; margin-right: 10px'
+                        }, {
+                            xtype: 'button',
+                            text: 'Filtrer ses produits',
+                            iconCls: 'drink-icon',
+                            itemId: 'filter_produits_btn',
+                            style: 'margin-top: 10px'
+                        }]
                     }]
                     }
                 }]

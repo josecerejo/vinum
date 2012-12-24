@@ -30,6 +30,14 @@ Ext.define('VIN.view.Grid', {
             bbar.setText(Ext.String.format('{0} items', store.getTotalCount()));
         }, this));
 
+        this.listeners = {
+            // must create the filters after grid is rendered
+            // for the filters default value to be set; loading must follow, not precede
+            afterrender: function(grid) {
+                grid.filters.createFilters();
+            }
+        };
+
         this.callParent(arguments);
     }
 

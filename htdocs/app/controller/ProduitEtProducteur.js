@@ -36,6 +36,31 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                         }, this)
                     });
                 }
+            },
+            'pp_forms #filter_produits_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    var no_producteur = form.down('#no_producteur_tf').getValue();
+                    if (no_producteur) {
+                        var filter = form.down('#produit_g').filters.getFilter('no_producteur');
+                        filter.setValue({eq: no_producteur});
+                        filter.setActive(true);
+                    } else {
+                        Ext.Msg.show({
+                            title: 'Vinum',
+                            msg: Ext.String.format("Veuillez tout d'abord sélectionner un producteur dans la table de gauche"),
+                            icon: Ext.MessageBox.INFO,
+                            buttons: Ext.MessageBox.OK
+                        });
+                    }
+                }
+            },
+            'pp_forms #all_produits_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    var filter = form.down('#produit_g').filters.getFilter('no_producteur');
+                    filter.setActive(false);
+                }
             }
 
         });

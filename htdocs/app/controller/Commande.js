@@ -236,7 +236,7 @@ Ext.define('VIN.controller.Commande', {
                                     buttons: Ext.MessageBox.OK
                                 });
                                 form.down(Ext.String.format('#email_{0}_btn',
-                                                            form.email_win.document_type)).setIconCls('accept-icon');
+                                                            form.email_win.document_type)).setIconCls('tick-icon');
                             }
                         });
                     }
@@ -496,10 +496,10 @@ Ext.define('VIN.controller.Commande', {
         */
         //form.loadRecord(commande_rec); <-- doesn't work.. why?
         if (commande_rec.get('facture_est_envoyee')) {
-            form.down('#email_facture_btn').setIconCls('accept-icon');
+            form.down('#email_facture_btn').setIconCls('tick-icon');
         }
         if (commande_rec.get('bon_de_commande_est_envoye')) {
-            form.down('#email_bon_de_commande_btn').setIconCls('accept-icon');
+            form.down('#email_bon_de_commande_btn').setIconCls('tick-icon');
         }
         form.down('#commande_item_g').getStore().load({
             params: {

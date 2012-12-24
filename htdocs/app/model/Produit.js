@@ -23,7 +23,7 @@ Ext.define('VIN.model.Produit', {
     }, {
         name: 'couleur'
     }, {
-        header: 'Quantité (c)',
+        header: 'Qté par caisse',
         name: 'quantite_par_caisse',
         type: 'int',
         useNull: true
@@ -44,6 +44,14 @@ Ext.define('VIN.model.Produit', {
         name: 'quantite_bouteille',
         type: 'int',
         useNull: true
+    }, {
+        header: 'No producteur',
+        name: 'no_producteur',
+        type: 'int',
+        useNull: true
+    }, {
+        header: 'Nom du producteur',
+        name: 'nom_producteur'
     }],
 
     idProperty: 'no_produit_interne'

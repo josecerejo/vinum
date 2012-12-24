@@ -36,6 +36,14 @@
     background: url(../images/icons/accept.png) no-repeat !important;
 }
 
+.tick-icon {
+    background: url(../images/icons/tick.png) no-repeat !important;
+}
+
+.drink-icon {
+    background: url(../images/icons/drink.png) no-repeat !important;
+}
+
 .clients-icon {
     background: url(../images/icons/group.png) no-repeat !important;
 }

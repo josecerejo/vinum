@@ -11,7 +11,7 @@ Ext.define('VIN.view.inventaire.Grid', {
     initComponent: function() {
 
         if (this.is_master_grid) {
-            this.dockedItems = [{
+            this.dockedItems = {
                 xtype: 'toolbar',
                 dock: 'top',
                 items: [{
@@ -27,7 +27,7 @@ Ext.define('VIN.view.inventaire.Grid', {
                     itemId: 'type_vin_external_filter_tf',
                     labelWidth: 120
                 }]
-            }];
+            };
 
             if (this.use_paging_toolbar) {
                 this.dockedItems.push({
@@ -50,16 +50,16 @@ Ext.define('VIN.view.inventaire.Grid', {
             };
         }
 
-        this.listeners = {
-            // must create the filters after grid is rendered
-            // for the filters default value to be set; loading must follow, not precede
-            afterrender: function(grid) {
-                grid.filters.createFilters();
-                if (this.is_master_grid) {
-                    grid.getStore().load();
-                }
-            }
-        };
+        // this.listeners = {
+        //     // must create the filters after grid is rendered
+        //     // for the filters default value to be set; loading must follow, not precede
+        //     afterrender: function(grid) {
+        //         grid.filters.createFilters();
+        //         if (this.is_master_grid) {
+        //             grid.getStore().load();
+        //         }
+        //     }
+        // };
 
         this.callParent(arguments);
 
