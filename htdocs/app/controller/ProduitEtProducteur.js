@@ -61,8 +61,19 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                     var filter = form.down('#produit_g').filters.getFilter('no_producteur');
                     filter.setActive(false);
                 }
+            },
+            'pp_forms #new_produit_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    form.down('#pp_produit_form').getForm().reset();
+                }
+            },
+            'pp_forms #new_producteur_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    form.down('#pp_producteur_form').getForm().reset();
+                }
             }
-
         });
     },
 

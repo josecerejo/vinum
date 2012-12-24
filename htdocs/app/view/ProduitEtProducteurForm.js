@@ -239,8 +239,14 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             xtype: 'button',
                             text: 'Sauvegarder le produit',
                             iconCls: 'disk-icon',
-                            style: 'margin-top: 10px',
+                            style: 'margin-top: 10px; margin-right: 10px',
                             disabled: true
+                        }, {
+                            xtype: 'button',
+                            text: 'Nouveau produit',
+                            iconCls: 'app-form-add-icon',
+                            style: 'margin-top: 10px',
+                            itemId: 'new_produit_btn'
                         }]
                     }]
                     }
@@ -351,7 +357,13 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             text: 'Filtrer ses produits',
                             iconCls: 'drink-icon',
                             itemId: 'filter_produits_btn',
-                            style: 'margin-top: 10px'
+                            style: 'margin-top: 10px; margin-right: 10px'
+                        }, {
+                            xtype: 'button',
+                            text: 'Nouveau producteur',
+                            iconCls: 'app-form-add-icon',
+                            style: 'margin-top: 10px',
+                            itemId: 'new_producteur_btn'
                         }]
                     }]
                     }

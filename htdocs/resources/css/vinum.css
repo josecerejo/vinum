@@ -48,6 +48,10 @@
     background: url(../images/icons/group.png) no-repeat !important;
 }
 
+.app-form-add-icon {
+    background: url(../images/icons/application_form_add.png) no-repeat !important;
+}
+
 .arrow-down-icon {
     background: url(../images/icons/arrow_down.png) no-repeat !important;
 }
