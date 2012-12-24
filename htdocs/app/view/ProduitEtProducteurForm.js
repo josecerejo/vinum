@@ -47,6 +47,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                     xtype: 'fieldset',
                     title: 'Produit',
                     height: grid_height,
+                    style: 'margin-bottom: 20px',
                     defaults: {
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false
