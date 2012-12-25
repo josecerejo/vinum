@@ -4,7 +4,7 @@ from common import *
 
 @app.route('/producteur/get', methods=['GET'])
 def get_producteur():
-    return get(g, request, 'producteur')
+    return get(g, request, 'producteur', ('nom_producteur',))
 
 
 @app.route('/producteur/load', methods=['POST'])
