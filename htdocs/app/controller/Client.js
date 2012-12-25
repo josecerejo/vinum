@@ -180,6 +180,7 @@ Ext.define('VIN.controller.Client', {
         var cg = Ext.create('VIN.view.Grid', {
             itemId: 'client_g',
             title: 'Clients',
+            closable: true,
             store: Ext.create('VIN.store.Clients'),
             add_edit_actioncolumn: true,
             add_delete_actioncolumn: true,
