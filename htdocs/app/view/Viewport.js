@@ -5,13 +5,14 @@ Ext.define('VIN.view.Viewport', {
     layout: 'border',
     items: [{
         region: 'north',
+        border: false,
         items: [{
             xtype: 'toolbar',
             cls: 'header',
             items: {
                 xtype: 'component',
                 cls: 'title',
-                html: 'Prototype Vinum (code: 2012-12-24, données: 2012-12-11)'
+                html: 'Prototype Vinum (code: 2012-12-25, données: 2012-12-11)'
             }
         }, {
             xtype: 'main_toolbar'

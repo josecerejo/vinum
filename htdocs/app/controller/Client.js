@@ -68,7 +68,7 @@ Ext.define('VIN.controller.Client', {
                 }
             },
 
-            'client_grid actioncolumn': {
+            '#client_g actioncolumn': {
                 del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le client #{0} de la base de données',
                                                                rec.get('no_client')),
@@ -91,7 +91,7 @@ Ext.define('VIN.controller.Client', {
                 }
             },
 
-            'client_grid': {
+            '#client_g': {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
                     this.createClientForm(record);
                 }
@@ -177,8 +177,12 @@ Ext.define('VIN.controller.Client', {
     },
 
     createClientGrid: function() {
-        var cg = Ext.create('VIN.view.client.Grid', {
+        var cg = Ext.create('VIN.view.Grid', {
+            itemId: 'client_g',
+            title: 'Clients',
             store: Ext.create('VIN.store.Clients'),
+            add_edit_actioncolumn: true,
+            add_delete_actioncolumn: true,
             column_flex: {
                 no_client: 0.1,
                 no_client_saq: 0.1,

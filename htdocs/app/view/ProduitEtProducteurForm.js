@@ -32,6 +32,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                     resizable: { handles: 's' },
                     height: grid_height,
                     style: 'margin-bottom: 20px',
+                    add_delete_actioncolumn: true,
                     column_flex: {
                         type_vin: 2,
                         nom_domaine: 2,
@@ -55,6 +56,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                     title: 'Producteurs',
                     resizable: { handles: 's' },
                     height: grid_height,
+                    add_delete_actioncolumn: true,
                     column_flex: {
                         nom_producteur: 1
                     }
@@ -227,6 +229,34 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             fieldLabel: 'Quantité par caisse',
                             name: 'quantite_par_caisse',
                             flex: 0.3
+                        }]
+                    }, {
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        defaults: {
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'combo',
+                            allowBlank: false,
+                            flex: 0.75,
+                            displayField: 'nom_producteur',
+                            name: 'nom_producteur',
+                            store: Ext.create('VIN.store.Producteurs'),
+                            itemId: 'nom_producteur_dd',
+                            fieldLabel: 'Nom du producteur',
+                            minChars: 3,
+                            forceSelection: true,
+                            //pageSize: 10,
+                            //style: 'margin-bottom: 10px;',
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucun producteur ne correspond à cette recherche..'
+                            }
+                        }, {
+                            xtype: 'tbspacer',
+                            flex: 0.25
                         }]
                     }, {
                         layout: 'hbox',
