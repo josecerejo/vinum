@@ -46,32 +46,6 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
     return json_out
 
 
-def update(g, request, table, id):
-    cursor = g.db.cursor()
-    request.form = dict([(c, f if f else None) for c, f in request.form.items()])
-    pg.update(cursor, table, values=request.form, where={id:request.form[id]})
-    g.db.commit()
-    return {'success': True}
-
-
-def create(g, request, table, id):
-    cursor = g.db.cursor()
-    request.form = dict([(c, f if f else None) for c, f in request.form.items()])
-    del request.form[id]
-    pg.insert(cursor, table, values=request.form)
-    key = pg.getCurrentPKeyValue(cursor, table, pkey_seq_name='%s_%s_seq' % (table, id))
-    g.db.commit()
-    return {'success': True, id: key}
-
-
-def delete(g, request, table, id):
-    cursor = g.db.cursor()
-    request.form = dict([(c, f if f else None) for c, f in request.form.items()])
-    pg.delete(cursor, table, where={id:request.form[id]})
-    g.db.commit()
-    return {'success': True}
-
-
 def removeTaxes_(v):
     tps = 0.05;
     tvq = 0.095;

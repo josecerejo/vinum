@@ -90,11 +90,11 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         },
                         items: [{
                             xtype: 'textfield',
-                            allowBlank: false,
                             fieldLabel: 'No produit',
                             readOnly: true,
                             cls: 'x-item-disabled',
                             name: 'no_produit_interne',
+                            itemId: 'no_produit_interne_tf',
                             flex: 0.25
                         }, {
                             xtype: 'textfield',
@@ -228,6 +228,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             xtype: 'numberfield',
                             fieldLabel: 'Quantité par caisse',
                             name: 'quantite_par_caisse',
+                            allowBlank: false,
                             flex: 0.3
                         }]
                     }, {
@@ -243,13 +244,12 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             flex: 0.75,
                             displayField: 'nom_producteur',
                             name: 'nom_producteur',
+                            itemId: 'nom_producteur_dd',
                             store: Ext.create('VIN.store.Producteurs'),
                             itemId: 'nom_producteur_dd',
                             fieldLabel: 'Nom du producteur',
                             minChars: 3,
                             forceSelection: true,
-                            //pageSize: 10,
-                            //style: 'margin-bottom: 10px;',
                             listConfig: {
                                 loadingText: 'Recherche...',
                                 emptyText: 'Aucun producteur ne correspond à cette recherche..'
@@ -270,7 +270,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             text: 'Sauvegarder le produit',
                             iconCls: 'disk-icon',
                             style: 'margin-top: 10px; margin-right: 10px',
-                            disabled: true
+                            itemId: 'save_produit_btn'
                         }, {
                             xtype: 'button',
                             text: 'Nouveau produit',

@@ -35,3 +35,22 @@ def load_produit():
                           join={'p.no_producteur': 'r.no_producteur'},
                           where={'no_produit_interne': request.form['no_produit_interne']})
     return {'success': True, 'data': produit}
+
+
+@app.route('/produit/save', methods=['POST'])
+def save_produit():
+    rf = request.form.to_dict()
+    npi = rf.pop('no_produit_interne')
+    if npi == '': npi = None
+    produit = pg.upsert(g.db.cursor(), 'produit', where={'no_produit_interne': npi},
+                        values=rf, filter_values=True, map_values={'': None})
+    g.db.commit()
+    return {'success': True, 'data': produit}
+
+
+@app.route('/produit/delete', methods=['POST'])
+def delete_produit():
+    pg.delete(g.db.cursor(), 'produit', where={'no_produit_interne':
+                                               request.form['no_produit_interne']})
+    g.db.commit()
+    return {'success': True}

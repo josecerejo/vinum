@@ -5,6 +5,7 @@ Ext.define('VIN.store.Producteurs', {
     model: 'VIN.model.Producteur',
     pageSize: 100,
     buffered: true,
+    remoteSort: true,
     sorters: [{
         property: 'nom_producteur',
         direction: 'ASC'

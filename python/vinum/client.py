@@ -43,7 +43,10 @@ def create_client():
 
 @app.route('/client/delete', methods=['POST'])
 def delete_client():
-    return delete(g, request, 'client', 'no_client')
+    pg.delete(g.db.cursor(), 'client', where={'no_client':
+                                              request.form['no_client']})
+    g.db.commit()
+    return {'success': True}
 
 
 def get_produits(g, no_client):
