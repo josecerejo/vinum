@@ -28,15 +28,6 @@ def get_pays():
     return get(g, request, 'produit', ('pays',), what='distinct pays')
 
 
-@app.route('/produit/load', methods=['POST'])
-def load_produit():
-    produit = pg.select1r(g.db.cursor(), {'produit': 'p', 'producteur': 'r'},
-                          what=['p.*', 'r.nom_producteur'],
-                          join={'p.no_producteur': 'r.no_producteur'},
-                          where={'no_produit_interne': request.form['no_produit_interne']})
-    return {'success': True, 'data': produit}
-
-
 @app.route('/produit/save', methods=['POST'])
 def save_produit():
     rf = request.form.to_dict()

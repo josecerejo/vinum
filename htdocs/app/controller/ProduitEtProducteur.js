@@ -14,33 +14,18 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                     if (records.length == 0) { return; }
                     var form = this._getFormViewInstance(model.view).down('#pp_produit_form');
                     form.down('#nom_producteur_dd').forceSelection = false;
-                    form.load({
-                        url: ajax_url_prefix + '/produit/load',
-                        params: {
-                            no_produit_interne: records[0].get('no_produit_interne')
-                        },
-                        success: Ext.bind(function(_form, action) {
-                            // this hack is required to load a full producteur model in the dd,
-                            // to allow form.load to retrieve its no_producteur field later
-                            var r = Ext.create('VIN.model.Producteur', action.result.data);
-                            form.down('#nom_producteur_dd').getStore().loadRecords([r]);
-                            form.down('#nom_producteur_dd').forceSelection = true;
-                        }, this)
-                    });
+                    form.getForm().loadRecord(records[0]);
+                    // this hack is required to load a full producteur model in the dd,
+                    // to allow form.load to retrieve its no_producteur field later
+                    form.down('#nom_producteur_dd').getStore().loadRecords([records[0]]);
+                    form.down('#nom_producteur_dd').forceSelection = true;
                 }
             },
             'pp_forms #producteur_g': {
                 selectionchange: function(model, records) {
                     if (records.length == 0) { return; }
                     var form = this._getFormViewInstance(model.view).down('#pp_producteur_form');
-                    form.load({
-                        url: ajax_url_prefix + '/producteur/load',
-                        params: {
-                            no_producteur: records[0].get('no_producteur')
-                        },
-                        callback: Ext.bind(function(records, operation, success) {
-                        }, this)
-                    });
+                    form.getForm().loadRecord(records[0]);
                 }
             },
             'pp_forms #filter_produits_btn': {
@@ -117,6 +102,47 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                     url: ajax_url_prefix + '/produit/delete',
                                     params: {
                                         no_produit_interne: rec.get('no_produit_interne')
+                                    },
+                                    success: function(response) {
+                                        grid.store.reload();
+                                    }
+                                });
+                            }
+                        }, this));
+                }
+            },
+            'pp_forms #save_producteur_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    var pf = form.down('#pp_producteur_form');
+                    if (pf.getForm().isValid()) {
+                        pf.submit({
+                            url: ajax_url_prefix + '/producteur/save',
+                            success: Ext.bind(function(_form, action) {
+                                Ext.Msg.show({
+                                    title: 'Vinum',
+                                    msg: Ext.String.format("Le producteur '{0}' a été {1}", pf.down('#nom_producteur_tf').getValue(),
+                                                           pf.down('#no_producteur_tf').getValue() ? 'modifié' : 'créé'),
+                                    icon: Ext.MessageBox.INFO,
+                                    buttons: Ext.MessageBox.OK
+                                });
+                                pf.loadRecord(action.result); // to load no_producteur_tf
+                                form.down('#producteur_g').getStore().reload();
+                            }, this)
+                        });
+                    }
+                }
+            },
+            'pp_forms #producteur_g actioncolumn': {
+                del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le producteur \'{0}\' de la base de données',
+                                                               rec.get('nom_producteur')),
+                        Ext.bind(function(btn) {
+                            if (btn == 'yes') {
+                                Ext.Ajax.request({
+                                    url: ajax_url_prefix + '/producteur/delete',
+                                    params: {
+                                        no_producteur: rec.get('no_producteur')
                                     },
                                     success: function(response) {
                                         grid.store.reload();

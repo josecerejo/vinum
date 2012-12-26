@@ -305,7 +305,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         },
                         items: [{
                             xtype: 'textfield',
-                            allowBlank: false,
                             fieldLabel: 'No producteur',
                             readOnly: true,
                             cls: 'x-item-disabled',
@@ -317,6 +316,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             fieldLabel: 'Nom du producteur',
                             allowBlank: false,
                             name: 'nom_producteur',
+                            itemId: 'nom_producteur_tf',
                             flex: 0.75
                         }]
                         }, {
@@ -379,7 +379,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         items: [{
                             xtype: 'button',
                             text: 'Sauvegarder le producteur',
-                            disabled: true,
+                            itemId: 'save_producteur_btn',
                             iconCls: 'disk-icon',
                             style: 'margin-top: 10px; margin-right: 10px'
                         }, {
