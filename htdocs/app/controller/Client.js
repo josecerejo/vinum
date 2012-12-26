@@ -191,7 +191,6 @@ Ext.define('VIN.controller.Client', {
                 date_ouverture_dossier: 0.1
             }
         });
-        cg.getStore().load();
         Ext.getCmp('main_pnl').add(cg);
         Ext.getCmp('main_pnl').setActiveTab(cg);
     }

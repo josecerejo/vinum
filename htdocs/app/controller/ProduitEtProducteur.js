@@ -83,8 +83,6 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
 
     createForm: function() {
         var ppf = Ext.create('widget.pp_forms');
-        ppf.down('#produit_g').getStore().load();
-        ppf.down('#producteur_g').getStore().load();
         Ext.getCmp('main_pnl').add(ppf);
         Ext.getCmp('main_pnl').setActiveTab(ppf);
     }

@@ -389,6 +389,7 @@ Ext.define('VIN.view.commande.Form', {
                     title: 'Liste de produits habituels pour le client',
                     resizable: { handles: 's' },
                     store: Ext.create('VIN.store.Produits'),
+                    load_after_render: false,
                     column_flex: {
                         type_vin: 2,
                         nom_domaine: 2,
@@ -401,15 +402,14 @@ Ext.define('VIN.view.commande.Form', {
                 // -----------------------------------------------------
                 // right part panel
                 items: [{
-                    xtype: 'inventaire_grid',
-                    is_master_grid: false,
+                    xtype: 'vin_grid',
                     itemId: 'inventaire_g',
                     store: Ext.create('VIN.store.Inventaires'),
                     collapsible: false,
                     closable: false,
-                    use_paging_toolbar: false,
                     title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
                     resizable: { handles: 's' },
+                    load_after_render: false,
                     column_flex: {
                         no_produit_saq: 1,
                         no_commande_saq: 1,
@@ -425,6 +425,7 @@ Ext.define('VIN.view.commande.Form', {
                     xtype: 'commande_item_grid',
                     itemId: 'commande_item_g',
                     title: 'Produits commandés',
+                    load_after_render: false,
                     store: Ext.create('VIN.store.CommandeItems'),
                     resizable: { handles: 's' },
                     is_editable: true,

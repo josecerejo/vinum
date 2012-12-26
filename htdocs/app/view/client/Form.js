@@ -2,7 +2,7 @@ Ext.define('VIN.view.client.Form', {
 
     extend: 'Ext.form.Panel',
     alias: 'widget.client_form',
-    requires: ['VIN.view.commande.Grid', 'VIN.view.commande.ItemGrid'],
+    requires: ['VIN.view.Grid', 'VIN.view.commande.ItemGrid'],
     autoScroll: true,
     title: 'Client',
     closable: true,
@@ -259,11 +259,14 @@ Ext.define('VIN.view.client.Form', {
                         }]
                     }]
                 }, {
-                    xtype: 'commande_grid',
+                    xtype: 'vin_grid',
                     itemId: 'commande_g',
                     title: 'Commandes faites par ce client',
                     resizable: { handles: 's' },
                     store: Ext.create('VIN.store.Commandes'),
+                    load_after_render: false,
+                    add_edit_actioncolumn: true,
+                    add_delete_actioncolumn: true,
                     column_flex: {
                         no_commande_facture: 1,
                         date_commande: 1,
@@ -422,6 +425,7 @@ Ext.define('VIN.view.client.Form', {
                     itemId: 'commande_item_g',
                     title: 'Produits commandés',
                     store: Ext.create('VIN.store.CommandeItems'),
+                    load_after_render: false,
                     resizable: { handles: 's' },
                     is_editable: false,
                     column_flex: {

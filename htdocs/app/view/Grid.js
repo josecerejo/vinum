@@ -6,6 +6,7 @@ Ext.define('VIN.view.Grid', {
     add_edit_actioncolumn: false,
     add_delete_actioncolumn: false,
     column_flex: 'all',
+    load_after_render: true,
 
     initComponent: function() {
 
@@ -67,6 +68,9 @@ Ext.define('VIN.view.Grid', {
             // for the filters default value to be set; loading must follow, not precede
             afterrender: function(grid) {
                 grid.filters.createFilters();
+                if (this.load_after_render) {
+                    grid.getStore().load();
+                }
             }
         };
 

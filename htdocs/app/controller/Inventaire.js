@@ -61,7 +61,6 @@ Ext.define('VIN.controller.Inventaire', {
                 age_in_days: 1
             }
         });
-        ig.getStore().load();
         Ext.getCmp('main_pnl').add(ig);
         Ext.getCmp('main_pnl').setActiveTab(ig);
     }

@@ -158,30 +158,30 @@
     background-color: #eee;
 }
 
-.grid-row-inv-fraicheur-0 .x-grid-cell {
+.inventaire-grid-row-age-0 .x-grid-cell {
     background: hsl(120, 75%, 50%);
 }
 
-.grid-row-inv-fraicheur-1 .x-grid-cell {
+.inventaire-grid-row-age-1 .x-grid-cell {
     background: hsl(100, 75%, 50%);
 }
 
-.grid-row-inv-fraicheur-2 .x-grid-cell {
+.inventaire-grid-row-age-2 .x-grid-cell {
     background: hsl(80, 75%, 50%);
 }
 
-.grid-row-inv-fraicheur-3 .x-grid-cell {
+.inventaire-grid-row-age-3 .x-grid-cell {
     background: hsl(60, 75%, 50%);
 }
 
-.grid-row-inv-fraicheur-4 .x-grid-cell {
+.inventaire-grid-row-age-4 .x-grid-cell {
     background: hsl(40, 75%, 50%);
 }
 
-.grid-row-inv-fraicheur-5 .x-grid-cell {
+.inventaire-grid-row-age-5 .x-grid-cell {
     background: hsl(20, 75%, 50%);
 }
 
-.grid-row-inv-fraicheur-6 .x-grid-cell {
+.inventaire-grid-row-age-6 .x-grid-cell {
     background: hsl(0, 75%, 50%);
 }

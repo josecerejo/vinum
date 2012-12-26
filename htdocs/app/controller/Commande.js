@@ -4,7 +4,7 @@
 Ext.define('VIN.controller.Commande', {
 
     extend: 'Ext.app.Controller',
-    views: ['VIN.view.commande.Form'],//, 'VIN.view.client.Form'],
+    views: ['VIN.view.commande.Form'],
     models: ['VIN.model.Produit'],
     stores: ['VIN.store.Produits'],
 
@@ -527,9 +527,12 @@ Ext.define('VIN.controller.Commande', {
     },
 
     createCommandeGrid: function() {
-        var cg = Ext.create('widget.commande_grid', {
+        var cg = Ext.create('VIN.view.Grid', {
             itemId: 'commande_g',
             title: 'Commandes',
+            closable: true,
+            add_edit_actioncolumn: true,
+            add_delete_actioncolumn: true,
             store: Ext.create('VIN.store.Commandes'),
             column_flex: {
                 no_commande_facture: 0.1,
@@ -539,10 +542,8 @@ Ext.define('VIN.controller.Commande', {
                 date_commande: 0.1,
                 facture_est_envoyee: 0.05,
                 bon_de_commande_est_envoye: 0.05
-            },
-            closable: true
+            }
         });
-        cg.getStore().load();
         Ext.getCmp('main_pnl').add(cg);
         Ext.getCmp('main_pnl').setActiveTab(cg);
     }
