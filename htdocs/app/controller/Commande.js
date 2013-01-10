@@ -403,7 +403,7 @@ Ext.define('VIN.controller.Commande', {
                             buttons: Ext.MessageBox.OK
                         });
                     }
-                    form.loadRexcord(action.result); // to load no_commande_facture_tf
+                    form.loadRecord(action.result); // to load no_commande_facture_tf
                     form.setTitle(Ext.String.format('Commande {0}', ncf));
                     this.updateInventaire(form, produit_rec);
                     form.down('#commande_item_g').store.load({
