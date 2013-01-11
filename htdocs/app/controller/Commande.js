@@ -106,13 +106,36 @@ Ext.define('VIN.controller.Commande', {
                             is_valid = false;
                         }
                     });
-                    if (is_valid) {
-                        this.addClientProduit(form, Ext.bind(function() {
-                            var desired_qc = form.down('#add_produit_qc_nf').getValue();
-                            var pdd = form.down('#produit_dd');
-                            var pr = pdd.findRecordByDisplay(pdd.getValue());
-                            this.addCommandeProduit(form, pr, desired_qc);
+                    if (!is_valid) {
+                        return;
+                    }
+                    var desired_qc = form.down('#add_produit_qc_nf').getValue();
+                    var pdd = form.down('#produit_dd');
+                    var pr = pdd.findRecordByDisplay(pdd.getValue());
+                    var cpg = form.down('#client_produit_g');
+                    var produit = pdd.getValue();
+                    if (!cpg.getStore().findRecord('type_vin', produit)) {
+                        var msg = Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit);
+                        Ext.Msg.confirm('Vinum', msg, Ext.bind(function(btn) {
+                            if (btn == 'yes') {
+                                var cdd = form.down('#client_dd');
+                                var cr = cdd.findRecordByDisplay(cdd.getValue());
+                                form.submit({
+                                    url: ajax_url_prefix + '/client/add_produit',
+                                    params: {
+                                        no_client: cr.get('no_client')
+                                    },
+                                    success: Ext.bind(function(_form, action) {
+                                        cpg.getStore().load(); // reload doesn't seem to work here, don't understand why!
+                                        this.addCommandeProduit(form, pr, desired_qc);
+                                    }, this)
+                                });
+                            } else {
+                                this.addCommandeProduit(form, pr, desired_qc);
+                            }
                         }, this));
+                    } else {
+                        this.addCommandeProduit(form, pr, desired_qc);
                     }
                 }
             },
@@ -325,35 +348,6 @@ Ext.define('VIN.controller.Commande', {
                                 });
                             }
                         }, this));
-    },
-
-    addClientProduit: function(form, callback) {
-        var cpg = form.down('#client_produit_g');
-        var produit = form.down('#produit_dd').getValue();
-        if (!cpg.getStore().findRecord('type_vin', produit)) {
-            var msg = Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit);
-            Ext.Msg.confirm('Vinum', msg, Ext.bind(function(btn) {
-                if (btn == 'yes') {
-                    var cdd = form.down('#client_dd');
-                    var cr = cdd.findRecordByDisplay(cdd.getValue());
-                    form.submit({
-                        url: ajax_url_prefix + '/client/add_produit',
-                        params: {
-                            no_client: cr.get('no_client')
-                        },
-                        success: function(_form, action) {
-                            cpg.getStore().load();
-                            //form.down('#client_produit_g').getStore().reload();
-                            callback();
-                        }
-                    });
-                } else {
-                    callback();
-                }
-            }, this));
-        } else {
-            callback();
-        }
     },
 
     updateInventaire: function(form, produit_rec) {
