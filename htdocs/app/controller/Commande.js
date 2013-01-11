@@ -153,7 +153,7 @@ Ext.define('VIN.controller.Commande', {
                                                     no_produit_interne: records[0].get('no_produit_interne')
                                                 },
                                                 success: Ext.bind(function(_form, action) {
-                                                    form.down('#commande_item_g').getStore().reload();
+                                                    form.down('#commande_item_g').getStore().load();
                                                     // check if inventaire needs update: in the inventaire grid, all rows/recs should
                                                     // correspond to the same produit, so just take the 1rst, if it exists
                                                     var pr = form.down('#inventaire_g').getStore().getAt(0);
@@ -299,7 +299,7 @@ Ext.define('VIN.controller.Commande', {
                                                     no_commande_facture: rec.get('no_commande_facture')
                                                 },
                                                 success: function(response) {
-                                                    grid.getStore().reload();
+                                                    grid.getStore().load();
                                                 }
                                             });
                                         }
@@ -323,7 +323,8 @@ Ext.define('VIN.controller.Commande', {
         // bind this inventaire grid to this particular produit, so that every operation
         // on it (filter, sort, etc) remembers to take it into consideration
         var cpg = form.down('#client_produit_g');
-        cpg.getStore().getProxy().extraParams = {
+        //cpg.getStore().getProxy().extraParams = {
+        cpg.store.proxy.extraParams = {
             no_client: cr.get('no_client')
         };
         cpg.getStore().load();
@@ -352,12 +353,32 @@ Ext.define('VIN.controller.Commande', {
 
     updateInventaire: function(form, produit_rec) {
         var ig = form.down('#inventaire_g');
+        // hmm this is only way I found working to preserve selection of the inv grid
+        // upon reload: (1) get selected recs
+        var inv_sel = ig.getSelectionModel().getSelection();
+        // (2) build a list of the no_produi_saq ids
+        var inv_sel_nps = [];
+        Ext.Array.each(inv_sel, function(rec) {
+            inv_sel_nps.push(rec.get('no_produit_saq'));
+        });
         // bind this inventaire grid to this particular produit, so that every operation
         // on it (filter, sort, etc) remembers to take it into consideration
         ig.getStore().getProxy().extraParams = {
             no_produit_interne: produit_rec.get('no_produit_interne')
         };
-        ig.getStore().load();
+        ig.getStore().load({
+            callback: function(records, operation, success) {
+                // reset selection state before load
+                if (operation) {
+                    // (3) query updated store to retrieve recs matching (2)
+                    var inv_sel = ig.getStore().queryBy(function(rec, id) {
+                        return Ext.Array.contains(inv_sel_nps, rec.get('no_produit_saq'));
+                    });
+                    // (4) select those..
+                    ig.getSelectionModel().select(inv_sel.items);
+                }
+            }
+        });
         ig.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', produit_rec.get('type_vin')));
     },
 
@@ -375,10 +396,23 @@ Ext.define('VIN.controller.Commande', {
             return;
         }
         if (form.getForm().isValid()) {
-
             var ig = form.down('#inventaire_g');
             var inv_sel = ig.getSelectionModel().getSelection();
-
+            var inv_sel_nps = [];
+            var sel_qc_avail = 0;
+            Ext.Array.each(inv_sel, function(rec) {
+                inv_sel_nps.push(rec.get('no_produit_saq'));
+                sel_qc_avail += rec.get('solde_caisse');
+            });
+            if (inv_sel.length && desired_qc > sel_qc_avail) {
+                Ext.Msg.show({
+                    title: 'Vinum',
+                    msg: "Quantité disponible insuffisante",
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.MessageBox.OK
+                });
+                return;
+            }
             var cdd = form.down('#client_dd');
             var cr = cdd.findRecordByDisplay(cdd.getValue());
             form.submit({
@@ -387,7 +421,8 @@ Ext.define('VIN.controller.Commande', {
                     // no_commande_facture is not necessarily defined at this point
                     no_client: cr.get('no_client'),
                     no_produit_interne: produit_rec.get('no_produit_interne'),
-                    qc: desired_qc
+                    qc: desired_qc,
+                    nps_constraint: inv_sel_nps
                 },
                 success: Ext.bind(function(_form, action) {
                     var ncf = action.result.data.no_commande_facture;
@@ -407,8 +442,6 @@ Ext.define('VIN.controller.Commande', {
                         no_commande_facture: form.down('#no_commande_facture_tf').getValue()
                     };
                     cig.getStore().load();
-                    // reset selection state before load
-                    ig.getSelectionModel().select(inv_sel);
                 }, this)
             });
         }

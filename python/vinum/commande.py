@@ -91,11 +91,14 @@ def add_produit_to_commande():
     ncf = commande['no_commande_facture']
     rem_qc = int(rf['qc'])
     default_commission = float(rf['default_commission'])
+    where = {'statut': ('actif', u'en réserve'),
+             'i.no_produit_interne': rf['no_produit_interne']}
+    nps_constraint = request.form.getlist('nps_constraint')
+    if nps_constraint:
+        where['no_produit_saq'] = tuple(nps_constraint)
     rows = pg.select(g.db.cursor(), {'inventaire': 'i', 'produit': 'p'},
                      join={'p.no_produit_interne':'i.no_produit_interne'},
-                     where={'statut': ('actif', u'en réserve'),
-                            'i.no_produit_interne': rf['no_produit_interne']},
-                     order_by='date_commande asc')
+                     where=where, order_by='date_commande asc')
     prev_statut = None
     for inv in rows:
         inv_id = inv['no_inventaire']

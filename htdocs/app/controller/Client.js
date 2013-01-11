@@ -77,7 +77,7 @@ Ext.define('VIN.controller.Client', {
                                         no_client: rec.get('no_client')
                                     },
                                     success: function(response) {
-                                        grid.store.reload();
+                                        grid.store.load();
                                     }
                                 });
                             }
@@ -119,7 +119,7 @@ Ext.define('VIN.controller.Client', {
                 no_client: no_client
             },
             callback: Ext.bind(function(records, operation, success) {
-                form.down('#client_dd').getStore().reload();
+                form.down('#client_dd').getStore().load();
             }, this)
         });
         var cg = form.down('#commande_g');

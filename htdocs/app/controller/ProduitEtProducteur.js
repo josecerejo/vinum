@@ -86,7 +86,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                     buttons: Ext.MessageBox.OK
                                 });
                                 pf.loadRecord(action.result); // to load no_produit_interne_tf
-                                form.down('#produit_g').getStore().reload();
+                                form.down('#produit_g').getStore().load();
                             }, this)
                         });
                     }
@@ -104,7 +104,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                         no_produit_interne: rec.get('no_produit_interne')
                                     },
                                     success: function(response) {
-                                        grid.store.reload();
+                                        grid.store.load();
                                     }
                                 });
                             }
@@ -127,7 +127,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                     buttons: Ext.MessageBox.OK
                                 });
                                 pf.loadRecord(action.result); // to load no_producteur_tf
-                                form.down('#producteur_g').getStore().reload();
+                                form.down('#producteur_g').getStore().load();
                             }, this)
                         });
                     }
@@ -145,7 +145,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                         no_producteur: rec.get('no_producteur')
                                     },
                                     success: function(response) {
-                                        grid.store.reload();
+                                        grid.store.load();
                                     }
                                 });
                             }
