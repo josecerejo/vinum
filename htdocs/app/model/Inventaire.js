@@ -59,8 +59,8 @@ Ext.define('VIN.model.Inventaire', {
         type: 'int',
         useNull: true
     }, {
-        header: '# commande SAQ',
-        name: 'no_commande_saq'
+        header: '# demande SAQ',
+        name: 'no_demande_saq'
         // this is not an int!
     }, {
         header: 'Qté commandée',

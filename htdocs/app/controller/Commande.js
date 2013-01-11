@@ -536,6 +536,7 @@ Ext.define('VIN.controller.Commande', {
             store: Ext.create('VIN.store.Commandes'),
             column_flex: {
                 no_commande_facture: 0.1,
+                no_commande_saq: 0.1,
                 no_client: 0.1,
                 no_client_saq: 0.1,
                 nom_social: 0.3,

@@ -89,24 +89,7 @@ Ext.define('VIN.view.commande.Form', {
         this.dockedItems = {
             xtype: 'toolbar',
             dock: 'top',
-            items: [/*{
-                xtype: 'button',
-                text: 'Sauvegarder la commande',
-                iconCls: 'disk-icon',
-                itemId: 'save_commande_btn'
-            },*/ {
-                xtype: 'buttongroup',
-                title: 'Facture',
-                items: [{
-                    text: 'Visualiser',
-                    itemId: 'preview_facture_btn',
-                    iconCls: 'monitor-icon'
-                }, {
-                    text: 'Envoyer par courriel',
-                    itemId: 'email_facture_btn',
-                    iconCls: 'email-attach-icon'
-                }]
-            }, {
+            items: [{
                 xtype: 'buttongroup',
                 title: 'Bon de commande',
                 items: [{
@@ -116,6 +99,18 @@ Ext.define('VIN.view.commande.Form', {
                 }, {
                     text: 'Envoyer par courriel',
                     itemId: 'email_bon_de_commande_btn',
+                    iconCls: 'email-attach-icon'
+                }]
+            }, {
+                xtype: 'buttongroup',
+                title: 'Facture',
+                items: [{
+                    text: 'Visualiser',
+                    itemId: 'preview_facture_btn',
+                    iconCls: 'monitor-icon'
+                }, {
+                    text: 'Envoyer par courriel',
+                    itemId: 'email_facture_btn',
                     iconCls: 'email-attach-icon'
                 }]
             }]
@@ -412,7 +407,7 @@ Ext.define('VIN.view.commande.Form', {
                     load_after_render: false,
                     column_flex: {
                         no_produit_saq: 1,
-                        no_commande_saq: 1,
+                        no_demande_saq: 1,
                         statut: 1,
                         date_commande: 1,
                         millesime: 1,

@@ -92,7 +92,8 @@ create table commande (
     suc_num integer,
     jour_livraison text,
     facture_est_envoyee bool default false,
-    bon_de_commande_est_envoye bool default false
+    bon_de_commande_est_envoye bool default false,
+    no_commande_saq integer
 );
 
 -- IMPORTANT: I renamed the original commande_produit table to commande_item, to put
@@ -107,7 +108,7 @@ create table commande_item (
     no_commande_facture integer not null,
     no_produit_interne integer not null,
     no_produit_saq integer,
-    no_commande_saq text, -- ?? should it be in commande?
+    no_demande_saq text,
     quantite_caisse integer,
     quantite_bouteille integer,
     statut text check (statut in ('OK', 'BO')),
@@ -123,13 +124,11 @@ create table inventaire (
     no_inventaire serial primary key,
     no_produit_interne integer not null,
     no_produit_saq integer,
-    no_commande_saq text,
+    no_demande_saq text,
     quantite_commandee integer,
     quantite_recue integer,
     date_commande date,
     date_recue date,
-    prix_restaurant numeric, -- prix_coutant / 1.14975 + 16% + 0.81$
-    prix_particulier numeric, -- prix_coutant + 23%
     prix_coutant numeric,
     millesime integer,
     commission numeric,
@@ -138,7 +137,9 @@ create table inventaire (
     solde_caisse integer,
     solde_30_jours numeric,
     solde_60_jours numeric,
-    suc_num integer
+    suc_num integer,
+    prix_restaurant numeric, -- prix_coutant / 1.14975 + 16% + 0.81$
+    prix_particulier numeric -- prix_coutant + 23%
 );
 
 drop table if exists succursale_saq cascade;
@@ -173,7 +174,7 @@ create or replace function age_in_days(date) returns int as $$
 $$ language sql immutable;
 
 -- if PG >= 9, use this (requires postgresql-contrib)
-create extension unaccent;
+--create extension unaccent;
 
 -- else, comment previous, uncomment these 2 functions:
 -- taken from: http://www.laudatio.com/wordpress/2008/11/05/postgresql-83-to_ascii-utf8/
@@ -182,4 +183,9 @@ create extension unaccent;
 
 -- create or replace function unaccent(text) returns text as $$
 --     select to_ascii(convert_to($1, 'latin1'), 'latin1')
+-- $$ language sql immutable;
+
+-- this one does nothing
+-- create or replace function unaccent(text) returns text as $$
+--     select $1
 -- $$ language sql immutable;

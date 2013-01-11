@@ -51,7 +51,7 @@ Ext.define('VIN.controller.Inventaire', {
                 solde_caisse: 1,
                 solde_bouteille: 1,
                 no_produit_saq: 1.5,
-                no_commande_saq: 1.5,
+                no_demande_saq: 1.5,
                 quantite_commandee: 1.5,
                 quantite_recue: 1.5,
                 date_commande: 2,
