@@ -54,13 +54,6 @@ def delete_client():
     return {'success': True}
 
 
-def get_produits(g, no_client):
-    rows = pg.select(g.db.cursor(), ['produit p', 'client_produit cp'],
-                     join={'p.no_produit_interne': 'cp.no_produit_interne'},
-                     where={'no_client': no_client}, order_by='type_vin asc')
-    return {'success': True, 'total': len(rows), 'rows': rows}
-
-
 @app.route('/client/remove_produit', methods=['POST'])
 def remove_produit():
     cursor = g.db.cursor()

@@ -402,6 +402,9 @@ Ext.define('VIN.view.commande.Form', {
                     store: Ext.create('VIN.store.Inventaires'),
                     collapsible: false,
                     closable: false,
+                    selModel: {
+                        mode: 'MULTI'
+                    },
                     title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
                     resizable: { handles: 's' },
                     load_after_render: false,

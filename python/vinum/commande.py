@@ -76,10 +76,9 @@ def delete_commande():
 
 @app.route('/commande/get_items', methods=['GET'])
 def get_items_for_commande():
-    rows = pg.select(g.db.cursor(), {'commande_item': 'ci', 'produit': 'p'},
-                     join={'ci.no_produit_interne': 'p.no_produit_interne'},
-                     where={'ci.no_commande_facture': request.args['no_commande_facture']})
-    return {'success': True, 'rows': rows}
+    return get(g, request, {'commande_item': 'ci', 'produit': 'p'},
+               join={'ci.no_produit_interne': 'p.no_produit_interne'},
+               where={'ci.no_commande_facture': request.args['no_commande_facture']})
 
 
 # save commande + commande_items

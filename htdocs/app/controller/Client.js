@@ -58,13 +58,10 @@ Ext.define('VIN.controller.Client', {
                     }
                     var form = this._getFormViewInstance(model.view);
                     var cig = form.down('#commande_item_g');
-                    cig.store.load({
-                        params: {
-                            no_commande_facture: records[0].get('no_commande_facture')
-                        },
-                        callback: Ext.bind(function(recs, op, success) {
-                        }, this)
-                    });
+                    cig.getStore().getProxy().extraParams = {
+                        no_commande_facture: records[0].get('no_commande_facture')
+                    };
+                    cig.getStore().load();
                 }
             },
 

@@ -276,7 +276,7 @@ Ext.define('VIN.controller.Commande', {
                                                     no_commande_facture: rec.get('no_commande_facture')
                                                 },
                                                 success: function(response) {
-                                                    grid.store.reload();
+                                                    grid.getStore().reload();
                                                 }
                                             });
                                         }
@@ -297,16 +297,13 @@ Ext.define('VIN.controller.Commande', {
     loadClientProduits: function(form) {
         var cdd = form.down('#client_dd');
         var cr = cdd.findRecordByDisplay(cdd.getValue());
-        form.down('#client_produit_g').store.load({
-            params: {
-                no_client: cr.get('no_client')
-            },
-            callback: Ext.bind(function(records, operation, success) {
-                //var g = form.down('#client_produit_g');
-                //g.setTitle(Ext.String.format('Liste de produits habituels pour le client "{0}" ({1})',
-                //                             cr.get('nom_social'), g.store.getCount()));
-            }, this)
-        });
+        // bind this inventaire grid to this particular produit, so that every operation
+        // on it (filter, sort, etc) remembers to take it into consideration
+        var cpg = form.down('#client_produit_g');
+        cpg.getStore().getProxy().extraParams = {
+            no_client: cr.get('no_client')
+        };
+        cpg.getStore().load();
     },
 
     removeClientProduit: function(form, grid, produit_rec) {
@@ -323,7 +320,7 @@ Ext.define('VIN.controller.Commande', {
                                         no_produit_interne: produit_rec.get('no_produit_interne')
                                     },
                                     success: function(_form, action) {
-                                        grid.store.reload();
+                                        grid.getStore().load();
                                     }
                                 });
                             }
@@ -345,7 +342,8 @@ Ext.define('VIN.controller.Commande', {
                             no_client: cr.get('no_client')
                         },
                         success: function(_form, action) {
-                            cpg.getStore().reload();
+                            cpg.getStore().load();
+                            //form.down('#client_produit_g').getStore().reload();
                             callback();
                         }
                     });
@@ -383,6 +381,10 @@ Ext.define('VIN.controller.Commande', {
             return;
         }
         if (form.getForm().isValid()) {
+
+            var ig = form.down('#inventaire_g');
+            var inv_sel = ig.getSelectionModel().getSelection();
+
             var cdd = form.down('#client_dd');
             var cr = cdd.findRecordByDisplay(cdd.getValue());
             form.submit({
@@ -406,13 +408,13 @@ Ext.define('VIN.controller.Commande', {
                     form.loadRecord(action.result); // to load no_commande_facture_tf
                     form.setTitle(Ext.String.format('Commande {0}', ncf));
                     this.updateInventaire(form, produit_rec);
-                    form.down('#commande_item_g').store.load({
-                        params: {
-                            no_commande_facture: form.down('#no_commande_facture_tf').getValue()
-                        },
-                        callback: Ext.bind(function(recs, op, success) {
-                        }, this)
-                    });
+                    var cig = form.down('#commande_item_g');
+                    cig.getStore().getProxy().extraParams = {
+                        no_commande_facture: form.down('#no_commande_facture_tf').getValue()
+                    };
+                    cig.getStore().load();
+                    // reset selection state before load
+                    ig.getSelectionModel().select(inv_sel);
                 }, this)
             });
         }
@@ -501,13 +503,11 @@ Ext.define('VIN.controller.Commande', {
         if (commande_rec.get('bon_de_commande_est_envoye')) {
             form.down('#email_bon_de_commande_btn').setIconCls('tick-icon');
         }
-        form.down('#commande_item_g').getStore().load({
-            params: {
-                no_commande_facture: commande_rec.get('no_commande_facture')
-            },
-            callback: Ext.bind(function(recs, op, success) {
-            }, this)
-        });
+        var cig = form.down('#commande_item_g');
+        cig.getStore().getProxy().extraParams = {
+            no_commande_facture: commande_rec.get('no_commande_facture')
+        };
+        cig.getStore().load();
     },
 
     createCommandeForm: function(commande_rec_or_no_client) {

@@ -5,12 +5,15 @@ from common import *
 @app.route('/produit/get', methods=['GET'])
 def get_produit():
     if 'no_client' in request.args:
-        return client.get_produits(g, request.args['no_client'])
-    return get(g, request, {'produit':'p','producteur':'r'},
-               join={'p.no_producteur': 'r.no_producteur'},
-               what=['p.*', 'r.nom_producteur'],
-               query_fields=('type_vin', 'nom_domaine'),
-               field_map={'no_producteur': 'p.no_producteur'})
+        return get(g, request, {'produit': 'p', 'client_produit': 'cp'},
+                   join={'p.no_produit_interne': 'cp.no_produit_interne'},
+                   where={'no_client': request.args['no_client']})
+    else:
+        return get(g, request, {'produit':'p','producteur':'r'},
+                   join={'p.no_producteur': 'r.no_producteur'},
+                   what=['p.*', 'r.nom_producteur'],
+                   query_fields=('type_vin', 'nom_domaine'),
+                   field_map={'no_producteur': 'p.no_producteur'})
 
 
 @app.route('/produit/get_nom_domaine', methods=['GET'])
