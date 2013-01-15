@@ -106,7 +106,6 @@ Ext.define('VIN.view.client.Form', {
                     },
                     items: [{
                         xtype: 'textfield',
-                        allowBlank: false,
                         fieldLabel: 'No client SAQ',
                         name: 'no_client_saq',
                         flex: 0.3
