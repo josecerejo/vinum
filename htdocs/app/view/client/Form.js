@@ -260,6 +260,7 @@ Ext.define('VIN.view.client.Form', {
                     }]
                 }, {
                     xtype: 'vin_grid',
+                    style: 'margin-top: 37px', // align with right column
                     itemId: 'commande_g',
                     title: 'Commandes faites par ce client',
                     resizable: { handles: 's' },
@@ -280,8 +281,14 @@ Ext.define('VIN.view.client.Form', {
                 // -----------------------------------------------------
                 // right part panel
                 layout: 'anchor',
-                style: 'margin-top: 44px', // align bottom with left column
                 items: [{
+                    xtype: 'textarea',
+                    fieldLabel: 'Notes',
+                    name: 'note',
+                    anchor: '100%',
+                    height: 75,
+                    resizable: true
+                }, {
                     xtype: 'fieldset',
                     title: 'Coordonnées de la personne en charge',
                     defaults: {

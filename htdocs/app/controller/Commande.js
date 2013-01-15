@@ -224,7 +224,7 @@ Ext.define('VIN.controller.Commande', {
                     this.saveCommandeFormPart(form, Ext.bind(function() {
                         form.email_win.document_type = 'bon_de_commande';
                         form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_bdc';
-                        form.email_win.down('#email_addr_tf').setValue('info_@saq.com');
+                        form.email_win.down('#email_addr_tf').setValue('commandes.privees@saq.qc.ca');
                         form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Bon de commande pour la facture #{0}',
                                                                                             form.down('#no_commande_facture_tf').getValue()));
                         form.email_win.down('#email_msg_ta').setValue(form.email_msg_bdc);
