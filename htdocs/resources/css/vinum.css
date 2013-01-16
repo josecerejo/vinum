@@ -84,6 +84,10 @@
     background: url(../images/icons/user.png) no-repeat !important;
 }
 
+.grape-icon {
+    background: url(../images/icons/grape-icon.png) no-repeat !important;
+}
+
 .clients-add-icon {
     background: url(../images/icons/user_add.png) no-repeat !important;
 }
@@ -114,6 +118,14 @@
 
 .produits-icon {
     background: url(../images/icons/drink.png) no-repeat !important;
+}
+
+.grape-icon {
+    background: url(../images/icons/grape-icon_16x16.png) no-repeat !important;
+}
+
+.about-icon {
+    background: url(../images/icons/information.png) no-repeat !important;
 }
 
 .inventaire-icon {

@@ -1,20 +1,26 @@
 Ext.define('VIN.controller.MainToolbar', {
 
     extend: 'Ext.app.Controller',
-    views: ['VIN.view.MainToolbar', 'VIN.view.MainPanel', 'VIN.view.commande.Form'],
-    refs: [{
-        ref: 'toolbar',
-        selector: 'main_toolbar'
-    }, {
-        ref: 'main',
-        selector: 'main_panel'
-    }],
+    views: ['VIN.view.MainToolbar'],
 
     init: function() {
+
+        var about = ['Vinum (prototype)',
+                     'Créé par <a href="http://christianjauv.in" target="_blank">Christian Jauvin</a> en 2012-2013',
+                     'Code source: <a href="https://github.com/cjauvin/vinum" target="_blank">https://github.com/cjauvin/vinum</a>'];
+
         this.control({
             'toolbar menuitem': {
                 click: function(itm, e, opts) {
                     switch (itm.id) {
+                    case 'vinum_about_menu_itm':
+                        Ext.Msg.show({
+                            title: 'Vinum',
+                            msg: about.join('<br />'),
+                            icon: Ext.MessageBox.INFO,
+                            buttons: Ext.MessageBox.OK
+                        });
+                        break;
                     case 'create_commande_menu_itm':
                         VIN.app.getController('Commande').createCommandeForm();
                         break;
@@ -26,6 +32,12 @@ Ext.define('VIN.controller.MainToolbar', {
                         break;
                     case 'list_commandes_menu_itm':
                         VIN.app.getController('Commande').createCommandeGrid();
+                        break;
+                    case 'produits_pp_menu_itm':
+                        VIN.app.getController('ProduitEtProducteur').createForm();
+                        break;
+                    case 'produits_inv_menu_itm':
+                        VIN.app.getController('Inventaire').createInventaireGrid();
                         break;
                     };
                 }
