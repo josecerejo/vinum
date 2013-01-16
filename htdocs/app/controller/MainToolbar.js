@@ -5,9 +5,13 @@ Ext.define('VIN.controller.MainToolbar', {
 
     init: function() {
 
-        var about = ['Vinum (prototype)',
-                     'Créé par <a href="http://christianjauv.in" target="_blank">Christian Jauvin</a> en 2012-2013',
-                     'Code source: <a href="https://github.com/cjauvin/vinum" target="_blank">https://github.com/cjauvin/vinum</a>'];
+        var about = [Ext.String.format('<b>Vinum</b> (version <i>{0}</i>)', vinum_version),
+                     '',
+                     'Créé par <a href="http://christianjauv.in" target="_blank">Christian Jauvin</a>',
+                     'pour la <a href="http://roucet.com" target="_blank">Société Roucet</a>, en 2012-2013.',
+                     '',
+                     Ext.String.format('Dernière mise à jour : <a href="https://github.com/cjauvin/vinum/commits/master" target="_blank">{0}</a>', last_update),
+                     'Code source : <a href="https://github.com/cjauvin/vinum" target="_blank">https://github.com/cjauvin/vinum</a>'];
 
         this.control({
             'toolbar menuitem': {
