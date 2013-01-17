@@ -386,15 +386,15 @@ Ext.define('VIN.controller.Commande', {
     addCommandeProduit: function(form, produit_rec, desired_qc) {
         var ig = form.down('#inventaire_g');
         var cig = form.down('#commande_item_g');
-        if (cig.store.find('no_produit_interne', produit_rec.get('no_produit_interne')) !== -1) {
-            Ext.Msg.show({
-                title: 'Vinum',
-                msg: "Ce produit existe déjà dans la commande",
-                icon: Ext.MessageBox.WARNING,
-                buttons: Ext.MessageBox.OK
-            });
-            return;
-        }
+        // if (cig.store.find('no_produit_interne', produit_rec.get('no_produit_interne')) !== -1) {
+        //     Ext.Msg.show({
+        //         title: 'Vinum',
+        //         msg: "Ce produit existe déjà dans la commande",
+        //         icon: Ext.MessageBox.WARNING,
+        //         buttons: Ext.MessageBox.OK
+        //     });
+        //     return;
+        // }
         if (form.getForm().isValid()) {
             var ig = form.down('#inventaire_g');
             var inv_sel = ig.getSelectionModel().getSelection();

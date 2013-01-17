@@ -32,6 +32,8 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
     elif request.args.get('query', '').strip():
         # autocomplete query
         if query_op.lower() in ['ilike', 'like']:
+            # this is needed because the concat operator (||) doesn't work with null values
+            query_fields = ["coalesce(%s::text, '')" % f for f in query_fields]
             where[('||'.join(query_fields), query_op, 'unaccent')] = set(['%%%s%%' % v for v in request.args['query'].split()])
         # exact field query: assumes only 1 field, because there is only 1 query value
         else:
