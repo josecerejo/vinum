@@ -3,13 +3,13 @@ import sys, csv, re, os, math
 sys.path.append('/home/christian/gh/little_pger')
 from little_pger import *
 
-inventaire_only = False
+inventaire_only = True
 
 conn = psycopg2.connect("dbname=vinum")
 cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 if inventaire_only:
-    cursor.execute('delete from inventaire')
+    cursor.execute('delete from inventaire; drop index inventaire_no_produit_interne_idx;')
 else:
     os.system('psql -d vinum -f /home/christian/vinum/data/sql/model.sql')
 
@@ -143,7 +143,7 @@ for row in f:
     else:
         row.insert(13, '')
     data = dict(zip(cols, processRow(row)))
-    data['statut'] = data['statut'].lower()
+    data['statut_inventaire'] = data['statut_inventaire'].lower()
     insert(cursor, 'inventaire', values=data)
 cursor.execute("select setval('inventaire_no_inventaire_seq', (select max(no_inventaire) from inventaire)+1)")
 cursor.execute('create index inventaire_no_produit_interne_idx on inventaire (no_produit_interne)')

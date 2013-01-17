@@ -111,7 +111,7 @@ create table commande_item (
     no_demande_saq text,
     quantite_caisse integer,
     quantite_bouteille integer,
-    statut text check (statut in ('OK', 'BO')),
+    statut_item text check (statut in ('OK', 'BO')),
     no_client integer,
     commission numeric, -- added
     montant_commission numeric,
@@ -132,7 +132,7 @@ create table inventaire (
     prix_coutant numeric,
     millesime integer,
     commission numeric,
-    statut text check (statut in ('en attente', 'en réserve', 'actif', 'inactif')),
+    statut_inventaire text check (statut in ('en attente', 'en réserve', 'actif', 'inactif')),
     solde_bouteille integer, -- en # de bouteilles
     solde_caisse integer,
     solde_30_jours numeric,

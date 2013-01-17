@@ -51,7 +51,8 @@ Ext.define('VIN.model.CommandeItem', {
         type: 'float',
         useNull: true
     }, {
-        name: 'statut'
+        header: 'Statut',
+        name: 'statut_item'
     }],
 
     idProperty: 'no_produit_saq'

@@ -164,7 +164,33 @@ Ext.define('VIN.controller.Commande', {
                                             });
                                         }
                                     }, this));
-                },
+                }
+            },
+            '#commande_item_g actioncolumn': {
+                del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    var form = this._getFormViewInstance(grid);
+                    var nps = rec.get('no_produit_saq');
+                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit SAQ "{0}" de la commande?', nps),
+                                    Ext.bind(function(btn) {
+                                        if (btn == 'yes') {
+                                            form.submit({
+                                                url: ajax_url_prefix + '/commande/remove_item',
+                                                params: {
+                                                    no_produit_saq: nps
+                                                },
+                                                success: Ext.bind(function(_form, action) {
+                                                    form.down('#commande_item_g').getStore().load();
+                                                    // check if inventaire needs update: in the inventaire grid, all rows/recs should
+                                                    // correspond to the same produit, so just take the 1rst, if it exists
+                                                    var ir0 = form.down('#inventaire_g').getStore().getAt(0);
+                                                    if (ir0 !== undefined && ir0.get('no_produit_interne') === rec.get('no_produit_interne')) {
+                                                        this.updateInventaire(form, ir0);
+                                                    }
+                                                }, this)
+                                            });
+                                        }
+                                    }, this));
+                }
             },
             '#preview_facture_btn': {
                 click: function(btn) {
@@ -386,15 +412,6 @@ Ext.define('VIN.controller.Commande', {
     addCommandeProduit: function(form, produit_rec, desired_qc) {
         var ig = form.down('#inventaire_g');
         var cig = form.down('#commande_item_g');
-        // if (cig.store.find('no_produit_interne', produit_rec.get('no_produit_interne')) !== -1) {
-        //     Ext.Msg.show({
-        //         title: 'Vinum',
-        //         msg: "Ce produit existe déjà dans la commande",
-        //         icon: Ext.MessageBox.WARNING,
-        //         buttons: Ext.MessageBox.OK
-        //     });
-        //     return;
-        // }
         if (form.getForm().isValid()) {
             var ig = form.down('#inventaire_g');
             var inv_sel = ig.getSelectionModel().getSelection();

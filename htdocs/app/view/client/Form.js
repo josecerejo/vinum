@@ -442,7 +442,7 @@ Ext.define('VIN.view.client.Form', {
                         quantite_bouteille: 0.5,
                         commission: 0.75,
                         montant_commission: 0.75,
-                        statut: 0.5
+                        statut_item: 0.5
                     },
                     height: grid_height
                 }]

@@ -77,7 +77,7 @@ Ext.define('VIN.model.Inventaire', {
         type: 'date'
     }, {
         header: 'Statut',
-        name: 'statut',
+        name: 'statut_inventaire',
         filter: {
             type: 'list',
             options: ['actif', 'en réserve', 'en attente', 'inactif'],

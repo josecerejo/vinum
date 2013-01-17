@@ -399,7 +399,12 @@ Ext.define('VIN.view.commande.Form', {
                 items: [{
                     xtype: 'vin_grid',
                     itemId: 'inventaire_g',
-                    store: Ext.create('VIN.store.Inventaires'),
+                    store: Ext.create('VIN.store.Inventaires', {
+                        sorters: [{
+                            property: 'date_commande',
+                            direction: 'ASC'
+                        }]
+                    }),
                     collapsible: false,
                     closable: false,
                     selModel: {
@@ -411,7 +416,7 @@ Ext.define('VIN.view.commande.Form', {
                     column_flex: {
                         no_produit_saq: 1,
                         no_demande_saq: 1,
-                        statut: 1,
+                        statut_inventaire: 1,
                         date_commande: 1,
                         millesime: 1,
                         solde_bouteille: 1,
@@ -427,6 +432,7 @@ Ext.define('VIN.view.commande.Form', {
                     store: Ext.create('VIN.store.CommandeItems'),
                     resizable: { handles: 's' },
                     is_editable: true,
+                    add_delete_actioncolumn: true,
                     column_flex: {
                         type_vin: 1,
                         format: 1,
@@ -435,7 +441,7 @@ Ext.define('VIN.view.commande.Form', {
                         quantite_bouteille: 0.5,
                         commission: 0.75,
                         montant_commission: 0.75,
-                        statut: 0.5
+                        statut_item: 0.5
                     },
                     height: grid_height
                 }]

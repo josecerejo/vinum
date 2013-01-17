@@ -6,6 +6,7 @@
 import re, math
 from vinum import *
 from common import *
+from collections import defaultdict
 from appy.pod.renderer import Renderer
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
@@ -64,7 +65,7 @@ def delete_commande():
     rf = request.form.to_dict()
     ncf = rf['no_commande_facture']
     # here it's easier to delete iteratively by distinct produit (i.e. no_produit_interne), to play well
-    # with the complicated inventaire.statut restoring logic (see comment in _remove_produit_from_commande below)
+    # with the complicated statut_inventaire restoring logic (see comment in _remove_produit_from_commande below)
     rows = pg.select(cursor, 'commande_item', what='distinct no_produit_interne',
                      where={'no_commande_facture': ncf})
     for row in rows:
@@ -91,7 +92,7 @@ def add_produit_to_commande():
     ncf = commande['no_commande_facture']
     rem_qc = int(rf['qc'])
     default_commission = float(rf['default_commission'])
-    where = {'statut': ('actif', u'en réserve'),
+    where = {'statut_inventaire': ('actif', u'en réserve'),
              'i.no_produit_interne': rf['no_produit_interne']}
     nps_constraint = request.form.getlist('nps_constraint')
     if nps_constraint:
@@ -99,11 +100,11 @@ def add_produit_to_commande():
     rows = pg.select(g.db.cursor(), {'inventaire': 'i', 'produit': 'p'},
                      join={'p.no_produit_interne':'i.no_produit_interne'},
                      where=where, order_by='date_commande asc')
-    prev_statut = None
+    prev_statut_inv = None
     for inv in rows:
         inv_id = inv['no_inventaire']
-        if prev_statut == 'inactif':
-            pg.update(cursor, 'inventaire', set={'statut':'actif'}, where={'no_inventaire': inv_id})
+        if prev_statut_inv == 'inactif':
+            pg.update(cursor, 'inventaire', set={'statut_inventaire':'actif'}, where={'no_inventaire': inv_id})
         if rem_qc == 0:
             break
         # solde caisses
@@ -114,25 +115,29 @@ def add_produit_to_commande():
         inv_update = {'solde_bouteille': inv['solde_bouteille'] - qb,
                       'solde_caisse': inv['solde_caisse'] - qc}
         if inv_update['solde_bouteille'] == 0:
-            inv_update['statut'] = 'inactif'
+            inv_update['statut_inventaire'] = 'inactif'
         pg.update(cursor, 'inventaire', set=inv_update, where={'no_inventaire': inv_id})
-        prev_statut = inv_update.get('statut', None)
-        # new commande_item
-        ci = inv.copy()
+        prev_statut_inv = inv_update.get('statut_inventaire', None)
+        ci = inv.copy() # new commande_item
+        # look for an existing one (to which we'll add values)
+        existing_ci = pg.select1r(cursor, 'commande_item',
+                                  where={'no_commande_facture': ncf,
+                                         'no_produit_saq': ci['no_produit_saq']}) or defaultdict(int)
         ci['no_commande_facture'] = ncf
-        ci['quantite_caisse'] = qc
-        ci['quantite_bouteille'] = qb
+        ci['quantite_caisse'] = existing_ci['quantite_caisse'] + qc
+        ci['quantite_bouteille'] = existing_ci['quantite_bouteille'] + qb
         ci['commission'] = default_commission
-        pc = ci['prix_coutant']
         ci['montant_commission'] = removeTaxes_(inv['prix_coutant']) * default_commission
-        ci['statut'] = 'OK'
-        ci['statut_inventaire'] = inv['statut'] # in case we need to revert it
-        pg.insert(cursor, 'commande_item', values=ci, filter_values=True)
+        ci['statut_item'] = 'OK'
+        pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf,
+                                                             'no_produit_saq': ci['no_produit_saq']},
+                  filter_values=True)
+        #pg.insert(cursor, 'commande_item', values=ci, filter_values=True)
     if rem_qc > 0:
         # backorders
         qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
         ci = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
-              'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut': 'BO'}
+              'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut_item': 'BO'}
         pg.insert(cursor, 'commande_item', values=ci)
     g.db.commit()
     return {'success': True, 'data': commande}
@@ -149,23 +154,46 @@ def remove_produit_from_commande():
     return {'success': True}
 
 
+@app.route('/commande/remove_item', methods=['POST'])
+def remove_item_from_commande():
+    rf = request.form.to_dict()
+    cursor = g.db.cursor()
+    ncf = rf['no_commande_facture']
+    nps = rf['no_produit_saq']
+    ci_inv = pg.select1r(cursor, {'commande_item': 'ci', 'inventaire': 'i'},
+                         join={'ci.no_produit_saq': 'i.no_produit_saq'},
+                         where={'no_commande_facture': ncf, 'ci.no_produit_saq': nps})
+    npi = ci_inv['no_produit_interne']
+    to_be_set_active = ci_inv['statut_inventaire'] == 'actif' or not pg.exists(cursor, 'inventaire',
+                                                                               where={'no_produit_interne': npi,
+                                                                                      'statut_inventaire': 'actif'})
+    pg.update(cursor, 'inventaire', set={'solde_bouteille': ci_inv['solde_bouteille'] + ci_inv['quantite_bouteille'],
+                                         'solde_caisse': ci_inv['solde_caisse'] + ci_inv['quantite_caisse'],
+                                         'statut_inventaire': 'actif' if to_be_set_active else u'en réserve'},
+              where={'no_inventaire': ci_inv['no_inventaire']})
+    pg.delete(cursor, 'commande_item', where={'no_commande_facture': ncf,
+                                              'no_produit_saq': nps})
+    g.db.commit()
+    return {'success': True}
+
+
 # the logic is a little convoluted here because we need to restore the statut of inventaire records,
 # as well as their quantity fields, for a given produit
-# (1) for a given product's statut=actif inventaire records, set them all to statut=en reserve
+# (1) for a given product's statut_inventaire=actif inventaire records, set them all to statut_inventaire=en reserve
 # (2) for all commande_item records, restore the corresponding inventaire record quantities,
-#     and only set the oldest one (the first) to statut=actif
+#     and only set the oldest one (the first) to statut_inventaire=actif
 def _remove_produit_from_commande(cursor, ncf, npi):
-    pg.update(cursor, 'inventaire', set={'statut': u'en réserve'}, where={'no_produit_interne': npi,
-                                                                         'statut': 'actif'})
+    pg.update(cursor, 'inventaire', set={'statut_inventaire': u'en réserve'}, where={'no_produit_interne': npi,
+                                                                         'statut_inventaire': 'actif'})
     rows = pg.select(cursor, {'commande_item': 'ci', 'inventaire': 'i'},
                      join={'ci.no_produit_saq': 'i.no_produit_saq'},
                      where={'no_commande_facture': ncf, 'ci.no_produit_interne': npi},
                      order_by='i.date_commande asc')
-    for i, cii in enumerate(rows):
-        pg.update(cursor, 'inventaire', set={'solde_bouteille': cii['solde_bouteille'] + cii['quantite_bouteille'],
-                                             'solde_caisse': cii['solde_caisse'] + cii['quantite_caisse'],
-                                             'statut': 'actif' if i == 0 else u'en réserve'},
-                  where={'no_inventaire': cii['no_inventaire']})
+    for i, ci_inv in enumerate(rows):
+        pg.update(cursor, 'inventaire', set={'solde_bouteille': ci_inv['solde_bouteille'] + ci_inv['quantite_bouteille'],
+                                             'solde_caisse': ci_inv['solde_caisse'] + ci_inv['quantite_caisse'],
+                                             'statut_inventaire': 'actif' if i == 0 else u'en réserve'},
+                  where={'no_inventaire': ci_inv['no_inventaire']})
     pg.delete(cursor, 'commande_item', where={'no_commande_facture':ncf, 'no_produit_interne':npi})
 
 
