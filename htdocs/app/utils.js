@@ -34,40 +34,40 @@ Ext.define('VIN.utils', {
         getGridColumnsFromModel: function(model, column_flex) {
             var cols = [];
             var items = model.prototype.fields.items;
-            for (var i = 0; i < items.length; i++) {
-                var name = items[i].name;
+            Ext.each(items, function(item) {
+                var name = item.name;
                 var flex = 1;
                 var hidden = false;
                 var filterable = true;
                 if (column_flex != 'all') {
                     flex = column_flex.hasOwnProperty(name) ? column_flex[name] : 0;
                     hidden = !column_flex.hasOwnProperty(name);
-                    filterable = items[i].hasOwnProperty('filterable') ? items[i].filterable : true;
+                    filterable = item.hasOwnProperty('filterable') ? item.filterable : true;
                 }
                 var col = {
                     xtype: 'gridcolumn',
-                    text: items[i].hasOwnProperty('header') ? items[i].header : Ext.String.capitalize(items[i].name),
+                    text: item.hasOwnProperty('header') ? item.header : Ext.String.capitalize(item.name),
                     dataIndex: name,
-                    type: items[i].type.type,
+                    type: item.type.type,
                     filterable: filterable,
                     flex: flex,
                     hidden: hidden
                 };
-                if (items[i].hasOwnProperty('filter')) {
-                    col.filter = items[i].filter;
+                if (item.hasOwnProperty('filter')) {
+                    col.filter = item.filter;
                 }
-                if (items[i].type.type == 'date') {
+                if (item.type.type == 'date') {
                     col.xtype = 'datecolumn';
-                } else if (items[i].type.type == 'float') {
+                } else if (item.type.type == 'float') {
                     col.xtype = 'numbercolumn'; // to fix formatting issue
-                } else if (items[i].type.type == 'bool') {
+                } else if (item.type.type == 'bool') {
                     col.xtype = 'checkcolumn';
                     col.processEvent = function() {
                         return false;
                     }
                 }
                 cols.push(col);
-            }
+            });
             return cols;
         }
 

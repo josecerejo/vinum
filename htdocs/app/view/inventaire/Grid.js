@@ -2,8 +2,8 @@ Ext.define('VIN.view.inventaire.Grid', {
 
     extend: 'VIN.view.Grid',
     alias: 'widget.inventaire_grid',
-    title: 'Inventaire',
-    closable: true,
+    //title: 'Inventaire',
+    //closable: true,
     use_colors: true,
 
     initComponent: function() {

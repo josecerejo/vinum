@@ -29,9 +29,9 @@ Ext.define('VIN.view.commande.ItemGrid', {
     	        }
             });
 
-            for (var i = 0; i < this.columns.length; i++) {
-                if (this.columns[i].dataIndex == 'commission') {
-                    this.columns[i].editor = {
+            Ext.each(this.columns, function(col) {
+                if (col.dataIndex == 'commission') {
+                    col.editor = {
                         xtype: 'combo',
                         queryMode: 'local',
                         triggerAction: 'all',
@@ -48,7 +48,7 @@ Ext.define('VIN.view.commande.ItemGrid', {
                     };
                     break;
                 }
-            }
+            });
         }
 
         this.plugins = [Ext.create('Ext.grid.plugin.CellEditing', {
