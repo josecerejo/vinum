@@ -46,7 +46,7 @@ Ext.define('VIN.view.commande.ItemGrid', {
                                    {commission: 0.23}]
                         })
                     };
-                    break;
+                    return;
                 }
             });
         }

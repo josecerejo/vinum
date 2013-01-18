@@ -146,7 +146,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             fieldLabel: 'Format',
                             displayField: 'format',
                             name: 'format',
-                            allowBlank: false,
                             store: Ext.create('Ext.data.Store', {
                                 fields: ['format'],
                                 proxy: {

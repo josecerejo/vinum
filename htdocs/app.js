@@ -9,7 +9,7 @@ var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var is_dev_version = window.location.hostname == 'localhost';
 var use_flask_server = is_dev_version;
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-01-17';
+var last_update = '2013-01-18';
 var vinum_version = 'prototype';
 
 Ext.window.MessageBox.prototype.buttonText = {
@@ -25,6 +25,9 @@ Ext.form.field.Date.prototype.format = 'Y-m-d';
 Ext.grid.column.Date.prototype.format = 'Y-m-d';
 Ext.form.field.Date.prototype.altFormats = 'Y-m-d H:i:s';
 Ext.grid.column.Date.prototype.altFormats = 'Y-m-d H:i:s';
+
+// disable numberfields up/down arrows
+Ext.form.field.Number.prototype.hideTrigger = true;
 
 Ext.override(Ext.data.proxy.Ajax, {
     listeners: {

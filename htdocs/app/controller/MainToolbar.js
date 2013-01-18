@@ -41,7 +41,7 @@ Ext.define('VIN.controller.MainToolbar', {
                         VIN.app.getController('ProduitEtProducteur').createForm();
                         break;
                     case 'produits_inv_menu_itm':
-                        VIN.app.getController('Inventaire').createInventaireGrid();
+                        VIN.app.getController('Inventaire').createInventaireForm();
                         break;
                     };
                 }
