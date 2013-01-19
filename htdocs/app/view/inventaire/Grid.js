@@ -34,7 +34,8 @@ Ext.define('VIN.view.inventaire.Grid', {
                 } else{
                     return Ext.String.format('inventaire-grid-row-age-{0}', Math.floor(a / 30));
                 }
-            }, this)
+            }, this),
+            preserveScrollOnRefresh: true
         };
 
         this.callParent(arguments);

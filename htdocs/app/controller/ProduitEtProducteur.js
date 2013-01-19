@@ -12,7 +12,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
             'pp_forms #produit_g': {
                 selectionchange: function(model, records) {
                     if (records.length == 0) { return; }
-                    var form = this._getFormViewInstance(model.view).down('#pp_produit_form');
+                    var form = this._getFormViewInstance(model.view).down('#pp_produit_f');
                     form.down('#nom_producteur_dd').forceSelection = false;
                     form.getForm().loadRecord(records[0]);
                     // this hack is required to load a full producteur model in the dd,
@@ -24,7 +24,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
             'pp_forms #producteur_g': {
                 selectionchange: function(model, records) {
                     if (records.length == 0) { return; }
-                    var form = this._getFormViewInstance(model.view).down('#pp_producteur_form');
+                    var form = this._getFormViewInstance(model.view).down('#pp_producteur_f');
                     form.getForm().loadRecord(records[0]);
                 }
             },
@@ -56,19 +56,19 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
             'pp_forms #new_produit_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    form.down('#pp_produit_form').getForm().reset();
+                    form.down('#pp_produit_f').getForm().reset();
                 }
             },
             'pp_forms #new_producteur_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    form.down('#pp_producteur_form').getForm().reset();
+                    form.down('#pp_producteur_f').getForm().reset();
                 }
             },
             'pp_forms #save_produit_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    var pf = form.down('#pp_produit_form');
+                    var pf = form.down('#pp_produit_f');
                     if (pf.getForm().isValid()) {
                         var pdd = pf.down('#nom_producteur_dd');
                         var pr = pdd.findRecordByDisplay(pdd.getValue());
@@ -104,7 +104,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                         no_produit_interne: rec.get('no_produit_interne')
                                     },
                                     success: function(response) {
-                                        grid.store.load();
+                                        grid.getStore().load();
                                     }
                                 });
                             }
@@ -114,7 +114,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
             'pp_forms #save_producteur_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    var pf = form.down('#pp_producteur_form');
+                    var pf = form.down('#pp_producteur_f');
                     if (pf.getForm().isValid()) {
                         pf.submit({
                             url: ajax_url_prefix + '/producteur/save',
@@ -160,8 +160,11 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
     },
 
     createForm: function() {
-        var ppf = Ext.create('widget.pp_forms');
-        Ext.getCmp('main_pnl').add(ppf);
+        var ppf = Ext.getCmp('main_pnl').down('pp_forms');
+        if (!ppf) {
+            ppf = Ext.create('widget.pp_forms');
+            Ext.getCmp('main_pnl').add(ppf);
+        }
         Ext.getCmp('main_pnl').setActiveTab(ppf);
     }
 

@@ -174,21 +174,24 @@ Ext.define('VIN.controller.Client', {
     },
 
     createClientGrid: function() {
-        var cg = Ext.create('VIN.view.Grid', {
-            itemId: 'client_g',
-            title: 'Clients',
-            closable: true,
-            store: Ext.create('VIN.store.Clients'),
-            add_edit_actioncolumn: true,
-            add_delete_actioncolumn: true,
-            column_flex: {
-                no_client: 0.1,
-                no_client_saq: 0.1,
-                nom_social: 0.7,
-                date_ouverture_dossier: 0.1
-            }
-        });
-        Ext.getCmp('main_pnl').add(cg);
+        var cg = Ext.getCmp('main_pnl').down('#client_g');
+        if (!cg) {
+            cg = Ext.create('VIN.view.Grid', {
+                itemId: 'client_g',
+                title: 'Clients',
+                closable: true,
+                store: Ext.create('VIN.store.Clients'),
+                add_edit_actioncolumn: true,
+                add_delete_actioncolumn: true,
+                column_flex: {
+                    no_client: 0.1,
+                    no_client_saq: 0.1,
+                    nom_social: 0.7,
+                    date_ouverture_dossier: 0.1
+                }
+            });
+            Ext.getCmp('main_pnl').add(cg);
+        }
         Ext.getCmp('main_pnl').setActiveTab(cg);
     }
 

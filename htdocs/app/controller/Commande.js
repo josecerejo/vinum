@@ -220,7 +220,7 @@ Ext.define('VIN.controller.Commande', {
                         var cdd = form.down('#client_dd');
                         var cr = cdd.findRecordByDisplay(cdd.getValue());
                         var courriel = cr.get('courriel');
-                        form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_facture';
+                        form.email_win.down('#email_f').getForm().url = ajax_url_prefix + '/commande/email_facture';
                         form.email_win.down('#email_addr_tf').setValue(courriel);
                         form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Facture #{0}',
                                                                                             form.down('#no_commande_facture_tf').getValue()));
@@ -247,7 +247,7 @@ Ext.define('VIN.controller.Commande', {
                     var form = this._getFormViewInstance(btn);
                     this.saveCommandeFormPart(form, Ext.bind(function() {
                         form.email_win.document_type = 'bon_de_commande';
-                        form.email_win.down('#email_form').getForm().url = ajax_url_prefix + '/commande/email_bdc';
+                        form.email_win.down('#email_f').getForm().url = ajax_url_prefix + '/commande/email_bdc';
                         form.email_win.down('#email_addr_tf').setValue('commandes.privees@saq.qc.ca');
                         form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Bon de commande pour la facture #{0}',
                                                                                             form.down('#no_commande_facture_tf').getValue()));
@@ -266,7 +266,7 @@ Ext.define('VIN.controller.Commande', {
                 click: function(btn) {
                     var ew = btn.up('#email_win');
                     var form = ew.parent_form;
-                    var ef = ew.down('#email_form');
+                    var ef = ew.down('#email_f');
                     if (ef.getForm().isValid()) {
                         wait_mask.show();
                         ef.submit({
@@ -380,7 +380,7 @@ Ext.define('VIN.controller.Commande', {
         // hmm this is only way I found working to preserve selection of the inv grid
         // upon reload: (1) get selected recs
         var inv_sel = ig.getSelectionModel().getSelection();
-        // (2) build a list of the no_produi_saq ids
+        // (2) build a list of the no_produit_saq ids
         var inv_sel_nps = [];
         Ext.Array.each(inv_sel, function(rec) {
             inv_sel_nps.push(rec.get('no_produit_saq'));
@@ -569,25 +569,28 @@ Ext.define('VIN.controller.Commande', {
     },
 
     createCommandeGrid: function() {
-        var cg = Ext.create('VIN.view.Grid', {
-            itemId: 'commande_g',
-            title: 'Commandes',
-            closable: true,
-            add_edit_actioncolumn: true,
-            add_delete_actioncolumn: true,
-            store: Ext.create('VIN.store.Commandes'),
-            column_flex: {
-                no_commande_facture: 0.1,
-                no_commande_saq: 0.1,
-                no_client: 0.1,
-                no_client_saq: 0.1,
-                nom_social: 0.3,
-                date_commande: 0.1,
-                facture_est_envoyee: 0.05,
-                bon_de_commande_est_envoye: 0.05
-            }
-        });
-        Ext.getCmp('main_pnl').add(cg);
+        var cg = Ext.getCmp('main_pnl').down('#commande_g');
+        if (!cg) {
+            cg = Ext.create('VIN.view.Grid', {
+                itemId: 'commande_g',
+                title: 'Commandes',
+                closable: true,
+                add_edit_actioncolumn: true,
+                add_delete_actioncolumn: true,
+                store: Ext.create('VIN.store.Commandes'),
+                column_flex: {
+                    no_commande_facture: 0.1,
+                    no_commande_saq: 0.1,
+                    no_client: 0.1,
+                    no_client_saq: 0.1,
+                    nom_social: 0.3,
+                    date_commande: 0.1,
+                    facture_est_envoyee: 0.05,
+                    bon_de_commande_est_envoye: 0.05
+                }
+            });
+            Ext.getCmp('main_pnl').add(cg);
+        }
         Ext.getCmp('main_pnl').setActiveTab(cg);
     }
 

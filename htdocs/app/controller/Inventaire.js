@@ -19,7 +19,7 @@ Ext.define('VIN.controller.Inventaire', {
 
             'inventaire_grid #type_vin_external_filter_tf': {
                 keyup: function(tf, e, opts) {
-                    var g = btn.up('inventaire_grid');
+                    var g = tf.up('inventaire_grid');
                     var tv_filter = g.filters.getFilter('type_vin');
                     if (tf.getValue()) {
                         tv_filter.setValue(tf.getValue());
@@ -34,10 +34,40 @@ Ext.define('VIN.controller.Inventaire', {
             '#inventaire_g': {
                 selectionchange: function(model, records) {
                     if (records.length == 0) { return; }
+                    var ir = records[0];
                     var form = model.view.up('inventaire_form').down('#inventaire_f');
                     form.down('#type_vin_dd').forceSelection = false;
-                    form.getForm().loadRecord(records[0]);
+                    form.getForm().loadRecord(ir);
                     form.down('#type_vin_dd').forceSelection = true;
+                }
+            },
+
+            'inventaire_form #save_inv_record_btn': {
+                click: function(btn) {
+                    var form = btn.up('inventaire_form').down('#inventaire_f');
+                    var g = btn.up('inventaire_form').down('#inventaire_g');
+                    var selected_ni = g.getSelectionModel().getSelection();
+                    if (selected_ni.length == 1) {
+                        selected_ni = selected_ni[0].get('no_inventaire');
+                    } else {
+                        selected_ni = null;
+                    }
+                    if (form.getForm().isValid()) {
+                        form.submit({
+                            url: ajax_url_prefix + '/inventaire/save',
+                            success: function(_form, action) {
+                                btn.up('inventaire_form').down('#inventaire_g').getStore().reload({
+                                    callback: function(records, operation, success) {
+                                        // reset selection state before load
+                                        if (operation && selected_ni) {
+                                            var r = g.getStore().query('no_inventaire', selected_ni);
+                                            g.getSelectionModel().select(r.items);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }
             },
 
@@ -45,19 +75,41 @@ Ext.define('VIN.controller.Inventaire', {
                 click: function(btn) {
                     var form = btn.up('#inventaire_f');
                     form.getForm().reset();
+                    btn.up('inventaire_form').down('#inventaire_g').getSelectionModel().deselectAll();
+                }
+            },
+
+            'inventaire_form #del_inv_record_btn': {
+                click: function(btn) {
+                    var form = btn.up('inventaire_form').down('#inventaire_f');
+                    var noi = form.down('#no_inventaire_tf').getValue();
+                    if (!noi) { return; }
+                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir détruire l\'item d\'inventaire #{0}?', noi),
+                        Ext.bind(function(_btn) {
+                            if (_btn == 'yes') {
+                                Ext.Ajax.request({
+                                    url: ajax_url_prefix + '/inventaire/delete',
+                                    params: {
+                                        no_inventaire: noi
+                                    },
+                                    success: function(response) {
+                                        btn.up('inventaire_form').down('#inventaire_g').getStore().reload();
+                                    }
+                                });
+                            }
+                        }, this));
                 }
             }
 
         });
     },
 
-    // _getFormViewInstance: function(any_contained_view) {
-    //     return any_contained_view.up('inventaire_grid');
-    // },
-
     createInventaireForm: function() {
-        var invf = Ext.create('VIN.view.inventaire.Form');
-        Ext.getCmp('main_pnl').add(invf);
+        var invf = Ext.getCmp('main_pnl').down('inventaire_form');
+        if (!invf) {
+            invf = Ext.create('VIN.view.inventaire.Form');
+            Ext.getCmp('main_pnl').add(invf);
+        }
         Ext.getCmp('main_pnl').setActiveTab(invf);
     }
 

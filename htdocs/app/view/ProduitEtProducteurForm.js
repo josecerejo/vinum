@@ -79,7 +79,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         fieldDefaults: {
                             labelAlign: 'top'
                         },
-                        itemId: 'pp_produit_form',
+                        itemId: 'pp_produit_f',
                         items: [{
                         layout: 'hbox',
                         bodyStyle: 'background-color:#dfe8f5',
@@ -185,16 +185,13 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             valueField: 'couleur',
                             fieldLabel: 'Couleur',
                             forceSelection: true,
-                            flex: 0.2,
+                            flex: 0.3,
                             store: Ext.create('Ext.data.Store', {
                                 fields: ['couleur'],
                                 data: [{couleur: 'Blanc'},
                                        {couleur: 'Rouge'},
                                        {couleur: 'Rosé'}]
-                            }),
-                            fieldLabel: 'Couleur',
-                            name: 'couleur',
-                            flex: 0.3
+                            })
                         }, {
                             xtype: 'combo',
                             allowBlank: false,
@@ -293,7 +290,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         fieldDefaults: {
                             labelAlign: 'top'
                         },
-                        itemId: 'pp_producteur_form',
+                        itemId: 'pp_producteur_f',
                         items: [{
                         layout: 'hbox',
                         bodyStyle: 'background-color:#dfe8f5',

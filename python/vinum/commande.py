@@ -28,6 +28,7 @@ def save_commande():
 def _save_commande(cursor, rf):
     ncf = rf.pop('no_commande_facture')
     if ncf == '': ncf = None
+    else: rf['no_commande_facture'] = ncf # to allow resaving it back after delete with the same id
     # !!! not sure of this.. could be done in the client as well, or not at all
     if rf['expedition'] == 'direct':
         rf['no_succursale'] = None

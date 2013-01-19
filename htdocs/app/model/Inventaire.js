@@ -22,7 +22,8 @@ Ext.define('VIN.model.Inventaire', {
         useNull: true
     }, {
         header: 'Format',
-        name: 'format'
+        name: 'format',
+        align: 'right'
     }, {
         header: 'Prix (resto)',
         name: 'prix_restaurant',
@@ -60,7 +61,8 @@ Ext.define('VIN.model.Inventaire', {
         useNull: true
     }, {
         header: '# demande SAQ',
-        name: 'no_demande_saq'
+        name: 'no_demande_saq',
+        align: 'right'
         // this is not an int!
     }, {
         header: 'Qté commandée',

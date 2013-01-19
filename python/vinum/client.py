@@ -28,6 +28,7 @@ def save_client():
     rf['jours_livraison'] = request.form.getlist('jours_livraison')
     no_client = rf.pop('no_client')
     if no_client == '': no_client = None
+    else: rf['no_client'] = no_client # to allow resaving it back after delete with the same id
     rf['representant_id'] = pg.selectId(g.db.cursor(), 'representant',
                                         where={'representant_nom': rf.get('representant_nom')})
     client = pg.upsert(g.db.cursor(), 'client', where={'no_client': no_client},

@@ -56,10 +56,16 @@ Ext.define('VIN.utils', {
                 if (item.hasOwnProperty('filter')) {
                     col.filter = item.filter;
                 }
+                if (item.hasOwnProperty('align')) {
+                    col.align = item.align;
+                }
                 if (item.type.type == 'date') {
                     col.xtype = 'datecolumn';
-                } else if (item.type.type == 'float') {
+                } else if (item.type.type == 'float' || item.type.type == 'int') {
                     col.xtype = 'numbercolumn'; // to fix formatting issue
+                    if (item.type.type == 'int') {
+                        col.format = '0';
+                    }
                 } else if (item.type.type == 'bool') {
                     col.xtype = 'checkcolumn';
                     col.processEvent = function() {

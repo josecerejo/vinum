@@ -32,7 +32,7 @@ Ext.define('VIN.view.commande.Form', {
                 xtype: 'form',
                 bodyStyle: 'background-color:#dfe8f5',
                 border: 0,
-                itemId: 'email_form',
+                itemId: 'email_f',
                 padding: 10,
                 fieldDefaults: {
                     anchor: '100%'

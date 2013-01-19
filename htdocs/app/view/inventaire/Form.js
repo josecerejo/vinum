@@ -63,6 +63,7 @@ Ext.define('VIN.view.inventaire.Form', {
                     store: Ext.create('VIN.store.Produits'),
                     itemId: 'type_vin_dd',
                     fieldLabel: 'Tous les produits',
+                    triggerAction: 'all',
                     minChars: 3,
                     forceSelection: true,
                     pageSize: 10,
@@ -86,8 +87,7 @@ Ext.define('VIN.view.inventaire.Form', {
                     items: [{
                         xtype: 'numberfield',
                         fieldLabel: 'Millésime',
-                        name: 'millesime',
-                        disabled: true
+                        name: 'millesime'
                     }, {
                         xtype: 'textfield',
                         fieldLabel: 'Format',
@@ -101,17 +101,26 @@ Ext.define('VIN.view.inventaire.Form', {
                     border: false,
                     style: 'margin-bottom: 5px',
                     defaults: {
-                        flex: 1/2
+                        flex: 1/3
                     },
                     items: [{
                         xtype: 'numberfield',
-                        fieldLabel: 'No produit SAQ',
-                        name: 'no_produit_saq'
+                        fieldLabel: 'No inventaire',
+                        name: 'no_inventaire',
+                        itemId: 'no_inventaire_tf',
+                        allowBlank: true,
+                        readOnly: true,
+                        cls: 'x-item-disabled'
                     }, {
                         xtype: 'numberfield',
-                        fieldLabel: 'No demande SAQ',
+                        fieldLabel: '# prod. SAQ',
+                        name: 'no_produit_saq',
+                        style: 'margin-left: 10px'
+                    }, {
+                        xtype: 'numberfield',
+                        fieldLabel: '# dem. SAQ',
                         name: 'no_demande_saq',
-                        style: 'margin-left: 10px',
+                        style: 'margin-left: 10px'
                     }]
                 }, {
                     layout: 'hbox',
@@ -191,7 +200,25 @@ Ext.define('VIN.view.inventaire.Form', {
                         fieldLabel: 'Date reçue',
                         name: 'date_recue',
                         style: 'margin-left: 10px',
+                        allowBlank: true
                     }]
+                }, {
+                    xtype: 'combo',
+                    allowBlank: false,
+                    name: 'statut_inventaire',
+                    queryMode: 'local',
+                    triggerAction: 'all',
+                    displayField: 'statut_inventaire',
+                    valueField: 'statut_inventaire',
+                    fieldLabel: 'Statut',
+                    forceSelection: true,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['statut_inventaire'],
+                        data: [{statut_inventaire: 'en attente'},
+                               {statut_inventaire: 'en réserve'},
+                               {statut_inventaire: 'actif'},
+                               {statut_inventaire: 'inactif'}]
+                    })
                 }, {
                     layout: 'hbox',
                     bodyStyle: 'background-color:#dfe8f5',
@@ -204,12 +231,19 @@ Ext.define('VIN.view.inventaire.Form', {
                     items: [{
                         xtype: 'button',
                         text: 'Sauvegarder',
-                        iconCls: 'disk-icon'
+                        iconCls: 'disk-icon',
+                        itemId: 'save_inv_record_btn'
                     }, {
                         xtype: 'button',
                         text: 'Nouveau',
                         itemId: 'new_inv_record_btn',
                         iconCls: 'app-form-add-icon',
+                        style: 'margin-left: 5px'
+                    }, {
+                        xtype: 'button',
+                        text: 'Détruire',
+                        itemId: 'del_inv_record_btn',
+                        iconCls: 'del-icon',
                         style: 'margin-left: 5px'
                     }]
                 }]

@@ -28,6 +28,7 @@ Ext.define('VIN.model.Produit', {
         name: 'nom_producteur'
     }, {
         name: 'format',
+        align: 'right'
     }, {
         name: 'couleur'
     }, {

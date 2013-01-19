@@ -12,6 +12,7 @@ def save_producteur():
     rf = request.form.to_dict()
     np = rf.pop('no_producteur')
     if np == '': np = None
+    else: rf['no_producteur'] = np # to allow resaving it back after delete with the same id
     producteur = pg.upsert(g.db.cursor(), 'producteur', where={'no_producteur': np},
                            values=rf, filter_values=True, map_values={'': None})
     g.db.commit()

@@ -36,6 +36,7 @@ def save_produit():
     rf = request.form.to_dict()
     npi = rf.pop('no_produit_interne')
     if npi == '': npi = None
+    else: rf['no_produit_interne'] = npi # to allow resaving it back after delete with the same id
     produit = pg.upsert(g.db.cursor(), 'produit', where={'no_produit_interne': npi},
                         values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
