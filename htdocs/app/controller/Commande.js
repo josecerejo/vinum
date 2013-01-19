@@ -68,9 +68,7 @@ Ext.define('VIN.controller.Commande', {
             },
             '#client_produit_g': {
                 selectionchange: function(model, records) {
-                    if (records.length == 0) {
-                        return;
-                    }
+                    if (records.length == 0) { return; }
                     var form = this._getFormViewInstance(model.view);
                     this.updateInventaire(form, records[0]);
                 }
@@ -156,7 +154,7 @@ Ext.define('VIN.controller.Commande', {
                                                     form.down('#commande_item_g').getStore().load();
                                                     // check if inventaire needs update: in the inventaire grid, all rows/recs should
                                                     // correspond to the same produit, so just take the 1rst, if it exists
-                                                    var pr = form.down('#inventaire_g').getStore().getAt(0);
+                                                    var pr = form.down('#inventaire_produit_g').getStore().getAt(0);
                                                     if (pr !== undefined && pr.get('type_vin') === tv) {
                                                         this.updateInventaire(form, pr);
                                                     }
@@ -182,7 +180,7 @@ Ext.define('VIN.controller.Commande', {
                                                     form.down('#commande_item_g').getStore().load();
                                                     // check if inventaire needs update: in the inventaire grid, all rows/recs should
                                                     // correspond to the same produit, so just take the 1rst, if it exists
-                                                    var ir0 = form.down('#inventaire_g').getStore().getAt(0);
+                                                    var ir0 = form.down('#inventaire_produit_g').getStore().getAt(0);
                                                     if (ir0 !== undefined && ir0.get('no_produit_interne') === rec.get('no_produit_interne')) {
                                                         this.updateInventaire(form, ir0);
                                                     }
@@ -378,7 +376,7 @@ Ext.define('VIN.controller.Commande', {
     },
 
     updateInventaire: function(form, produit_rec) {
-        var ig = form.down('#inventaire_g');
+        var ig = form.down('#inventaire_produit_g');
         // hmm this is only way I found working to preserve selection of the inv grid
         // upon reload: (1) get selected recs
         var inv_sel = ig.getSelectionModel().getSelection();
@@ -410,10 +408,10 @@ Ext.define('VIN.controller.Commande', {
 
     // this saves the commande form part and add the desired produit in the same submit
     addCommandeProduit: function(form, produit_rec, desired_qc) {
-        var ig = form.down('#inventaire_g');
+        var ig = form.down('#inventaire_produit_g');
         var cig = form.down('#commande_item_g');
         if (form.getForm().isValid()) {
-            var ig = form.down('#inventaire_g');
+            var ig = form.down('#inventaire_produit_g');
             var inv_sel = ig.getSelectionModel().getSelection();
             var inv_sel_nps = [];
             var sel_qc_avail = 0;

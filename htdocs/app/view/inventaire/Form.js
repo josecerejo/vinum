@@ -14,6 +14,7 @@ Ext.define('VIN.view.inventaire.Form', {
             border: false,
             flex: 0.75,
             items: Ext.create('VIN.view.inventaire.Grid', {
+                itemId: 'inventaire_g',
                 store: Ext.create('VIN.store.Inventaires'),
                 column_flex: {
                     type_vin: 3,
@@ -47,6 +48,7 @@ Ext.define('VIN.view.inventaire.Form', {
             collapsible: true,
             items: {
                 xtype: 'form',
+                itemId: 'inventaire_f',
                 frame: true,
                 fieldDefaults: {
                     labelAlign: 'top',
@@ -59,7 +61,7 @@ Ext.define('VIN.view.inventaire.Form', {
                     displayField: 'type_vin',
                     name: 'type_vin',
                     store: Ext.create('VIN.store.Produits'),
-                    itemId: 'produit_dd',
+                    itemId: 'type_vin_dd',
                     fieldLabel: 'Tous les produits',
                     minChars: 3,
                     forceSelection: true,
@@ -78,38 +80,38 @@ Ext.define('VIN.view.inventaire.Form', {
                     bodyStyle: 'background-color:#dfe8f5',
                     border: false,
                     style: 'margin-bottom: 5px',
+                    defaults: {
+                        flex: 1/2
+                    },
                     items: [{
                         xtype: 'numberfield',
                         fieldLabel: 'Millésime',
                         name: 'millesime',
-                        flex: 0.5,
+                        disabled: true
                     }, {
-                        flex: 0.5,
-                        style: 'margin-left: 10px',
-                        xtype: 'combo',
+                        xtype: 'textfield',
                         fieldLabel: 'Format',
-                        displayField: 'format',
+                        disabled: true,
                         name: 'format',
-                        store: Ext.create('Ext.data.Store', {
-                            fields: ['format'],
-                            proxy: {
-                                type: 'ajax',
-                                limitParam: undefined,
-                                pageParam: undefined,
-                                startParam: undefined,
-                                url: ajax_url_prefix + '/produit/get_format',
-                                reader: {
-                                    type: 'json',
-                                    root: 'rows'
-                                }
-                            }
-                        }),
-                        minChars: 2,
-                        forceSelection: false,
-                        listConfig: {
-                            loadingText: 'Recherche...',
-                            emptyText: 'Aucun format trouvé..'
-                        }
+                        style: 'margin-left: 10px',
+                    }]
+                }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    style: 'margin-bottom: 5px',
+                    defaults: {
+                        flex: 1/2
+                    },
+                    items: [{
+                        xtype: 'numberfield',
+                        fieldLabel: 'No produit SAQ',
+                        name: 'no_produit_saq'
+                    }, {
+                        xtype: 'numberfield',
+                        fieldLabel: 'No demande SAQ',
+                        name: 'no_demande_saq',
+                        style: 'margin-left: 10px',
                     }]
                 }, {
                     layout: 'hbox',
@@ -135,6 +137,80 @@ Ext.define('VIN.view.inventaire.Form', {
                         name: 'prix_particulier',
                         disabled: true,
                         style: 'margin-left: 10px'
+                    }]
+                }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    style: 'margin-bottom: 5px',
+                    defaults: {
+                        flex: 1/2
+                    },
+                    items: [{
+                        xtype: 'numberfield',
+                        fieldLabel: 'Solde (b)',
+                        name: 'solde_bouteille'
+                    }, {
+                        xtype: 'numberfield',
+                        fieldLabel: 'Solde (c)',
+                        name: 'solde_caisse',
+                        style: 'margin-left: 10px',
+                    }]
+                }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    style: 'margin-bottom: 5px',
+                    defaults: {
+                        flex: 1/2
+                    },
+                    items: [{
+                        xtype: 'numberfield',
+                        fieldLabel: 'Qté commandée',
+                        name: 'quantite_commandee'
+                    }, {
+                        xtype: 'numberfield',
+                        fieldLabel: 'Qté reçue',
+                        name: 'quantite_recue',
+                        style: 'margin-left: 10px',
+                    }]
+                }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    style: 'margin-bottom: 5px',
+                    defaults: {
+                        flex: 1/2
+                    },
+                    items: [{
+                        xtype: 'datefield',
+                        fieldLabel: 'Date de commande',
+                        name: 'date_commande'
+                    }, {
+                        xtype: 'datefield',
+                        fieldLabel: 'Date reçue',
+                        name: 'date_recue',
+                        style: 'margin-left: 10px',
+                    }]
+                }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    style: 'margin-bottom: 5px; margin-top: 15px',
+                    defaults: {
+                        flex: 1/2,
+                        padding: 5
+                    },
+                    items: [{
+                        xtype: 'button',
+                        text: 'Sauvegarder',
+                        iconCls: 'disk-icon'
+                    }, {
+                        xtype: 'button',
+                        text: 'Nouveau',
+                        itemId: 'new_inv_record_btn',
+                        iconCls: 'app-form-add-icon',
+                        style: 'margin-left: 5px'
                     }]
                 }]
             }

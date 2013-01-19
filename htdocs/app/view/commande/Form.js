@@ -398,7 +398,7 @@ Ext.define('VIN.view.commande.Form', {
                 // right part panel
                 items: [{
                     xtype: 'vin_grid',
-                    itemId: 'inventaire_g',
+                    itemId: 'inventaire_produit_g',
                     store: Ext.create('VIN.store.Inventaires', {
                         sorters: [{
                             property: 'date_commande',
