@@ -3,7 +3,7 @@ import sys, csv, re, os, math
 sys.path.append('/home/christian/gh/little_pger')
 from little_pger import *
 
-inventaire_only = True
+inventaire_only = False
 
 conn = psycopg2.connect("dbname=vinum")
 cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -60,6 +60,22 @@ if not inventaire_only:
 
 ####################################################################################################
 
+if not inventaire_only:
+    print 'producteur..',
+    sys.stdout.flush()
+    no_producteurs = set()
+    cols = getColumns(cursor, 'producteur')
+    f = csv.reader(open('%s/Producteurs.csv' % export_dir), delimiter=delim)
+    f.next()
+    for row in f:
+        data = dict(zip(cols, processRow(row, 'cp1252')))
+        no_producteurs.add(data['no_producteur'])
+        insert(cursor, 'producteur', values=data)
+    cursor.execute("select setval('producteur_no_producteur_seq', (select max(no_producteur) from producteur)+1)")
+    print '(%s)' % count(cursor, 'producteur')
+
+####################################################################################################
+
 print 'produit..',
 sys.stdout.flush()
 format_map = {}
@@ -77,28 +93,12 @@ for row in f:
     row[5] = format_map.get(row[5])
     data = dict(zip(cols, processRow(row)))
     npi_to_qpc[data['no_produit_interne']] = int(data['quantite_par_caisse'])
-    no_produit_internes.add(data['no_produit_interne'])
-    if not inventaire_only:
+    if not inventaire_only and data['no_producteur'] in no_producteurs:
         insert(cursor, 'produit', values=data)
+        no_produit_internes.add(data['no_produit_interne'])
 if not inventaire_only:
     cursor.execute("select setval('produit_no_produit_interne_seq', (select max(no_produit_interne) from produit)+1)")
 print '(%s)' % count(cursor, 'produit')
-
-####################################################################################################
-
-if not inventaire_only:
-    print 'producteur..',
-    sys.stdout.flush()
-    no_producteurs = set()
-    cols = getColumns(cursor, 'producteur')
-    f = csv.reader(open('%s/Producteurs.csv' % export_dir), delimiter=delim)
-    f.next()
-    for row in f:
-        data = dict(zip(cols, processRow(row, 'cp1252')))
-        no_producteurs.add(data['no_producteur'])
-        insert(cursor, 'producteur', values=data)
-    cursor.execute("select setval('producteur_no_producteur_seq', (select max(no_producteur) from producteur)+1)")
-    print '(%s)' % count(cursor, 'producteur')
 
 ####################################################################################################
 

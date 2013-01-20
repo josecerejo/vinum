@@ -7,7 +7,7 @@ Ext.Loader.setConfig({
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var is_dev_version = window.location.hostname == 'localhost';
-var use_flask_server = true; //is_dev_version;
+var use_flask_server = is_dev_version;
 var initial_tab = null; //'widget.inventaire_grid';
 var last_update = '2013-01-20';
 var vinum_version = 'prototype';

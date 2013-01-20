@@ -32,20 +32,6 @@ create table client (
     --jour_livraison text
 );
 
-drop table if exists produit cascade;
-create table produit (
-    no_produit_interne serial primary key,
-    ancien_no_produit integer,
-    no_producteur integer not null references producteur,
-    type_vin text not null,
-    nom_domaine text,
-    format text,
-    couleur text,
-    quantite_par_caisse integer not null,
-    pays text,
-    suc_num integer
-);
-
 drop table if exists producteur cascade;
 create table producteur (
     no_producteur serial primary key,
@@ -60,6 +46,20 @@ create table producteur (
     no_tel text,
     no_fax text,
     note text,
+    suc_num integer
+);
+
+drop table if exists produit cascade;
+create table produit (
+    no_produit_interne serial primary key,
+    ancien_no_produit integer,
+    no_producteur integer not null references producteur,
+    type_vin text not null,
+    nom_domaine text,
+    format text,
+    couleur text,
+    quantite_par_caisse integer not null,
+    pays text,
     suc_num integer
 );
 
