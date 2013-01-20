@@ -8,7 +8,7 @@ if __name__ == '__main__':
                                      # json error messages, for when we're running in production mod_wsgi mode
 
     # http://flask.pocoo.org/snippets/84/
-    # To allow using "/vinum_server" prefixed URLs (i.e. WSGIScriptAlias) in the Flask server env 
+    # To allow using "/vinum_server" prefixed URLs (i.e. WSGIScriptAlias) in the Flask server env
     class CherrokeeFix(object):
 
         def __init__(self, app, script_name):
@@ -26,6 +26,6 @@ if __name__ == '__main__':
     # app.wsgi_app = CherrokeeFix(app.wsgi_app, '/vinum_server')
     # app.run(debug=True, port=80, static_files={'/vinum': '/home/christian/vinum/htdocs'})
 
-    app.wsgi_app = SharedDataMiddleware(CherrokeeFix(app.wsgi_app, '/vinum_server'), 
+    app.wsgi_app = SharedDataMiddleware(CherrokeeFix(app.wsgi_app, '/vinum_server'),
                                         {'/vinum': '/home/christian/vinum/htdocs'})
     app.run(debug=True, port=81)

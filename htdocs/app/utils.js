@@ -4,12 +4,13 @@ Ext.define('VIN.utils', {
 
     statics: {
 
-        serverErrorPopup: function(server_error_msg) {
+        serverErrorPopup: function(msg) {
             wait_mask.hide();
-            var msg = "<b>SVP veuillez copier le message d'erreur suivant et l'envoyer à cjauvin@gmail.com</b>:<br /><br />";
+            //var msg = "<b>SVP veuillez copier le message d'erreur suivant et l'envoyer à cjauvin@gmail.com</b>:<br /><br />";
             Ext.Msg.show({
                 title: 'Erreur du serveur',
-                msg: msg + server_error_msg,
+                //msg: msg + server_error_msg,
+                msg: msg,
                 icon: Ext.MessageBox.ERROR,
                 buttons: Ext.MessageBox.OK
             });

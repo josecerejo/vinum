@@ -7,9 +7,9 @@ Ext.Loader.setConfig({
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var is_dev_version = window.location.hostname == 'localhost';
-var use_flask_server = is_dev_version;
+var use_flask_server = true; //is_dev_version;
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-01-19';
+var last_update = '2013-01-20';
 var vinum_version = 'prototype';
 
 Ext.window.MessageBox.prototype.buttonText = {
@@ -41,6 +41,23 @@ Ext.override(Ext.data.proxy.Ajax, {
                 VIN.utils.serverErrorPopup(Ext.JSON.decode(response.responseText).error_msg);
             }
         }
+    }
+});
+
+Ext.Ajax.on('requestcomplete', function(conn, response, opts, eopts) {
+    if (use_flask_server) { return; }
+    var r = Ext.JSON.decode(response.responseText);
+    if (!r.success) {
+        VIN.utils.serverErrorPopup(r.error_msg);
+    }
+});
+
+Ext.Ajax.on('requestexception', function(conn, response, opts, eopts) {
+    if (use_flask_server) {
+        VIN.utils.createFlaskDebugConsoleWindow(response.responseText);
+    } else {
+        var r = Ext.JSON.decode(response.responseText);
+        VIN.utils.serverErrorPopup(r.error_msg);
     }
 });
 

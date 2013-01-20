@@ -16,7 +16,7 @@ create table client (
     courriel text,
     type_client text,
     specialite text,
-    representant_id integer,
+    representant_id integer references representant,
     expedition text check (expedition in ('direct', 'pickup', 'succursale')),
     no_succursale text,
     note text,
@@ -36,12 +36,12 @@ drop table if exists produit cascade;
 create table produit (
     no_produit_interne serial primary key,
     ancien_no_produit integer,
-    no_producteur integer,
-    type_vin text,
+    no_producteur integer not null references producteur,
+    type_vin text not null,
     nom_domaine text,
     format text,
     couleur text,
-    quantite_par_caisse integer,
+    quantite_par_caisse integer not null,
     pays text,
     suc_num integer
 );
@@ -50,7 +50,7 @@ drop table if exists producteur cascade;
 create table producteur (
     no_producteur serial primary key,
     ancien_no_producteur integer,
-    nom_producteur text,
+    nom_producteur text not null,
     no_civique text,
     rue text,
     ville text,
@@ -66,8 +66,8 @@ create table producteur (
 drop table if exists client_produit cascade;
 create table client_produit (
     client_produit_id serial primary key,
-    no_client integer not null,
-    no_produit_interne integer not null,
+    no_client integer not null references client on delete cascade,
+    no_produit_interne integer not null references produit,
     suc_num integer
 );
 
@@ -75,7 +75,7 @@ drop table if exists commande cascade;
 create table commande (
     no_commande_facture serial primary key,
     ancien_no_commande_facture integer,
-    no_client integer not null,
+    no_client integer not null not null references client,
     date_commande date,
     expedition text check (expedition in ('direct', 'pickup', 'succursale')),
     no_succursale integer,
@@ -105,13 +105,13 @@ create table commande (
 drop table if exists commande_item cascade;
 create table commande_item (
     commande_item_id serial primary key,
-    no_commande_facture integer not null,
-    no_produit_interne integer not null,
+    no_commande_facture integer not null references commande,
+    no_produit_interne integer not null references produit,
     no_produit_saq integer,
     no_demande_saq text,
     quantite_caisse integer,
     quantite_bouteille integer,
-    statut_item text check (statut in ('OK', 'BO')),
+    statut_item text check (statut_item in ('OK', 'BO')),
     no_client integer,
     commission numeric, -- added
     montant_commission numeric,
@@ -122,7 +122,7 @@ create table commande_item (
 drop table if exists inventaire cascade;
 create table inventaire (
     no_inventaire serial primary key,
-    no_produit_interne integer not null,
+    no_produit_interne integer not null references produit,
     no_produit_saq integer,
     no_demande_saq text,
     quantite_commandee integer,
@@ -132,7 +132,7 @@ create table inventaire (
     prix_coutant numeric,
     millesime integer,
     commission numeric,
-    statut_inventaire text check (statut in ('en attente', 'en réserve', 'actif', 'inactif')),
+    statut_inventaire text check (statut_inventaire in ('en attente', 'en réserve', 'actif', 'inactif')),
     solde_bouteille integer, -- en # de bouteilles
     solde_caisse integer,
     solde_30_jours numeric,

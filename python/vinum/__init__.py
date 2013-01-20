@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import psycopg2, psycopg2.extras, json, datetime, traceback, locale
 from flask import *
 
@@ -11,8 +13,11 @@ psycopg2._psycopg.register_type(DEC2FLOAT)
 locale.setlocale(locale.LC_ALL, 'fr_CA.UTF-8')
 
 def general_error_handler(e):
+    if isinstance(e, psycopg2.IntegrityError):
+        return json.dumps({'success' : False, 'error' : 'server', 'error_msg' : "Au moins un autre objet dépend de celui que vous tentez de modifier ou de détruire."})
     tb_str = traceback.format_exc()
     tb_str = tb_str.replace('\n', '<br>')
+    tb_str = "<b>SVP veuillez copier le message d'erreur suivant et l'envoyer à cjauvin@gmail.com</b>:<br /><br />" + tb_str
     return json.dumps({'success' : False, 'error' : 'server', 'error_msg' : tb_str})
 
 # The '00:00:00' suffix is important for the correct handling of ExtJS dates (I don't know what exactly
