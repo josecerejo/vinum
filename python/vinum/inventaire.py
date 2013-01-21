@@ -24,7 +24,7 @@ def save_inventaire_record():
     rf['no_produit_interne'] = pg.select1(cur, 'produit', 'no_produit_interne',
                                           where={'type_vin': rf['type_vin']})
 
-    # if any existing commande_item is associated to this inv record, don't alow its modif
+    # if any existing commande_item is associated to this inv record, don't allow its modif
     inv = pg.select1r(cur, 'inventaire', where={'no_inventaire': ni})
     if inv:
         if pg.exists(cur, 'commande_item', where={'no_produit_saq': inv['no_produit_saq'],
@@ -42,7 +42,14 @@ def save_inventaire_record():
 
 @app.route('/inventaire/delete', methods=['POST'])
 def delete_inventaire_record():
-    pg.delete(g.db.cursor(), 'inventaire',
-              where={'no_inventaire': request.form['no_inventaire']})
+    cur = g.db.cursor()
+
+    # if any existing commande_item is associated to this inv record, don't allow to del
+    inv = pg.select1r(cur, 'inventaire', where={'no_inventaire': request.form['no_inventaire']})
+    if pg.exists(cur, 'commande_item', where={'no_produit_saq': inv['no_produit_saq'],
+                                              'no_demande_saq': inv['no_demande_saq']}):
+        raise psycopg2.IntegrityError
+
+    pg.delete(cur, 'inventaire', where={'no_inventaire': request.form['no_inventaire']})
     g.db.commit()
     return {'success': True}

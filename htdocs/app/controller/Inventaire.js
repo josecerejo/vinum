@@ -87,11 +87,8 @@ Ext.define('VIN.controller.Inventaire', {
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir détruire l\'item d\'inventaire #{0}?', noi),
                         Ext.bind(function(_btn) {
                             if (_btn == 'yes') {
-                                Ext.Ajax.request({
+                                form.submit({
                                     url: ajax_url_prefix + '/inventaire/delete',
-                                    params: {
-                                        no_inventaire: noi
-                                    },
                                     success: function(response) {
                                         btn.up('inventaire_form').down('#inventaire_g').getStore().reload();
                                     }

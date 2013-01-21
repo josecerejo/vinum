@@ -32,7 +32,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                     resizable: { handles: 's' },
                     height: grid_height,
                     style: 'margin-bottom: 20px',
-                    add_delete_actioncolumn: true,
                     column_flex: {
                         type_vin: 2,
                         nom_domaine: 2,
@@ -56,7 +55,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                     title: 'Producteurs',
                     resizable: { handles: 's' },
                     height: grid_height,
-                    add_delete_actioncolumn: true,
                     column_flex: {
                         nom_producteur: 1
                     }
@@ -258,21 +256,27 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         layout: 'hbox',
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false,
+                        style: 'margin-bottom: 5px; margin-top: 15px',
                         defaults: {
                             padding: 5
                         },
                         items: [{
                             xtype: 'button',
-                            text: 'Sauvegarder le produit',
+                            text: 'Sauvegarder',
                             iconCls: 'disk-icon',
-                            style: 'margin-top: 10px; margin-right: 10px',
                             itemId: 'save_produit_btn'
                         }, {
                             xtype: 'button',
-                            text: 'Nouveau produit',
+                            text: 'Nouveau',
                             iconCls: 'app-form-add-icon',
-                            style: 'margin-top: 10px',
-                            itemId: 'new_produit_btn'
+                            itemId: 'new_produit_btn',
+                            style: 'margin-left: 5px'
+                        }, {
+                            xtype: 'button',
+                            text: 'Détruire',
+                            itemId: 'del_produit_btn',
+                            iconCls: 'del-icon',
+                            style: 'margin-left: 5px'
                         }]
                     }]
                     }
@@ -321,7 +325,8 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         border: false,
                         style: 'margin-bottom: 10px',
                         defaults: {
-                            padding: 5
+                            padding: 5,
+                            flex: 1/4
                         },
                         items: [{
                             xtype: 'textfield',
@@ -346,7 +351,8 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         border: false,
                         style: 'margin-bottom: 10px',
                         defaults: {
-                            padding: 5
+                            padding: 5,
+                            flex: 1/4
                         },
                         items: [{
                             xtype: 'textfield',
@@ -369,27 +375,56 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         layout: 'hbox',
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false,
+                        style: 'margin-bottom: 10px',
+                        defaults: {
+                            padding: 5,
+                            flex: 1/4
+                        },
+                        items: [{
+                            xtype: 'textfield',
+                            fieldLabel: 'Nom du responsable',
+                            name: 'nom_responsable'
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Courriel',
+                            name: 'courriel'
+                        }, {
+                            xtype: 'hidden'
+                        }, {
+                            xtype: 'hidden'
+                        }]
+                    }, {
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        style: 'margin-bottom: 5px; margin-top: 15px',
                         defaults: {
                             padding: 5
                         },
                         items: [{
                             xtype: 'button',
-                            text: 'Sauvegarder le producteur',
+                            text: 'Sauvegarder',
                             itemId: 'save_producteur_btn',
-                            iconCls: 'disk-icon',
-                            style: 'margin-top: 10px; margin-right: 10px'
+                            iconCls: 'disk-icon'
                         }, {
                             xtype: 'button',
-                            text: 'Filtrer ses produits',
+                            text: 'Filtrer les produits',
                             iconCls: 'drink-icon',
                             itemId: 'filter_produits_btn',
-                            style: 'margin-top: 10px; margin-right: 10px'
+                            style: 'margin-left: 5px'
                         }, {
                             xtype: 'button',
-                            text: 'Nouveau producteur',
+                            text: 'Nouveau',
                             iconCls: 'app-form-add-icon',
                             style: 'margin-top: 10px',
-                            itemId: 'new_producteur_btn'
+                            itemId: 'new_producteur_btn',
+                            style: 'margin-left: 5px'
+                        }, {
+                            xtype: 'button',
+                            text: 'Détruire',
+                            itemId: 'del_producteur_btn',
+                            iconCls: 'del-icon',
+                            style: 'margin-left: 5px'
                         }]
                     }]
                     }

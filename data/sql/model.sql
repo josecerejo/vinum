@@ -46,7 +46,9 @@ create table producteur (
     no_tel text,
     no_fax text,
     note text,
-    suc_num integer
+    suc_num integer,
+    nom_responsable text,
+    courriel text
 );
 
 drop table if exists produit cascade;

@@ -16,6 +16,9 @@ Ext.define('VIN.model.Producteur', {
         header: 'Nom',
         name: 'nom_producteur'
     }, {
+        header: 'Nom du responsable',
+        name: 'nom_responsable'
+    }, {
         name: 'no_civique'
     }, {
         name: 'rue',
@@ -35,6 +38,8 @@ Ext.define('VIN.model.Producteur', {
     }, {
         header: '# fax',
         name: 'no_fax',
+    }, {
+        name: 'courriel'
     }, {
         name: 'suc_num',
         type: 'int',
