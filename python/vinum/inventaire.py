@@ -16,17 +16,26 @@ def get_inventaire():
 
 @app.route('/inventaire/save', methods=['POST'])
 def save_inventaire_record():
+    cur = g.db.cursor()
     rf = request.form.to_dict()
     ni = rf.pop('no_inventaire')
     if ni == '': ni = None
     else: rf['no_inventaire'] = ni # to allow resaving it back after delete with the same id
-    rf['no_produit_interne'] = pg.select1(g.db.cursor(), 'produit', 'no_produit_interne',
+    rf['no_produit_interne'] = pg.select1(cur, 'produit', 'no_produit_interne',
                                           where={'type_vin': rf['type_vin']})
+
+    # if any existing commande_item is associated to this inv record, don't alow its modif
+    inv = pg.select1r(cur, 'inventaire', where={'no_inventaire': ni})
+    if inv:
+        if pg.exists(cur, 'commande_item', where={'no_produit_saq': inv['no_produit_saq'],
+                                                  'no_demande_saq': inv['no_demande_saq']}):
+            raise psycopg2.IntegrityError
+
     pc = float(rf['prix_coutant'])
     rf['prix_particulier'] = (pc * 0.23) + pc
     rf['prix_restaurant'] = (pc / 1.14975) * 0.16 + (pc / 1.15975) + 0.81
-    inv = pg.upsert(g.db.cursor(), 'inventaire', where={'no_inventaire': ni},
-                    values=rf, filter_values=True, map_values={'': None}, debug_print=True)
+    inv = pg.upsert(cur, 'inventaire', where={'no_inventaire': ni},
+                    values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
     return {'success': True, 'data': inv}
 
