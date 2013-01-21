@@ -235,7 +235,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         items: [{
                             xtype: 'combo',
                             allowBlank: false,
-                            flex: 0.75,
+                            flex: 1,
                             displayField: 'nom_producteur',
                             name: 'nom_producteur',
                             itemId: 'nom_producteur_dd',
@@ -248,9 +248,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                                 loadingText: 'Recherche...',
                                 emptyText: 'Aucun producteur ne correspond à cette recherche..'
                             }
-                        }, {
-                            xtype: 'tbspacer',
-                            flex: 0.25
                         }]
                     }, {
                         layout: 'hbox',
@@ -377,21 +374,18 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         border: false,
                         style: 'margin-bottom: 10px',
                         defaults: {
-                            padding: 5,
-                            flex: 1/4
+                            padding: 5
                         },
                         items: [{
                             xtype: 'textfield',
                             fieldLabel: 'Nom du responsable',
-                            name: 'nom_responsable'
+                            name: 'nom_responsable',
+                            flex: 2/3
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Courriel',
-                            name: 'courriel'
-                        }, {
-                            xtype: 'hidden'
-                        }, {
-                            xtype: 'hidden'
+                            name: 'courriel',
+                            flex: 1/3
                         }]
                     }, {
                         layout: 'hbox',
