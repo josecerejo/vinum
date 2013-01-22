@@ -61,6 +61,12 @@ Ext.define('VIN.model.Client', {
         header: '# succursale',
         name: 'no_succursale',
     }, {
+        header: 'Facturation',
+        name: 'mode_facturation'
+    }, {
+        header: 'Facturation (note)',
+        name: 'mode_facturation_note'
+    }, {
         name: 'note',
     }, {
         header: 'Ouverture du dossier',

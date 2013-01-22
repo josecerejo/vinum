@@ -72,8 +72,12 @@
     background: url(../images/icons/page_save.png) no-repeat !important;
 }
 
-.email-attach-icon {
-    background: url(../images/icons/email_attach.png) no-repeat !important;
+.email-icon {
+    background: url(../images/icons/email-icon.png) no-repeat !important;
+}
+
+.poste-icon {
+    background: url(../images/icons/email.png) no-repeat !important;
 }
 
 .cart-go-icon {

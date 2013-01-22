@@ -29,7 +29,7 @@ Ext.define('VIN.controller.Commande', {
             'commande_form #client_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
-                    this.loadClientPartOfCommandeForm(form, records[0].get('no_client'));
+                    this.loadClientPartOfCommandeForm(form, records[0].get('no_client'), Ext.bind(this.loadClientPartOfCommmandeFormCallback, this));
                 }
             },
             '#details_client_btn': {
@@ -332,8 +332,19 @@ Ext.define('VIN.controller.Commande', {
                 edit_click: function(grid, el, rowIndex, colIndex, e, record, rowEl) {
                     this.createCommandeForm(record);
                 }
+            },
+            '#facture_poste_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    form.down('#facture_poste_btn').setIconCls(btn.pressed ? 'tick-icon' : 'poste-icon');
+                    Ext.Msg.show({
+                        title: 'Vinum',
+                        msg: btn.pressed ? "La facture a été envoyée électroniquement à Postes Canada, pour impression suivi d'un envoi par la poste régulière" : 'Il est malheureusement trop tard pour annuler, car la facture est déjà en cours d\'envoi par la poste régulière.',
+                        icon: Ext.MessageBox.INFO,
+                        buttons: Ext.MessageBox.OK
+                    });
+                }
             }
-
         });
     },
 
@@ -466,11 +477,13 @@ Ext.define('VIN.controller.Commande', {
         if (form.getForm().isValid()) {
             var cdd = form.down('#client_dd');
             var cr = cdd.findRecordByDisplay(cdd.getValue());
+            var params = {no_client: cr.get('no_client')};
+            if (cr.get('mode_facturation') === 'poste') {
+                params['facture_est_envoyee'] = form.down('#facture_poste_btn').pressed;
+            }
             form.submit({
                 url: ajax_url_prefix + '/commande/save',
-                params: {
-                    no_client: cr.get('no_client')
-                },
+                params: params,
                 success: Ext.bind(function(_form, action) {
                     var was_created = form.down('#no_commande_facture_tf').getValue() == '';
                     form.loadRecord(action.result); // to load no_commande_facture_tf
@@ -495,7 +508,8 @@ Ext.define('VIN.controller.Commande', {
         }
     },
 
-    loadClientPartOfCommandeForm: function(form, no_client, dont_load_client_produits) {
+    //loadClientPartOfCommandeForm: function(form, no_client, dont_load_client_produits, commande_rec) {
+    loadClientPartOfCommandeForm: function(form, no_client, callback) {
         var cdd = form.down('#client_dd');
         cdd.forceSelection = false;
         form.load({
@@ -517,11 +531,32 @@ Ext.define('VIN.controller.Commande', {
                                                 cr.get('rue')||'<rue?>', cr.get('ville')||'<ville?>',
                                                 cr.get('code_postal')||'<code_postal?>');
                 form.down('#adresse_tf').setValue(adresse);
-                if (dont_load_client_produits === undefined || !dont_load_client_produits) {
-                    this.loadClientProduits(form);
+
+                if (typeof callback === 'function') {
+                    callback(form, cr);
                 }
             }, this)
         });
+    },
+
+    loadClientPartOfCommmandeFormCallback: function(form, client_rec) {
+        this.loadClientProduits(form);
+        form.down('#email_facture_btn').setDisabled(client_rec.get('mode_facturation') === 'poste');
+        form.down('#facture_poste_btn').setDisabled(client_rec.get('mode_facturation') === 'courriel');
+        // commande_rec might be defined in closure
+        if (typeof commande_rec !== 'undefined') {
+            if (commande_rec.get('facture_est_envoyee')) {
+                if (client_rec.get('mode_facturation') === 'courriel') {
+                    form.down('#email_facture_btn').setIconCls('tick-icon');
+                } else {
+                    form.down('#facture_poste_btn').setIconCls('tick-icon');
+                    form.down('#facture_poste_btn').toggle();
+                }
+            }
+            if (commande_rec.get('bon_de_commande_est_envoye')) {
+                form.down('#email_bon_de_commande_btn').setIconCls('tick-icon');
+            }
+        }
     },
 
     loadCommandePartOfCommandeForm: function(form, commande_rec) {
@@ -539,12 +574,6 @@ Ext.define('VIN.controller.Commande', {
            it doesn't play well with the "expedition" rbg
         */
         //form.loadRecord(commande_rec); <-- doesn't work.. why?
-        if (commande_rec.get('facture_est_envoyee')) {
-            form.down('#email_facture_btn').setIconCls('tick-icon');
-        }
-        if (commande_rec.get('bon_de_commande_est_envoye')) {
-            form.down('#email_bon_de_commande_btn').setIconCls('tick-icon');
-        }
         var cig = form.down('#commande_item_g');
         cig.getStore().getProxy().extraParams = {
             no_commande_facture: commande_rec.get('no_commande_facture')
@@ -557,14 +586,16 @@ Ext.define('VIN.controller.Commande', {
         var mp = Ext.getCmp('main_pnl');
         mp.add(cf);
         mp.setActiveTab(cf);
+
+
         if (typeof commande_rec_or_no_client === 'object') {
             var commande_rec = commande_rec_or_no_client;
-            this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'));
+            this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'), Ext.bind(this.loadClientPartOfCommmandeFormCallback, this));
             this.loadCommandePartOfCommandeForm(cf, commande_rec);
             cf.setTitle(Ext.String.format('Commande {0}', commande_rec.get('no_commande_facture')));
         } else if (typeof commande_rec_or_no_client !== 'undefined') {
             var no_client = commande_rec_or_no_client;
-            this.loadClientPartOfCommandeForm(cf, no_client);
+            this.loadClientPartOfCommandeForm(cf, no_client, Ext.bind(this.loadClientPartOfCommmandeFormCallback, this));
         }
     },
 

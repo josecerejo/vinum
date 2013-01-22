@@ -150,7 +150,10 @@ Ext.define('VIN.controller.Client', {
                                 var cr = cdd.findRecordByDisplay(cdd.getValue());
                                 if (cr.get('no_client') == no_client) {
                                     // 3rd bool arg: don't reload client produits
-                                    VIN.app.getController('Commande').loadClientPartOfCommandeForm(tab, no_client, true);
+                                    VIN.app.getController('Commande').loadClientPartOfCommandeForm(tab, no_client, function(form, client_rec) {
+                                        form.down('#email_facture_btn').setDisabled(client_rec.get('mode_facturation') === 'poste');
+                                        form.down('#facture_poste_btn').setDisabled(client_rec.get('mode_facturation') === 'courriel');
+                                    });
                                 }
                             }
                         }
@@ -186,7 +189,10 @@ Ext.define('VIN.controller.Client', {
                 column_flex: {
                     no_client: 0.1,
                     no_client_saq: 0.1,
-                    nom_social: 0.7,
+                    nom_social: 0.4,
+                    expedition: 0.1,
+                    mode_facturation: 0.1,
+                    mode_facturation_note: 0.1,
                     date_ouverture_dossier: 0.1
                 }
             });

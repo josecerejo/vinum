@@ -258,8 +258,40 @@ Ext.define('VIN.view.client.Form', {
                         }]
                     }]
                 }, {
+                    xtype: 'fieldset',
+                    title: 'Facturation',
+                    defaults: {
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false
+                    },
+                    items: {
+                        layout: 'hbox',
+                        defaults: {
+                            bodyStyle: 'background-color:#dfe8f5',
+                            border: false,
+                            padding: 5
+                        },
+                        items: [{
+                            xtype: 'radiofield',
+                            flex: 0.2,
+                            boxLabel: 'Par courriel',
+                            name: 'mode_facturation',
+                            inputValue: 'courriel',
+                            checked: true
+                        }, {
+                            xtype: 'radiofield',
+                            flex: 0.2,
+                            boxLabel: 'Par la poste',
+                            name: 'mode_facturation',
+                            inputValue: 'poste'
+                        }, {
+                            xtype: 'textfield',
+                            flex: 0.6,
+                            name: 'mode_facturation_note'
+                        }]
+                    }
+                }, {
                     xtype: 'vin_grid',
-                    style: 'margin-top: 37px', // align with right column
                     itemId: 'commande_g',
                     title: 'Commandes faites par ce client',
                     resizable: { handles: 's' },
@@ -286,7 +318,8 @@ Ext.define('VIN.view.client.Form', {
                     name: 'note',
                     anchor: '100%',
                     height: 75,
-                    resizable: true
+                    resizable: { handles: 's' },
+                    style: 'margin-bottom: 10px'
                 }, {
                     xtype: 'fieldset',
                     title: 'Coordonnées de la personne en charge',
@@ -428,6 +461,7 @@ Ext.define('VIN.view.client.Form', {
                     }]
                 }, {
                     xtype: 'commande_item_grid',
+                    style: 'margin-top: 49px', // align with grid on left
                     itemId: 'commande_item_g',
                     title: 'Produits commandés',
                     store: Ext.create('VIN.store.CommandeItems'),

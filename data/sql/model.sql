@@ -28,7 +28,9 @@ create table client (
     code_postal_fact text,
     suc_num text,
     jours_livraison text[],
-    date_ouverture_dossier date
+    date_ouverture_dossier date,
+    mode_facturation text check (mode_facturation in ('courriel', 'poste')) default 'courriel',
+    mode_facturation_note text
     --jour_livraison text
 );
 
@@ -134,7 +136,7 @@ create table inventaire (
     prix_coutant numeric,
     millesime integer,
     commission numeric,
-    statut_inventaire text check (statut_inventaire in ('en attente', 'en réserve', 'actif', 'inactif')),
+    statut_inventaire text check (statut_inventaire in ('en attente', 'en réserve', 'actif', 'inactif')) not null,
     solde_bouteille integer, -- en # de bouteilles
     solde_caisse integer,
     solde_30_jours numeric,
