@@ -241,7 +241,7 @@ def _generate_facture(g, ncf, doc_type):
     doc_values['tvq'] = locale.currency(tvq)
     doc_values['total'] = locale.currency(total)
     out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, doc_type)
-    tmpl_fn = 'facture.odt' if client['mode_facturation'] == 'courriel' else 'facture_sans_log.odt'
+    tmpl_fn = 'facture.odt' if client['mode_facturation'] == 'courriel' else 'facture_sans_logo.odt'
     ren = Renderer('/home/christian/vinum/data/templates/%s' % tmpl_fn, doc_values,
                    out_fn, overwriteExisting=True)
     ren.run()
