@@ -508,7 +508,6 @@ Ext.define('VIN.controller.Commande', {
         }
     },
 
-    //loadClientPartOfCommandeForm: function(form, no_client, dont_load_client_produits, commande_rec) {
     loadClientPartOfCommandeForm: function(form, no_client, callback) {
         var cdd = form.down('#client_dd');
         cdd.forceSelection = false;
@@ -539,11 +538,12 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    loadClientPartOfCommmandeFormCallback: function(form, client_rec) {
+    loadClientPartOfCommmandeFormCallback: function(form, client_rec, commande_rec) {
         this.loadClientProduits(form);
         form.down('#email_facture_btn').setDisabled(client_rec.get('mode_facturation') === 'poste');
         form.down('#facture_poste_btn').setDisabled(client_rec.get('mode_facturation') === 'courriel');
         // commande_rec might be defined in closure
+        console.log('2:', commande_rec);
         if (typeof commande_rec !== 'undefined') {
             if (commande_rec.get('facture_est_envoyee')) {
                 if (client_rec.get('mode_facturation') === 'courriel') {
@@ -586,10 +586,9 @@ Ext.define('VIN.controller.Commande', {
         var mp = Ext.getCmp('main_pnl');
         mp.add(cf);
         mp.setActiveTab(cf);
-
-
         if (typeof commande_rec_or_no_client === 'object') {
             var commande_rec = commande_rec_or_no_client;
+            console.log('1:', commande_rec);
             this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'), Ext.bind(this.loadClientPartOfCommmandeFormCallback, this));
             this.loadCommandePartOfCommandeForm(cf, commande_rec);
             cf.setTitle(Ext.String.format('Commande {0}', commande_rec.get('no_commande_facture')));
