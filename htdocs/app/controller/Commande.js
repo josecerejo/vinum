@@ -12,24 +12,28 @@ Ext.define('VIN.controller.Commande', {
 
         this.control({
             'commande_form': {
+                // this (confirm msg or not) prevents a bug (Uncaught TypeError: Cannot call method 'apply' of undefined)
+                // on Chrome/OSX (why only for this particular tab though?)
                 beforeclose: function(form) {
-                    Ext.Msg.confirm('Vinum', "Voulez-vous sauvegarder cette commande avant de la fermer?",
-                                    Ext.bind(function(btn) {
-                                        if (btn == 'yes') {
-                                            this.saveCommandeFormPart(form, function() {
-                                                form.ownerCt.remove(form);
-                                            }, 'both'); // will both both created/saved msgs
-                                        } else {
-                                            form.ownerCt.remove(form);
-                                        }
-                                    }, this));
-                    return false;
+                    form.ownerCt.remove(form);
+                    // Ext.Msg.confirm('Vinum', "Voulez-vous sauvegarder cette commande avant de la fermer?",
+                    //                 Ext.bind(function(btn) {
+                    //                     if (btn == 'yes') {
+                    //                         this.saveCommandeFormPart(form, function() {
+                    //                             form.ownerCt.remove(form);
+                    //                         }, 'both'); // will both both created/saved msgs
+                    //                     } else {
+                    //                         form.ownerCt.remove(form);
+                    //                     }
+                    //                 }, this));
+                    // return false;
                 }
             },
             'commande_form #client_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
-                    this.loadClientPartOfCommandeForm(form, records[0].get('no_client'), Ext.bind(this.loadClientPartOfCommmandeFormCallback, this));
+                    this.loadClientPartOfCommandeForm(form, records[0].get('no_client'),
+                                                      this.getLoadClientPartOfCommmandeFormCallback(form));
                 }
             },
             '#details_client_btn': {
@@ -339,10 +343,16 @@ Ext.define('VIN.controller.Commande', {
                     form.down('#facture_poste_btn').setIconCls(btn.pressed ? 'tick-icon' : 'poste-icon');
                     Ext.Msg.show({
                         title: 'Vinum',
-                        msg: btn.pressed ? "La facture a été envoyée électroniquement à Postes Canada, pour impression suivi d'un envoi par la poste régulière" : 'Il est malheureusement trop tard pour annuler, car la facture est déjà en cours d\'envoi par la poste régulière.',
+                        msg: btn.pressed ? "La facture a été envoyée électroniquement à Postes Canada, pour impression suivi d'un envoi par la poste régulière." : 'Il est malheureusement trop tard pour annuler, car la facture est déjà en cours d\'envoi par la poste régulière.',
                         icon: Ext.MessageBox.INFO,
                         buttons: Ext.MessageBox.OK
                     });
+                }
+            },
+            '#save_commande_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    this.saveCommandeFormPart(form, Ext.emptyFn, 'both');
                 }
             }
         });
@@ -500,7 +510,7 @@ Ext.define('VIN.controller.Commande', {
                             });
                         }
                     }
-                    if (typeof callback !== 'undefined') {
+                    if (typeof callback === 'function') {
                         callback();
                     }
                 }, this)
@@ -530,7 +540,6 @@ Ext.define('VIN.controller.Commande', {
                                                 cr.get('rue')||'<rue?>', cr.get('ville')||'<ville?>',
                                                 cr.get('code_postal')||'<code_postal?>');
                 form.down('#adresse_tf').setValue(adresse);
-
                 if (typeof callback === 'function') {
                     callback(form, cr);
                 }
@@ -538,25 +547,27 @@ Ext.define('VIN.controller.Commande', {
         });
     },
 
-    loadClientPartOfCommmandeFormCallback: function(form, client_rec, commande_rec) {
-        this.loadClientProduits(form);
-        form.down('#email_facture_btn').setDisabled(client_rec.get('mode_facturation') === 'poste');
-        form.down('#facture_poste_btn').setDisabled(client_rec.get('mode_facturation') === 'courriel');
-        // commande_rec might be defined in closure
-        console.log('2:', commande_rec);
-        if (typeof commande_rec !== 'undefined') {
-            if (commande_rec.get('facture_est_envoyee')) {
-                if (client_rec.get('mode_facturation') === 'courriel') {
-                    form.down('#email_facture_btn').setIconCls('tick-icon');
-                } else {
-                    form.down('#facture_poste_btn').setIconCls('tick-icon');
-                    form.down('#facture_poste_btn').toggle();
+    // returns closure on commande_rec, callable with client_rec
+    getLoadClientPartOfCommmandeFormCallback: function(form, commande_rec) {
+        return Ext.bind(function(form, client_rec) {
+            this.loadClientProduits(form);
+            form.down('#email_facture_btn').setDisabled(client_rec.get('mode_facturation') === 'poste');
+            form.down('#facture_poste_btn').setDisabled(client_rec.get('mode_facturation') === 'courriel');
+            // commande_rec might or might not have been defined (by the close creation call)
+            if (typeof commande_rec !== 'undefined') {
+                if (commande_rec.get('facture_est_envoyee')) {
+                    if (client_rec.get('mode_facturation') === 'courriel') {
+                        form.down('#email_facture_btn').setIconCls('tick-icon');
+                    } else {
+                        form.down('#facture_poste_btn').setIconCls('tick-icon');
+                        form.down('#facture_poste_btn').toggle();
+                    }
+                }
+                if (commande_rec.get('bon_de_commande_est_envoye')) {
+                    form.down('#email_bon_de_commande_btn').setIconCls('tick-icon');
                 }
             }
-            if (commande_rec.get('bon_de_commande_est_envoye')) {
-                form.down('#email_bon_de_commande_btn').setIconCls('tick-icon');
-            }
-        }
+        }, this);
     },
 
     loadCommandePartOfCommandeForm: function(form, commande_rec) {
@@ -588,13 +599,13 @@ Ext.define('VIN.controller.Commande', {
         mp.setActiveTab(cf);
         if (typeof commande_rec_or_no_client === 'object') {
             var commande_rec = commande_rec_or_no_client;
-            console.log('1:', commande_rec);
-            this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'), Ext.bind(this.loadClientPartOfCommmandeFormCallback, this));
+            this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'),
+                                              this.getLoadClientPartOfCommmandeFormCallback(cf, commande_rec));
             this.loadCommandePartOfCommandeForm(cf, commande_rec);
             cf.setTitle(Ext.String.format('Commande {0}', commande_rec.get('no_commande_facture')));
         } else if (typeof commande_rec_or_no_client !== 'undefined') {
             var no_client = commande_rec_or_no_client;
-            this.loadClientPartOfCommandeForm(cf, no_client, Ext.bind(this.loadClientPartOfCommmandeFormCallback, this));
+            this.loadClientPartOfCommandeForm(cf, no_client, this.getLoadClientPartOfCommmandeFormCallback(cf));
         }
     },
 

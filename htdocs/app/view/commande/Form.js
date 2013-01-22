@@ -90,6 +90,11 @@ Ext.define('VIN.view.commande.Form', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
+                xtype: 'button',
+                text: 'Sauvegarder',
+                itemId: 'save_commande_btn',
+                iconCls: 'disk-icon'
+            }, {
                 xtype: 'buttongroup',
                 title: 'Bon de commande',
                 items: [{
