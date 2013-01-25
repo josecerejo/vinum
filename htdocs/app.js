@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-01-22';
+var last_update = '2013-01-25';
 var vinum_version = 'prototype';
 
 Ext.window.MessageBox.prototype.buttonText = {
@@ -31,15 +31,19 @@ Ext.form.field.Number.prototype.hideTrigger = true;
 // right align for numeric grid columns
 Ext.grid.column.Number.prototype.align = 'right';
 
-Ext.override(Ext.data.proxy.Ajax, {
-    listeners: {
-        exception: function (proxy, response, operation, options) {
-
-            if (response.status = 401) {
-                login_win.show();
-                return;
-            }
-
+// idea taken from: http://www.sencha.com/forum/showthread.php?147882-Get-store-from-proxy&p=721344&viewfull=1#post721344
+Ext.override(Ext.data.Store, {
+    constructor: function(config) {
+        this.callParent([config]);
+        this.proxy.on('exception', this.onProxyException, this);
+    },
+    onProxyException: function(proxy, response, options, eOpts) {
+        if (response.status === 401) {
+            var store = this;
+            login_win.pop(function() {
+                store.load();
+            });
+        } else {
             if (use_flask_server) {
                 VIN.utils.createFlaskDebugConsoleWindow(response.responseText);
             } else {
@@ -49,130 +53,56 @@ Ext.override(Ext.data.proxy.Ajax, {
     }
 });
 
-// Ext.Ajax.on('requestcomplete', function(conn, response, opts, eopts) {
-//     if (use_flask_server) { return; }
-//     var r = Ext.JSON.decode(response.responseText);
-//     if (!r.success) {
-//         VIN.utils.serverErrorPopup(r.error_msg);
-//     }
-// });
-
-// Ext.Ajax.on('requestexception', function(conn, response, opts, eopts) {
-//     if (use_flask_server) {
-//         VIN.utils.createFlaskDebugConsoleWindow(response.responseText);
-//     } else {
-//         var r = Ext.JSON.decode(response.responseText);
-//         VIN.utils.serverErrorPopup(r.error_msg);
-//     }
-// });
-
 Ext.override(Ext.form.action.Submit, {
     failure: function(form, action) {
-        if (use_flask_server) {
-            VIN.utils.createFlaskDebugConsoleWindow(action.response.responseText);
+        if (action.response.status === 401) {
+            login_win.pop(function() {
+                action.run();
+            });
         } else {
-            VIN.utils.serverErrorPopup(action.result.error_msg);
+            if (use_flask_server) {
+                VIN.utils.createFlaskDebugConsoleWindow(action.response.responseText);
+            } else {
+                VIN.utils.serverErrorPopup(action.result.error_msg);
+            }
         }
     }
 });
 
 Ext.override(Ext.form.action.Load, {
     failure: function(form, action) {
-        if (use_flask_server) {
-            VIN.utils.createFlaskDebugConsoleWindow(action.response.responseText);
+        if (action.response.status === 401) {
+            login_win.pop(function() {
+                action.run();
+            });
         } else {
-            VIN.utils.serverErrorPopup(action.result.error_msg);
+            if (use_flask_server) {
+                VIN.utils.createFlaskDebugConsoleWindow(action.response.responseText);
+            } else {
+                VIN.utils.serverErrorPopup(action.result.error_msg);
+            }
         }
     }
 });
 
 Ext.application({
     name: 'VIN',
-    controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur'],
+    controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur', 'Login'],
     autoCreateViewport: true,
     launch: function() {
         VIN.app = this; // to access the controllers with VIN.app.getController
-        // global!
+
+        // globals!
         wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Un moment svp..."});
 
         successful_login_callback = Ext.emptyFn;
-        login_win = Ext.create('Ext.window.Window', {
-            title: 'Bienvenue à Vinum!',
-            itemId: 'login_w',
-            modal: true,
-            layout: 'fit',
-            closeAction: 'hide',
-            closable: false,
-            successful_login_callback: Ext.emptyFn,
-            items: {
-                xtype: 'form',
-                bodyStyle: 'background-color:#dfe8f5',
-                border: 0,
-                itemId: 'login_f',
-                padding: 10,
-                fieldDefaults: {
-                    anchor: '100%'
-                },
-                layout: {
-                    type: 'vbox',
-                    align: 'stretch'  // Child items are stretched to full width
-                },
-                items: [{
-                    xtype: 'textfield',
-                    fieldLabel: 'Nom',
-                    name: 'username',
-                    itemId: 'username_tf',
-                    allowBlank: false
-                }, {
-                    xtype: 'textfield',
-                    fieldLabel: 'Mot de passe',
-                    name: 'password',
-                    itemId: 'password_tf',
-                    inputType: 'password',
-                    allowBlank: false
-                }]
-            },
-            dockedItems: [{
-                xtype: 'toolbar',
-                dock: 'bottom',
-                ui: 'footer',
-                layout: {
-                    pack: 'center'
-                },
-                items: [{
-                    text: 'Se connecter',
-                    itemId: 'login_btn',
-                    listeners: {
-                        click: function(btn) {
-                            var win = btn.up('#login_w');
-                            var form = win.down('#login_f');
-                            if (!form.getForm().isValid()) { return; }
-                            form.submit({
-                                url: ajax_url_prefix + '/login',
-                                success: function(_form, action) {
-                                    win.hide();
-                                    successful_login_callback();
-                                    successful_login_callback = Ext.emptyFn;
-                                },
-                                failure: function(_form, action) {
-                                    if (action.result.error === 'username') {
-                                        form.down('#username_tf').markInvalid("Ce nom d'usager n'est pas valide");
-                                    } else if (action.result.error === 'password') {
-                                        form.down('#password_tf').markInvalid("Ce mot de passe n'est pas valide");
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }]
-            }]
-        });
+        login_win = Ext.create('VIN.view.Login');
 
         Ext.Ajax.request({
             url: ajax_url_prefix + '/login_check',
             method: 'POST',
             failure: function() {
-                login_win.show();
+                login_win.pop();
             }
         });
 

@@ -184,8 +184,9 @@ create or replace function age_in_days(date) returns int as $$
     select date_part('day', now() - $1)::int
 $$ language sql immutable;
 
--- if PG >= 9, use this (requires postgresql-contrib)
+-- if PG >= 9, use these (requires postgresql-contrib)
 --create extension unaccent;
+--create extension pgcrypto;
 
 -- else, comment previous, uncomment these 2 functions:
 -- taken from: http://www.laudatio.com/wordpress/2008/11/05/postgresql-83-to_ascii-utf8/

@@ -321,12 +321,15 @@ Ext.define('VIN.controller.Commande', {
                                                                rec.get('no_commande_facture')),
                                     Ext.bind(function(btn) {
                                         if (btn == 'yes') {
-                                            Ext.Ajax.request({
+                                            // I use a dummy form here just to avoid using Ext.Ajax.request,
+                                            // which plays less well with my general error handlers
+                                            var dummy_form = Ext.create('Ext.form.Panel');
+                                            dummy_form.submit({
                                                 url: ajax_url_prefix + '/commande/delete',
                                                 params: {
                                                     no_commande_facture: rec.get('no_commande_facture')
                                                 },
-                                                success: function(response) {
+                                                success: function(form, action) {
                                                     grid.getStore().load();
                                                 }
                                             });

@@ -1,6 +1,5 @@
 from vinum import *
 from common import *
-from login import *
 
 
 @app.route('/client/get', methods=['GET'])
@@ -10,21 +9,20 @@ def get_client():
 
 
 @app.route('/client/load', methods=['POST'])
+@login_required
 def load_client():
     # would require a left join here
     client = pg.select1r(g.db.cursor(), 'client', where={'no_client':
                                                          request.form['no_client']})
     client['representant_nom'] = pg.select1(g.db.cursor(), 'representant', 'representant_nom',
                                             where={'representant_id': client['representant_id']})
-    # client = pg.select1r(g.db.cursor(), {'client': 'c', 'representant': 'r'},
-    #                      join={'c.representant_id': 'r.representant_id'},
-    #                      where={'no_client': request.form['no_client']})
     # !!! this should be in the database
     client['default_commission'] = 0.16 if client['type_client'] == 'restaurant' else 0.23
     return {'success': True, 'data': client}
 
 
 @app.route('/client/save', methods=['POST'])
+@login_required
 def save_client():
     rf = request.form.to_dict()
     rf['jours_livraison'] = request.form.getlist('jours_livraison')
@@ -40,16 +38,19 @@ def save_client():
 
 
 @app.route('/client/update', methods=['POST'])
+@login_required
 def update_client():
     return update(g, request, 'client', 'no_client')
 
 
 @app.route('/client/create', methods=['POST'])
+@login_required
 def create_client():
     return create(g, request, 'client', 'no_client')
 
 
 @app.route('/client/delete', methods=['POST'])
+@login_required
 def delete_client():
     pg.delete(g.db.cursor(), 'client', where={'no_client':
                                               request.form['no_client']})
@@ -58,6 +59,7 @@ def delete_client():
 
 
 @app.route('/client/remove_produit', methods=['POST'])
+@login_required
 def remove_produit():
     cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
@@ -68,6 +70,7 @@ def remove_produit():
 
 
 @app.route('/client/add_produit', methods=['POST'])
+@login_required
 def add_produit():
     cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])

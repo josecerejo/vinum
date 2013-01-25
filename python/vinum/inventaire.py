@@ -3,6 +3,7 @@ from common import *
 
 
 @app.route('/inventaire/get', methods=['GET'])
+@login_required
 def get_inventaire():
     # if no_produit_interne is specified, it's a product-specific request from a commande screen,
     # otherwise it's a request from the master grid
@@ -15,6 +16,7 @@ def get_inventaire():
 
 
 @app.route('/inventaire/save', methods=['POST'])
+@login_required
 def save_inventaire_record():
     cur = g.db.cursor()
     rf = request.form.to_dict()
@@ -41,6 +43,7 @@ def save_inventaire_record():
 
 
 @app.route('/inventaire/delete', methods=['POST'])
+@login_required
 def delete_inventaire_record():
     cur = g.db.cursor()
 

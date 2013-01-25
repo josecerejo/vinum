@@ -71,12 +71,15 @@ Ext.define('VIN.controller.Client', {
                                                                rec.get('no_client')),
                         Ext.bind(function(btn) {
                             if (btn == 'yes') {
-                                Ext.Ajax.request({
+                                // I use a dummy form here just to avoid using Ext.Ajax.request,
+                                // which plays less well with my general error handlers
+                                var dummy_form = Ext.create('Ext.form.Panel');
+                                dummy_form.submit({
                                     url: ajax_url_prefix + '/client/delete',
                                     params: {
                                         no_client: rec.get('no_client')
                                     },
-                                    success: function(response) {
+                                    success: function(form, action) {
                                         grid.store.load();
                                     }
                                 });

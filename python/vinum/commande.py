@@ -17,6 +17,7 @@ from smtplib import SMTP
 
 # save only commande part, i.e. does not deal with commande_items
 @app.route('/commande/save', methods=['POST'])
+@login_required
 def save_commande():
     cursor = g.db.cursor()
     rf = request.form.to_dict()
@@ -44,6 +45,7 @@ def _save_commande(cursor, rf):
 
 
 @app.route('/commande/get', methods=['GET'])
+@login_required
 def get_commandes():
     if 'no_client' in request.args:
         return get(g, request, 'commande', where={'no_client': request.args['no_client']})
@@ -54,6 +56,7 @@ def get_commandes():
 
 
 @app.route('/commande/load', methods=['POST'])
+@login_required
 def load_commande():
     commande = pg.select1r(g.db.cursor(), 'commande',
                                where={'no_commande_facture': request.form['no_commande_facture']})
@@ -61,6 +64,7 @@ def load_commande():
 
 
 @app.route('/commande/delete', methods=['POST'])
+@login_required
 def delete_commande():
     cursor = g.db.cursor()
     rf = request.form.to_dict()
@@ -77,6 +81,7 @@ def delete_commande():
 
 
 @app.route('/commande/get_items', methods=['GET'])
+@login_required
 def get_items_for_commande():
     return get(g, request, {'commande_item': 'ci', 'produit': 'p'},
                join={'ci.no_produit_interne': 'p.no_produit_interne'},
@@ -85,6 +90,7 @@ def get_items_for_commande():
 
 # save commande + commande_items
 @app.route('/commande/add_produit', methods=['POST'])
+@login_required
 def add_produit_to_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
@@ -145,6 +151,7 @@ def add_produit_to_commande():
 
 
 @app.route('/commande/remove_produit', methods=['POST'])
+@login_required
 def remove_produit_from_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
@@ -156,6 +163,7 @@ def remove_produit_from_commande():
 
 
 @app.route('/commande/remove_item', methods=['POST'])
+@login_required
 def remove_item_from_commande():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
@@ -199,6 +207,7 @@ def _remove_produit_from_commande(cursor, ncf, npi):
 
 
 @app.route('/commande/update_item', methods=['POST'])
+@login_required
 def update_commande_item():
     rf = request.form.to_dict()
     cursor = g.db.cursor()
@@ -279,6 +288,7 @@ def _generate_bdc(g, ncf, doc_type):
 
 
 @app.route('/commande/download_facture', methods=['GET'])
+@login_required
 def download_facture():
     ncf = request.args['no_commande_facture']
     out_fn = _generate_facture(g, ncf, 'pdf')
@@ -289,6 +299,7 @@ def download_facture():
 
 
 @app.route('/commande/download_bdc', methods=['GET'])
+@login_required
 def download_bdc():
     ncf = request.args['no_commande_facture']
     out_fn = _generate_bdc(g, ncf, 'pdf')
@@ -299,6 +310,7 @@ def download_bdc():
 
 
 @app.route('/commande/email_facture', methods=['POST'])
+@login_required
 def email_facture():
     msg = MIMEMultipart()
     enc = 'latin-1'
@@ -324,6 +336,7 @@ def email_facture():
 
 
 @app.route('/commande/email_bdc', methods=['POST'])
+@login_required
 def email_bdc():
     msg = MIMEMultipart()
     enc = 'latin-1'
