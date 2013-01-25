@@ -17,6 +17,15 @@ Ext.define('VIN.controller.MainToolbar', {
             'toolbar menuitem': {
                 click: function(itm, e, opts) {
                     switch (itm.id) {
+                    case 'logout_menu_itm':
+                        Ext.Ajax.request({
+                            url: ajax_url_prefix + '/logout',
+                            method: 'POST',
+                            success: function() {
+                                login_win.pop();
+                            }
+                        });
+                        break;
                     case 'vinum_about_menu_itm':
                         Ext.Msg.show({
                             title: 'Vinum',

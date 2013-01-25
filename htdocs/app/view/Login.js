@@ -2,7 +2,7 @@ Ext.define('VIN.view.Login', {
 
     extend: 'Ext.window.Window',
 
-    title: 'Bienvenue à Vinum!',
+    title: 'Vinum',
     itemId: 'login_w',
     modal: true,
     layout: 'fit',
@@ -41,7 +41,8 @@ Ext.define('VIN.view.Login', {
             pack: 'center'
         },
         items: [{
-            text: 'Se connecter',
+            text: 'Connexion',
+            iconCls: 'connect-icon',
             itemId: 'login_btn'
         }]
     }],

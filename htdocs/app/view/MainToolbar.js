@@ -5,6 +5,10 @@ Ext.define('VIN.view.MainToolbar', {
         text: 'Vinum',
         iconCls: 'grape-icon',
         menu: [{
+            text: 'Déconnexion',
+            iconCls: 'disconnect-icon',
+            id: 'logout_menu_itm'
+        }, {
             text: 'À propos de Vinum',
             iconCls: 'about-icon',
             id: 'vinum_about_menu_itm'

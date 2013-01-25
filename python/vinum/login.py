@@ -1,7 +1,5 @@
 from vinum import *
-from flask.ext.login import (LoginManager, current_user, login_required,
-                             login_user, logout_user, UserMixin, AnonymousUser,
-                             confirm_login, fresh_login_required)
+from flask.ext.login import LoginManager, login_required, login_user, logout_user, UserMixin
 import sys; sys.path.append('/home/christian/gh/little_pger')
 import little_pger as pg
 
@@ -23,9 +21,9 @@ def load_user(id):
     return None
 
 
-@app.route("/login_check", methods=['POST'])
+@app.route("/check_login", methods=['POST'])
 @login_required
-def login_check():
+def check_login():
     return {'success': True}
 
 
@@ -44,3 +42,10 @@ def login():
         else:
             return {'success': False, 'error': 'password'}
     return {'success': False, 'error': 'username'}
+
+
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return {'success': True}

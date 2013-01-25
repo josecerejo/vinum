@@ -144,6 +144,14 @@
     background: url(../images/icons/color_wheel.png) no-repeat !important;
 }
 
+.connect-icon {
+    background: url(../images/icons/connect.png) no-repeat !important;
+}
+
+.disconnect-icon {
+    background: url(../images/icons/disconnect.png) no-repeat !important;
+}
+
 .nav-menu {
     padding: 0 3px 0 3px;
 }

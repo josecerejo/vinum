@@ -90,16 +90,16 @@ Ext.application({
     controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur', 'Login'],
     autoCreateViewport: true,
     launch: function() {
+
         VIN.app = this; // to access the controllers with VIN.app.getController
 
         // globals!
         wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Un moment svp..."});
-
-        successful_login_callback = Ext.emptyFn;
         login_win = Ext.create('VIN.view.Login');
 
+        // initial login check (needed because the app doesn't interact with the server when it starts up)
         Ext.Ajax.request({
-            url: ajax_url_prefix + '/login_check',
+            url: ajax_url_prefix + '/check_login',
             method: 'POST',
             failure: function() {
                 login_win.pop();
