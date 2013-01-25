@@ -56,6 +56,7 @@ if not inventaire_only:
         no_clients.add(data['no_client'])
         insert(cursor, 'client', values=data)
     cursor.execute("select setval('client_no_client_seq', (select max(no_client) from client)+1)")
+    cursor.execute("update client set mode_facturation = 'poste'") # historical clients have "poste", newer have default "courriel"
     print '(%s)' % count(cursor, 'client')
 
 ####################################################################################################
