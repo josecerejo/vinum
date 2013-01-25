@@ -46,6 +46,7 @@ Ext.define('VIN.view.Login', {
         }]
     }],
     pop: function(callback) {
+        this.down('#login_f').getForm().reset(); // I'm not sure if this might be annoying or not.. more secure though
         this.show();
         this.successful_login_callback = Ext.emptyFn;
         if (typeof callback === 'function') {

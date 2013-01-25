@@ -180,6 +180,9 @@ create table usager (
     mdp_hash text not null
 );
 
+-- to create an usager:
+-- insert into usager (usager_nom, mdp_hash) values (<name>, (select crypt(<pw>, gen_salt('bf'))));
+
 create or replace function age_in_days(date) returns int as $$
     select date_part('day', now() - $1)::int
 $$ language sql immutable;

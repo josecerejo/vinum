@@ -121,18 +121,22 @@ Ext.define('VIN.controller.Client', {
             params: {
                 no_client: no_client
             },
-            callback: Ext.bind(function(records, operation, success) {
-                form.down('#client_dd').getStore().load();
-            }, this)
+            success: function(_form, action) {
+
+                // I guess this was never user (it was im "callback", instead of "success",
+                // which doesn't exist for a form.load); but anyway I'll let it here for a while
+                //form.down('#client_dd').getStore().load();
+
+                var cg = form.down('#commande_g');
+                // bind this commande grid to this particular client, so that every operation
+                // on it (filter, sort, etc) remembers to take it into consideration
+                cg.getStore().getProxy().extraParams = {
+                    no_client: no_client
+                };
+                // load client commandes
+                cg.getStore().load();
+            }
         });
-        var cg = form.down('#commande_g');
-        // bind this commande grid to this particular client, so that every operation
-        // on it (filter, sort, etc) remembers to take it into consideration
-        cg.getStore().getProxy().extraParams = {
-            no_client: no_client
-        };
-        // load client commandes
-        cg.getStore().load();
     },
 
     saveClientForm: function(form, callback) {
