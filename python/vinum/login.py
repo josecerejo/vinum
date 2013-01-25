@@ -45,7 +45,7 @@ def login():
         else:
             return {'success': False, 'error': 'password'}
     # in principle it's not a good practice to reveal the login error (pw/user),
-    # but it's more user-friendly though..
+    # but it's definitely more user-friendly though..
     return {'success': False, 'error': 'username'}
 
 
