@@ -173,6 +173,13 @@ insert into representant values (25, 'Patricia Morin');
 insert into representant values (27, 'Inactif');
 insert into representant values (29, 'bureau');
 
+drop table if exists usager cascade;
+create table usager (
+    usager_id serial primary key,
+    usager_nom text not null,
+    mdp_hash text not null
+);
+
 create or replace function age_in_days(date) returns int as $$
     select date_part('day', now() - $1)::int
 $$ language sql immutable;

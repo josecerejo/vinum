@@ -1,8 +1,10 @@
 from vinum import *
 from common import *
+from login import *
 
 
 @app.route('/client/get', methods=['GET'])
+@login_required
 def get_client():
     return get(g, request, 'client', ('nom_social', 'no_client_saq'))
 

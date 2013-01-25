@@ -31,8 +31,11 @@ class MyFlask(Flask):
         resp = Flask.make_response(self, rv)
         return resp
 
+
 app = MyFlask('vinum')
+app.secret_key = 'not really a secret!'
 app.handle_exception = general_error_handler
+
 
 @app.before_request
 def before_request():
@@ -45,6 +48,7 @@ def teardown_request(exception):
         g.db.close()
 
 try:
+    import login
     import client
     import commande
     import produit

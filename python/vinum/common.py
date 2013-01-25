@@ -1,4 +1,3 @@
-
 import psycopg2.extras, json
 import sys; sys.path.append('/home/christian/gh/little_pger')
 import little_pger as pg
