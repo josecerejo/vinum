@@ -24,6 +24,9 @@ def load_user(id):
 @app.route("/check_login", methods=['POST'])
 @login_required
 def check_login():
+    # all the @login_required decorated views emit 401 if authentication fails
+    # (so this one, by doing nothing, is basically just an authentication checker,
+    #  used when the webapp is loaded, to pop a login dialog if needed)
     return {'success': True}
 
 
