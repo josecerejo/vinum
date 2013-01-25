@@ -446,7 +446,7 @@ Ext.define('VIN.controller.Commande', {
             if (inv_sel.length && desired_qc > sel_qc_avail) {
                 Ext.Msg.show({
                     title: 'Vinum',
-                    msg: "Quantité disponible insuffisante",
+                    msg: "Quantité disponible insuffisante (pour cet item d'inventaire particulier)",
                     icon: Ext.MessageBox.ERROR,
                     buttons: Ext.MessageBox.OK
                 });
