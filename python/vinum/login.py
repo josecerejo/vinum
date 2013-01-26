@@ -40,7 +40,7 @@ def login():
                         what=["mdp_hash = (select crypt('%s', mdp_hash)) is_pwd_ok" % pwd,
                               'usager.*'], where={'usager_nom': un})
         if u['is_pwd_ok']:
-            login_user(User(u), remember=True)
+            login_user(User(u), remember=('remember' in request.form))
             return {'success': True}
         else:
             return {'success': False, 'error': 'password'}

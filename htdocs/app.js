@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-01-25';
+var last_update = '2013-01-26';
 var vinum_version = 'prototype';
 
 Ext.window.MessageBox.prototype.buttonText = {

@@ -15,9 +15,6 @@ Ext.define('VIN.view.Login', {
         border: 0,
         itemId: 'login_f',
         padding: 10,
-        fieldDefaults: {
-            anchor: '100%'
-        },
         items: [{
             xtype: 'textfield',
             fieldLabel: 'Nom',
@@ -31,6 +28,11 @@ Ext.define('VIN.view.Login', {
             itemId: 'password_tf',
             inputType: 'password',
             allowBlank: false
+        }, {
+            xtype: 'checkbox',
+            boxLabel: 'Rester connecté (entre les sessions)',
+            checked: true,
+            name: 'remember'
         }]
     },
     dockedItems: [{
@@ -47,7 +49,8 @@ Ext.define('VIN.view.Login', {
         }]
     }],
     pop: function(callback) {
-        this.down('#login_f').getForm().reset(); // I'm not sure if this might be annoying or not.. more secure though
+        // I'm not sure if this might be annoying or not.. more secure though
+        this.down('#login_f').getForm().reset();
         this.show();
         this.successful_login_callback = Ext.emptyFn;
         if (typeof callback === 'function') {
