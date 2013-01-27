@@ -47,13 +47,11 @@ def teardown_request(exception):
     if hasattr(g, 'db'):
         g.db.close()
 
-try:
-    import login
-    import client
-    import commande
-    import produit
-    import producteur
-    import inventaire
-    import misc
-except:
-    pass
+
+import login
+import client
+import commande
+import produit
+import producteur
+import inventaire
+import misc

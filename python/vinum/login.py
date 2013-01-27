@@ -1,6 +1,5 @@
 from vinum import *
 from flask.ext.login import LoginManager, login_required, login_user, logout_user, UserMixin
-import sys; sys.path.append('/home/christian/gh/little_pger')
 import little_pger as pg
 
 
@@ -26,26 +25,26 @@ def load_user(id):
 def check_login():
     # all the @login_required decorated views emit 401 if authentication fails
     # (so this one, by doing nothing, is basically just an authentication checker,
-    #  used when the webapp is loaded, to pop a login dialog if needed)
+    #  used when the webapp first loads, to pop a login dialog if needed)
     return {'success': True}
 
 
 @app.route("/login", methods=['POST'])
 def login():
     un = request.form["username"]
-    pwd = request.form["password"]
+    pw = request.form["password"]
     u = pg.select1r(g.db.cursor(), 'usager', where={'usager_nom': un})
     if u:
         u = pg.select1r(g.db.cursor(), 'usager',
-                        what=["mdp_hash = (select crypt('%s', mdp_hash)) is_pwd_ok" % pwd,
+                        what=["mdp_hash = (select crypt('%s', mdp_hash)) is_pw_ok" % pw,
                               'usager.*'], where={'usager_nom': un})
-        if u['is_pwd_ok']:
+        if u['is_pw_ok']:
             login_user(User(u), remember=('remember' in request.form))
             return {'success': True}
         else:
             return {'success': False, 'error': 'password'}
     # in principle it's not a good practice to reveal the login error (pw/user),
-    # but it's definitely more user-friendly though..
+    # but.. as it's definitely more user-friendly, let's do it anyway!
     return {'success': False, 'error': 'username'}
 
 

@@ -2,6 +2,7 @@ import os
 from werkzeug.wsgi import SharedDataMiddleware
 from vinum import app
 
+
 if __name__ == '__main__':
 
     delattr(app, 'handle_exception') # app.handle_exception is set in __init__.py to a general handler returning nice 
