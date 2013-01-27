@@ -178,7 +178,8 @@ Ext.define('VIN.controller.Commande', {
                                             form.submit({
                                                 url: ajax_url_prefix + '/commande/remove_item',
                                                 params: {
-                                                    no_produit_saq: nps
+                                                    no_produit_saq: nps,
+                                                    no_produit_interne: rec.get('no_produit_interne') // in case nps is null
                                                 },
                                                 success: Ext.bind(function(_form, action) {
                                                     form.down('#commande_item_g').getStore().load();

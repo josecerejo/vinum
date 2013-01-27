@@ -145,7 +145,13 @@ def add_produit_to_commande():
         qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
         ci = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
               'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut_item': 'BO'}
-        pg.insert(cursor, 'commande_item', values=ci)
+        existing_ci = pg.select1r(cursor, 'commande_item', where={'no_commande_facture': ncf, 'statut_item': 'BO',
+                                                             'no_produit_interne': rf['no_produit_interne']})
+        if existing_ci:
+            ci['quantite_bouteille'] += existing_ci['quantite_bouteille']
+            ci['quantite_caisse'] += existing_ci['quantite_caisse']
+        pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf, 'statut_item': 'BO',
+                                                             'no_produit_interne': rf['no_produit_interne']})
     g.db.commit()
     return {'success': True, 'data': commande}
 
@@ -169,19 +175,23 @@ def remove_item_from_commande():
     cursor = g.db.cursor()
     ncf = rf['no_commande_facture']
     nps = rf['no_produit_saq']
-    ci_inv = pg.select1r(cursor, {'commande_item': 'ci', 'inventaire': 'i'},
-                         join={'ci.no_produit_saq': 'i.no_produit_saq'},
-                         where={'no_commande_facture': ncf, 'ci.no_produit_saq': nps})
-    npi = ci_inv['no_produit_interne']
-    to_be_set_active = ci_inv['statut_inventaire'] == 'actif' or not pg.exists(cursor, 'inventaire',
-                                                                               where={'no_produit_interne': npi,
-                                                                                      'statut_inventaire': 'actif'})
-    pg.update(cursor, 'inventaire', set={'solde_bouteille': ci_inv['solde_bouteille'] + ci_inv['quantite_bouteille'],
-                                         'solde_caisse': ci_inv['solde_caisse'] + ci_inv['quantite_caisse'],
-                                         'statut_inventaire': 'actif' if to_be_set_active else u'en réserve'},
-              where={'no_inventaire': ci_inv['no_inventaire']})
-    pg.delete(cursor, 'commande_item', where={'no_commande_facture': ncf,
-                                              'no_produit_saq': nps})
+    if nps:
+        ci_inv = pg.select1r(cursor, {'commande_item': 'ci', 'inventaire': 'i'},
+                             join={'ci.no_produit_saq': 'i.no_produit_saq'},
+                             where={'no_commande_facture': ncf, 'ci.no_produit_saq': nps})
+        npi = ci_inv['no_produit_interne']
+        to_be_set_active = ci_inv['statut_inventaire'] == 'actif' or not pg.exists(cursor, 'inventaire',
+                                                                                   where={'no_produit_interne': npi,
+                                                                                          'statut_inventaire': 'actif'})
+        pg.update(cursor, 'inventaire', set={'solde_bouteille': ci_inv['solde_bouteille'] + ci_inv['quantite_bouteille'],
+                                             'solde_caisse': ci_inv['solde_caisse'] + ci_inv['quantite_caisse'],
+                                             'statut_inventaire': 'actif' if to_be_set_active else u'en réserve'},
+                  where={'no_inventaire': ci_inv['no_inventaire']})
+        pg.delete(cursor, 'commande_item', where={'no_commande_facture': ncf, 'no_produit_saq': nps})
+    else:
+        # statut_item=='BO'
+        npi = rf['no_produit_interne']
+        pg.delete(cursor, 'commande_item', where={'no_commande_facture': ncf, 'no_produit_interne': npi})
     g.db.commit()
     return {'success': True}
 
