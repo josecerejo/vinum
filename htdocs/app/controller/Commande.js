@@ -171,8 +171,10 @@ Ext.define('VIN.controller.Commande', {
             '#commande_item_g actioncolumn': {
                 del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     var form = this._getFormViewInstance(grid);
-                    var nps = rec.get('no_produit_saq');
-                    Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit SAQ "{0}" de la commande?', nps),
+                    var nps = rec.get('no_produit_saq'); // if statut_item==BO -> nps is null
+                    var msg = nps ? Ext.String.format('Êtes-vous certain de vouloir enlever le produit SAQ "{0}" de la commande?', nps) :
+                        'Êtes-vous certain de vouloir enlever cet item de la commande?';
+                    Ext.Msg.confirm('Vinum', msg,
                                     Ext.bind(function(btn) {
                                         if (btn == 'yes') {
                                             form.submit({
