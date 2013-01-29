@@ -51,8 +51,8 @@ Ext.define('VIN.model.Commande', {
         name: 'date_direct',
         type: 'date'
     }, {
-        header: 'Date d\'envoi',
-        name: 'date_envoi',
+        header: 'Date d\'envoi SAQ',
+        name: 'date_envoi_saq',
         type: 'date'
     }, {
         name: 'montant',

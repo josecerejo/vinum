@@ -85,7 +85,7 @@ create table commande (
     no_succursale integer,
     date_pickup date,
     date_direct date,
-    date_envoi date,
+    date_envoi_saq date,
     statut_commande text,
     sous_total numeric,
     montant numeric,

@@ -54,7 +54,16 @@ Ext.define('VIN.view.Grid', {
         });
 
         this.bbar = Ext.create('Ext.ux.statusbar.StatusBar', {
-            text: 'aucun item'
+            statusAlign: 'right',
+            text: 'aucun item',
+            items: {
+                icon: 'extjs/resources/themes/images/default/grid/refresh.gif',
+                listeners: {
+                    click: function(btn) {
+                        btn.up('grid').getStore().reload();
+                    }
+                }
+            }
         });
 
         var bbar = this.bbar; // not sure why this.bbar is not accessible below, even though I use Ext.bind!

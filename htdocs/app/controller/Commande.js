@@ -632,6 +632,7 @@ Ext.define('VIN.controller.Commande', {
                     no_client_saq: 0.1,
                     nom_social: 0.3,
                     date_commande: 0.1,
+                    date_envoi_saq: 0.1,
                     facture_est_envoyee: 0.05,
                     bon_de_commande_est_envoye: 0.05
                 }

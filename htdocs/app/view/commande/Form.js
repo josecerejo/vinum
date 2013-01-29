@@ -302,40 +302,42 @@ Ext.define('VIN.view.commande.Form', {
                     defaults: {
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false,
-                        padding: 5
+                        padding: 5,
+                        flex: 1/5
                     },
                     layout: 'hbox',
                     items: [{
                         xtype: 'textfield',
-                        fieldLabel: 'No commande Roucet',
-                        flex: 0.25,
+                        fieldLabel: 'No comm. Roucet',
                         readOnly: true,
                         cls: 'x-item-disabled',
                         name: 'no_commande_facture',
                         itemId: 'no_commande_facture_tf'
                     }, {
                         xtype: 'textfield',
-                        flex: 0.25,
-                        fieldLabel: 'No commande SAQ',
+                        fieldLabel: 'No comm. SAQ',
                         name: 'no_commande_saq',
                         itemId: 'no_commande_saq_tf'
                     }, {
                         xtype: 'datefield',
-                        fieldLabel: 'Date',
+                        fieldLabel: 'Date de comm.',
                         name: 'date_commande',
                         format: 'Y-m-d',
-                        value: new Date(),
-                        flex: 0.25
-                        //style: 'margin-right: 20px'
+                        value: new Date()
+                    }, {
+                        xtype: 'datefield',
+                        fieldLabel: 'Date envoi SAQ',
+                        name: 'date_envoi_saq',
+                        format: 'Y-m-d',
+                        value: new Date()
                     }, {
                         xtype: 'combo',
                         itemId: 'default_commission_dd',
-                        flex: 0.25,
                         queryMode: 'local',
                         triggerAction: 'all',
                         displayField: 'default_commission',
                         name: 'default_commission',
-                        fieldLabel: 'Commission par défaut',
+                        fieldLabel: 'Commission',
                         forceSelection: false,
                         regex: /^0\.?[0-9]*$/,
                         regexText: 'La commission doit être une valeur entre 0 et 1',
