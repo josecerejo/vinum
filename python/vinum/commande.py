@@ -252,8 +252,8 @@ def _generate_facture(g, ncf, doc_type):
         doc_values['items'].append([row['quantite_bouteille'], row['type_vin'], row['no_produit_saq'],
                                     row['format'], locale.currency(row['montant_commission']),
                                     locale.currency(montant_comm_x_qb)])
-    tps = sous_total * 0.05
-    tvq = (sous_total + tps) * 0.095
+    tps = sous_total * TPS
+    tvq = sous_total * TVQ
     total = sous_total + tps + tvq
     doc_values['sous_total'] = locale.currency(sous_total)
     doc_values['tps'] = locale.currency(tps)

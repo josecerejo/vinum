@@ -1,7 +1,7 @@
 from __future__ import division
 import sys, csv, re, os, math
-sys.path.append('/home/christian/gh/little_pger')
 from little_pger import *
+
 
 inventaire_only = False
 
@@ -31,6 +31,19 @@ def processRow(row, encoding=default_encoding):
 ####################################################################################################
 
 if not inventaire_only:
+    print 'succursale_saq..',
+    succs = set()
+    with open('../../data/raw/succursales_saq.txt') as f:
+        for line in f:
+            parts = [p.strip() for p in line.split('|')]
+            values = {'no_succursale_saq': parts[0], 'adresse': parts[1], 'ville': parts[2].strip()}
+            succs.add(parts[0])
+            insert(cursor, 'succursale_saq', values=values)
+        print '(%s)' % count(cursor, 'succursale_saq')
+
+####################################################################################################
+
+if not inventaire_only:
     print 'client..',
     sys.stdout.flush()
     cols = getColumns(cursor, 'client')
@@ -46,7 +59,8 @@ if not inventaire_only:
         data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])
         data['type_client'] = type_client_map.get(data['type_client'], data['type_client'])
         data['representant_id'] = selectId(cursor, 'representant', where={'representant_nom': data['representant_id']})
-        data['no_succursale'] = data['no_succursale'] if data['no_succursale'] != '0' else None
+        data['no_succursale_saq'] = data['no_succursale_saq'] if data['no_succursale_saq'] in succs else None
+        data['mode_facturation'] = 'poste' # historical clients have "poste", newer have default "courriel"
         jl = jl_map.get(data['jours_livraison'])
         if jl: data['jours_livraison'] = [jl]
         else: data['jours_livraison'] = None
@@ -56,7 +70,6 @@ if not inventaire_only:
         no_clients.add(data['no_client'])
         insert(cursor, 'client', values=data)
     cursor.execute("select setval('client_no_client_seq', (select max(no_client) from client)+1)")
-    cursor.execute("update client set mode_facturation = 'poste'") # historical clients have "poste", newer have default "courriel"
     print '(%s)' % count(cursor, 'client')
 
 ####################################################################################################
@@ -94,6 +107,7 @@ for row in f:
     row[5] = format_map.get(row[5])
     data = dict(zip(cols, processRow(row)))
     npi_to_qpc[data['no_produit_interne']] = int(data['quantite_par_caisse'])
+    data['format'] = {'6 litres': '6 Litres', '1.5': '1.5 Litre'}.get(data['format'], data['format'])
     if not inventaire_only and data['no_producteur'] in no_producteurs:
         insert(cursor, 'produit', values=data)
         no_produit_internes.add(data['no_produit_interne'])
@@ -130,7 +144,7 @@ if not inventaire_only:
     for row in f:
         data = dict(zip(cols, processRow(row)))
         data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])
-        data['no_succursale'] = data['no_succursale'] if data['no_succursale'] != '0' else None
+        data['no_succursale_saq'] = data['no_succursale_saq'] if data['no_succursale_saq'] in succs else None
         if data['no_client'] in no_clients:
             insert(cursor, 'commande', values=data)
             no_commande_factures.add(data['no_commande_facture'])
@@ -178,13 +192,13 @@ cursor.execute('create index inventaire_no_produit_interne_idx on inventaire (no
 print '(%s)' % count(cursor, 'inventaire')
 
 cursor.execute("""
-update inventaire set prix_particulier = (prix_coutant * 0.23) + prix_coutant;
-update inventaire set prix_restaurant =  (prix_coutant / 1.14975) * 0.16 + (prix_coutant / 1.14975) + 0.81;
+update inventaire set prix_particulier = prix_coutant * 1.23;
+update inventaire set prix_restaurant =  (prix_coutant / 1.14975) * 1.16 + f.montant_timbre
+       from (select montant_timbre from timbre_restaurateur tr, produit p
+             where p.no_produit_interne = no_produit_interne and format_timbre = format) f;
 """)
 
 ####################################################################################################
 
 conn.commit()
 conn.close()
-
-from import_succ import *

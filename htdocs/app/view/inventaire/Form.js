@@ -91,7 +91,8 @@ Ext.define('VIN.view.inventaire.Form', {
                     }, {
                         xtype: 'textfield',
                         fieldLabel: 'Format',
-                        disabled: true,
+                        readOnly: true,
+                        cls: 'x-item-disabled', // we need to retrieve it server side for the timbre
                         name: 'format',
                         style: 'margin-left: 10px',
                     }]
@@ -131,17 +132,17 @@ Ext.define('VIN.view.inventaire.Form', {
                         flex: 1/3
                     },
                     items: [{
-                        xtype: 'numberfield',
+                        xtype: 'pricefield',
                         fieldLabel: '$ coûtant',
                         name: 'prix_coutant'
                     }, {
-                        xtype: 'numberfield',
+                        xtype: 'pricefield',
                         fieldLabel: '$ restaurant',
                         name: 'prix_restaurant',
                         disabled: true,
                         style: 'margin-left: 10px'
                     }, {
-                        xtype: 'numberfield',
+                        xtype: 'pricefield',
                         fieldLabel: '$ particulier',
                         name: 'prix_particulier',
                         disabled: true,

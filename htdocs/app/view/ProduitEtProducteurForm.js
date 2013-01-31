@@ -144,6 +144,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             fieldLabel: 'Format',
                             displayField: 'format',
                             name: 'format',
+                            forceSelection: true,
                             store: Ext.create('Ext.data.Store', {
                                 fields: ['format'],
                                 proxy: {
@@ -159,7 +160,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                                 }
                             }),
                             minChars: 2,
-                            forceSelection: false,
                             listConfig: {
                                 loadingText: 'Recherche...',
                                 emptyText: 'Aucun format trouvé..'
@@ -198,6 +198,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             displayField: 'pays',
                             name: 'pays',
                             allowBlank: false,
+                            forceSelection: true,
                             store: Ext.create('Ext.data.Store', {
                                 fields: ['pays'],
                                 proxy: {
@@ -213,7 +214,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                                 }
                             }),
                             minChars: 2,
-                            forceSelection: false,
                             listConfig: {
                                 loadingText: 'Recherche...',
                                 emptyText: 'Aucun pays trouvé..'

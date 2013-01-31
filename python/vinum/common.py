@@ -46,9 +46,8 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
                                  order_by=order_by, debug_assert=False)
     return json_out
 
+TPS = 0.05
+TVQ = 0.09975
 
 def removeTaxes_(v):
-    tps = 0.05;
-    tvq = 0.095;
-    t = tps + (tvq + (tps * tvq));
-    return v / (1 + t);
+    return v / (1 + TPS + TVQ);

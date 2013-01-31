@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-01-29';
+var last_update = '2013-01-30';
 var vinum_version = 'prototype';
 
 Ext.window.MessageBox.prototype.buttonText = {
@@ -82,6 +82,27 @@ Ext.override(Ext.form.action.Load, {
                 VIN.utils.serverErrorPopup(action.result.error_msg);
             }
         }
+    }
+});
+
+// numberfield with forced 2 decimal precision (for prices)
+// based on that idea: http://stackoverflow.com/a/13736243/787842
+Ext.define('VIN.field.PriceField', {
+    extend: Ext.form.NumberField,
+    alias: 'widget.pricefield',
+    valueToRaw: function(value) {
+        var me = this,
+        decimalSeparator = me.decimalSeparator;
+        value = me.parseValue(value);
+        value = me.fixPrecision(value);
+        value = Ext.isNumber(value) ? value : parseFloat(String(value).replace(decimalSeparator, '.'));
+        if (isNaN(value)) {
+            value = '';
+        } else {
+            value = value.toFixed(me.decimalPrecision);
+            value = String(value).replace(".", decimalSeparator);
+        }
+        return value;
     }
 });
 

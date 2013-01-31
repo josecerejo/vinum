@@ -1,3 +1,22 @@
+drop table if exists succursale_saq cascade;
+create table succursale_saq (
+    no_succursale_saq text primary key, -- text to allow searching
+    adresse text,
+    ville text
+);
+
+drop table if exists representant cascade;
+create table representant (
+    representant_id serial primary key,
+    representant_nom text
+);
+
+drop table if exists timbre_restaurateur cascade;
+create table timbre_restaurateur (
+    format_timbre text primary key,
+    montant_timbre numeric
+);
+
 drop table if exists client cascade;
 create table client (
     no_client serial primary key,
@@ -18,7 +37,7 @@ create table client (
     specialite text,
     representant_id integer references representant,
     expedition text check (expedition in ('direct', 'pickup', 'succursale')),
-    no_succursale text,
+    no_succursale_saq text references succursale_saq,
     note text,
     no_client_saq integer,
     no_civique_fact text,
@@ -60,8 +79,8 @@ create table produit (
     no_producteur integer not null references producteur,
     type_vin text not null,
     nom_domaine text,
-    format text,
-    couleur text,
+    format text not null references timbre_restaurateur (format_timbre),
+    couleur text not null,
     quantite_par_caisse integer not null,
     pays text,
     suc_num integer
@@ -82,7 +101,7 @@ create table commande (
     no_client integer not null not null references client,
     date_commande date,
     expedition text check (expedition in ('direct', 'pickup', 'succursale')),
-    no_succursale integer,
+    no_succursale_saq text references succursale_saq,
     date_pickup date,
     date_direct date,
     date_envoi_saq date,
@@ -146,18 +165,11 @@ create table inventaire (
     prix_particulier numeric -- prix_coutant + 23%
 );
 
-drop table if exists succursale_saq cascade;
-create table succursale_saq (
-    succursale_saq_id serial primary key,
-    no_succursale text not null,
-    adresse text,
-    ville text
-);
-
-drop table if exists representant cascade;
-create table representant (
-    representant_id serial primary key,
-    representant_nom text
+drop table if exists usager cascade;
+create table usager (
+    usager_id serial primary key,
+    usager_nom text not null,
+    mdp_hash text not null
 );
 
 insert into representant values (2, 'David Doucet');
@@ -173,12 +185,17 @@ insert into representant values (25, 'Patricia Morin');
 insert into representant values (27, 'Inactif');
 insert into representant values (29, 'bureau');
 
-drop table if exists usager cascade;
-create table usager (
-    usager_id serial primary key,
-    usager_nom text not null,
-    mdp_hash text not null
-);
+insert into timbre_restaurateur values ('375 ml', 0.51);
+insert into timbre_restaurateur values ('500 ml', 0.68);
+insert into timbre_restaurateur values ('700 ml', 0.95);
+insert into timbre_restaurateur values ('750 ml', 1.01);
+insert into timbre_restaurateur values ('1 Litre', 1.35);
+insert into timbre_restaurateur values ('1.5 Litre', 2.03);
+insert into timbre_restaurateur values ('3 Litres', 4.05);
+insert into timbre_restaurateur values ('5 Litres', 6.75);
+insert into timbre_restaurateur values ('6 Litres', 8.10);
+insert into timbre_restaurateur values ('12 Litres', 16.20);
+insert into timbre_restaurateur values ('18 Litres', 24.30);
 
 -- to create an usager:
 -- insert into usager (usager_nom, mdp_hash) values (<name>, (select crypt(<pw>, gen_salt('bf'))));

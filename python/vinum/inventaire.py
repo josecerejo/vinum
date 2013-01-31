@@ -34,8 +34,10 @@ def save_inventaire_record():
             raise psycopg2.IntegrityError
 
     pc = float(rf['prix_coutant'])
-    rf['prix_particulier'] = (pc * 0.23) + pc
-    rf['prix_restaurant'] = (pc / 1.14975) * 0.16 + (pc / 1.15975) + 0.81
+    rf['prix_particulier'] = pc * 1.23
+    timbre = pg.select1(cur, 'timbre_restaurateur', 'montant_timbre',
+                        where={'format_timbre': rf['format']})
+    rf['prix_restaurant'] = removeTaxes_(pc) * 1.16 + timbre
     inv = pg.upsert(cur, 'inventaire', where={'no_inventaire': ni},
                     values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
