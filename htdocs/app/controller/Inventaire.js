@@ -39,6 +39,7 @@ Ext.define('VIN.controller.Inventaire', {
                     form.down('#type_vin_dd').forceSelection = false;
                     form.getForm().loadRecord(ir);
                     form.down('#type_vin_dd').forceSelection = true;
+                    form.down('#format_tf').setValue();
                 }
             },
 

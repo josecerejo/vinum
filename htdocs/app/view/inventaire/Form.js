@@ -94,6 +94,7 @@ Ext.define('VIN.view.inventaire.Form', {
                         readOnly: true,
                         cls: 'x-item-disabled', // we need to retrieve it server side for the timbre
                         name: 'format',
+                        itemId: 'format_tf',
                         style: 'margin-left: 10px',
                     }]
                 }, {

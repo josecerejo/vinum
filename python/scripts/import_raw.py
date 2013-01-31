@@ -193,9 +193,10 @@ print '(%s)' % count(cursor, 'inventaire')
 
 cursor.execute("""
 update inventaire set prix_particulier = prix_coutant * 1.23;
-update inventaire set prix_restaurant =  (prix_coutant / 1.14975) * 1.16 + f.montant_timbre
-       from (select montant_timbre from timbre_restaurateur tr, produit p
-             where p.no_produit_interne = no_produit_interne and format_timbre = format) f;
+update inventaire set prix_restaurant = (prix_coutant / 1.14975) * 1.16 +
+                                           (select montant_timbre from timbre_restaurateur tr, produit p
+                                               where p.format = tr.format_timbre and
+                                               p.no_produit_interne = inventaire.no_produit_interne);
 """)
 
 ####################################################################################################
