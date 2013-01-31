@@ -37,7 +37,14 @@ def save_inventaire_record():
     rf['prix_particulier'] = pc * 1.23
     timbre = pg.select1(cur, 'timbre_restaurateur', 'montant_timbre',
                         where={'format_timbre': rf['format']})
-    rf['prix_restaurant'] = removeTaxes_(pc) * 1.16 + timbre
+
+    # *** ATTENTION! EXCEPTION POUR LA COMMISSION ***
+    comm_restau_mult = 1.16
+    if int(rf['no_produit_interne']) in [23, 67]:
+        comm_restau_mult = 1.11
+    # ***********************************************
+
+    rf['prix_restaurant'] = removeTaxes_(pc) * comm_restau_mult + timbre
     inv = pg.upsert(cur, 'inventaire', where={'no_inventaire': ni},
                     values=rf, filter_values=True, map_values={'': None})
     g.db.commit()

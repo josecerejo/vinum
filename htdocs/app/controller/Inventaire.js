@@ -39,13 +39,22 @@ Ext.define('VIN.controller.Inventaire', {
                     form.down('#type_vin_dd').forceSelection = false;
                     form.getForm().loadRecord(ir);
                     form.down('#type_vin_dd').forceSelection = true;
-                    form.down('#format_tf').setValue();
+                }
+            },
+
+            'inventaire_form #type_vin_dd': {
+                select: function(field, records, eopts) {
+                    if (records.length == 0) { return; }
+                    var form = field.up('#inventaire_f');
+                    form.getForm().loadRecord(records[0]);
                 }
             },
 
             'inventaire_form #save_inv_record_btn': {
                 click: function(btn) {
                     var form = btn.up('inventaire_form').down('#inventaire_f');
+                    var noi = form.down('#no_inventaire_tf').getValue();
+                    var is_new_inv_rec = (noi === null || noi === '');
                     var g = btn.up('inventaire_form').down('#inventaire_g');
                     var selected_ni = g.getSelectionModel().getSelection();
                     if (selected_ni.length == 1) {
@@ -57,15 +66,30 @@ Ext.define('VIN.controller.Inventaire', {
                         form.submit({
                             url: ajax_url_prefix + '/inventaire/save',
                             success: function(_form, action) {
-                                btn.up('inventaire_form').down('#inventaire_g').getStore().reload({
-                                    callback: function(records, operation, success) {
-                                        // reset selection state before load
-                                        if (operation && selected_ni) {
-                                            var r = g.getStore().query('no_inventaire', selected_ni);
-                                            g.getSelectionModel().select(r.items);
-                                        }
+
+                                // to no_inv and prices field values (which are readonly)
+                                form.down('#no_inventaire_tf').setValue(action.result.data.no_inventaire);
+                                form.down('#prix_restaurant_tf').setValue(action.result.data.prix_restaurant);
+                                form.down('#prix_particulier_tf').setValue(action.result.data.prix_particulier);
+
+                                var cb = function(records, operation, success) {
+                                    // reset selection state before load
+                                    if (operation && selected_ni) {
+                                        var r = g.getStore().query('no_inventaire', selected_ni);
+                                        g.getSelectionModel().select(r.items);
                                     }
-                                });
+                                };
+
+                                // really not sure of this..
+                                if (is_new_inv_rec) {
+                                    btn.up('inventaire_form').down('#inventaire_g').getStore().load({
+                                        callback: cb
+                                    });
+                                } else {
+                                    btn.up('inventaire_form').down('#inventaire_g').getStore().reload({
+                                        callback: cb
+                                    });
+                                }
                             }
                         });
                     }

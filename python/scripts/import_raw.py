@@ -197,6 +197,12 @@ update inventaire set prix_restaurant = (prix_coutant / 1.14975) * 1.16 +
                                            (select montant_timbre from timbre_restaurateur tr, produit p
                                                where p.format = tr.format_timbre and
                                                p.no_produit_interne = inventaire.no_produit_interne);
+-- exception for ROU711/721
+update inventaire set prix_restaurant = (prix_coutant / 1.14975) * 1.11 +
+                                           (select montant_timbre from timbre_restaurateur tr, produit p
+                                               where p.format = tr.format_timbre and
+                                               p.no_produit_interne = inventaire.no_produit_interne)
+    where no_produit_interne in (23, 67);
 """)
 
 ####################################################################################################

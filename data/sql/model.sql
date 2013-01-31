@@ -77,7 +77,7 @@ create table produit (
     no_produit_interne serial primary key,
     ancien_no_produit integer,
     no_producteur integer not null references producteur,
-    type_vin text not null,
+    type_vin text not null unique,
     nom_domaine text,
     format text not null references timbre_restaurateur (format_timbre),
     couleur text not null,

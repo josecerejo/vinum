@@ -117,7 +117,8 @@ Ext.define('VIN.view.inventaire.Form', {
                         xtype: 'numberfield',
                         fieldLabel: '# prod. SAQ',
                         name: 'no_produit_saq',
-                        style: 'margin-left: 10px'
+                        style: 'margin-left: 10px',
+                        allowBlank: true
                     }, {
                         xtype: 'numberfield',
                         fieldLabel: '# dem. SAQ',
@@ -140,12 +141,14 @@ Ext.define('VIN.view.inventaire.Form', {
                         xtype: 'pricefield',
                         fieldLabel: '$ restaurant',
                         name: 'prix_restaurant',
+                        itemId: 'prix_restaurant_tf',
                         disabled: true,
                         style: 'margin-left: 10px'
                     }, {
                         xtype: 'pricefield',
                         fieldLabel: '$ particulier',
                         name: 'prix_particulier',
+                        itemId: 'prix_particulier_tf',
                         disabled: true,
                         style: 'margin-left: 10px'
                     }]
@@ -184,6 +187,7 @@ Ext.define('VIN.view.inventaire.Form', {
                         fieldLabel: 'Qté reçue',
                         name: 'quantite_recue',
                         style: 'margin-left: 10px',
+                        allowBlank: true
                     }]
                 }, {
                     layout: 'hbox',
@@ -206,7 +210,6 @@ Ext.define('VIN.view.inventaire.Form', {
                     }]
                 }, {
                     xtype: 'combo',
-                    allowBlank: false,
                     name: 'statut_inventaire',
                     queryMode: 'local',
                     triggerAction: 'all',

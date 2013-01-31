@@ -98,9 +98,17 @@ def add_produit_to_commande():
     commande = _save_commande(cursor, rf)
     ncf = commande['no_commande_facture']
     rem_qc = int(rf['qc'])
-    default_commission = float(rf['default_commission'])
+
+    # *** ATTENTION! EXCEPTION POUR LA COMMISSION ***
+    comm = float(rf['default_commission'])
+    if rf['type_client'] == 'restaurant' and int(rf['no_produit_interne']) in [23, 67]:
+        comm = 0.11
+   # ***********************************************
+
     where = {'statut_inventaire': ('actif', u'en réserve'),
              'i.no_produit_interne': rf['no_produit_interne']}
+    # this is used in the case that the user selected a particular row from the inventaire,
+    # to retrieve bottles ONLY from that record (i.e. a given "produit SAQ")
     nps_constraint = request.form.getlist('nps_constraint')
     if nps_constraint:
         where['no_produit_saq'] = tuple(nps_constraint)
@@ -133,8 +141,8 @@ def add_produit_to_commande():
         ci['no_commande_facture'] = ncf
         ci['quantite_caisse'] = existing_ci['quantite_caisse'] + qc
         ci['quantite_bouteille'] = existing_ci['quantite_bouteille'] + qb
-        ci['commission'] = default_commission
-        ci['montant_commission'] = removeTaxes_(inv['prix_coutant']) * default_commission
+        ci['commission'] = comm
+        ci['montant_commission'] = removeTaxes_(inv['prix_coutant']) * comm
         ci['statut_item'] = 'OK'
         pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf,
                                                              'no_produit_saq': ci['no_produit_saq']},
@@ -144,7 +152,7 @@ def add_produit_to_commande():
         # backorders
         qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
         ci = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
-              'quantite_bouteille': rem_qc * qpc, 'commission': default_commission, 'statut_item': 'BO'}
+              'quantite_bouteille': rem_qc * qpc, 'commission': comm, 'statut_item': 'BO'}
         existing_ci = pg.select1r(cursor, 'commande_item', where={'no_commande_facture': ncf, 'statut_item': 'BO',
                                                              'no_produit_interne': rf['no_produit_interne']})
         if existing_ci:
