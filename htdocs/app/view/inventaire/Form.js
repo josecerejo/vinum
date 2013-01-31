@@ -163,11 +163,13 @@ Ext.define('VIN.view.inventaire.Form', {
                     items: [{
                         xtype: 'numberfield',
                         fieldLabel: 'Solde (b)',
-                        name: 'solde_bouteille'
+                        name: 'solde_bouteille',
+                        allowBlank: true
                     }, {
                         xtype: 'numberfield',
                         fieldLabel: 'Solde (c)',
                         name: 'solde_caisse',
+                        allowBlank: true,
                         style: 'margin-left: 10px',
                     }]
                 }, {
@@ -215,6 +217,7 @@ Ext.define('VIN.view.inventaire.Form', {
                     triggerAction: 'all',
                     displayField: 'statut_inventaire',
                     valueField: 'statut_inventaire',
+                    value: 'en attente',
                     fieldLabel: 'Statut',
                     forceSelection: true,
                     store: Ext.create('Ext.data.Store', {
