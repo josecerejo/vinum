@@ -542,9 +542,8 @@ Ext.define('VIN.controller.Commande', {
                  */
                 cdd.getStore().loadData([cr]);
                 form.down('#details_client_btn').setDisabled(false);
-                var adresse = Ext.String.format('{0} {1} {2} {3}', cr.get('no_civique')||'<no?>',
-                                                cr.get('rue')||'<rue?>', cr.get('ville')||'<ville?>',
-                                                cr.get('code_postal')||'<code_postal?>');
+                var adresse = Ext.String.format('{0} {1} {2} {3}', cr.get('no_civique')||'', cr.get('rue')||'',
+                                                cr.get('ville')||'', cr.get('code_postal')||'');
                 form.down('#adresse_tf').setValue(adresse);
                 if (typeof callback === 'function') {
                     callback(form, cr);
@@ -633,6 +632,7 @@ Ext.define('VIN.controller.Commande', {
                     nom_social: 0.3,
                     date_commande: 0.1,
                     date_envoi_saq: 0.1,
+                    note_commande: 0.15,
                     facture_est_envoyee: 0.05,
                     bon_de_commande_est_envoye: 0.05
                 }

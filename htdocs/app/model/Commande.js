@@ -82,6 +82,9 @@ Ext.define('VIN.model.Commande', {
         header: 'Jour de livraison',
         name: 'jour_livraison'
     }, {
+        header: 'Note',
+        name: 'note_commande'
+    }, {
         header: 'Facture envoyée',
         name: 'facture_est_envoyee',
         type: 'bool'

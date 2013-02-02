@@ -315,7 +315,7 @@ Ext.define('VIN.view.client.Form', {
                 items: [{
                     xtype: 'textarea',
                     fieldLabel: 'Notes',
-                    name: 'note',
+                    name: 'note_client',
                     anchor: '100%',
                     height: 75,
                     resizable: { handles: 's' },

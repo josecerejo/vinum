@@ -408,7 +408,16 @@ Ext.define('VIN.view.commande.Form', {
             }, {
                 // -----------------------------------------------------
                 // right part panel
+                layout: 'anchor',
                 items: [{
+                    xtype: 'textarea',
+                    fieldLabel: 'Notes',
+                    name: 'note_commande',
+                    anchor: '100%',
+                    height: 60,
+                    resizable: { handles: 's' },
+                    style: 'margin-bottom: 10px'
+                }, {
                     xtype: 'vin_grid',
                     itemId: 'inventaire_produit_g',
                     store: Ext.create('VIN.store.Inventaires', {
@@ -434,7 +443,7 @@ Ext.define('VIN.view.commande.Form', {
                         solde_bouteille: 1,
                         solde_caisse: 1
                     },
-                    height: grid_height,
+                    height: grid_height - 70,
                     style: 'margin-bottom: 20px'
                 }, {
                     xtype: 'commande_item_grid',

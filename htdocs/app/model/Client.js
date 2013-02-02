@@ -67,7 +67,8 @@ Ext.define('VIN.model.Client', {
         header: 'Facturation (note)',
         name: 'mode_facturation_note'
     }, {
-        name: 'note',
+        header: 'Note',
+        name: 'note_client'
     }, {
         header: 'Ouverture du dossier',
         name: 'date_ouverture_dossier',
