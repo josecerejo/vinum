@@ -225,7 +225,7 @@ Ext.define('VIN.controller.Client', {
                         fieldLabel: 'Filtrer les clients (par nom social)',
                         itemId: 'nom_social_external_filter_tf',
                         labelWidth: 175,
-//                        width: 500
+                        width: 400
                     }
                 }
             });

@@ -1,5 +1,3 @@
-# -*- coding: cp1252 -*-
-
 from __future__ import division
 import sys, csv, re, os, math
 from little_pger import *
@@ -159,7 +157,7 @@ if not inventaire_only:
     sys.stdout.flush()
     cols = getColumns(cursor, 'commande_item')
     cols.remove('commission')
-    f = csv.reader(open('%s/ProduitsCommandés.csv' % export_dir), delimiter=delim)
+    f = csv.reader(open('%s/ProduitsCommandes.csv' % export_dir), delimiter=delim)
     f.next()
     for row in f:
         data = dict(zip(cols, processRow(row)))
