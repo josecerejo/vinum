@@ -95,6 +95,20 @@ Ext.define('VIN.controller.Client', {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
                     this.createClientForm(record);
                 }
+            },
+
+            '#client_g #nom_social_external_filter_tf': {
+                keyup: function(tf, e, opts) {
+                    var g = tf.up('#client_g');
+                    var ns_filter = g.filters.getFilter('nom_social');
+                    if (tf.getValue()) {
+                        ns_filter.setValue(tf.getValue());
+                        ns_filter.setActive(true);
+                    } else {
+                        ns_filter.setValue('');
+                        ns_filter.setActive(false);
+                    }
+                }
             }
 
         });
@@ -201,6 +215,18 @@ Ext.define('VIN.controller.Client', {
                     mode_facturation: 0.1,
                     mode_facturation_note: 0.1,
                     date_ouverture_dossier: 0.1
+                },
+                dockedItems: {
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    items: {
+                        xtype: 'textfield',
+                        enableKeyEvents: true,
+                        fieldLabel: 'Filtrer les clients (par nom social)',
+                        itemId: 'nom_social_external_filter_tf',
+                        labelWidth: 175,
+//                        width: 500
+                    }
                 }
             });
             Ext.getCmp('main_pnl').add(cg);

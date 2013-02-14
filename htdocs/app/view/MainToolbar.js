@@ -21,7 +21,7 @@ Ext.define('VIN.view.MainToolbar', {
             iconCls: 'commandes-add-icon',
             id: 'create_commande_menu_itm'
         }, {
-            text: 'Afficher les commandes',
+            text: 'Toutes les commandes',
             iconCls: 'clients-list-icon',
             id: 'list_commandes_menu_itm'
         }]
@@ -33,7 +33,7 @@ Ext.define('VIN.view.MainToolbar', {
             iconCls: 'clients-add-icon',
             id: 'edit_client_menu_itm'
         }, {
-            text: 'Afficher les clients',
+            text: 'Tous les clients',
             iconCls: 'clients-list-icon',
             id: 'list_clients_menu_itm'
         }]
@@ -45,7 +45,7 @@ Ext.define('VIN.view.MainToolbar', {
             iconCls: 'produits-icon',
             id: 'produits_pp_menu_itm'
         }, {
-            text: 'Afficher l\'inventaire',
+            text: 'Inventaire',
             iconCls: 'clients-list-icon',
             id: 'produits_inv_menu_itm'
         }]
