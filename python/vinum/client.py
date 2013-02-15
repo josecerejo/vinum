@@ -5,7 +5,9 @@ from common import *
 @app.route('/client/get', methods=['GET'])
 @login_required
 def get_client():
-    return get(g, request, 'client', ('nom_social', 'no_client_saq', 'no_tel', 'courriel'))
+    return get(g, request, 'client', ('nom_social', 'no_client_saq', 'no_tel', 'courriel',
+                                      'no_tel_personnel', 'no_cellulaire', 'note_client',
+                                      'nom_responsable'))
 
 
 @app.route('/client/load', methods=['POST'])
