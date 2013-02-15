@@ -417,12 +417,12 @@ Ext.define('VIN.view.client.Form', {
                         }, {
                             xtype: 'combo',
                             flex: 0.3,
-                            displayField: 'no_succursale',
+                            displayField: 'no_succursale_saq',
                             name: 'no_succursale',
                             store: Ext.create('Ext.data.Store', {
                                 model: Ext.define('VIN.model.Succursale', {
                                     extend: 'Ext.data.Model',
-                                    fields: ['no_succursale', 'ville', 'adresse']
+                                    fields: ['no_succursale_saq', 'ville', 'adresse']
                                 }),
                                 proxy: {
                                     type: 'ajax',
@@ -439,13 +439,13 @@ Ext.define('VIN.view.client.Form', {
                             itemId: 'succ_dd',
                             hideLabel: true,
                             minChars: 3,
-                            forceSelection: false, // to allow setting record field no_succursale alone
+                            forceSelection: false, // to allow setting record field no_succursale_saq alone
                             matchFieldWidth: false,
                             listConfig: {
                                 loadingText: 'Recherche...',
                                 emptyText: 'Aucune succursale ne correspond à cette recherche..',
                                 getInnerTpl: function() {
-                                    return '<span style="display:inline-block; width:20% !important">{no_succursale}</span>' +
+                                    return '<span style="display:inline-block; width:20% !important">{no_succursale_saq}</span>' +
                                         '<span style="display:inline-block; width:35% !important">{ville}</span>' +
                                         '<span style="display:inline-block; width:45% !important">{adresse}</span>';
                                 }

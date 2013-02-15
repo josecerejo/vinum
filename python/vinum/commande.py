@@ -32,14 +32,14 @@ def _save_commande(cursor, rf):
     else: rf['no_commande_facture'] = ncf # to allow resaving it back after delete with the same id
     # !!! not sure of this.. could be done in the client as well, or not at all
     if rf['expedition'] == 'direct':
-        rf['no_succursale'] = None
+        rf['no_succursale_saq'] = None
         rf['date_pickup'] = None
     elif rf['expedition'] == 'succursale':
         rf['date_direct'] = None
         rf['date_pickup'] = None
     elif rf['expedition'] == 'pickup':
         rf['date_direct'] = None
-        rf['no_succursale'] = None
+        rf['no_succursale_saq'] = None
     return pg.upsert(cursor, 'commande', where={'no_commande_facture': ncf},
                      values=rf, filter_values=True, map_values={'': None})
 
@@ -292,7 +292,7 @@ def _generate_bdc(g, ncf, doc_type):
         doc_values['date_expedition'] = commande['date_direct']
     elif commande['expedition'] == 'succursale':
         doc_values['sc'] = 'X'
-        doc_values['no_succursale'] = commande['no_succursale']
+        doc_values['no_succursale_saq'] = commande['no_succursale_saq']
     cis = pg.select(cursor, 'commande_item', where={'no_commande_facture': ncf})
     n_left = int(math.ceil(len(cis) / 2.))
     doc_values['left_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[:n_left]]

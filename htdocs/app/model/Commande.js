@@ -38,10 +38,8 @@ Ext.define('VIN.model.Commande', {
         header: 'Expédition',
         name: 'expedition'
     }, {
-        header: 'Succursale',
-        name: 'no_succursale',
-        type: 'int',
-        useNull: true
+        header: '# succ. SAQ',
+        name: 'no_succursale_saq',
     }, {
         header: 'Date de pickup',
         name: 'date_pickup',
