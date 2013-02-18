@@ -182,6 +182,20 @@ Ext.define('VIN.view.commande.Form', {
                         }],
                     }, {
                         layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        defaults: {
+                            padding: 5
+                        },
+                        items: {
+                            flex: 1,
+                            xtype: 'textfield',
+                            fieldLabel: 'Notes (client)',
+                            name: 'note_client',
+                            disabled: true
+                        }
+                    }, {
+                        layout: 'hbox',
                         defaults: {
                             padding: 5
                         },
@@ -443,7 +457,7 @@ Ext.define('VIN.view.commande.Form', {
                         solde_bouteille: 1,
                         solde_caisse: 1
                     },
-                    height: grid_height - 70,
+                    height: grid_height - 23,
                     style: 'margin-bottom: 20px'
                 }, {
                     xtype: 'commande_item_grid',

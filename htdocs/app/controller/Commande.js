@@ -530,7 +530,8 @@ Ext.define('VIN.controller.Commande', {
         form.load({
             url: ajax_url_prefix + '/client/load',
             params: {
-                no_client: no_client
+                no_client: no_client,
+                format_note: true // since the note_client field is one-line, replace \n's by spaces
             },
             success: Ext.bind(function(_form, action) {
                 cdd.forceSelection = true;

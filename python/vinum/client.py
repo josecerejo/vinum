@@ -20,6 +20,8 @@ def load_client():
                                             where={'representant_id': client['representant_id']})
     # !!! this should be in the database
     client['default_commission'] = 0.16 if client['type_client'] == 'restaurant' else 0.23
+    if 'format_note' in request.form:
+        client['note_client'] = client['note_client'].replace('\n', ' ')
     return {'success': True, 'data': client}
 
 
