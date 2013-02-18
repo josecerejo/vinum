@@ -363,6 +363,19 @@ Ext.define('VIN.view.commande.Form', {
                         })
                     }]
                 }, {
+                    layout: 'hbox',
+                    bodyStyle: 'background-color:#dfe8f5',
+                    border: false,
+                    defaults: { padding: 5 },
+                    items: {
+                        xtype: 'textarea',
+                        flex: 1,
+                        fieldLabel: 'Notes',
+                        name: 'note_commande',
+                        height: 60,
+                        resizable: { handles: 's' }
+                    }
+                }, {
                     border: false,
                     bodyStyle: 'background-color:#dfe8f5',
                     layout: 'hbox',
@@ -405,33 +418,6 @@ Ext.define('VIN.view.commande.Form', {
                         style: 'margin-top: 25px'
                     }]
                 }, {
-                    xtype: 'client_produit_grid',
-                    itemId: 'client_produit_g',
-                    title: 'Liste de produits habituels pour le client',
-                    resizable: { handles: 's' },
-                    store: Ext.create('VIN.store.Produits'),
-                    load_after_render: false,
-                    column_flex: {
-                        type_vin: 2,
-                        nom_domaine: 2,
-                        format: 1,
-                        quantite_caisse: 1
-                    },
-                    height: grid_height
-                }]
-            }, {
-                // -----------------------------------------------------
-                // right part panel
-                layout: 'anchor',
-                items: [{
-                    xtype: 'textarea',
-                    fieldLabel: 'Notes',
-                    name: 'note_commande',
-                    anchor: '100%',
-                    height: 60,
-                    resizable: { handles: 's' },
-                    style: 'margin-bottom: 10px'
-                }, {
                     xtype: 'vin_grid',
                     itemId: 'inventaire_produit_g',
                     store: Ext.create('VIN.store.Inventaires', {
@@ -445,7 +431,7 @@ Ext.define('VIN.view.commande.Form', {
                     selModel: {
                         mode: 'MULTI'
                     },
-                    title: 'Inventaire pour un produit particulier (choisir dans la liste de gauche ou dans le champ "Tous les produits")',
+                    title: 'Inventaire pour un produit particulier (choisir dans la liste à droite ou dans le champ "Tous les produits")',
                     resizable: { handles: 's' },
                     load_after_render: false,
                     column_flex: {
@@ -457,7 +443,26 @@ Ext.define('VIN.view.commande.Form', {
                         solde_bouteille: 1,
                         solde_caisse: 1
                     },
-                    height: grid_height - 23,
+                    height: grid_height
+                }]
+            }, {
+                // -----------------------------------------------------
+                // right part panel
+                layout: 'anchor',
+                items: [{
+                    xtype: 'client_produit_grid',
+                    itemId: 'client_produit_g',
+                    title: 'Liste de produits habituels pour le client',
+                    resizable: { handles: 's' },
+                    store: Ext.create('VIN.store.Produits'),
+                    load_after_render: false,
+                    column_flex: {
+                        type_vin: 2,
+                        nom_domaine: 2,
+                        format: 1,
+                        quantite_caisse: 1
+                    },
+                    height: grid_height + 122,
                     style: 'margin-bottom: 20px'
                 }, {
                     xtype: 'commande_item_grid',
