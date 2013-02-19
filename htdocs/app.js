@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-02-18';
+var last_update = '2013-02-19';
 var vinum_version = 'prototype';
 
 Ext.window.MessageBox.prototype.buttonText = {
@@ -108,7 +108,8 @@ Ext.define('VIN.field.PriceField', {
 
 Ext.application({
     name: 'VIN',
-    controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur', 'Login'],
+    controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur',
+                  'Login', 'Rapport'],
     autoCreateViewport: true,
     launch: function() {
 

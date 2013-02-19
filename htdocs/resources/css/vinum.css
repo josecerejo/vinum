@@ -152,6 +152,14 @@
     background: url(../images/icons/disconnect.png) no-repeat !important;
 }
 
+.report-icon {
+    background: url(../images/icons/report.png) no-repeat !important;
+}
+
+.cog-icon {
+    background: url(../images/icons/cog.png) no-repeat !important;
+}
+
 .nav-menu {
     padding: 0 3px 0 3px;
 }

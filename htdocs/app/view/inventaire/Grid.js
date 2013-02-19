@@ -16,11 +16,14 @@ Ext.define('VIN.view.inventaire.Grid', {
                 iconCls: 'color-icon',
                 pressed: true
             }, {
+                xtype: 'tbspacer',
+                width: 5
+            }, {
                 xtype: 'textfield',
                 enableKeyEvents: true,
-                fieldLabel: 'Filtrer par type de vin',
+                emptyText: 'Filtrer par type de vin',
                 itemId: 'type_vin_external_filter_tf',
-                labelWidth: 120
+                width: 250
             }]
         };
 

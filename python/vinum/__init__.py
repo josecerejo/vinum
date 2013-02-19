@@ -54,4 +54,5 @@ import commande
 import produit
 import producteur
 import inventaire
+import rapport
 import misc

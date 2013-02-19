@@ -1,4 +1,5 @@
 Ext.define('VIN.view.MainToolbar', {
+
     extend: 'Ext.Toolbar',
     alias: 'widget.main_toolbar',
     items: [{
@@ -49,5 +50,19 @@ Ext.define('VIN.view.MainToolbar', {
             iconCls: 'clients-list-icon',
             id: 'produits_inv_menu_itm'
         }]
+    }, {
+        text: 'Rapports',
+        iconCls: 'report-icon',
+        menu: [{
+            text: 'Rapport des transactions',
+            iconCls: 'report-icon',
+            id: 'rapport_transactions_menu_itm',
+            disabled: true
+        }, {
+            text: 'Rapport des ventes',
+            iconCls: 'report-icon',
+            id: 'rapport_ventes_menu_itm'
+        }]
     }]
+
 });

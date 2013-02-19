@@ -138,7 +138,7 @@ create table commande_item (
     no_client integer,
     commission numeric, -- added
     montant_commission numeric,
-    date_commande date, -- ??
+    --date_commande date, -- ??
     suc_num integer
 );
 
