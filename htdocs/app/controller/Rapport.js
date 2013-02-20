@@ -101,7 +101,7 @@ Ext.define('VIN.controller.Rapport', {
                 }, {
                     xtype: 'button',
                     iconCls: 'cog-icon',
-                    text: 'Produire le rapport',
+                    text: 'Voir les données',
                     itemId: 'run_rapport_vente_btn'
                 }, {
                     xtype: 'tbspacer',
@@ -110,7 +110,7 @@ Ext.define('VIN.controller.Rapport', {
                     xtype: 'button',
                     iconCls: 'disk-icon',
                     text: 'Télécharger le rapport',
-                    disabled: true
+                    itemId: 'download_rapport_vente_btn'
                 }]
             }
         });
