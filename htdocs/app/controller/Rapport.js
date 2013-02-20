@@ -9,8 +9,8 @@ Ext.define('VIN.controller.Rapport', {
             '#run_rapport_vente_btn': {
                 click: function(btn) {
                     var g = btn.up('#rapport_vente_g'),
-                    sd = g.down('#start_date_df').getValue(),
-                    ed = g.down('#end_date_df').getValue();
+                    sd = g.down('#start_date_df').getRawValue(),
+                    ed = g.down('#end_date_df').getRawValue();
                     if (!sd) {
                         g.down('#start_date_df').markInvalid('Ce champ est requis');
                     }
@@ -25,6 +25,26 @@ Ext.define('VIN.controller.Rapport', {
                             representant_nom: g.down('#representant_nom_dd').getValue()
                         }
                     });
+                }
+            },
+
+            '#download_rapport_vente_btn': {
+                click: function(btn) {
+                    var g = btn.up('#rapport_vente_g'),
+                    sd = g.down('#start_date_df').getRawValue(),
+                    ed = g.down('#end_date_df').getRawValue();
+                    if (!sd) {
+                        g.down('#start_date_df').markInvalid('Ce champ est requis');
+                    }
+                    if (!ed) {
+                        g.down('#end_date_df').markInvalid('Ce champ est requis');
+                    }
+                    if (!sd || !ed) { return; }
+                    var repr = g.down('#representant_nom_dd').getValue();
+                    repr =  repr ? repr : '';
+                    var url = Ext.String.format('{0}/rapport/vente_download?start_date={1}&end_date={2}&representant_nom={3}',
+                                                ajax_url_prefix, sd, ed, repr);
+                    location.href = url;
                 }
             }
 
