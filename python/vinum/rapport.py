@@ -4,17 +4,24 @@ from collections import defaultdict
 from appy.pod.renderer import Renderer
 
 
-# !!!
 def _get_rapport_vente_data(request):
-    where = {('date_commande', '>='): request.args['start_date'], ('date_commande', '<='): request.args['end_date']}
+    q = """ select ci.no_produit_interne, p.type_vin, p.nom_domaine, p.format,
+                   p.quantite_par_caisse, sum(ci.quantite_caisse) as quantite_caisse
+            from produit p
+            inner join commande_item ci on ci.no_produit_interne = p.no_produit_interne
+            inner join commande o on o.no_commande_facture = ci.no_commande_facture
+            inner join client c on o.no_client = c.no_client
+            left join representant r on c.representant_id = r.representant_id
+            where date_commande >= %s and date_commande <= %s"""
+    qvals = [request.args['start_date'], request.args['end_date']]
     if request.args['representant_nom']:
-        where['representant_nom'] = request.args['representant_nom']
-    return pg.select(g.db.cursor(), {'commande': 'c', 'commande_item': 'ci', 'produit': 'p', 'client': 'l', 'representant': 'r'},
-                     what=['ci.no_produit_interne', 'p.type_vin', 'p.nom_domaine', 'p.format', 'p.quantite_par_caisse',
-                           'sum(ci.quantite_caisse) as quantite_caisse'],
-                     join={'c.no_commande_facture': 'ci.no_commande_facture', 'ci.no_produit_interne': 'p.no_produit_interne',
-                           'c.no_client': 'l.no_client', 'l.representant_id': 'r.representant_id'}, where=where,
-                     group_by='type_vin, nom_domaine, format, quantite_par_caisse, ci.no_produit_interne', order_by='type_vin')
+        q += ' and representant_nom = %s'
+        qvals.append(request.args['representant_nom'])
+    q += """ group by type_vin, nom_domaine, format, quantite_par_caisse, ci.no_produit_interne
+             order by type_vin"""
+    cur = g.db.cursor()
+    cur.execute(q, qvals)
+    return cur.fetchall()
 
 
 def _get_rapport_transaction_data(request):
