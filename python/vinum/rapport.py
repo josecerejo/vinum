@@ -18,8 +18,6 @@ def _get_rapport_vente_data(request):
 
 
 def _get_rapport_transaction_data(request):
-    if request.args['representant_nom']:
-        where['representant_nom'] = request.args['representant_nom']
     q = """ select nom_social, no_client_saq, o.no_commande_facture, o.expedition, date_pickup,
                    date_direct, o.no_succursale_saq, note_commande, montant, sous_total, tps, tvq,
                    type_vin, nom_domaine, format, no_produit_saq, no_demande_saq, quantite_caisse,
