@@ -161,32 +161,39 @@ Ext.define('VIN.controller.Rapport', {
 
     createRapportTransactionGrid: function() {
 
-        var store = Ext.create('Ext.data.Store', {
-            model: 'VIN.model.Transaction',
+        // var store = Ext.create('Ext.data.Store', {
+        //     model: 'VIN.model.Transaction',
+        //     buffered: false,
+        //     remoteSort: false,
+        //     sorters: [{
+        //         property: 'no_commande_facture',
+        //         direction: 'ASC'
+        //     }],
+        //     proxy: {
+        //         type: 'ajax',
+        //         url: ajax_url_prefix + '/rapport/transaction',
+        //         reader: {
+        //             type: 'json',
+        //             root: 'rows'
+        //         }
+        //     },
+        //     getGroupString: function(instance) {
+        //         var group = this.groupers.first();
+        //         if (group) {
+        //             if (group.property == 'some_property') {
+        //                 return instance.get(group.property) + ' (' + instance.get('my_second_property') + ') ';
+        //             }
+        //             return instance.get(group.property);
+        //         }
+        //         return '';
+        //     }
+        // });
+        // store.proxy.url = ajax_url_prefix + '/rapport/transaction';
+
+        // bidon store
+        var store = Ext.create('VIN.store.Produits', {
             buffered: false,
-            remoteSort: false,
-            sorters: [{
-                property: 'no_commande_facture',
-                direction: 'ASC'
-            }],
-            proxy: {
-                type: 'ajax',
-                url: ajax_url_prefix + '/rapport/transaction',
-                reader: {
-                    type: 'json',
-                    root: 'rows'
-                }
-            },
-            getGroupString: function(instance) {
-                var group = this.groupers.first();
-                if (group) {
-                    if (group.property == 'some_property') {
-                        return instance.get(group.property) + ' (' + instance.get('my_second_property') + ') ';
-                    }
-                    return instance.get(group.property);
-                }
-                return '';
-            }
+            remoteSort: false
         });
         store.proxy.url = ajax_url_prefix + '/rapport/transaction';
 
