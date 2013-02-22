@@ -142,7 +142,7 @@ def add_produit_to_commande():
         ci['quantite_caisse'] = existing_ci['quantite_caisse'] + qc
         ci['quantite_bouteille'] = existing_ci['quantite_bouteille'] + qb
         ci['commission'] = comm
-        ci['montant_commission'] = removeTaxes_(inv['prix_coutant']) * comm
+        ci['montant_commission'] = remove_taxes_(inv['prix_coutant']) * comm
         ci['statut_item'] = 'OK'
         pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf,
                                                              'no_produit_saq': ci['no_produit_saq']},
@@ -233,7 +233,7 @@ def update_commande_item():
     item = json.loads(rf['item'])
     prix_coutant = pg.select1(cursor, 'inventaire', 'prix_coutant',
                               where={'no_produit_saq': item['no_produit_saq']})
-    item['montant_commission'] = removeTaxes_(float(prix_coutant)) * float(item['commission'])
+    item['montant_commission'] = remove_taxes_(float(prix_coutant)) * float(item['commission'])
     ci = pg.update(cursor, 'commande_item', where={'no_commande_facture': rf['no_commande_facture'],
                                                    'no_produit_saq': item['no_produit_saq']},
                    set=item, filter_values=True)
@@ -310,7 +310,7 @@ def _generate_bdc(g, ncf, doc_type):
 def download_facture():
     ncf = request.args['no_commande_facture']
     out_fn = _generate_facture(g, ncf, 'pdf')
-    return send_file(open(out_fn),
+    return send_file(out_fn,
                      mimetype='application/pdf',
                      attachment_filename='vinum_facture_%s.%s' % (ncf, 'pdf'),
                      as_attachment=request.args['attach']=='1')
@@ -321,7 +321,7 @@ def download_facture():
 def download_bdc():
     ncf = request.args['no_commande_facture']
     out_fn = _generate_bdc(g, ncf, 'pdf')
-    return send_file(open(out_fn),
+    return send_file(out_fn,
                      mimetype='application/pdf',
                      attachment_filename='vinum_bon_de_commande_%s.%s' % (ncf, 'pdf'),
                      as_attachment=request.args['attach']=='1')

@@ -56,12 +56,11 @@ Ext.define('VIN.view.MainToolbar', {
         menu: [{
             text: 'Rapport des transactions',
             iconCls: 'report-icon',
-            id: 'rapport_transactions_menu_itm',
-            disabled: true
+            id: 'rapport_transaction_menu_itm'
         }, {
             text: 'Rapport des ventes',
             iconCls: 'report-icon',
-            id: 'rapport_ventes_menu_itm'
+            id: 'rapport_vente_menu_itm'
         }]
     }]
 

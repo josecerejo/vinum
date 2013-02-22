@@ -46,8 +46,16 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
                                  order_by=order_by, debug_assert=False)
     return json_out
 
+
+# $$$-related utils (could be elsewhere that make more sense!)
+
 TPS = 0.05
 TVQ = 0.09975
 
-def removeTaxes_(v):
+
+def remove_taxes_(v):
     return v / (1 + TPS + TVQ);
+
+
+def as_currency(v):
+    return locale.currency(v) if v else None

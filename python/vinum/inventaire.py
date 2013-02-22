@@ -44,7 +44,7 @@ def save_inventaire_record():
         comm_restau_mult = 1.11
     # ***********************************************
 
-    rf['prix_restaurant'] = removeTaxes_(pc) * comm_restau_mult + timbre
+    rf['prix_restaurant'] = remove_taxes_(pc) * comm_restau_mult + timbre
     inv = pg.upsert(cur, 'inventaire', where={'no_inventaire': ni},
                     values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
