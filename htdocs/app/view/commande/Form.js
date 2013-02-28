@@ -313,6 +313,67 @@ Ext.define('VIN.view.commande.Form', {
                 }, {
                     border: false,
                     bodyStyle: 'background-color:#dfe8f5',
+                    layout: 'hbox',
+                    style: 'margin-bottom: 10px',
+                    defaults: {
+                        padding: 5
+                    },
+                    items: [{
+                        xtype: 'combo',
+                        flex: 0.70,
+                        displayField: 'type_vin',
+                        name: 'type_vin',
+                        store: Ext.create('VIN.store.Produits'),
+                        itemId: 'produit_dd',
+                        fieldLabel: 'Tous les produits',
+                        minChars: 3,
+                        forceSelection: true,
+                        pageSize: 10,
+                        listConfig: {
+                            loadingText: 'Recherche...',
+                            emptyText: 'Aucun produit ne correspond à cette recherche..',
+                            getInnerTpl: function() {
+                                return '<span style="display:inline-block; width:45%; !important">{type_vin}</span>' +
+                                    '<span style="display:inline-block; width:45%; !important">{nom_domaine}</span>' +
+                                    '<span style="display:inline-block; width:10%; !important">{format}</span>';
+                            }
+                        }
+                    }, {
+                        xtype: 'numberfield',
+                        flex: 0.15,
+                        fieldLabel: 'Quantité (c)',
+                        itemId: 'add_produit_qc_nf',
+                        minValue: 1
+                    }, {
+                        xtype: 'button',
+                        padding: 2,
+                        itemId: 'add_produit_btn',
+                        text: 'Ajouter',
+                        iconCls: 'add-icon',
+                        style: 'margin-top: 25px'
+                    }]
+                }, {
+                    xtype: 'client_produit_grid',
+                    itemId: 'client_produit_g',
+                    title: 'Liste de produits habituels pour le client',
+                    resizable: { handles: 's' },
+                    store: Ext.create('VIN.store.Produits'),
+                    load_after_render: false,
+                    column_flex: {
+                        type_vin: 2,
+                        nom_domaine: 2,
+                        format: 1,
+                        quantite_caisse: 1
+                    },
+                    height: grid_height
+                }]
+            }, {
+                // -----------------------------------------------------
+                // right part panel
+                //layout: 'anchor',
+                items: [{
+                    border: false,
+                    bodyStyle: 'background-color:#dfe8f5',
                     defaults: {
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false,
@@ -368,57 +429,17 @@ Ext.define('VIN.view.commande.Form', {
                     border: false,
                     defaults: { padding: 5 },
                     items: {
-                        xtype: 'textarea',
+                        xtype: 'textfield',
                         flex: 1,
                         fieldLabel: 'Notes',
                         name: 'note_commande',
-                        height: 60,
-                        resizable: { handles: 's' }
-                    }
-                }, {
-                    border: false,
-                    bodyStyle: 'background-color:#dfe8f5',
-                    layout: 'hbox',
-                    style: 'margin-bottom: 10px',
-                    defaults: {
-                        padding: 5
+                        //height: 60,
+                        //resizable: { handles: 's' }
                     },
-                    items: [{
-                        xtype: 'combo',
-                        flex: 0.70,
-                        displayField: 'type_vin',
-                        name: 'type_vin',
-                        store: Ext.create('VIN.store.Produits'),
-                        itemId: 'produit_dd',
-                        fieldLabel: 'Tous les produits',
-                        minChars: 3,
-                        forceSelection: true,
-                        pageSize: 10,
-                        listConfig: {
-                            loadingText: 'Recherche...',
-                            emptyText: 'Aucun produit ne correspond à cette recherche..',
-                            getInnerTpl: function() {
-                                return '<span style="display:inline-block; width:45%; !important">{type_vin}</span>' +
-                                    '<span style="display:inline-block; width:45%; !important">{nom_domaine}</span>' +
-                                    '<span style="display:inline-block; width:10%; !important">{format}</span>';
-                            }
-                        }
-                    }, {
-                        xtype: 'numberfield',
-                        flex: 0.15,
-                        fieldLabel: 'Quantité (c)',
-                        itemId: 'add_produit_qc_nf',
-                        minValue: 1
-                    }, {
-                        xtype: 'button',
-                        padding: 2,
-                        itemId: 'add_produit_btn',
-                        text: 'Ajouter',
-                        iconCls: 'add-icon',
-                        style: 'margin-top: 25px'
-                    }]
+                    style: 'margin-bottom: 10px'
                 }, {
                     xtype: 'vin_grid',
+                    title: 'Inventaire pour un produit particulier',
                     itemId: 'inventaire_produit_g',
                     store: Ext.create('VIN.store.Inventaires', {
                         sorters: [{
@@ -431,7 +452,6 @@ Ext.define('VIN.view.commande.Form', {
                     selModel: {
                         mode: 'MULTI'
                     },
-                    title: 'Inventaire pour un produit particulier (choisir dans la liste à droite ou dans le champ "Tous les produits")',
                     resizable: { handles: 's' },
                     load_after_render: false,
                     column_flex: {
@@ -443,27 +463,8 @@ Ext.define('VIN.view.commande.Form', {
                         solde_bouteille: 1,
                         solde_caisse: 1
                     },
-                    height: grid_height
-                }]
-            }, {
-                // -----------------------------------------------------
-                // right part panel
-                layout: 'anchor',
-                items: [{
-                    xtype: 'client_produit_grid',
-                    itemId: 'client_produit_g',
-                    title: 'Liste de produits habituels pour le client',
-                    resizable: { handles: 's' },
-                    store: Ext.create('VIN.store.Produits'),
-                    load_after_render: false,
-                    column_flex: {
-                        type_vin: 2,
-                        nom_domaine: 2,
-                        format: 1,
-                        quantite_caisse: 1
-                    },
-                    height: grid_height + 122,
-                    style: 'margin-bottom: 20px'
+                    height: grid_height - 110,
+                    style: 'margin-bottom: 16px'
                 }, {
                     xtype: 'commande_item_grid',
                     itemId: 'commande_item_g',

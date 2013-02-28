@@ -58,4 +58,4 @@ def remove_taxes_(v):
 
 
 def as_currency(v):
-    return locale.currency(v) if v else None
+    return locale.currency(v if v else 0)

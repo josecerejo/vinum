@@ -269,7 +269,7 @@ def _generate_facture(g, ncf, doc_type):
     doc_values['total'] = locale.currency(total)
     out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, doc_type)
     tmpl_fn = 'facture.odt' if client['mode_facturation'] == 'courriel' else 'facture_sans_logo.odt'
-    ren = Renderer('/home/christian/vinum/data/templates/%s' % tmpl_fn, doc_values,
+    ren = Renderer('/home/christian/vinum/docs/%s' % tmpl_fn, doc_values,
                    out_fn, overwriteExisting=True)
     ren.run()
     return out_fn
@@ -299,7 +299,7 @@ def _generate_bdc(g, ncf, doc_type):
     doc_values['right_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[n_left:]]
     doc_values['no_commande_facture'] = ncf
     out_fn = '/tmp/vinum_bdc_%s.%s' % (ncf, doc_type)
-    ren = Renderer('/home/christian/vinum/data/templates/bon_de_commande.odt', doc_values,
+    ren = Renderer('/home/christian/vinum/docs/bon_de_commande.odt', doc_values,
                    out_fn, overwriteExisting=True)
     ren.run()
     return out_fn

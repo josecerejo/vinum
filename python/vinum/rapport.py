@@ -6,7 +6,9 @@ from appy.pod.renderer import Renderer
 
 def _get_rapport_vente_data(request):
     q = """ select ci.no_produit_interne, p.type_vin, p.nom_domaine, p.format,
-                   p.quantite_par_caisse, sum(ci.quantite_caisse) as quantite_caisse
+                   p.quantite_par_caisse, sum(ci.quantite_caisse) as quantite_caisse,
+                   sum(o.montant) as montant, sum(o.sous_total) as sous_total,
+                   sum(o.tps) as tps, sum(o.tvq) as tvq
             from produit p
             inner join commande_item ci on ci.no_produit_interne = p.no_produit_interne
             inner join commande o on o.no_commande_facture = ci.no_commande_facture
@@ -59,12 +61,24 @@ def download_rapport_vente():
     end_date = request.args['end_date']
     representant = request.args['representant_nom'] if request.args['representant_nom'] else 'tous'
     rows = _get_rapport_vente_data(request)
-    items = [[row[c] for c in ['type_vin', 'nom_domaine', 'format', 'quantite_par_caisse', 'quantite_caisse']]
-             for row in rows]
-    doc_values = {'start_date': start_date, 'end_date': end_date,
-                  'representant_nom': representant, 'items': items}
+    items = []
+    n_caisses = 0
+    total = 0
+    sous_total = 0
+    tps = 0
+    tvq = 0
+    for row in rows:
+        items.append([row[c] for c in ['type_vin', 'nom_domaine', 'format', 'quantite_par_caisse', 'quantite_caisse']])
+        n_caisses += row['quantite_caisse']
+        total += row['montant']
+        sous_total += row['sous_total']
+        tps += row['tps']
+        tvq += row['tvq']
+    doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
+                  'items': items, 'n_caisses': n_caisses, 'total': as_currency(total),
+                  'sous_total': as_currency(sous_total), 'tps': as_currency(tps), 'tvq': as_currency(tvq)}
     out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s.pdf' % (start_date, end_date, representant)
-    ren = Renderer('/home/christian/vinum/data/templates/rapport_des_ventes.odt', doc_values,
+    ren = Renderer('/home/christian/vinum/docs/rapport_des_ventes.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
     return send_file('/tmp/%s' % out_fn, mimetype='application/pdf',
@@ -80,7 +94,7 @@ def download_rapport_transaction():
     rows = _get_rapport_transaction_data(request)
 
     # each row: {top: list of 7 items,
-    #            subitems: [ <list of 6 items> ]}
+    #            subitems: [ <list of 4 items> ]}
     items = []
 
     ncf_rows = defaultdict(list) # ncf -> []
@@ -104,8 +118,8 @@ def download_rapport_transaction():
                         as_currency(row0['sous_total']), as_currency(row0['tps']), as_currency(row0['tvq'])]}
         subitems = []
         for row in rows:
-            subitems.append(['%s, %s' % (row['type_vin'], row['nom_domaine']), row['format'], row['no_produit_saq'],
-                             row['no_demande_saq'], '%s(cs)' % row['quantite_caisse'], '%s(bt)' % row['quantite_par_caisse']])
+            subitems.append(['%s, %s' % (row['type_vin'], row['nom_domaine']), row['format'],
+                             '%s(cs)' % row['quantite_caisse'], '%s(bt)' % row['quantite_par_caisse']])
         item['subitems'] = subitems
         items.append(item)
         for i, f in enumerate(['montant', 'sous_total', 'tps', 'tvq']):
@@ -116,7 +130,7 @@ def download_rapport_transaction():
     doc_values = {'start_date': start_date, 'end_date': end_date,
                   'representant_nom': representant, 'items': items, 'totals': totals}
     out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s.pdf' % (start_date, end_date, representant)
-    ren = Renderer('/home/christian/vinum/data/templates/rapport_des_transactions.odt', doc_values,
+    ren = Renderer('/home/christian/vinum/docs/rapport_des_transactions.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
     return send_file('/tmp/%s' % out_fn, mimetype='application/pdf',
