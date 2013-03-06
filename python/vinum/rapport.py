@@ -4,11 +4,13 @@ from collections import defaultdict
 from appy.pod.renderer import Renderer
 
 
+DOC_TYPE = 'pdf'
+
 def _get_rapport_vente_data(request):
     q = """ select ci.no_produit_interne, p.type_vin, p.nom_domaine, p.format,
                    p.quantite_par_caisse, sum(ci.quantite_caisse) as quantite_caisse,
-                   sum(o.montant) as montant, sum(o.sous_total) as sous_total,
-                   sum(o.tps) as tps, sum(o.tvq) as tvq
+                   sum(ci.quantite_bouteille) as quantite_bouteille, sum(o.montant) as montant,
+                   sum(o.sous_total) as sous_total, sum(o.tps) as tps, sum(o.tvq) as tvq
             from produit p
             inner join commande_item ci on ci.no_produit_interne = p.no_produit_interne
             inner join commande o on o.no_commande_facture = ci.no_commande_facture
@@ -30,7 +32,7 @@ def _get_rapport_transaction_data(request):
     q = """ select nom_social, no_client_saq, o.no_commande_facture, o.expedition, date_pickup,
                    date_direct, o.no_succursale_saq, note_commande, montant, sous_total, tps, tvq,
                    type_vin, nom_domaine, format, no_produit_saq, no_demande_saq, quantite_caisse,
-                   quantite_par_caisse
+                   quantite_bouteille, quantite_par_caisse
             from client c
             inner join commande o on c.no_client = o.no_client
             inner join commande_item ci on o.no_commande_facture = ci.no_commande_facture
@@ -62,22 +64,15 @@ def download_rapport_vente():
     representant = request.args['representant_nom'] if request.args['representant_nom'] else 'tous'
     rows = _get_rapport_vente_data(request)
     items = []
-    n_caisses = 0
-    total = 0
-    sous_total = 0
-    tps = 0
-    tvq = 0
+    totals = [0] * 6
     for row in rows:
         items.append([row[c] for c in ['type_vin', 'nom_domaine', 'format', 'quantite_par_caisse', 'quantite_caisse']])
-        n_caisses += row['quantite_caisse']
-        total += row['montant']
-        sous_total += row['sous_total']
-        tps += row['tps']
-        tvq += row['tvq']
+        for i, f in enumerate(['quantite_caisse', 'quantite_bouteille', 'montant', 'sous_total', 'tps', 'tvq']):
+            totals[i] += row[f] if row[f] else 0
+    totals[2:] = [as_currency(v) for v in totals[2:]]
     doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
-                  'items': items, 'n_caisses': n_caisses, 'total': as_currency(total),
-                  'sous_total': as_currency(sous_total), 'tps': as_currency(tps), 'tvq': as_currency(tvq)}
-    out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s.pdf' % (start_date, end_date, representant)
+                  'items': items, 'totals': totals}
+    out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s.%s' % (start_date, end_date, representant, DOC_TYPE)
     ren = Renderer('/home/christian/vinum/docs/rapport_des_ventes.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
@@ -92,17 +87,13 @@ def download_rapport_transaction():
     end_date = request.args['end_date']
     representant = request.args['representant_nom'] if request.args['representant_nom'] else 'tous'
     rows = _get_rapport_transaction_data(request)
-
     # each row: {top: list of 7 items,
     #            subitems: [ <list of 4 items> ]}
     items = []
-
     ncf_rows = defaultdict(list) # ncf -> []
     for row in rows:
         ncf_rows[row['no_commande_facture']].append(row)
-
-    totals = [0, 0, 0, 0]
-
+    totals = [0] * 6
     for ncf, rows in ncf_rows.items():
         row0 = rows[0]
         exp = ''
@@ -122,14 +113,12 @@ def download_rapport_transaction():
                              '%s(cs)' % row['quantite_caisse'], '%s(bt)' % row['quantite_par_caisse']])
         item['subitems'] = subitems
         items.append(item)
-        for i, f in enumerate(['montant', 'sous_total', 'tps', 'tvq']):
+        for i, f in enumerate(['quantite_caisse', 'quantite_bouteille', 'montant', 'sous_total', 'tps', 'tvq']):
             totals[i] += row0[f] if row0[f] else 0
-
-    totals = [as_currency(v) for v in totals]
-
+    totals[2:] = [as_currency(v) for v in totals[2:]]
     doc_values = {'start_date': start_date, 'end_date': end_date,
                   'representant_nom': representant, 'items': items, 'totals': totals}
-    out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s.pdf' % (start_date, end_date, representant)
+    out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s.%s' % (start_date, end_date, representant, DOC_TYPE)
     ren = Renderer('/home/christian/vinum/docs/rapport_des_transactions.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
