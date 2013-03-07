@@ -4,7 +4,7 @@ from login import *
 
 
 # type of generated documents (pdf or odt)
-DOC_TYPE = 'odt'
+DOC_TYPE = 'pdf'
 
 
 # get everything! handles every single possible select query required by the app..
