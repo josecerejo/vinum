@@ -241,7 +241,7 @@ def update_commande_item():
     return {'success': True, 'data': ci}
 
 
-def _generate_facture(g, ncf, doc_type):
+def _generate_facture(g, ncf):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
@@ -250,15 +250,17 @@ def _generate_facture(g, ncf, doc_type):
     doc_values.update(client)
     doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom',
                                                 where={'representant_id': client['representant_id']})
-    cursor.execute("""select * from produit p, commande_item ci
-                      where p.no_produit_interne = ci.no_produit_interne
-                      and no_commande_facture = %s""", [ncf])
+    rows = pg.select(g.db.cursor(), {'produit':'p', 'commande_item':'ci', 'producteur':'r', 'inventaire':'i'},
+                     join={'p.no_produit_interne':'ci.no_produit_interne', 'p.no_producteur':'r.no_producteur',
+                           'ci.no_produit_saq':'i.no_produit_saq'}, where={'ci.no_commande_facture': ncf},
+                     order_by='type_vin')
     sous_total = 0
-    for row in cursor.fetchall():
+    for row in rows:
         montant_comm_x_qb = row['montant_commission'] * row['quantite_bouteille']
         sous_total += montant_comm_x_qb
-        doc_values['items'].append([row['quantite_bouteille'], row['type_vin'], row['no_produit_saq'],
-                                    row['format'], locale.currency(row['montant_commission']),
+        desc = '%s %s %s %s' % (row['type_vin'], row['nom_domaine'], row['nom_producteur'], row['millesime'])
+        doc_values['items'].append([row['quantite_bouteille'], desc, row['format'],
+                                    locale.currency(row['montant_commission']),
                                     locale.currency(montant_comm_x_qb)])
     tps = sous_total * TPS
     tvq = sous_total * TVQ
@@ -267,7 +269,7 @@ def _generate_facture(g, ncf, doc_type):
     doc_values['tps'] = locale.currency(tps)
     doc_values['tvq'] = locale.currency(tvq)
     doc_values['total'] = locale.currency(total)
-    out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, doc_type)
+    out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, DOC_TYPE)
     tmpl_fn = 'facture.odt' if client['mode_facturation'] == 'courriel' else 'facture_sans_logo.odt'
     ren = Renderer('/home/christian/vinum/docs/%s' % tmpl_fn, doc_values,
                    out_fn, overwriteExisting=True)
@@ -275,7 +277,7 @@ def _generate_facture(g, ncf, doc_type):
     return out_fn
 
 
-def _generate_bdc(g, ncf, doc_type):
+def _generate_bdc(g, ncf):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
@@ -298,7 +300,7 @@ def _generate_bdc(g, ncf, doc_type):
     doc_values['left_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[:n_left]]
     doc_values['right_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[n_left:]]
     doc_values['no_commande_facture'] = ncf
-    out_fn = '/tmp/vinum_bdc_%s.%s' % (ncf, doc_type)
+    out_fn = '/tmp/vinum_bdc_%s.%s' % (ncf, DOC_TYPE)
     ren = Renderer('/home/christian/vinum/docs/bon_de_commande.odt', doc_values,
                    out_fn, overwriteExisting=True)
     ren.run()
@@ -309,7 +311,7 @@ def _generate_bdc(g, ncf, doc_type):
 @login_required
 def download_facture():
     ncf = request.args['no_commande_facture']
-    out_fn = _generate_facture(g, ncf, 'pdf')
+    out_fn = _generate_facture(g, ncf)
     return send_file(out_fn,
                      mimetype='application/pdf',
                      attachment_filename='vinum_facture_%s.%s' % (ncf, 'pdf'),
@@ -320,7 +322,7 @@ def download_facture():
 @login_required
 def download_bdc():
     ncf = request.args['no_commande_facture']
-    out_fn = _generate_bdc(g, ncf, 'pdf')
+    out_fn = _generate_bdc(g, ncf)
     return send_file(out_fn,
                      mimetype='application/pdf',
                      attachment_filename='vinum_bon_de_commande_%s.%s' % (ncf, 'pdf'),
@@ -339,7 +341,7 @@ def email_facture():
     msg['Reply-to'] = 'commande@roucet.com'
     msg.attach(MIMEText(request.form['msg'].encode(enc), 'plain', enc))
     if 'include_pdf' in request.form:
-        out_fn = _generate_facture(g, request.form['no_commande_facture'], 'pdf')
+        out_fn = _generate_facture(g, request.form['no_commande_facture'])
         part = MIMEApplication(open(out_fn, "rb").read())
         part.add_header('Content-Disposition', 'attachment', filename="facture_roucet.pdf")
         msg.attach(part)
@@ -365,7 +367,7 @@ def email_bdc():
     msg['Reply-to'] = 'commande@roucet.com'
     msg.attach(MIMEText(request.form['msg'].encode(enc), 'plain', enc))
     if 'include_pdf' in request.form:
-        out_fn = _generate_bdc(g, request.form['no_commande_facture'], 'pdf')
+        out_fn = _generate_bdc(g, request.form['no_commande_facture'])
         part = MIMEApplication(open(out_fn, "rb").read())
         part.add_header('Content-Disposition', 'attachment', filename="bon_de_commande_roucet.pdf")
         msg.attach(part)

@@ -3,6 +3,10 @@ import little_pger as pg
 from login import *
 
 
+# type of generated documents (pdf or odt)
+DOC_TYPE = 'odt'
+
+
 # get everything! handles every single possible select query required by the app..
 def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=None, where=None, field_map=None):
     if query_fields is None: query_fields = ()

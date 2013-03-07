@@ -4,8 +4,6 @@ from collections import defaultdict
 from appy.pod.renderer import Renderer
 
 
-DOC_TYPE = 'pdf'
-
 def _get_rapport_vente_data(request):
     q = """ select ci.no_produit_interne, p.type_vin, p.nom_domaine, p.format,
                    p.quantite_par_caisse, sum(ci.quantite_caisse) as quantite_caisse,
