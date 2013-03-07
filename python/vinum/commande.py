@@ -245,7 +245,7 @@ def _generate_facture(g, ncf):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
-    doc_values = {'items': []}
+    doc_values = {'elems': []}
     doc_values.update(commande)
     doc_values.update(client)
     doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom',
@@ -258,9 +258,9 @@ def _generate_facture(g, ncf):
     for row in rows:
         montant_comm_x_qb = row['montant_commission'] * row['quantite_bouteille']
         sous_total += montant_comm_x_qb
-        desc = '%s %s %s %s' % (row['type_vin'], row['nom_domaine'], row['nom_producteur'], row['millesime'])
-        doc_values['items'].append([row['quantite_bouteille'], desc, row['format'],
-                                    locale.currency(row['montant_commission']),
+        nom = '%s %s' % (row['type_vin'], row['nom_domaine'])
+        doc_values['elems'].append([row['quantite_bouteille'], nom, row['nom_producteur'], row['millesime'],
+                                    row['no_produit_saq'], row['format'], locale.currency(row['montant_commission']),
                                     locale.currency(montant_comm_x_qb)])
     tps = sous_total * TPS
     tvq = sous_total * TVQ

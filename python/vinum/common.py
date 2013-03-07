@@ -5,6 +5,8 @@ from login import *
 
 # type of generated documents (pdf or odt)
 DOC_TYPE = 'pdf'
+TPS = 0.05
+TVQ = 0.09975
 
 
 # get everything! handles every single possible select query required by the app..
@@ -52,10 +54,6 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
 
 
 # $$$-related utils (could be elsewhere that make more sense!)
-
-TPS = 0.05
-TVQ = 0.09975
-
 
 def remove_taxes_(v):
     return v / (1 + TPS + TVQ);
