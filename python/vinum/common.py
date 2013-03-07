@@ -4,7 +4,7 @@ from login import *
 
 
 # type of generated documents (pdf or odt)
-DOC_TYPE = 'odt'
+DOC_TYPE = 'pdf'
 TPS = 0.05
 TVQ = 0.09975
 
