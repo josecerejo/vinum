@@ -650,26 +650,7 @@ Ext.define('VIN.controller.Commande', {
                 itemId: 'bo_g',
                 title: 'Ruptures de stock (BOs)',
                 closable: true,
-                store: Ext.create('VIN.store.CommandeItems', {
-                    pageSize: 100,
-                    buffered: true,
-                    remoteSort: true,
-                    sorters: [{
-                        property: 'date_commande',
-                        direction: 'DESC'
-                    }, {
-                        property: 'no_commande_facture',
-                        direction: 'DESC'
-                    }],
-                    proxy: {
-                        type: 'ajax',
-                        url: ajax_url_prefix + '/commande/get_bos',
-                        reader: {
-                            type: 'json',
-                            root: 'rows'
-                        }
-                    }
-                }),
+                store: Ext.create('VIN.store.BOCommandeItems'),
                 column_flex: {
                     type_vin: 2,
                     format: 1,
