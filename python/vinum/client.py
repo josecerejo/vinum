@@ -13,11 +13,9 @@ def get_client():
 @app.route('/client/load', methods=['POST'])
 @login_required
 def load_client():
-    # would require a left join here
-    client = pg.select1r(g.db.cursor(), 'client', where={'no_client':
-                                                         request.form['no_client']})
-    client['representant_nom'] = pg.select1(g.db.cursor(), 'representant', 'representant_nom',
-                                            where={'representant_id': client['representant_id']})
+    client = pg.select1r(g.db.cursor(), {'client': 'c', 'representant': 'r'},
+                         join={'c.representant_id': 'r.representant_id'},
+                         where={'no_client': request.form['no_client']})
     # !!! this should be in the database
     client['default_commission'] = 0.16 if client['type_client'] == 'restaurant' else 0.23
     if 'format_note' in request.form and client['note_client']:

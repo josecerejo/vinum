@@ -56,7 +56,9 @@ if not inventaire_only:
         data = dict(zip(cols, processRow(row)))
         data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])
         data['type_client'] = type_client_map.get(data['type_client'], data['type_client'])
-        data['representant_id'] = selectId(cursor, 'representant', where={'representant_nom': data['representant_id']})
+        repr_id = data['representant_id'] if data['representant_id'] else 'Inactif'
+        data['representant_id'] = selectId(cursor, 'representant', where={'representant_nom': repr_id})
+        assert data['representant_id']
         data['no_succursale_saq'] = data['no_succursale_saq'] if data['no_succursale_saq'] in succs else None
         data['mode_facturation'] = 'poste' # historical clients have "poste", newer have default "courriel"
         jl = jl_map.get(data['jours_livraison'])

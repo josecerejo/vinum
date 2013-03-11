@@ -96,49 +96,26 @@ Ext.define('VIN.controller.Commande', {
                         });
                         return;
                     }
+                },
+            },
+            // dont know why adding 'client_produit_grid' (in front of numberfield) does not work here..
+            'numberfield': {
+                qc_enter_key: function(nf, e) {
+                    // http://www.sencha.com/forum/showthread.php?240227-Grid-Cell-Editor-Combobox-get-information-about-Record-row&p=880434&viewfull=1#post880434
+                    var grid = nf.up('#client_produit_g');
+                    var sel = grid.getSelectionModel().getSelection();
+                    var rec = Ext.create('VIN.model.Produit', sel[0].data);
+                    var desired_qc = nf.getValue();
+                    if (desired_qc) {
+                        var form = this._getFormViewInstance(nf);
+                        this.addCommandeProduit(form, rec, desired_qc);
+                    }
                 }
             },
             '#add_produit_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    var is_valid = true;
-                    Ext.Array.each(['#client_dd', '#produit_dd', '#add_produit_qc_nf'], function(item_id) {
-                        if (!form.down(item_id).getValue()) {
-                            form.down(item_id).markInvalid('Ce champ est requis');
-                            is_valid = false;
-                        }
-                    });
-                    if (!is_valid) {
-                        return;
-                    }
-                    var desired_qc = form.down('#add_produit_qc_nf').getValue();
-                    var pdd = form.down('#produit_dd');
-                    var pr = pdd.findRecordByDisplay(pdd.getValue());
-                    var cpg = form.down('#client_produit_g');
-                    var produit = pdd.getValue();
-                    if (!cpg.getStore().findRecord('type_vin', produit)) {
-                        var msg = Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit);
-                        Ext.Msg.confirm('Vinum', msg, Ext.bind(function(btn) {
-                            if (btn == 'yes') {
-                                var cdd = form.down('#client_dd');
-                                var cr = cdd.findRecordByDisplay(cdd.getValue());
-                                form.submit({
-                                    url: ajax_url_prefix + '/client/add_produit',
-                                    params: {
-                                        no_client: cr.get('no_client')
-                                    },
-                                    success: Ext.bind(function(_form, action) {
-                                        cpg.getStore().load(); // reload doesn't seem to work here, don't understand why!
-                                        this.addCommandeProduit(form, pr, desired_qc);
-                                    }, this)
-                                });
-                            } else {
-                                this.addCommandeProduit(form, pr, desired_qc);
-                            }
-                        }, this));
-                    } else {
-                        this.addCommandeProduit(form, pr, desired_qc);
-                    }
+                    this.preAddCommandeProduit(form);
                 }
             },
             '#commande_item_g rowactions': {
@@ -360,6 +337,14 @@ Ext.define('VIN.controller.Commande', {
                     var form = this._getFormViewInstance(btn);
                     this.saveCommandeFormPart(form, Ext.emptyFn, 'both');
                 }
+            },
+            '#add_produit_qc_nf': {
+                specialkey: function(tf, e, eOpts) {
+                    if (e.getKey() === e.ENTER) {
+                        var form = this._getFormViewInstance(tf);
+                        this.preAddCommandeProduit(form);
+                    }
+                }
             }
         });
     },
@@ -431,6 +416,46 @@ Ext.define('VIN.controller.Commande', {
             }
         });
         ig.setTitle(Ext.String.format('Inventaire pour le produit "{0}"', produit_rec.get('type_vin')));
+    },
+
+    // will first ask to include product in preferred list before adding it
+    preAddCommandeProduit: function(form) {
+        var is_valid = true;
+        Ext.Array.each(['#client_dd', '#produit_dd', '#add_produit_qc_nf'], function(item_id) {
+            if (!form.down(item_id).getValue()) {
+                form.down(item_id).markInvalid('Ce champ est requis');
+                is_valid = false;
+            }
+        });
+        if (!is_valid) { return; }
+        var desired_qc = form.down('#add_produit_qc_nf').getValue();
+        var pdd = form.down('#produit_dd');
+        var pr = pdd.findRecordByDisplay(pdd.getValue());
+        var cpg = form.down('#client_produit_g');
+        var produit = pdd.getValue();
+        if (!cpg.getStore().findRecord('type_vin', produit)) {
+            var msg = Ext.String.format('Voulez-vous ajouter le produit "{0}" à la liste de produits habituels de ce client?', produit);
+            Ext.Msg.confirm('Vinum', msg, Ext.bind(function(btn) {
+                if (btn == 'yes') {
+                    var cdd = form.down('#client_dd');
+                    var cr = cdd.findRecordByDisplay(cdd.getValue());
+                    form.submit({
+                        url: ajax_url_prefix + '/client/add_produit',
+                        params: {
+                            no_client: cr.get('no_client')
+                        },
+                        success: Ext.bind(function(_form, action) {
+                            cpg.getStore().load(); // reload doesn't seem to work here, don't understand why!
+                            this.addCommandeProduit(form, pr, desired_qc);
+                        }, this)
+                    });
+                } else {
+                    this.addCommandeProduit(form, pr, desired_qc);
+                }
+            }, this));
+        } else {
+            this.addCommandeProduit(form, pr, desired_qc);
+        }
     },
 
     // this saves the commande form part and add the desired produit in the same submit
@@ -653,11 +678,13 @@ Ext.define('VIN.controller.Commande', {
                 store: Ext.create('VIN.store.BOCommandeItems'),
                 column_flex: {
                     type_vin: 2,
-                    format: 1,
+                    format: 0.75,
                     date_commande: 1,
-                    no_commande_facture: 1,
-                    quantite_caisse: 1,
-                    quantite_bouteille: 1,
+                    no_commande_facture: 0.75,
+                    nom_social: 2,
+                    representant_nom: 1.5,
+                    quantite_caisse: 0.75,
+                    quantite_bouteille: 0.75,
                     statut_item: 0.5
                 }
             });

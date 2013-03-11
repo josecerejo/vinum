@@ -121,6 +121,7 @@ Ext.define('VIN.view.client.Form', {
                         xtype: 'combo',
                         flex: 0.4,
                         fieldLabel: 'Représentant',
+                        allowBlank: false,
                         displayField: 'representant_nom',
                         name: 'representant_nom',
                         store: Ext.create('Ext.data.Store', {

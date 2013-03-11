@@ -384,8 +384,8 @@ def email_bdc():
 @app.route('/commande/get_bos', methods=['GET'])
 @login_required
 def get_bos():
-    return get(g, request, {'commande_item': 'ci', 'produit': 'p', 'commande': 'c'},
-               what=['ci.*', 'p.*', 'c.date_commande'],
-               join={'ci.no_produit_interne': 'p.no_produit_interne',
-                     'c.no_commande_facture': 'ci.no_commande_facture'},
+    return get(g, request, {'commande_item': 'ci', 'produit': 'p', 'commande': 'o', 'client': 'c', 'representant': 'r'},
+               what=['ci.*', 'p.*', 'o.date_commande', 'c.nom_social', 'r.representant_nom'],
+               join={'ci.no_produit_interne': 'p.no_produit_interne', 'o.no_commande_facture': 'ci.no_commande_facture',
+                     'c.no_client': 'o.no_client', 'c.representant_id': 'r.representant_id'},
                where={'statut_item': 'BO'})

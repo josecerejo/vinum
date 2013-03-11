@@ -43,12 +43,20 @@ Ext.define('VIN.view.client.ProduitGrid', {
             }]
         });
 
+        var that = this;
         Ext.each(this.columns, function(col) {
             if (col.dataIndex == 'quantite_caisse') {
                 col.editor = {
                     xtype: 'numberfield',
                     allowBlank: false,
-                    minValue: 1
+                    minValue: 1,
+                    listeners: {
+                        specialkey: function(field, e) {
+                            if (e.getKey() === e.ENTER) {
+                                this.fireEvent('qc_enter_key', field, e);
+                            }
+                        }
+                    }
                 };
             }
         });
