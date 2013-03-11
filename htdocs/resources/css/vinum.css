@@ -160,6 +160,10 @@
     background: url(../images/icons/cog.png) no-repeat !important;
 }
 
+.error-icon {
+    background: url(../images/icons/error.png) no-repeat !important;
+}
+
 .nav-menu {
     padding: 0 3px 0 3px;
 }

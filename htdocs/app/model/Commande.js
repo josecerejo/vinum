@@ -3,7 +3,7 @@ Ext.define('VIN.model.Commande', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        header: '# commande Roucet',
+        header: '# commande',
         name: 'no_commande_facture',
         type: 'int',
         useNull: true

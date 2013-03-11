@@ -379,3 +379,13 @@ def email_bdc():
               where={'no_commande_facture': request.form['no_commande_facture']})
     g.db.commit()
     return {'success': True}
+
+
+@app.route('/commande/get_bos', methods=['GET'])
+@login_required
+def get_bos():
+    return get(g, request, {'commande_item': 'ci', 'produit': 'p', 'commande': 'c'},
+               what=['ci.*', 'p.*', 'c.date_commande'],
+               join={'ci.no_produit_interne': 'p.no_produit_interne',
+                     'c.no_commande_facture': 'ci.no_commande_facture'},
+               where={'statut_item': 'BO'})

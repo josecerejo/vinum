@@ -25,6 +25,10 @@ Ext.define('VIN.view.MainToolbar', {
             text: 'Toutes les commandes',
             iconCls: 'clients-list-icon',
             id: 'list_commandes_menu_itm'
+        }, {
+            text: 'Ruptures de stock (BOs)',
+            iconCls: 'error-icon',
+            id: 'bo_menu_itm'
         }]
     }, {
         text: 'Clients',

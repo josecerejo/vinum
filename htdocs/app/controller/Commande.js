@@ -641,6 +641,48 @@ Ext.define('VIN.controller.Commande', {
             Ext.getCmp('main_pnl').add(cg);
         }
         Ext.getCmp('main_pnl').setActiveTab(cg);
+    },
+
+    createBOGrid: function() {
+        var g = Ext.getCmp('main_pnl').down('#bo_g');
+        if (!g) {
+            g = Ext.create('VIN.view.Grid', {
+                itemId: 'bo_g',
+                title: 'Ruptures de stock (BOs)',
+                closable: true,
+                store: Ext.create('VIN.store.CommandeItems', {
+                    pageSize: 100,
+                    buffered: true,
+                    remoteSort: true,
+                    sorters: [{
+                        property: 'date_commande',
+                        direction: 'DESC'
+                    }, {
+                        property: 'no_commande_facture',
+                        direction: 'DESC'
+                    }],
+                    proxy: {
+                        type: 'ajax',
+                        url: ajax_url_prefix + '/commande/get_bos',
+                        reader: {
+                            type: 'json',
+                            root: 'rows'
+                        }
+                    }
+                }),
+                column_flex: {
+                    type_vin: 2,
+                    format: 1,
+                    date_commande: 1,
+                    no_commande_facture: 1,
+                    quantite_caisse: 1,
+                    quantite_bouteille: 1,
+                    statut_item: 0.5
+                }
+            });
+            Ext.getCmp('main_pnl').add(g);
+        }
+        Ext.getCmp('main_pnl').setActiveTab(g);
     }
 
 });

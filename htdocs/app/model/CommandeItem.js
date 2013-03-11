@@ -18,6 +18,15 @@ Ext.define('VIN.model.CommandeItem', {
     }, {
         name: 'format'
     }, {
+        header: '# commande',
+        name: 'no_commande_facture',
+        type: 'int',
+        useNull: true
+    }, {
+        header: 'Date de la commande',
+        name: 'date_commande',
+        type: 'date'
+    }, {
         header: '# produit SAQ',
         name: 'no_produit_saq',
         type: 'int',
@@ -53,8 +62,8 @@ Ext.define('VIN.model.CommandeItem', {
     }, {
         header: 'Statut',
         name: 'statut_item'
-    }],
+    }]
 
-    idProperty: 'no_produit_saq'
+    //idProperty: 'no_produit_saq'
 
 });
