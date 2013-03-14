@@ -182,8 +182,8 @@ insert into representant values (20, 'Steve Fradette');
 insert into representant values (22, 'Alain Doucet');
 insert into representant values (23, 'Caroline Chouinard');
 insert into representant values (25, 'Patricia Morin');
-insert into representant values (27, 'Inactif');
-insert into representant values (29, 'bureau');
+--insert into representant values (27, 'Inactif');
+--insert into representant values (29, 'bureau');
 
 insert into timbre_restaurateur values ('375 ml', 0.51);
 insert into timbre_restaurateur values ('500 ml', 0.68);
