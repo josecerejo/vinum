@@ -26,7 +26,7 @@ create table client (
     rue text,
     ville text,
     province text,
-    code_postal text,
+    code_postal text check (code_postal ~ $re$^[A-Z]\d[A-Z] \d[A-Z]\d$$re$), -- 'H0H 0H0'
     nom_responsable text,
     no_tel text,
     no_fax text,
@@ -44,7 +44,7 @@ create table client (
     rue_fact text,
     ville_fact text,
     province_fact text,
-    code_postal_fact text,
+    code_postal_fact text check (code_postal_fact ~ $re$^[A-Z]\d[A-Z] \d[A-Z]\d$$re$), -- 'H0H 0H0'
     suc_num text,
     jours_livraison text[],
     date_ouverture_dossier date,
@@ -62,7 +62,7 @@ create table producteur (
     rue text,
     ville text,
     comte text,
-    code_postal text,
+    code_postal text, -- check (code_postal ~ $re$^[A-Z]\d[A-Z] \d[A-Z]\d$$re$), -- 'H0H 0H0'
     pays text,
     no_tel text,
     no_fax text,
@@ -179,11 +179,12 @@ insert into representant values (13, 'François Lachapelle');
 insert into representant values (18, 'Annie-C. Gaudreau');
 insert into representant values (19, 'André Baillargeon');
 insert into representant values (20, 'Steve Fradette');
-insert into representant values (22, 'Alain Doucet');
+--insert into representant values (22, 'Alain Doucet');
 insert into representant values (23, 'Caroline Chouinard');
-insert into representant values (25, 'Patricia Morin');
+--insert into representant values (25, 'Patricia Morin');
 --insert into representant values (27, 'Inactif');
 --insert into representant values (29, 'bureau');
+insert into representant values (30, 'Pierre Decelles');
 
 insert into timbre_restaurateur values ('375 ml', 0.51);
 insert into timbre_restaurateur values ('500 ml', 0.68);

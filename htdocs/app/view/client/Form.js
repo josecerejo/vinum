@@ -195,6 +195,8 @@ Ext.define('VIN.view.client.Form', {
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Code postal',
+                                regex: /^[A-Z]\d[A-Z] \d[A-Z]\d$/,
+                                regexText: 'Le format doit être: H0H 0H0',
                                 name: 'code_postal',
                                 itemId: 'code_postal_tf',
                                 flex: 1/6
@@ -252,6 +254,8 @@ Ext.define('VIN.view.client.Form', {
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'Code postal',
+                                regex: /^[A-Z]\d[A-Z] \d[A-Z]\d$/,
+                                regexText: 'Le format doit être: H0H 0H0',
                                 name: 'code_postal_fact',
                                 itemId: 'code_postal_fact_tf',
                                 flex: 1/6

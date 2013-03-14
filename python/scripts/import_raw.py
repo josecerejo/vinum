@@ -14,7 +14,7 @@ if inventaire_only:
     cursor.execute('delete from inventaire; drop index inventaire_no_produit_interne_idx;')
 else:
     os.system('psql -d vinum -f /home/christian/vinum/data/sql/model.sql')
-export_dir = '/home/christian/vinum/data/raw/access_export_2013-02-14'
+export_dir = '/home/christian/vinum/data/raw/access_export_2013-03-14'
 delim = ';'
 #default_encoding = 'utf8'
 default_encoding = 'cp1252'
@@ -56,10 +56,14 @@ if not inventaire_only:
         data = dict(zip(cols, processRow(row)))
         data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])
         data['type_client'] = type_client_map.get(data['type_client'], data['type_client'])
-        data['representant_id'] = selectId(cursor, 'representant', where={'representant_nom': repr_id})
+        data['representant_id'] = selectId(cursor, 'representant', where={'representant_nom': data['representant_id']})
         if data['representant_id'] is None: continue # invalid client
         data['no_succursale_saq'] = data['no_succursale_saq'] if data['no_succursale_saq'] in succs else None
         data['mode_facturation'] = 'poste' # historical clients have "poste", newer have default "courriel"
+        for f in ['code_postal', 'code_postal_fact']:
+            if data[f]:
+                m = re.match('([A-Z]\d[A-Z]) *(\d[A-Z]\d)', data[f].upper())
+                data[f] = '%s %s' % (m.group(1), m.group(2))
         jl = jl_map.get(data['jours_livraison'])
         if jl: data['jours_livraison'] = [jl]
         else: data['jours_livraison'] = None
@@ -82,6 +86,13 @@ if not inventaire_only:
     f.next()
     for row in f:
         data = dict(zip(cols, processRow(row, 'cp1252')))
+        # if data['code_postal']:
+        #     print data['code_postal']
+        #     m = re.match('([A-Z]\d[A-Z]) *(\d[A-Z]\d)', data['code_postal'].upper())
+        #     if not m:
+        #         print data['code_postal']
+        #         continue
+        #     data['code_postal'] = '%s %s' % (m.group(1), m.group(2))
         no_producteurs.add(data['no_producteur'])
         insert(cursor, 'producteur', values=data)
     cursor.execute("select setval('producteur_no_producteur_seq', (select max(no_producteur) from producteur)+1)")
@@ -125,8 +136,9 @@ if not inventaire_only:
     f.next()
     for row in f:
         data = dict(zip(cols, processRow(row)))
-        if data['no_produit_interne'] in no_produit_internes:
-            insert(cursor, 'client_produit', values=data)
+        if data['no_client'] not in no_clients or \
+                data['no_produit_interne'] not in no_produit_internes: continue
+        insert(cursor, 'client_produit', values=data)
     cursor.execute('create index client_produit_no_client_idx on client_produit (no_client)')
     cursor.execute('create index client_produit_no_produit_interne_idx on client_produit (no_produit_interne)')
     print '(%s)' % count(cursor, 'client_produit')
@@ -144,9 +156,9 @@ if not inventaire_only:
         data = dict(zip(cols, processRow(row)))
         data['expedition'] = expedition_map.get(data['expedition'], data['expedition'])
         data['no_succursale_saq'] = data['no_succursale_saq'] if data['no_succursale_saq'] in succs else None
-        if data['no_client'] in no_clients:
-            insert(cursor, 'commande', values=data)
-            no_commande_factures.add(data['no_commande_facture'])
+        if data['no_client'] not in no_clients: continue
+        insert(cursor, 'commande', values=data)
+        no_commande_factures.add(data['no_commande_facture'])
     cursor.execute("select setval('commande_no_commande_facture_seq', (select max(no_commande_facture) from commande)+1)")
     cursor.execute('create index commande_no_client_idx on commande (no_client)')
     print '(%s)' % count(cursor, 'commande')
@@ -161,9 +173,11 @@ if not inventaire_only:
     f = csv.reader(open('%s/ProduitsCommandes.csv' % export_dir), delimiter=delim)
     f.next()
     for row in f:
+        del row[-2] # date_commande
         data = dict(zip(cols, processRow(row)))
-        if data['no_commande_facture'] in no_commande_factures and data['no_produit_interne'] in no_produit_internes:
-            insert(cursor, 'commande_item', values=data)
+        if data['no_commande_facture'] not in no_commande_factures or \
+                data['no_produit_interne'] not in no_produit_internes: continue
+        insert(cursor, 'commande_item', values=data)
     cursor.execute("select setval('commande_item_commande_item_id_seq', (select max(commande_item_id) from commande_item)+1)")
     print '(%s)' % count(cursor, 'commande_item')
 
@@ -184,8 +198,8 @@ for row in f:
         row.insert(13, '')
     data = dict(zip(cols, processRow(row)))
     data['statut_inventaire'] = data['statut_inventaire'].lower()
-    if data['no_produit_interne'] in no_produit_internes:
-        insert(cursor, 'inventaire', values=data)
+    if data['no_produit_interne'] not in no_produit_internes: continue
+    insert(cursor, 'inventaire', values=data)
 cursor.execute("select setval('inventaire_no_inventaire_seq', (select max(no_inventaire) from inventaire)+1)")
 cursor.execute('create index inventaire_no_produit_interne_idx on inventaire (no_produit_interne)')
 print '(%s)' % count(cursor, 'inventaire')
