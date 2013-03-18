@@ -30,7 +30,7 @@ def _get_rapport_transaction_data(request):
     q = """ select nom_social, no_client_saq, o.no_commande_facture, o.expedition, date_pickup,
                    date_direct, o.no_succursale_saq, note_commande, montant, sous_total, tps, tvq,
                    type_vin, nom_domaine, format, no_produit_saq, no_demande_saq, quantite_caisse,
-                   quantite_bouteille, quantite_par_caisse
+                   quantite_bouteille, quantite_par_caisse, representant_nom
             from client c
             inner join commande o on c.no_client = o.no_client
             inner join commande_item ci on o.no_commande_facture = ci.no_commande_facture
@@ -85,8 +85,8 @@ def download_rapport_transaction():
     end_date = request.args['end_date']
     representant = request.args['representant_nom'] if request.args['representant_nom'] else 'tous'
     rows = _get_rapport_transaction_data(request)
-    # each row: {top: list of 7 items,
-    #            subitems: [ <list of 4 items> ]}
+    # each row: {top: <list of 7 items>, [bottom: str,]
+    #            subitems: <list of 4 items>}
     items = []
     ncf_rows = defaultdict(list) # ncf -> []
     for row in rows:
@@ -105,6 +105,8 @@ def download_rapport_transaction():
         item = {'top': ['%s (%s)' % (row0['nom_social'], row0['no_client_saq'] if row0['no_client_saq'] else '?'),
                         row0['no_commande_facture'], '%s %s' % (exp, note), as_currency(row0['montant']),
                         as_currency(row0['sous_total']), as_currency(row0['tps']), as_currency(row0['tvq'])]}
+        if representant == 'tous':
+            items['bottom'] = row0['representant_nom']
         subitems = []
         for row in rows:
             subitems.append(['%s, %s' % (row['type_vin'], row['nom_domaine']), row['format'],
@@ -117,8 +119,9 @@ def download_rapport_transaction():
     doc_values = {'start_date': start_date, 'end_date': end_date,
                   'representant_nom': representant, 'items': items, 'totals': totals}
     out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s.%s' % (start_date, end_date, representant, DOC_TYPE)
-    ren = Renderer('/home/christian/vinum/docs/rapport_des_transactions.odt', doc_values,
-                   '/tmp/%s' % out_fn, overwriteExisting=True)
+    tmpl_fn = '/home/christian/vinum/docs/rapport_des_transactions.odt' if representant == 'tous' else \
+        '/home/christian/vinum/docs/rapport_des_transactions_1repr.odt'
+    ren = Renderer(tmpl_fn, doc_values, '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
     return send_file('/tmp/%s' % out_fn, mimetype='application/pdf',
                      attachment_filename=out_fn, as_attachment=True)
