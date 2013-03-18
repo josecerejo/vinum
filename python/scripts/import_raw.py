@@ -14,7 +14,7 @@ if inventaire_only:
     cursor.execute('delete from inventaire; drop index inventaire_no_produit_interne_idx;')
 else:
     os.system('psql -d vinum -f /home/christian/vinum/data/sql/model.sql')
-export_dir = '/home/christian/vinum/data/raw/access_export_2013-03-14'
+export_dir = '/home/christian/vinum/data/raw/access_export_2013-03-15'
 delim = ';'
 #default_encoding = 'utf8'
 default_encoding = 'cp1252'
@@ -86,13 +86,6 @@ if not inventaire_only:
     f.next()
     for row in f:
         data = dict(zip(cols, processRow(row, 'cp1252')))
-        # if data['code_postal']:
-        #     print data['code_postal']
-        #     m = re.match('([A-Z]\d[A-Z]) *(\d[A-Z]\d)', data['code_postal'].upper())
-        #     if not m:
-        #         print data['code_postal']
-        #         continue
-        #     data['code_postal'] = '%s %s' % (m.group(1), m.group(2))
         no_producteurs.add(data['no_producteur'])
         insert(cursor, 'producteur', values=data)
     cursor.execute("select setval('producteur_no_producteur_seq', (select max(no_producteur) from producteur)+1)")

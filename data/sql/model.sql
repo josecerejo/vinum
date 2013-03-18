@@ -62,7 +62,7 @@ create table producteur (
     rue text,
     ville text,
     comte text,
-    code_postal text, -- check (code_postal ~ $re$^[A-Z]\d[A-Z] \d[A-Z]\d$$re$), -- 'H0H 0H0'
+    code_postal text check (code_postal ~ $re$^[A-Z]\d[A-Z] \d[A-Z]\d$|^\d{4,5}$$re$), -- 'H0H 0H0'|'1234'|'12345'
     pays text,
     no_tel text,
     no_fax text,

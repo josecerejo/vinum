@@ -340,7 +340,9 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Code postal',
-                            name: 'code_postal'
+                            name: 'code_postal',
+                            regex: /^[A-Z]\d[A-Z] \d[A-Z]\d$|^\d{4,5}$/,
+                            regexText: 'Le format doit être: H0H 0H0 ou 1234[5]',
                         }]
                     }, {
                         layout: 'hbox',
