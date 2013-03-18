@@ -106,7 +106,7 @@ def download_rapport_transaction():
                         row0['no_commande_facture'], '%s %s' % (exp, note), as_currency(row0['montant']),
                         as_currency(row0['sous_total']), as_currency(row0['tps']), as_currency(row0['tvq'])]}
         if representant == 'tous':
-            items['bottom'] = row0['representant_nom']
+            item['bottom'] = row0['representant_nom']
         subitems = []
         for row in rows:
             subitems.append(['%s, %s' % (row['type_vin'], row['nom_domaine']), row['format'],
