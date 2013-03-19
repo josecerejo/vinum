@@ -158,8 +158,17 @@ def add_produit_to_commande():
         if existing_ci:
             ci['quantite_bouteille'] += existing_ci['quantite_bouteille']
             ci['quantite_caisse'] += existing_ci['quantite_caisse']
-        pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf, 'statut_item': 'BO',
-                                                             'no_produit_interne': rf['no_produit_interne']})
+        ci = pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf, 'statut_item': 'BO',
+                                                                  'no_produit_interne': rf['no_produit_interne']})
+        # insert BO in backorder table
+        pg.upsert(cursor, 'backorder', values={'commande_item_id': ci['commande_item_id']},
+                  where={'commande_item_id': ci['commande_item_id']})
+    else:
+        # try remove produit from backorder table
+        cids = [row['commande_item_id'] for row in pg.select(cursor, 'commande_item',
+                                                             where={'no_client': rf['no_client'],
+                                                                    'no_produit_interne': rf['no_produit_interne']})]
+        pg.delete(cursor, 'backorder', where={'commande_item_id': tuple(cids)})
     g.db.commit()
     return {'success': True, 'data': commande}
 
