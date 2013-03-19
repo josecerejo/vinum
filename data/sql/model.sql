@@ -165,6 +165,12 @@ create table inventaire (
     prix_particulier numeric -- prix_coutant + 23%
 );
 
+drop table if exists backorder cascade;
+create table backorder (
+    backorder_id serial primary key,
+    commande_item_id integer not null references commande_item
+);
+
 drop table if exists usager cascade;
 create table usager (
     usager_id serial primary key,

@@ -3,6 +3,10 @@ Ext.define('VIN.model.CommandeItem', {
     extend: 'Ext.data.Model',
 
     fields: [{
+        name: 'commande_item_id',
+        type: 'int',
+        useNull: true
+    }, {
         header: '# inventaire',
         name: 'no_inventaire',
         type: 'int',

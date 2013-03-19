@@ -345,6 +345,28 @@ Ext.define('VIN.controller.Commande', {
                         this.preAddCommandeProduit(form);
                     }
                 }
+            },
+            '#bo_g actioncolumn': {
+                del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
+                    Ext.Msg.confirm('Vinum', Ext.String.format("Êtes-vous certain de vouloir détruire ce BO ('{0}' pour '{1}')?",
+                                                               rec.get('type_vin'), rec.get('nom_social')),
+                                    Ext.bind(function(btn) {
+                                        if (btn == 'yes') {
+                                            // I use a dummy form here just to avoid using Ext.Ajax.request,
+                                            // which plays less well with my general error handlers
+                                            var dummy_form = Ext.create('Ext.form.Panel');
+                                            dummy_form.submit({
+                                                url: ajax_url_prefix + '/commande/remove_bo',
+                                                params: {
+                                                    commande_item_id: rec.get('commande_item_id')
+                                                },
+                                                success: function(_form, action) {
+                                                    grid.getStore().load();
+                                                }
+                                            });
+                                        }
+                                    }, this));
+                }
             }
         });
     },
@@ -676,6 +698,7 @@ Ext.define('VIN.controller.Commande', {
                 title: 'Ruptures de stock (BOs)',
                 closable: true,
                 store: Ext.create('VIN.store.BOCommandeItems'),
+                add_delete_actioncolumn: true,
                 column_flex: {
                     type_vin: 2,
                     format: 0.75,
@@ -684,8 +707,7 @@ Ext.define('VIN.controller.Commande', {
                     nom_social: 2,
                     representant_nom: 1.5,
                     quantite_caisse: 0.75,
-                    quantite_bouteille: 0.75,
-                    statut_item: 0.5
+                    quantite_bouteille: 0.75
                 }
             });
             Ext.getCmp('main_pnl').add(g);

@@ -384,8 +384,17 @@ def email_bdc():
 @app.route('/commande/get_bos', methods=['GET'])
 @login_required
 def get_bos():
-    return get(g, request, {'commande_item': 'ci', 'produit': 'p', 'commande': 'o', 'client': 'c', 'representant': 'r'},
+    return get(g, request, {'backorder': 'bo', 'commande_item': 'ci', 'produit': 'p', 'commande': 'o',
+                            'client': 'c', 'representant': 'r'},
                what=['ci.*', 'p.*', 'o.date_commande', 'c.nom_social', 'r.representant_nom'],
-               join={'ci.no_produit_interne': 'p.no_produit_interne', 'o.no_commande_facture': 'ci.no_commande_facture',
-                     'c.no_client': 'o.no_client', 'c.representant_id': 'r.representant_id'},
-               where={'statut_item': 'BO'})
+               join={'bo.commande_item_id': 'ci.commande_item_id', 'ci.no_produit_interne': 'p.no_produit_interne',
+                     'o.no_commande_facture': 'ci.no_commande_facture', 'c.no_client': 'o.no_client',
+                     'c.representant_id': 'r.representant_id'})
+
+
+@app.route('/commande/remove_bo', methods=['POST'])
+@login_required
+def remove_bo():
+    pg.delete(g.db.cursor(), 'backorder', where={'commande_item_id': request.form['commande_item_id']})
+    g.db.commit()
+    return {'success': True}
