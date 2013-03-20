@@ -117,6 +117,8 @@ def add_produit_to_commande():
                      where=where, order_by='date_commande asc')
     prev_statut_inv = None
     for inv in rows:
+        # fill commande_items by order of date_commande inventaire items, taking the max
+        # available quantity from each
         inv_id = inv['no_inventaire']
         if prev_statut_inv == 'inactif':
             pg.update(cursor, 'inventaire', set={'statut_inventaire':'actif'}, where={'no_inventaire': inv_id})
@@ -148,7 +150,8 @@ def add_produit_to_commande():
                                                              'no_produit_saq': ci['no_produit_saq']},
                   filter_values=True)
     if rem_qc > 0:
-        # backorders (commande_item only)
+        # if we still have cases at this point, it's a BO, i.e. a commande_item with statut=BO (not a
+        # 'backorder' table row yet though!)
         qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
         ci = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
               'quantite_bouteille': rem_qc * qpc, 'commission': comm, 'statut_item': 'BO'}
@@ -159,11 +162,13 @@ def add_produit_to_commande():
             ci['quantite_caisse'] += existing_ci['quantite_caisse']
         ci = pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf, 'statut_item': 'BO',
                                                                   'no_produit_interne': rf['no_produit_interne']})
-    # check for already existing corresponding BO (now for backorder table)
+    # check for already existing 'backorder' row/item; if found, return it to the client for it to
+    # pop an update dialog (allowing to modify/delete the backorder item)
     bo = pg.select1r(cursor, 'backorder', where={'no_client': rf['no_client'], 'no_produit_interne': rf['no_produit_interne']})
     if bo:
         commande['backorder'] = bo
     elif rem_qc > 0:
+        # not found, but there was a BO in the first place, so add it as a backorder item
         bo = {'no_client': rf['no_client'], 'no_produit_interne': rf['no_produit_interne'],
               'date_bo': rf['date_commande'], 'quantite_caisse': ci['quantite_caisse'],
               'quantite_bouteille': ci['quantite_bouteille']}
