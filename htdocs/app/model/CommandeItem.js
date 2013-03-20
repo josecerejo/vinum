@@ -22,21 +22,6 @@ Ext.define('VIN.model.CommandeItem', {
     }, {
         name: 'format'
     }, {
-        header: '# commande',
-        name: 'no_commande_facture',
-        type: 'int',
-        useNull: true
-    }, {
-        header: 'Date de commande',
-        name: 'date_commande',
-        type: 'date'
-    }, {
-        header: 'Client',
-        name: 'nom_social'
-    }, {
-        header: 'Représentant',
-        name: 'representant_nom'
-    }, {
         header: '# produit SAQ',
         name: 'no_produit_saq',
         type: 'int',

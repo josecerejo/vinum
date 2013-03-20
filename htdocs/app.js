@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-03-18';
+var last_update = '2013-03-20';
 var vinum_version = 'prototype';
 
 Ext.window.MessageBox.prototype.buttonText = {
@@ -109,7 +109,7 @@ Ext.define('VIN.field.PriceField', {
 Ext.application({
     name: 'VIN',
     controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur',
-                  'Login', 'Rapport'],
+                  'Login', 'Rapport', 'Backorder'],
     autoCreateViewport: true,
     launch: function() {
 
@@ -117,7 +117,8 @@ Ext.application({
 
         // globals!
         wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Un moment svp..."});
-        login_win = Ext.create('VIN.view.Login');
+        login_win = Ext.create('VIN.view.LoginWindow');
+        backorder_win = Ext.create('VIN.view.BackorderWindow');
 
         // initial login check (needed because the app doesn't interact with the server when it starts up)
         Ext.Ajax.request({

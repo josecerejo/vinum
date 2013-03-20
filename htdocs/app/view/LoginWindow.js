@@ -1,4 +1,4 @@
-Ext.define('VIN.view.Login', {
+Ext.define('VIN.view.LoginWindow', {
 
     extend: 'Ext.window.Window',
 

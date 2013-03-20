@@ -1,7 +1,6 @@
 Ext.define('VIN.controller.Rapport', {
 
     extend: 'Ext.app.Controller',
-    //requires: ['VIN.model.Transaction'],
 
     init: function() {
 

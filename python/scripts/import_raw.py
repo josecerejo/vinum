@@ -214,9 +214,12 @@ update inventaire set prix_restaurant = (prix_coutant / 1.14975) * 1.11 +
 ####################################################################################################
 
 print 'backorder..',
-rows = select(cursor, 'commande_item', where={'statut_item': 'BO'})
+rows = select(cursor, {'commande_item':'ci', 'commande':'c'},
+              join={'ci.no_commande_facture': 'c.no_commande_facture'},
+              where={'statut_item': 'BO'})
 for row in rows:
-    insert(cursor, 'backorder', values={'commande_item_id': row['commande_item_id']})
+    row['date_bo'] = row['date_commande']
+    insert(cursor, 'backorder', values=row, filter_values=True)
 print '(%s)' % count(cursor, 'backorder')
 
 ####################################################################################################

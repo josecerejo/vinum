@@ -168,7 +168,12 @@ create table inventaire (
 drop table if exists backorder cascade;
 create table backorder (
     backorder_id serial primary key,
-    commande_item_id integer not null references commande_item on delete cascade
+    --commande_item_id integer not null references commande_item on delete cascade
+    no_produit_interne integer not null references produit,
+    no_client integer not null references client,
+    date_bo date,
+    quantite_caisse integer,
+    quantite_bouteille integer
 );
 
 drop table if exists usager cascade;

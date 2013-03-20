@@ -147,9 +147,8 @@ def add_produit_to_commande():
         pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf,
                                                              'no_produit_saq': ci['no_produit_saq']},
                   filter_values=True)
-        #pg.insert(cursor, 'commande_item', values=ci, filter_values=True)
     if rem_qc > 0:
-        # backorders
+        # backorders (commande_item only)
         qpc = pg.select1(cursor, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
         ci = {'no_commande_facture': ncf, 'no_produit_interne': rf['no_produit_interne'], 'quantite_caisse': rem_qc,
               'quantite_bouteille': rem_qc * qpc, 'commission': comm, 'statut_item': 'BO'}
@@ -160,15 +159,15 @@ def add_produit_to_commande():
             ci['quantite_caisse'] += existing_ci['quantite_caisse']
         ci = pg.upsert(cursor, 'commande_item', values=ci, where={'no_commande_facture': ncf, 'statut_item': 'BO',
                                                                   'no_produit_interne': rf['no_produit_interne']})
-        # insert BO in backorder table
-        pg.upsert(cursor, 'backorder', values={'commande_item_id': ci['commande_item_id']},
-                  where={'commande_item_id': ci['commande_item_id']})
-    else:
-        # try remove produit from backorder table
-        cids = [row['commande_item_id'] for row in pg.select(cursor, 'commande_item',
-                                                             where={'no_client': rf['no_client'],
-                                                                    'no_produit_interne': rf['no_produit_interne']})]
-        pg.delete(cursor, 'backorder', where={'commande_item_id': tuple(cids)})
+    # check for already existing corresponding BO (now for backorder table)
+    bo = pg.select1r(cursor, 'backorder', where={'no_client': rf['no_client'], 'no_produit_interne': rf['no_produit_interne']})
+    if bo:
+        commande['backorder'] = bo
+    elif rem_qc > 0:
+        bo = {'no_client': rf['no_client'], 'no_produit_interne': rf['no_produit_interne'],
+              'date_bo': rf['date_commande'], 'quantite_caisse': ci['quantite_caisse'],
+              'quantite_bouteille': ci['quantite_bouteille']}
+        pg.insert(cursor, 'backorder', values=bo)
     g.db.commit()
     return {'success': True, 'data': commande}
 
@@ -386,24 +385,5 @@ def email_bdc():
     mailer.close()
     pg.update(g.db.cursor(), 'commande', set={'bon_de_commande_est_envoye': True},
               where={'no_commande_facture': request.form['no_commande_facture']})
-    g.db.commit()
-    return {'success': True}
-
-
-@app.route('/commande/get_bos', methods=['GET'])
-@login_required
-def get_bos():
-    return get(g, request, {'backorder': 'bo', 'commande_item': 'ci', 'produit': 'p', 'commande': 'o',
-                            'client': 'c', 'representant': 'r'},
-               what=['ci.*', 'p.*', 'o.date_commande', 'c.nom_social', 'r.representant_nom'],
-               join={'bo.commande_item_id': 'ci.commande_item_id', 'ci.no_produit_interne': 'p.no_produit_interne',
-                     'o.no_commande_facture': 'ci.no_commande_facture', 'c.no_client': 'o.no_client',
-                     'c.representant_id': 'r.representant_id'})
-
-
-@app.route('/commande/remove_bo', methods=['POST'])
-@login_required
-def remove_bo():
-    pg.delete(g.db.cursor(), 'backorder', where={'commande_item_id': request.form['commande_item_id']})
     g.db.commit()
     return {'success': True}

@@ -48,11 +48,5 @@ def teardown_request(exception):
         g.db.close()
 
 
-import login
-import client
-import commande
-import produit
-import producteur
-import inventaire
-import rapport
-import misc
+# these must be imported in the end like that!
+import login, client, commande, produit, producteur, inventaire, rapport, backorder, misc

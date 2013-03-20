@@ -62,7 +62,7 @@ Ext.define('VIN.controller.Commande', {
                     form.down('#pickup_rb').setValue(true);
                 }
             },
-            '#produit_dd': {
+            'commande_form #produit_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
                     var pdd = form.down('#produit_dd');
@@ -345,28 +345,6 @@ Ext.define('VIN.controller.Commande', {
                         this.preAddCommandeProduit(form);
                     }
                 }
-            },
-            '#bo_g actioncolumn': {
-                del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
-                    Ext.Msg.confirm('Vinum', Ext.String.format("Êtes-vous certain de vouloir détruire ce BO ('{0}' pour '{1}')?",
-                                                               rec.get('type_vin'), rec.get('nom_social')),
-                                    Ext.bind(function(btn) {
-                                        if (btn == 'yes') {
-                                            // I use a dummy form here just to avoid using Ext.Ajax.request,
-                                            // which plays less well with my general error handlers
-                                            var dummy_form = Ext.create('Ext.form.Panel');
-                                            dummy_form.submit({
-                                                url: ajax_url_prefix + '/commande/remove_bo',
-                                                params: {
-                                                    commande_item_id: rec.get('commande_item_id')
-                                                },
-                                                success: function(_form, action) {
-                                                    grid.getStore().load();
-                                                }
-                                            });
-                                        }
-                                    }, this));
-                }
             }
         });
     },
@@ -531,6 +509,12 @@ Ext.define('VIN.controller.Commande', {
                         no_commande_facture: form.down('#no_commande_facture_tf').getValue()
                     };
                     cig.getStore().load();
+                    // check for existing backorder (msg from server)
+                    if (action.result.data.backorder !== undefined) {
+                        // if found, pop the BO window to allow its edition
+                        var bo_rec = Ext.create('VIN.model.Backorder', action.result.data.backorder);
+                        VIN.app.getController('Backorder').editBO(bo_rec);
+                    }
                 }, this)
             });
         }
@@ -688,31 +672,6 @@ Ext.define('VIN.controller.Commande', {
             Ext.getCmp('main_pnl').add(cg);
         }
         Ext.getCmp('main_pnl').setActiveTab(cg);
-    },
-
-    createBOGrid: function() {
-        var g = Ext.getCmp('main_pnl').down('#bo_g');
-        if (!g) {
-            g = Ext.create('VIN.view.Grid', {
-                itemId: 'bo_g',
-                title: 'Ruptures de stock (BOs)',
-                closable: true,
-                store: Ext.create('VIN.store.BOCommandeItems'),
-                add_delete_actioncolumn: true,
-                column_flex: {
-                    type_vin: 2,
-                    format: 0.75,
-                    date_commande: 1,
-                    no_commande_facture: 0.75,
-                    nom_social: 2,
-                    representant_nom: 1.5,
-                    quantite_caisse: 0.75,
-                    quantite_bouteille: 0.75
-                }
-            });
-            Ext.getCmp('main_pnl').add(g);
-        }
-        Ext.getCmp('main_pnl').setActiveTab(g);
     }
 
 });
