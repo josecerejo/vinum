@@ -84,7 +84,7 @@ Ext.define('VIN.controller.Backorder', {
                         }, this));
     },
 
-    editBO: function(rec) {
+    editBO: function(rec, win_title) {
         var f = backorder_win.down('#backorder_f');
         f.down('#client_dd').forceSelection = false;
         f.down('#produit_dd').forceSelection = false;
@@ -100,6 +100,11 @@ Ext.define('VIN.controller.Backorder', {
                 f.down('#produit_dd').forceSelection = true;
                 f.down('#produit_dd').addCls('x-item-disabled');
                 backorder_win.down('#del_btn').setDisabled(false);
+                if (win_title !== undefined) {
+                    backorder_win.setTitle(win_title);
+                } else {
+                    backorder_win.setTitle('Rupture de stock (BO)');
+                }
             }
         });
     },

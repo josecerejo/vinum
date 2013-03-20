@@ -513,7 +513,7 @@ Ext.define('VIN.controller.Commande', {
                     if (action.result.data.backorder !== undefined) {
                         // if found, pop the BO window to allow its edition
                         var bo_rec = Ext.create('VIN.model.Backorder', action.result.data.backorder);
-                        VIN.app.getController('Backorder').editBO(bo_rec);
+                        VIN.app.getController('Backorder').editBO(bo_rec, 'BO existant pour ce client/produit');
                     }
                 }, this)
             });
