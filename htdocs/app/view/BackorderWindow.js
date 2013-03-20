@@ -16,8 +16,7 @@ Ext.define('VIN.view.BackorderWindow', {
         padding: 10,
         items: [{
             xtype: 'hidden',
-            name: 'backorder_id',
-            itemId: 'backorder_id_hd'
+            name: 'backorder_id'
         }, {
             xtype: 'combo',
             width: 300,

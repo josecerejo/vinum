@@ -8,7 +8,7 @@ Ext.define('VIN.controller.Backorder', {
 
             '#backorder_g actioncolumn': {
                 del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
-                    this.deleteBO();
+                    this.deleteBO(rec);
                 },
                 edit_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     this.editBO(rec);
@@ -51,24 +51,26 @@ Ext.define('VIN.controller.Backorder', {
 
             '#backorder_w #del_btn': {
                 click: function(btn) {
-                    this.deleteBO();
+                    var f = backorder_win.down('#backorder_f');
+                    var rec = Ext.create('VIN.model.Backorder', f.getForm().getFieldValues());
+                    this.deleteBO(rec);
                 }
             }
 
         });
     },
 
-    deleteBO: function() {
+    deleteBO: function(rec) {
         var f = backorder_win.down('#backorder_f');
         Ext.Msg.confirm('Vinum', Ext.String.format("Êtes-vous certain de vouloir détruire ce BO ('{0}' pour '{1}')?",
-                                                   f.down('#produit_dd').getValue(), f.down('#client_dd').getValue()),
+                                                   rec.get('type_vin'), rec.get('nom_social')),
                         Ext.bind(function(btn) {
                             if (btn == 'yes') {
                                 var dummy_form = Ext.create('Ext.form.Panel');
                                 dummy_form.submit({
                                     url: ajax_url_prefix + '/backorder/remove',
                                     params: {
-                                        backorder_id: f.down('#backorder_id_hd').getValue()
+                                        backorder_id: rec.get('backorder_id')
                                     },
                                     success: function(_form, action) {
                                         var g = Ext.getCmp('main_pnl').down('#backorder_g');

@@ -36,6 +36,9 @@ def save_bo():
     rf = request.form.to_dict()
     rf['no_client'] = pg.select1(cur, 'client', 'no_client', where={'nom_social': rf['nom_social']})
     rf['no_produit_interne'] = pg.select1(cur, 'produit', 'no_produit_interne', where={'type_vin': rf['type_vin']})
+    qc = int(rf['quantite_caisse'])
+    rf['quantite_bouteille'] = qc * pg.select1(cur, 'produit', 'quantite_par_caisse',
+                                               where={'no_produit_interne': rf['no_produit_interne']})
     bid = rf.pop('backorder_id')
     if bid == '': bid = None
     else: rf['backorder_id'] = bid
