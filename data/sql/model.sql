@@ -180,7 +180,8 @@ drop table if exists usager cascade;
 create table usager (
     usager_id serial primary key,
     usager_nom text not null,
-    mdp_hash text not null
+    mdp_hash text not null,
+    representant_id integer references representant
 );
 
 insert into representant values (2, 'David Doucet');

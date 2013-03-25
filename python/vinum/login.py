@@ -1,5 +1,5 @@
 from vinum import *
-from flask.ext.login import LoginManager, login_required, login_user, logout_user, UserMixin
+from flask.ext.login import LoginManager, login_required, login_user, logout_user, UserMixin, current_user
 import little_pger as pg
 
 
@@ -9,14 +9,13 @@ login_manager.init_app(app)
 
 class User(UserMixin):
     def __init__(self, u):
-        self.id = u['usager_id']
-        self.name = u['usager_nom']
+        self.u = u
 
 
 @login_manager.user_loader
 def load_user(id):
     u = pg.select1r(g.db.cursor(), 'usager', where={'usager_id': id})
-    if u: return User(u)
+    if u: return User(dict(u))
     return None
 
 
@@ -26,7 +25,10 @@ def check_login():
     # all the @login_required decorated views emit 401 if authentication fails
     # (so this one, by doing nothing, is basically just an authentication checker,
     #  used when the webapp first loads, to pop a login dialog if needed)
-    return {'success': True}
+    u = current_user.u
+    u['success'] = True
+    return u
+    #return {'success': True, 'is_repr': current_user.is_repr}
 
 
 @app.route("/login", methods=['POST'])
@@ -39,7 +41,7 @@ def login():
                         what=["mdp_hash = (select crypt('%s', mdp_hash)) is_pw_ok" % pw,
                               'usager.*'], where={'usager_nom': un})
         if u['is_pw_ok']:
-            login_user(User(u), remember=('remember' in request.form))
+            login_user(User(dict(u)), remember=('remember' in request.form))
             return {'success': True}
         else:
             return {'success': False, 'error': 'password'}
