@@ -54,13 +54,13 @@ Ext.define('VIN.view.MainToolbar', {
         text: 'Ruptures de stock (BOs)',
         iconCls: 'error-icon',
         menu: [{
-            text: 'Voir la liste',
-            iconCls: 'clients-list-icon',
-            id: 'bo_list_menu_itm'
-        }, {
             text: 'Créer un BO',
             iconCls: 'add-icon',
             id: 'bo_create_menu_itm'
+        }, {
+            text: 'Voir la liste',
+            iconCls: 'clients-list-icon',
+            id: 'bo_list_menu_itm'
         }]
     }, {
         text: 'Rapports',
