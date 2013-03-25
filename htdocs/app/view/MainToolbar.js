@@ -25,10 +25,6 @@ Ext.define('VIN.view.MainToolbar', {
             text: 'Toutes les commandes',
             iconCls: 'clients-list-icon',
             id: 'list_commandes_menu_itm'
-        }, {
-            text: 'Ruptures de stock (BOs)',
-            iconCls: 'error-icon',
-            id: 'bo_menu_itm'
         }]
     }, {
         text: 'Clients',
@@ -53,6 +49,18 @@ Ext.define('VIN.view.MainToolbar', {
             text: 'Inventaire',
             iconCls: 'clients-list-icon',
             id: 'produits_inv_menu_itm'
+        }]
+    }, {
+        text: 'Ruptures de stock (BOs)',
+        iconCls: 'error-icon',
+        menu: [{
+            text: 'Voir la liste',
+            iconCls: 'clients-list-icon',
+            id: 'bo_list_menu_itm'
+        }, {
+            text: 'Créer un BO',
+            iconCls: 'add-icon',
+            id: 'bo_create_menu_itm'
         }]
     }, {
         text: 'Rapports',

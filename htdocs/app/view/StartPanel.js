@@ -39,10 +39,11 @@ Ext.define('VIN.view.StartPanel', {
                         '<div class="x-clear"></div>'
                     ],
                     trackOver: true,
-                    overItemCls: 'x-item-over',
+                    //overItemCls: 'x-item-over',
                     itemSelector: 'div.thumb-wrap',
                     listeners: {
-                        itemclick: function(dvm, rec) {
+                        itemclick: function(dv, rec, item, idx, e, opts) {
+                            if (jQuery(item).hasClass('x-item-disabled')) { return; }
                             switch (rec.get('name')) {
                             case 'create_commande':
                                 VIN.app.getController('Commande').createCommandeForm();
@@ -63,7 +64,18 @@ Ext.define('VIN.view.StartPanel', {
                                 VIN.app.getController('Inventaire').createInventaireForm();
                                 break;
                             }
+                        },
+
+                        itemmouseenter: function(dv, rec, item, idx, e, opts) {
+                            if (!jQuery(item).hasClass('x-item-disabled')) {
+                                jQuery(item).addClass('x-item-over');
+                            }
+                        },
+
+                        itemmouseleave: function(dv, rec, item, idx, e, opts) {
+                            jQuery(item).removeClass('x-item-over');
                         }
+
                     }
                 })
             }

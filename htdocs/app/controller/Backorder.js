@@ -23,12 +23,7 @@ Ext.define('VIN.controller.Backorder', {
 
             '#backorder_g #add_bo_btn': {
                 click: function(btn) {
-                    var f = backorder_win.down('#backorder_f');
-                    f.getForm().reset();
-                    f.down('#client_dd').removeCls('x-item-disabled');
-                    f.down('#produit_dd').removeCls('x-item-disabled');
-                    backorder_win.down('#del_btn').setDisabled(true);
-                    backorder_win.show();
+                    this.popNewBOWindow();
                 }
             },
 
@@ -142,7 +137,15 @@ Ext.define('VIN.controller.Backorder', {
             Ext.getCmp('main_pnl').add(g);
         }
         Ext.getCmp('main_pnl').setActiveTab(g);
-    }
+    },
 
+    popNewBOWindow: function() {
+        var f = backorder_win.down('#backorder_f');
+        f.getForm().reset();
+        f.down('#client_dd').removeCls('x-item-disabled');
+        f.down('#produit_dd').removeCls('x-item-disabled');
+        backorder_win.down('#del_btn').setDisabled(true);
+        backorder_win.show();
+    }
 
 });

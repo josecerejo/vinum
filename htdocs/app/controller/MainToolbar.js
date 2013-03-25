@@ -46,14 +46,17 @@ Ext.define('VIN.controller.MainToolbar', {
                     case 'list_commandes_menu_itm':
                         VIN.app.getController('Commande').createCommandeGrid();
                         break;
-                    case 'bo_menu_itm':
-                        VIN.app.getController('Backorder').createBOGrid();
-                        break;
                     case 'produits_pp_menu_itm':
                         VIN.app.getController('ProduitEtProducteur').createForm();
                         break;
                     case 'produits_inv_menu_itm':
                         VIN.app.getController('Inventaire').createInventaireForm();
+                        break;
+                    case 'bo_list_menu_itm':
+                        VIN.app.getController('Backorder').createBOGrid();
+                        break;
+                    case 'bo_create_menu_itm':
+                        VIN.app.getController('Backorder').popNewBOWindow();
                         break;
                     case 'rapport_transaction_menu_itm':
                         VIN.app.getController('Rapport').createRapportTransactionGrid();
