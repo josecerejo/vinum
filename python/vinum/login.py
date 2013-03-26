@@ -23,12 +23,13 @@ def load_user(id):
 @login_required
 def check_login():
     # all the @login_required decorated views emit 401 if authentication fails
-    # (so this one, by doing nothing, is basically just an authentication checker,
-    #  used when the webapp first loads, to pop a login dialog if needed)
+    # (so this one, by doing nothing (apart from returning user info), is basically
+    # just an authentication checker, used when the webapp first loads, to pop a
+    # login dialog if needed)
     u = current_user.u
+    del u['mdp_hash']
     u['success'] = True
     return u
-    #return {'success': True, 'is_repr': current_user.is_repr}
 
 
 @app.route("/login", methods=['POST'])

@@ -120,12 +120,18 @@ Ext.application({
         login_win = Ext.create('VIN.view.LoginWindow');
         backorder_win = Ext.create('VIN.view.BackorderWindow');
 
+        // to make the css works, see (*) in Viewport.js
+        Ext.getCmp('main_header').getEl().removeCls('x-box-item');
+
         // initial login check (needed because the app doesn't interact with the server when it starts up)
         Ext.Ajax.request({
             url: ajax_url_prefix + '/check_login',
             method: 'POST',
             failure: function() {
                 login_win.pop();
+            },
+            success: function(resp) {
+                jQuery('#login_name').html(Ext.JSON.decode(resp.responseText).usager_nom);
             }
         });
 
