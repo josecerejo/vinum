@@ -27,12 +27,6 @@ Ext.define('VIN.view.Viewport', {
 
     initComponent: function() {
         this.callParent(arguments);
-        // var dv = Ext.getCmp('main_pnl').down('dataview');
-        // console.log(dv);
-        // dv.on('viewready', function() {
-        //     //console.log(typeof dv.all.elements[0]);
-        //     dv.all.elements[1].className += ' x-item-disabled';
-        // });
     }
 
 });

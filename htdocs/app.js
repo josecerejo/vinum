@@ -131,7 +131,7 @@ Ext.application({
                 login_win.pop();
             },
             success: function(resp) {
-                jQuery('#login_name').html(Ext.JSON.decode(resp.responseText).usager_nom);
+                VIN.app.getController('Login').setUserPrivileges(Ext.JSON.decode(resp.responseText));
             }
         });
 

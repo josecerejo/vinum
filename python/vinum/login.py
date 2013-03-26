@@ -9,13 +9,14 @@ login_manager.init_app(app)
 
 class User(UserMixin):
     def __init__(self, u):
-        self.u = u
+        self.id = u['usager_id']
+        self.u = dict(u)
 
 
 @login_manager.user_loader
 def load_user(id):
     u = pg.select1r(g.db.cursor(), 'usager', where={'usager_id': id})
-    if u: return User(dict(u))
+    if u: return User(u)
     return None
 
 
@@ -42,8 +43,11 @@ def login():
                         what=["mdp_hash = (select crypt('%s', mdp_hash)) is_pw_ok" % pw,
                               'usager.*'], where={'usager_nom': un})
         if u['is_pw_ok']:
-            login_user(User(dict(u)), remember=('remember' in request.form))
-            return {'success': True}
+            login_user(User(u), remember=('remember' in request.form))
+            u = dict(u)
+            del u['mdp_hash']
+            u['success'] = True
+            return u
         else:
             return {'success': False, 'error': 'password'}
     # in principle it's not a good practice to reveal the login error (pw/user),
