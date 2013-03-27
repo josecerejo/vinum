@@ -47,7 +47,7 @@ Ext.define('VIN.controller.Login', {
     },
 
     setUserPrivileges: function(u) {
-        jQuery('#login_name').html(u.usager_nom);
+        jQuery('#login_name').html(Ext.String.format('{0} ({1})', u.usager_nom, u.representant_id ? 'représentant' : 'admin'));
         var dv = Ext.getCmp('main_pnl').down('dataview');
         if (u.representant_id) {
             jQuery(dv.all.elements[0]).addClass('x-item-disabled');

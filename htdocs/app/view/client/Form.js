@@ -91,7 +91,7 @@ Ext.define('VIN.view.client.Form', {
                     }, {
                         flex: 0.2,
                         xtype: 'datefield',
-                        allowBlank: false,
+                        allowBlank: true,
                         fieldLabel: "Création",
                         name: 'date_ouverture_dossier',
                         value: new Date()
