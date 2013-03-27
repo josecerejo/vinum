@@ -51,10 +51,17 @@ Ext.define('VIN.controller.Login', {
         var dv = Ext.getCmp('main_pnl').down('dataview');
         if (u.representant_id) {
             jQuery(dv.all.elements[0]).addClass('x-item-disabled');
+            jQuery(dv.all.elements[1]).addClass('x-item-disabled');
+            jQuery(dv.all.elements[4]).addClass('x-item-disabled');
         } else {
             jQuery(dv.all.elements[0]).removeClass('x-item-disabled');
+            jQuery(dv.all.elements[1]).removeClass('x-item-disabled');
+            jQuery(dv.all.elements[4]).removeClass('x-item-disabled');
         }
         Ext.getCmp('create_commande_menu_itm').setDisabled(u.representant_id);
+        Ext.getCmp('edit_client_menu_itm').setDisabled(u.representant_id);
+        Ext.getCmp('produits_pp_menu_itm').setDisabled(u.representant_id);
+        Ext.getCmp('bo_create_menu_itm').setDisabled(u.representant_id);
     }
 
 });
