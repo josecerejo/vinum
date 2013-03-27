@@ -16,7 +16,11 @@ class User(UserMixin):
 @login_manager.user_loader
 def load_user(id):
     u = pg.select1r(g.db.cursor(), 'usager', where={'usager_id': id})
-    if u: return User(u)
+    if u:
+        # VERY IMPORTANT: here we set the PG role corresponding to the usager, to enforce
+        # that its associated privileges will be taken into account
+        g.db.cursor().execute('set role %s', [u['usager_nom']])
+        return User(u)
     return None
 
 
