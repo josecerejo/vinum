@@ -211,6 +211,7 @@ Ext.define('VIN.controller.Client', {
                     no_client: 0.1,
                     no_client_saq: 0.1,
                     nom_social: 0.4,
+                    representant_nom: 0.15,
                     expedition: 0.1,
                     mode_facturation: 0.1,
                     mode_facturation_note: 0.1,

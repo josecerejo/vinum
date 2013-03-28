@@ -53,7 +53,7 @@ Ext.define('VIN.model.Client', {
         name: 'specialite',
     }, {
         header: 'Représentant',
-        name: 'representant',
+        name: 'representant_nom',
     }, {
         header: 'Expédition',
         name: 'expedition',

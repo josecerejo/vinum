@@ -4,10 +4,11 @@ from common import *
 
 @app.route('/client/get', methods=['GET'])
 @login_required
-def get_client():
-    return get(g, request, 'client', ('nom_social', 'no_client_saq', 'no_tel', 'courriel',
-                                      'no_tel_personnel', 'no_cellulaire', 'note_client',
-                                      'nom_responsable'))
+def get_clients():
+    return get(g, request, {'client': 'c', 'representant': 'r'},
+               ('nom_social', 'no_client_saq', 'no_tel', 'courriel',
+                'no_tel_personnel', 'no_cellulaire', 'note_client',
+                'nom_responsable'), join={'c.representant_id': 'r.representant_id'})
 
 
 @app.route('/client/load', methods=['POST'])
