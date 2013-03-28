@@ -31,6 +31,9 @@ Ext.define('VIN.model.Commande', {
         header: 'Nom social',
         name: 'nom_social'
     }, {
+        header: 'Représentant',
+        name: 'representant_nom',
+    }, {
         header: 'Date de la commande',
         name: 'date_commande',
         type: 'date'
@@ -77,8 +80,9 @@ Ext.define('VIN.model.Commande', {
         header: 'Statut (facture)',
         name: 'statut_facture'
     }, {
-        header: 'Jour de livraison',
-        name: 'jour_livraison'
+        header: 'Jours de livraison',
+        name: 'jours_livraison',
+        filterable: false
     }, {
         header: 'Note',
         name: 'note_commande'

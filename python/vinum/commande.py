@@ -50,9 +50,8 @@ def get_commandes():
     if 'no_client' in request.args:
         return get(g, request, 'commande', where={'no_client': request.args['no_client']})
     else:
-        return get(g, request, {'commande': 'c', 'client': 'd'},
-                   what=['c.*', 'd.no_client_saq', 'd.nom_social'],
-                   join={'c.no_client': 'd.no_client'})
+        return get(g, request, {'commande': 'o', 'client': 'c', 'representant': 'r'},
+                   join={'o.no_client': 'c.no_client', 'c.representant_id': 'r.representant_id'})
 
 
 @app.route('/commande/load', methods=['POST'])
