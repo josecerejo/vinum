@@ -65,7 +65,8 @@ Ext.define('VIN.model.Client', {
         name: 'mode_facturation'
     }, {
         header: 'Jours de livraison',
-        name: 'jours_livraison'
+        name: 'jours_livraison',
+        filterable: false
     }, {
         header: 'Facturation (note)',
         name: 'mode_facturation_note'
