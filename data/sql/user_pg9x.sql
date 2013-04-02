@@ -1,12 +1,13 @@
 delete from usager;
 
-
 -- admin full-privilege role and users
 
 drop owned by admin_role;
 drop role if exists admin_role;
 create role admin_role;
 grant all on all tables in schema public to admin_role;
+grant all on all sequences in schema public to admin_role;
+grant all on all functions in schema public to admin_role;
 
 insert into usager (usager_nom, mdp_hash) values ('x', (select crypt('x', gen_salt('bf'))));
 drop role if exists x;
