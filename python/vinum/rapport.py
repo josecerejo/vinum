@@ -19,6 +19,9 @@ def _get_rapport_vente_data(request):
     if request.args['representant_nom']:
         q += ' and representant_nom = %s'
         qvals.append(request.args['representant_nom'])
+    if request.args['type_client']:
+        q += ' and type_client = %s'
+        qvals.append(request.args['type_client'])
     q += """ group by type_vin, nom_domaine, format, quantite_par_caisse, ci.no_produit_interne
              order by type_vin"""
     cur = g.db.cursor()
@@ -41,7 +44,11 @@ def _get_rapport_transaction_data(request):
     if request.args['representant_nom']:
         q += ' and representant_nom = %s'
         qvals.append(request.args['representant_nom'])
+    if request.args['type_client']:
+        q += ' and type_client = %s'
+        qvals.append(request.args['type_client'])
     q += ' order by o.no_commande_facture'
+    print q
     cur = g.db.cursor()
     cur.execute(q, qvals)
     return cur.fetchall()
@@ -60,6 +67,7 @@ def download_rapport_vente():
     start_date = request.args['start_date']
     end_date = request.args['end_date']
     representant = request.args['representant_nom'] if request.args['representant_nom'] else 'tous'
+    type_client = request.args['type_client'] if request.args['type_client'] else 'tous'
     rows = _get_rapport_vente_data(request)
     items = []
     totals = [0] * 6
@@ -69,8 +77,8 @@ def download_rapport_vente():
             totals[i] += row[f] if row[f] else 0
     totals[2:] = [as_currency(v) for v in totals[2:]]
     doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
-                  'items': items, 'totals': totals}
-    out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s.%s' % (start_date, end_date, representant, DOC_TYPE)
+                  'type_client': type_client, 'items': items, 'totals': totals}
+    out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client, DOC_TYPE)
     ren = Renderer('/home/christian/vinum/docs/rapport_des_ventes.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
@@ -84,6 +92,7 @@ def download_rapport_transaction():
     start_date = request.args['start_date']
     end_date = request.args['end_date']
     representant = request.args['representant_nom'] if request.args['representant_nom'] else 'tous'
+    type_client = request.args['type_client'] if request.args['type_client'] else 'tous'
     rows = _get_rapport_transaction_data(request)
     # each row: {top: <list of 7 items>, [bottom: str,]
     #            subitems: <list of 4 items>}
@@ -111,14 +120,16 @@ def download_rapport_transaction():
         for row in rows:
             subitems.append(['%s, %s' % (row['type_vin'], row['nom_domaine']), row['format'],
                              '%s(cs)' % row['quantite_caisse'], '%s(bt)' % row['quantite_par_caisse']])
+            for i, f in enumerate(['quantite_caisse', 'quantite_bouteille']):
+                totals[i] += row[f] if row[f] else 0
         item['subitems'] = subitems
         items.append(item)
-        for i, f in enumerate(['quantite_caisse', 'quantite_bouteille', 'montant', 'sous_total', 'tps', 'tvq']):
+        for i, f in enumerate(['montant', 'sous_total', 'tps', 'tvq'], 2):
             totals[i] += row0[f] if row0[f] else 0
     totals[2:] = [as_currency(v) for v in totals[2:]]
-    doc_values = {'start_date': start_date, 'end_date': end_date,
-                  'representant_nom': representant, 'items': items, 'totals': totals}
-    out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s.%s' % (start_date, end_date, representant, DOC_TYPE)
+    doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
+                  'type_client': type_client, 'items': items, 'totals': totals}
+    out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client, DOC_TYPE)
     tmpl_fn = '/home/christian/vinum/docs/rapport_des_transactions.odt' if representant == 'tous' else \
         '/home/christian/vinum/docs/rapport_des_transactions_1repr.odt'
     ren = Renderer(tmpl_fn, doc_values, '/tmp/%s' % out_fn, overwriteExisting=True)

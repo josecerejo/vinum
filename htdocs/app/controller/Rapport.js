@@ -22,7 +22,8 @@ Ext.define('VIN.controller.Rapport', {
                         params: {
                             start_date: sd,
                             end_date: ed,
-                            representant_nom: g.down('#representant_nom_dd').getValue()
+                            representant_nom: g.down('#representant_nom_dd').getValue(),
+                            type_client: g.down('#type_client_dd').getValue()
                         }
                     });
                 }
@@ -42,8 +43,10 @@ Ext.define('VIN.controller.Rapport', {
                     if (!sd || !ed) { return; }
                     var repr = g.down('#representant_nom_dd').getValue();
                     repr =  repr ? repr : '';
-                    var url = Ext.String.format('{0}/rapport/vente_download?start_date={1}&end_date={2}&representant_nom={3}',
-                                                ajax_url_prefix, sd, ed, repr);
+                    var tc = g.down('#type_client_dd').getValue();
+                    tc =  tc ? tc : '';
+                    var url = Ext.String.format('{0}/rapport/vente_download?start_date={1}&end_date={2}&representant_nom={3}&type_client={4}',
+                                                ajax_url_prefix, sd, ed, repr, tc);
                     location.href = url;
                 }
             },
@@ -62,8 +65,10 @@ Ext.define('VIN.controller.Rapport', {
                     if (!sd || !ed) { return; }
                     var repr = g.down('#representant_nom_dd').getValue();
                     repr =  repr ? repr : '';
-                    var url = Ext.String.format('{0}/rapport/transaction_download?start_date={1}&end_date={2}&representant_nom={3}',
-                                                ajax_url_prefix, sd, ed, repr);
+                    var tc = g.down('#type_client_dd').getValue();
+                    tc =  tc ? tc : '';
+                    var url = Ext.String.format('{0}/rapport/transaction_download?start_date={1}&end_date={2}&representant_nom={3}&type_client={4}',
+                                                ajax_url_prefix, sd, ed, repr, tc);
                     location.href = url;
                 }
             }
@@ -135,6 +140,24 @@ Ext.define('VIN.controller.Rapport', {
                         loadingText: 'Recherche...',
                         emptyText: 'Aucun représentant ne correspond à cette recherche..'
                     }
+                }, {
+                    xtype: 'tbspacer',
+                    width: 5
+                }, {
+                    xtype: 'combo',
+                    name: 'type_client',
+                    itemId: 'type_client_dd',
+                    queryMode: 'local',
+                    triggerAction: 'all',
+                    displayField: 'type_client',
+                    valueField: 'type_client',
+                    emptyText: 'Type de client',
+                    forceSelection: false,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['type_client'],
+                        data: [{type_client: 'restaurant'},
+                               {type_client: 'particulier'}]
+                    })
                 }, {
                     xtype: 'tbspacer',
                     width: 5
@@ -250,6 +273,21 @@ Ext.define('VIN.controller.Rapport', {
                 }, {
                     xtype: 'tbspacer',
                     width: 5
+                }, {
+                    xtype: 'combo',
+                    name: 'type_client',
+                    itemId: 'type_client_dd',
+                    queryMode: 'local',
+                    triggerAction: 'all',
+                    displayField: 'type_client',
+                    valueField: 'type_client',
+                    emptyText: 'Type de client',
+                    forceSelection: false,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['type_client'],
+                        data: [{type_client: 'restaurant'},
+                               {type_client: 'particulier'}]
+                    })
                 }, {
                     xtype: 'button',
                     iconCls: 'cog-icon',
