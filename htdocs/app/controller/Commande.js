@@ -345,6 +345,19 @@ Ext.define('VIN.controller.Commande', {
                         this.preAddCommandeProduit(form);
                     }
                 }
+            },
+            '#commande_g #nom_social_external_filter_tf': {
+                keyup: function(tf, e, opts) {
+                    var g = tf.up('#commande_g');
+                    var ns_filter = g.filters.getFilter('nom_social');
+                    if (tf.getValue()) {
+                        ns_filter.setValue(tf.getValue());
+                        ns_filter.setActive(true);
+                    } else {
+                        ns_filter.setValue('');
+                        ns_filter.setActive(false);
+                    }
+                }
             }
         });
     },
@@ -667,6 +680,17 @@ Ext.define('VIN.controller.Commande', {
                     note_commande: 0.15,
                     facture_est_envoyee: 0.05,
                     bon_de_commande_est_envoye: 0.05
+                },
+                dockedItems: {
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    items: {
+                        xtype: 'textfield',
+                        enableKeyEvents: true,
+                        emptyText: 'Filtrer les clients (par nom social)',
+                        itemId: 'nom_social_external_filter_tf',
+                        width: 250
+                    }
                 }
             });
             Ext.getCmp('main_pnl').add(cg);
