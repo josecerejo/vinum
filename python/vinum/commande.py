@@ -15,6 +15,9 @@ from email.utils import COMMASPACE
 from smtplib import SMTP
 
 
+SMTP_PW = open('data/smtp_server_infos_KEEP_SECRET.txt').readline().strip()
+
+
 # save only commande part, i.e. does not deal with commande_items
 @app.route('/commande/save', methods=['POST'])
 @login_required
@@ -357,8 +360,8 @@ def email_facture():
         part = MIMEApplication(open(out_fn, "rb").read())
         part.add_header('Content-Disposition', 'attachment', filename="facture_roucet.pdf")
         msg.attach(part)
-    mailer = SMTP('mail.roucet.com')
-    mailer.login('commande@roucet.com', '836121234') # !!!
+    mailer = SMTP('mail.roucet.com', 587)
+    mailer.login('commande@roucet.com', SMTP_PW)
     mailer.sendmail(msg['From'], to_list, msg.as_string())
     mailer.close()
     pg.update(g.db.cursor(), 'commande', set={'facture_est_envoyee': True},
@@ -383,8 +386,8 @@ def email_bdc():
         part = MIMEApplication(open(out_fn, "rb").read())
         part.add_header('Content-Disposition', 'attachment', filename="bon_de_commande_roucet.pdf")
         msg.attach(part)
-    mailer = SMTP('mail.roucet.com')
-    mailer.login('commande@roucet.com', '836121234') # !!!
+    mailer = SMTP('mail.roucet.com', 587)
+    mailer.login('commande@roucet.com', SMTP_PW)
     mailer.sendmail(msg['From'], to_list, msg.as_string())
     mailer.close()
     pg.update(g.db.cursor(), 'commande', set={'bon_de_commande_est_envoye': True},
