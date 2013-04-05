@@ -3,7 +3,7 @@
 # IMPORTANT: for an important distinction between the "produit" and "item" concepts,
 #            refer to a note in model.sql, at the level of the commande_item table.
 
-import re, math
+import re, math, os
 from vinum import *
 from common import *
 from collections import defaultdict
@@ -15,7 +15,7 @@ from email.utils import COMMASPACE
 from smtplib import SMTP
 
 
-SMTP_PW = open('data/smtp_server_infos_KEEP_SECRET.txt').readline().strip()
+SMTP_PW = open('%s/../../data/smtp_server_infos_KEEP_SECRET.txt' % os.path.dirname(os.path.realpath(__file__))).readline().strip()
 
 
 # save only commande part, i.e. does not deal with commande_items
