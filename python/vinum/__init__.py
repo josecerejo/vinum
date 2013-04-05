@@ -32,7 +32,8 @@ class MyFlask(Flask):
         if rv.__class__ is dict:
             rv = json.dumps(rv, default=json_dthandler)
         resp = Flask.make_response(self, rv)
-        resp.mimetype = 'application/json'
+        if rv.__class__ is dict:
+            resp.mimetype = 'application/json'
         return resp
 
 
