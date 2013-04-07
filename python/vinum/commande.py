@@ -47,6 +47,17 @@ def _save_commande(cursor, rf):
                      values=rf, filter_values=True, map_values={'': None})
 
 
+def _update_commande(cursor, ncf):
+    # here it seems that there is no need to restrict on statut=BO, because those have their mc/qb fields set to null
+    sous_total = pg.select(g.db.cursor(), 'commande_item', what={'sum(montant_commission * quantite_bouteille)': 'st'},
+                           where={'no_commande_facture': ncf}, debug_print=True)[0]['st'] or 0
+    tps = sous_total * TPS
+    tvq = sous_total * TVQ
+    montant = sous_total + tps + tvq
+    pg.update(g.db.cursor(), 'commande', set={'sous_total': sous_total, 'tps': tps, 'tvq': tvq, 'montant': montant},
+              where={'no_commande_facture': ncf})
+
+
 @app.route('/commande/get', methods=['GET'])
 @login_required
 def get_commandes():
@@ -175,6 +186,7 @@ def add_produit_to_commande():
               'date_bo': rf['date_commande'], 'quantite_caisse': ci['quantite_caisse'],
               'quantite_bouteille': ci['quantite_bouteille']}
         pg.insert(cursor, 'backorder', values=bo)
+    _update_commande(cursor, ncf)
     g.db.commit()
     return {'success': True, 'data': commande}
 
@@ -187,6 +199,7 @@ def remove_produit_from_commande():
     ncf = rf['no_commande_facture']
     npi = rf['no_produit_interne']
     _remove_produit_from_commande(cursor, ncf, npi)
+    _update_commande(cursor, ncf)
     g.db.commit()
     return {'success': True}
 
@@ -215,6 +228,7 @@ def remove_item_from_commande():
         # statut_item=='BO'
         npi = rf['no_produit_interne']
         pg.delete(cursor, 'commande_item', where={'no_commande_facture': ncf, 'no_produit_interne': npi})
+    _update_commande(cursor, ncf)
     g.db.commit()
     return {'success': True}
 
@@ -252,6 +266,7 @@ def update_commande_item():
     ci = pg.update(cursor, 'commande_item', where={'no_commande_facture': rf['no_commande_facture'],
                                                    'no_produit_saq': item['no_produit_saq']},
                    set=item, filter_values=True)
+    _update_commande(cursor, ncf)
     g.db.commit()
     return {'success': True, 'data': ci}
 
@@ -269,21 +284,13 @@ def _generate_facture(g, ncf):
                      join={'p.no_produit_interne':'ci.no_produit_interne', 'p.no_producteur':'r.no_producteur',
                            'ci.no_produit_saq':'i.no_produit_saq'}, where={'ci.no_commande_facture': ncf},
                      order_by='type_vin')
-    sous_total = 0
     for row in rows:
-        montant_comm_x_qb = row['montant_commission'] * row['quantite_bouteille']
-        sous_total += montant_comm_x_qb
         nom = '%s %s' % (row['type_vin'], row['nom_domaine'])
         doc_values['elems'].append([row['quantite_bouteille'], nom, row['nom_producteur'], row['millesime'],
                                     row['no_produit_saq'], row['format'], locale.currency(row['montant_commission']),
-                                    locale.currency(montant_comm_x_qb)])
-    tps = sous_total * TPS
-    tvq = sous_total * TVQ
-    total = sous_total + tps + tvq
-    doc_values['sous_total'] = locale.currency(sous_total)
-    doc_values['tps'] = locale.currency(tps)
-    doc_values['tvq'] = locale.currency(tvq)
-    doc_values['total'] = locale.currency(total)
+                                    locale.currency(row['montant_commission'] * row['quantite_bouteille'])])
+    for f in ['sous_total', 'tps', 'tvq', 'montant']:
+        doc_values[f] = locale.currency(doc_values[f])
     out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, DOC_TYPE)
     tmpl_fn = 'facture.odt' if client['mode_facturation'] == 'courriel' else 'facture_sans_logo.odt'
     ren = Renderer('/home/christian/vinum/docs/%s' % tmpl_fn, doc_values,

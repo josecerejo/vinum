@@ -221,3 +221,7 @@
 .inventaire-grid-row-age-6 .x-grid-cell {
     background: hsl(0, 75%, 50%);
 }
+
+.main_header {
+    position: static !important;
+}

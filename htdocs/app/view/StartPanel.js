@@ -19,15 +19,15 @@ Ext.define('VIN.view.StartPanel', {
                 flex: .5
             },
             items: {
-                width: 400,
+                //width: 400,
                 items: Ext.create('Ext.view.View', {
                     store: Ext.create('Ext.data.Store', {
                         fields: ['name', 'src', 'text'],
                         data: [{name: 'create_commande', src: 'resources/images/icons/empty-shopping-cart.png', text: 'Créer une commande'},
                                {name: 'edit_client', src: 'resources/images/icons/about-me.png', text: 'Créer ou modifier un client'},
-                               {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir la liste de clients'},
-                               {name: 'list_commandes', src: 'resources/images/icons/clipboard_64.png', text: 'Voir la liste de commandes'},
-                               {name: 'list_pp', src: 'resources/images/icons/wine_glass_64.png', text: 'Voir la liste des produits et producteurs'},
+                               {name: 'list_clients', src: 'resources/images/icons/My-blog.png', text: 'Voir les clients'},
+                               {name: 'list_commandes', src: 'resources/images/icons/clipboard_64.png', text: 'Voir les commandes'},
+                               {name: 'list_pp', src: 'resources/images/icons/wine_glass_64.png', text: 'Voir les produits et producteurs'},
                                {name: 'inventaire', src: 'resources/images/icons/inventaire_boite_64.png', text: 'Voir l\'inventaire'}]
                     }),
                     tpl: [

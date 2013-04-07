@@ -105,7 +105,7 @@ create table commande (
     date_pickup date,
     date_direct date,
     date_envoi_saq date,
-    statut_commande text,
+    statut_commande text, -- ??
     sous_total numeric,
     montant numeric,
     tps numeric,

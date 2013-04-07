@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-04-05';
+var last_update = '2013-04-07';
 var vinum_version = 'prototype';
 
 Ext.window.MessageBox.prototype.buttonText = {
@@ -120,8 +120,8 @@ Ext.application({
         login_win = Ext.create('VIN.view.LoginWindow');
         backorder_win = Ext.create('VIN.view.BackorderWindow');
 
-        // to make the css works, see (*) in Viewport.js
-        Ext.getCmp('main_header').getEl().removeCls('x-box-item');
+        // FF doesn't render the login_name td correctly without this:
+        jQuery('#main_header').width($(document).width() - 20); // padding=10+10
 
         // initial login check (needed because the app doesn't interact with the server when it starts up)
         Ext.Ajax.request({
