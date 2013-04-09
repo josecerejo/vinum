@@ -10,7 +10,9 @@ var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
 var last_update = '2013-04-09';
 var vinum_version = 'alpha';
-var dev_msg = "<b>Dernières mises à jour:</b><br>&bull; Bugs du bon de commande<br>&bull; Bugs du rapport des transactions";
+var dev_msg = '<b>Dernières mises à jour:</b>' +
+    '<br>&bull; Bugs du rapport des transactions' +
+    '<br>&bull; Nom de domaine sur la facture';
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',

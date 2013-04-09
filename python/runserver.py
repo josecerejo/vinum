@@ -5,7 +5,9 @@ from vinum import app
 
 if __name__ == '__main__':
 
-    delattr(app, 'handle_exception') # app.handle_exception is set in __init__.py to a general handler returning nice 
+    app.is_dev = True
+
+    delattr(app, 'handle_exception') # app.handle_exception is set in __init__.py to a general handler returning nice
                                      # json error messages, for when we're running in production mod_wsgi mode
 
     # http://flask.pocoo.org/snippets/84/

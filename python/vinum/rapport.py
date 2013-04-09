@@ -81,7 +81,8 @@ def download_rapport_vente():
     totals[2:] = [as_currency(v) for v in totals[2:]]
     doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
                   'type_client': type_client, 'items': items, 'totals': totals}
-    out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client, DOC_TYPE)
+    out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client,
+                                                                    'odt' if hasattr(app, 'is_dev') else 'pdf')
     ren = Renderer('/home/christian/vinum/docs/rapport_des_ventes.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
@@ -132,7 +133,8 @@ def download_rapport_transaction():
     totals[2:] = [as_currency(v) for v in totals[2:]]
     doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
                   'type_client': type_client, 'items': items, 'totals': totals}
-    out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client, DOC_TYPE)
+    out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client, 
+                                                                          'odt' if hasattr(app, 'is_dev') else 'pdf')
     tmpl_fn = '/home/christian/vinum/docs/rapport_des_transactions.odt' if representant == 'tous' else \
         '/home/christian/vinum/docs/rapport_des_transactions_1repr.odt'
     ren = Renderer(tmpl_fn, doc_values, '/tmp/%s' % out_fn, overwriteExisting=True)

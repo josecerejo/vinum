@@ -285,13 +285,13 @@ def _generate_facture(g, ncf):
                            'ci.no_produit_saq':'i.no_produit_saq'}, where={'ci.no_commande_facture': ncf},
                      order_by='type_vin')
     for row in rows:
-        nom = '%s %s' % (row['type_vin'], row['nom_domaine'])
+        nom = '%s %s' % (row['type_vin'], row['nom_domaine'] or '')
         doc_values['elems'].append([row['quantite_bouteille'], nom, row['nom_producteur'], row['millesime'],
                                     row['no_produit_saq'], row['format'], locale.currency(row['montant_commission']),
                                     locale.currency(row['montant_commission'] * row['quantite_bouteille'])])
     for f in ['sous_total', 'tps', 'tvq', 'montant']:
         doc_values[f] = locale.currency(doc_values[f])
-    out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, DOC_TYPE)
+    out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, 'odt' if hasattr(app, 'is_dev') else 'pdf')
     tmpl_fn = 'facture.odt' if client['mode_facturation'] == 'courriel' else 'facture_sans_logo.odt'
     ren = Renderer('/home/christian/vinum/docs/%s' % tmpl_fn, doc_values,
                    out_fn, overwriteExisting=True)
@@ -323,7 +323,7 @@ def _generate_bdc(g, ncf):
     doc_values['left_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[:n_left]]
     doc_values['right_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[n_left:]]
     doc_values['no_commande_facture'] = ncf
-    out_fn = '/tmp/vinum_bdc_%s.%s' % (ncf, DOC_TYPE)
+    out_fn = '/tmp/vinum_bdc_%s.%s' % (ncf, 'odt' if hasattr(app, 'is_dev') else 'pdf')
     ren = Renderer('/home/christian/vinum/docs/bon_de_commande.odt', doc_values,
                    out_fn, overwriteExisting=True)
     ren.run()

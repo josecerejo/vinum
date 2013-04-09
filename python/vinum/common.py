@@ -1,10 +1,9 @@
 import psycopg2.extras, json
 import little_pger as pg
 from login import *
+from conf import *
 
 
-# type of generated documents (pdf or odt)
-DOC_TYPE = 'pdf'
 TPS = 0.05
 TVQ = 0.09975
 
