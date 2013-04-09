@@ -14,7 +14,7 @@ create table representant (
 drop table if exists timbre_restaurateur cascade;
 create table timbre_restaurateur (
     format_timbre text primary key,
-    montant_timbre numeric
+    montant_timbre numeric(1000, 2)
 );
 
 drop table if exists client cascade;
@@ -106,10 +106,10 @@ create table commande (
     date_direct date,
     date_envoi_saq date,
     statut_commande text, -- ??
-    sous_total numeric,
-    montant numeric,
-    tps numeric,
-    tvq numeric,
+    sous_total numeric(1000, 2),
+    montant numeric(1000, 2),
+    tps numeric(1000, 2),
+    tvq numeric(1000, 2),
     statut_facture text,
     note_commande text,
     suc_num integer,
@@ -137,7 +137,7 @@ create table commande_item (
     statut_item text check (statut_item in ('OK', 'BO')),
     no_client integer,
     commission numeric, -- added
-    montant_commission numeric,
+    montant_commission numeric(1000, 2),
     --date_commande date, -- ??
     suc_num integer
 );
@@ -152,7 +152,7 @@ create table inventaire (
     quantite_recue integer,
     date_commande date,
     date_recue date,
-    prix_coutant numeric,
+    prix_coutant numeric(1000, 2),
     millesime integer,
     commission numeric,
     statut_inventaire text check (statut_inventaire in ('en attente', 'en réserve', 'actif', 'inactif')) not null,
@@ -161,8 +161,8 @@ create table inventaire (
     solde_30_jours numeric,
     solde_60_jours numeric,
     suc_num integer,
-    prix_restaurant numeric, -- prix_coutant / 1.14975 + 16% + 0.81$
-    prix_particulier numeric -- prix_coutant + 23%
+    prix_restaurant numeric(1000, 2), -- prix_coutant / 1.14975 + 16% + 0.81$
+    prix_particulier numeric(1000, 2) -- prix_coutant + 23%
 );
 
 drop table if exists backorder cascade;

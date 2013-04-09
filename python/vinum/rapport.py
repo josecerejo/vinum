@@ -14,7 +14,9 @@ def _get_rapport_vente_data(request):
             inner join commande o on o.no_commande_facture = ci.no_commande_facture
             inner join client c on o.no_client = c.no_client
             left join representant r on c.representant_id = r.representant_id
-            where date_commande >= %s and date_commande <= %s"""
+            where statut_item != 'BO'
+            and date_commande >= %s and date_commande <= %s
+        """
     qvals = [request.args['start_date'], request.args['end_date']]
     if request.args['representant_nom']:
         q += ' and representant_nom = %s'
@@ -39,7 +41,9 @@ def _get_rapport_transaction_data(request):
             inner join commande_item ci on o.no_commande_facture = ci.no_commande_facture
             inner join produit p on ci.no_produit_interne = p.no_produit_interne
             left join representant r on r.representant_id = c.representant_id
-            where date_commande >= %s and date_commande <= %s"""
+            where statut_item != 'BO'
+            and date_commande >= %s and date_commande <= %s
+        """
     qvals = [request.args['start_date'], request.args['end_date']]
     if request.args['representant_nom']:
         q += ' and representant_nom = %s'

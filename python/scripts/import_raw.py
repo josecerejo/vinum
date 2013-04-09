@@ -14,7 +14,7 @@ if inventaire_only:
     cursor.execute('delete from inventaire; drop index inventaire_no_produit_interne_idx;')
 else:
     os.system('psql -d vinum -f /home/christian/vinum/data/sql/model.sql')
-export_dir = '/home/christian/vinum/data/raw/access_export_2013-04-05'
+export_dir = '/home/christian/vinum/data/raw/access_export_2013-04-08'
 delim = ';'
 #default_encoding = 'utf8'
 default_encoding = 'cp1252'
@@ -72,7 +72,7 @@ if not inventaire_only:
                 data['nom_social'] = data['nom_social'].replace(possible_saq_nb, '').strip()
         no_clients.add(data['no_client'])
         insert(cursor, 'client', values=data)
-    cursor.execute("select setval('client_no_client_seq', (select max(no_client) from client)+1)")
+    cursor.execute("select setval('client_no_client_seq', (select max(no_client) from client))")
     print '(%s)' % count(cursor, 'client')
 
 ####################################################################################################
@@ -88,7 +88,7 @@ if not inventaire_only:
         data = dict(zip(cols, processRow(row, 'cp1252')))
         no_producteurs.add(data['no_producteur'])
         insert(cursor, 'producteur', values=data)
-    cursor.execute("select setval('producteur_no_producteur_seq', (select max(no_producteur) from producteur)+1)")
+    cursor.execute("select setval('producteur_no_producteur_seq', (select max(no_producteur) from producteur))")
     print '(%s)' % count(cursor, 'producteur')
 
 ####################################################################################################
@@ -115,7 +115,7 @@ for row in f:
         insert(cursor, 'produit', values=data)
         no_produit_internes.add(data['no_produit_interne'])
 if not inventaire_only:
-    cursor.execute("select setval('produit_no_produit_interne_seq', (select max(no_produit_interne) from produit)+1)")
+    cursor.execute("select setval('produit_no_produit_interne_seq', (select max(no_produit_interne) from produit))")
 print '(%s)' % count(cursor, 'produit')
 
 ####################################################################################################
@@ -152,7 +152,7 @@ if not inventaire_only:
         if data['no_client'] not in no_clients: continue
         insert(cursor, 'commande', values=data)
         no_commande_factures.add(data['no_commande_facture'])
-    cursor.execute("select setval('commande_no_commande_facture_seq', (select max(no_commande_facture) from commande)+1)")
+    cursor.execute("select setval('commande_no_commande_facture_seq', (select max(no_commande_facture) from commande))")
     cursor.execute('create index commande_no_client_idx on commande (no_client)')
     print '(%s)' % count(cursor, 'commande')
 
@@ -171,7 +171,7 @@ if not inventaire_only:
         if data['no_commande_facture'] not in no_commande_factures or \
                 data['no_produit_interne'] not in no_produit_internes: continue
         insert(cursor, 'commande_item', values=data)
-    cursor.execute("select setval('commande_item_commande_item_id_seq', (select max(commande_item_id) from commande_item)+1)")
+    cursor.execute("select setval('commande_item_commande_item_id_seq', (select max(commande_item_id) from commande_item))")
     print '(%s)' % count(cursor, 'commande_item')
 
 ####################################################################################################
@@ -193,7 +193,7 @@ for row in f:
     data['statut_inventaire'] = data['statut_inventaire'].lower()
     if data['no_produit_interne'] not in no_produit_internes: continue
     insert(cursor, 'inventaire', values=data)
-cursor.execute("select setval('inventaire_no_inventaire_seq', (select max(no_inventaire) from inventaire)+1)")
+cursor.execute("select setval('inventaire_no_inventaire_seq', (select max(no_inventaire) from inventaire))")
 cursor.execute('create index inventaire_no_produit_interne_idx on inventaire (no_produit_interne)')
 print '(%s)' % count(cursor, 'inventaire')
 
