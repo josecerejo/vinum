@@ -11,8 +11,8 @@ var initial_tab = null; //'widget.inventaire_grid';
 var last_update = '2013-04-09';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    '<br>&bull; Bugs du rapport des transactions' +
-    '<br>&bull; Nom de domaine sur la facture';
+    "<br>&bull; Nom de domaine sur la facture" +
+    "<br>&bull; Infos d'expédition manquantes dans le rapport des transactions";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',

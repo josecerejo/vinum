@@ -109,11 +109,11 @@ def download_rapport_transaction():
         row0 = ncf_rows[ncf][0]
         exp = ''
         if row0['expedition'] == 'direct':
-            exp = 'direct%s' % (' (%s)' % row['date_direct'] if row['date_direct'] else '')
+            exp = 'direct%s' % (' (%s)' % row0['date_direct'] if row0['date_direct'] else '')
         elif row0['expedition'] == 'pickup':
-            exp = 'pickup%s' % (' (%s)' % row['date_pickup'] if row['date_pickup'] else '')
-        elif row['expedition'] == 'succursale':
-            exp = 'succursale%s' % (' (%s)' % row['no_succursale_saq'] if row['no_succursale_saq'] else '')
+            exp = 'pickup%s' % (' (%s)' % row0['date_pickup'] if row0['date_pickup'] else '')
+        elif row0['expedition'] == 'succursale':
+            exp = 'succursale%s' % (' (%s)' % row0['no_succursale_saq'] if row0['no_succursale_saq'] else '')
         note = row0['note_commande'] if row0['note_commande'] else ''
         item = {'top': ['%s (%s)' % (row0['nom_social'], row0['no_client_saq'] if row0['no_client_saq'] else '?'),
                         row0['no_commande_facture'], '%s %s' % (exp, note), as_currency(row0['montant']),
