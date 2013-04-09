@@ -1,7 +1,6 @@
 import psycopg2.extras, json
 import little_pger as pg
 from login import *
-from conf import *
 
 
 TPS = 0.05
