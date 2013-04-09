@@ -14,8 +14,11 @@ Ext.define('VIN.view.Viewport', {
                 id: 'main_header',
                 cls: 'title',
                 componentCls: 'main_header',
-                html: '<table style="width: 100%"><tr><td>' + Ext.String.format('Prototype Vinum (code: {0}, données: 2013-04-08)', last_update) + '</td>' +
-                      '<td id="login_name" style="font-size: 60%" align="right"></td></tr></table>'
+                html: '<table style="width: 100%; table-layout: fixed"><tr>' +
+                      '<td style="padding: 10px">Vinum (alpha)</td>' +
+                      '<td id="dev_msg" style="font-size: 50%; border: 1px dashed; padding-left: 5px"></td>' +
+                      '<td id="login_name" style="font-size: 60%" align="right"></td>' +
+                      '</tr></table>'
             }
         }, {
             xtype: 'main_toolbar'

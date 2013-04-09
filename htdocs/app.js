@@ -8,8 +8,9 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-04-08';
-var vinum_version = 'prototype';
+var last_update = '2013-04-09';
+var vinum_version = 'alpha';
+var dev_msg = "<b>Dernière mise à jour:</b><br>&bull; Bugs du bon de commande";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
@@ -122,6 +123,7 @@ Ext.application({
 
         // FF doesn't render the login_name td correctly without this:
         jQuery('#main_header').width($(document).width() - 20); // padding=10+10
+        jQuery('#dev_msg').html(dev_msg);
 
         // initial login check (needed because the app doesn't interact with the server when it starts up)
         Ext.Ajax.request({

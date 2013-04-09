@@ -308,6 +308,7 @@ def _generate_bdc(g, ncf):
     doc_values.update(client)
     doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom',
                                                 where={'representant_id': client['representant_id']})
+    doc_values.update({'pu': None, 'dr': None, 'sc': None})
     if commande['expedition'] == 'pickup':
         doc_values['pu'] = 'X'
         doc_values['date_expedition'] = commande['date_pickup']
@@ -317,7 +318,7 @@ def _generate_bdc(g, ncf):
     elif commande['expedition'] == 'succursale':
         doc_values['sc'] = 'X'
         doc_values['no_succursale_saq'] = commande['no_succursale_saq']
-    cis = pg.select(cursor, 'commande_item', where={'no_commande_facture': ncf})
+    cis = pg.select(cursor, 'commande_item', where={'no_commande_facture': ncf, 'statut_item': 'OK'})
     n_left = int(math.ceil(len(cis) / 2.))
     doc_values['left_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[:n_left]]
     doc_values['right_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[n_left:]]
