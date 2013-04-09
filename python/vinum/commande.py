@@ -401,7 +401,8 @@ def email_bdc():
     mailer.login('commande@roucet.com', SMTP_PW)
     mailer.sendmail(msg['From'], to_list, msg.as_string())
     mailer.close()
-    pg.update(g.db.cursor(), 'commande', set={'bon_de_commande_est_envoye': True},
+    pg.update(g.db.cursor(), 'commande', set={'bon_de_commande_est_envoye': True,
+                                              'bon_de_commande_heure_envoi': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')},
               where={'no_commande_facture': request.form['no_commande_facture']})
     g.db.commit()
     return {'success': True}

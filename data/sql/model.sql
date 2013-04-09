@@ -116,6 +116,7 @@ create table commande (
     jour_livraison text,
     facture_est_envoyee bool default false,
     bon_de_commande_est_envoye bool default false,
+    bon_de_commande_heure_envoi timestamp,
     no_commande_saq integer
 );
 

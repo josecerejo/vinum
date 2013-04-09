@@ -94,6 +94,10 @@ Ext.define('VIN.model.Commande', {
         header: 'BDC envoyé',
         name: 'bon_de_commande_est_envoye',
         type: 'bool'
+    }, {
+        header: "Heure d'envoi du BDC",
+        name: 'bon_de_commande_heure_envoi',
+        type: 'datetime'
     }],
 
     idProperty: 'no_commande_facture'

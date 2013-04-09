@@ -25,7 +25,8 @@ def general_error_handler(e):
 
 # The '00:00:00' suffix is important for the correct handling of ExtJS dates (I don't know what exactly
 # is the problem with simple iso format)
-json_dthandler = lambda obj: obj.strftime('%Y-%m-%d 00:00:00') if obj.__class__ in [datetime.date, datetime.datetime] else None
+#json_dthandler = lambda obj: obj.strftime('%Y-%m-%d 00:00:00') if obj.__class__ in [datetime.date, datetime.datetime] else None
+json_dthandler = lambda obj: obj.strftime('%Y-%m-%d %H:%M:%S') if obj.__class__ in [datetime.date, datetime.datetime] else None
 
 class MyFlask(Flask):
     def make_response(self, rv):

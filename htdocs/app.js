@@ -11,8 +11,10 @@ var initial_tab = null; //'widget.inventaire_grid';
 var last_update = '2013-04-09';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Infos d'expédition manquantes dans le rapport des transactions" +
-    "<br>&bull; Règles plus permissives pour la modification des records d'inventaire";
+    "<br>&bull; Règles plus permissives pour la modification des records d'inventaire" +
+    "<br>&bull; Colonne pour la date et l'heure d'envoi d'un BDC dans la table des commandes";
+
+if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
