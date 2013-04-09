@@ -324,12 +324,12 @@ Ext.define('VIN.controller.Commande', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     form.down('#facture_poste_btn').setIconCls(btn.pressed ? 'tick-icon' : 'poste-icon');
-                    Ext.Msg.show({
-                        title: 'Vinum',
-                        msg: btn.pressed ? "La facture a été envoyée électroniquement à Postes Canada, pour impression suivi d'un envoi par la poste régulière." : 'Il est malheureusement trop tard pour annuler, car la facture est déjà en cours d\'envoi par la poste régulière.',
-                        icon: Ext.MessageBox.INFO,
-                        buttons: Ext.MessageBox.OK
-                    });
+                    // Ext.Msg.show({
+                    //     title: 'Vinum',
+                    //     msg: btn.pressed ? "La facture a été envoyée électroniquement à Postes Canada, pour impression suivi d'un envoi par la poste régulière." : 'Il est malheureusement trop tard pour annuler, car la facture est déjà en cours d\'envoi par la poste régulière.',
+                    //     icon: Ext.MessageBox.INFO,
+                    //     buttons: Ext.MessageBox.OK
+                    // });
                 }
             },
             '#save_commande_btn': {

@@ -1,3 +1,6 @@
+create extension unaccent;
+create extension pgcrypto;
+
 delete from usager;
 
 -- admin full-privilege role and users
