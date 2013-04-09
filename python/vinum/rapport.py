@@ -52,7 +52,6 @@ def _get_rapport_transaction_data(request):
         q += ' and type_client = %s'
         qvals.append(request.args['type_client'])
     q += ' order by o.no_commande_facture'
-    print q
     cur = g.db.cursor()
     cur.execute(q, qvals)
     return cur.fetchall()
@@ -103,10 +102,10 @@ def download_rapport_transaction():
     items = []
     ncf_rows = defaultdict(list) # ncf -> []
     for row in rows:
-        ncf_rows[row['no_commande_facture']].append(row)
+        ncf_rows[int(row['no_commande_facture'])].append(row)
     totals = [0] * 6
-    for ncf, rows in ncf_rows.items():
-        row0 = rows[0]
+    for ncf in sorted(ncf_rows.iterkeys()):
+        row0 = ncf_rows[ncf][0]
         exp = ''
         if row0['expedition'] == 'direct':
             exp = 'direct%s' % (' (%s)' % row['date_direct'] if row['date_direct'] else '')
@@ -121,7 +120,7 @@ def download_rapport_transaction():
         if representant == 'tous':
             item['bottom'] = row0['representant_nom']
         subitems = []
-        for row in rows:
+        for row in ncf_rows[ncf]:
             subitems.append(['%s, %s' % (row['type_vin'], row['nom_domaine']), row['format'],
                              '%s(cs)' % row['quantite_caisse'], '%s(bt)' % row['quantite_par_caisse']])
             for i, f in enumerate(['quantite_caisse', 'quantite_bouteille']):
