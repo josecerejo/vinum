@@ -120,7 +120,7 @@ Ext.define('VIN.view.inventaire.Form', {
                         style: 'margin-left: 10px',
                         allowBlank: true
                     }, {
-                        xtype: 'numberfield',
+                        xtype: 'textfield',
                         fieldLabel: '# dem. SAQ',
                         name: 'no_demande_saq',
                         style: 'margin-left: 10px'
