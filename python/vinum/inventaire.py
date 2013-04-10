@@ -27,7 +27,7 @@ def save_inventaire_record():
                                           where={'type_vin': rf['type_vin']})
 
     # if any existing commande_item is associated to this inv record, only allow
-    # 4 quantity fields: quantite_recuee/commandee, solde_caisse/bouteille
+    # certain fields: quantite_recuee/commandee, solde_caisse/bouteille, statut_inventaire
     inv = pg.select1r(cur, 'inventaire', where={'no_inventaire': ni})
     if inv and pg.exists(cur, 'commande_item', where={'no_produit_saq': inv['no_produit_saq'],
                                                       'no_demande_saq': inv['no_demande_saq']}):
@@ -35,8 +35,8 @@ def save_inventaire_record():
             if f not in rf: continue
             if inv[f].__class__ == float: inv[f] = '%.2f' % inv[f]
             if str(inv[f]) != str(rf[f]) and f not in ['quantite_recue', 'quantite_commandee',
-                                                       'solde_bouteille', 'solde_caisse']:
-                print f, inv[f], rf[f]
+                                                       'solde_bouteille', 'solde_caisse',
+                                                       'statut_inventaire']:
                 raise psycopg2.IntegrityError
 
     pc = float(rf['prix_coutant'])

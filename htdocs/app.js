@@ -8,11 +8,11 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-04-09';
+var last_update = '2013-04-10';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Règles plus permissives pour la modification des records d'inventaire" +
-    "<br>&bull; Colonne pour la date et l'heure d'envoi d'un BDC dans la table des commandes";
+    "<br>&bull; Modification du statut d'inventaire" +
+    "<br>&bull; Heure du serveur";
 
 if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
 
