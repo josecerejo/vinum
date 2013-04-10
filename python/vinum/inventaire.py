@@ -23,20 +23,22 @@ def save_inventaire_record():
     ni = rf.pop('no_inventaire')
     if ni == '': ni = None
     else: rf['no_inventaire'] = ni # to allow resaving it back after delete with the same id
-    rf['no_produit_interne'] = pg.select1(cur, 'produit', 'no_produit_interne',
-                                          where={'type_vin': rf['type_vin']})
+    rf['no_produit_interne'] = unicode(pg.select1(cur, 'produit', 'no_produit_interne',
+                                                  where={'type_vin': rf['type_vin']}))
 
     # if any existing commande_item is associated to this inv record, only allow
     # certain fields: quantite_recuee/commandee, solde_caisse/bouteille, statut_inventaire
+    # WARNING: THIS IS UGLY AND SHOULD BE DONE BETTER!!
     inv = pg.select1r(cur, 'inventaire', where={'no_inventaire': ni})
     if inv and pg.exists(cur, 'commande_item', where={'no_produit_saq': inv['no_produit_saq'],
                                                       'no_demande_saq': inv['no_demande_saq']}):
         for f in pg.getColumns(cur, 'inventaire'):
             if f not in rf: continue
             if inv[f].__class__ == float: inv[f] = '%.2f' % inv[f]
-            if str(inv[f]) != str(rf[f]) and f not in ['quantite_recue', 'quantite_commandee',
-                                                       'solde_bouteille', 'solde_caisse',
-                                                       'statut_inventaire']:
+            if unicode(str(inv[f]), 'utf8') != rf[f] and f not in ['quantite_recue', 'quantite_commandee',
+                                                                   'solde_bouteille', 'solde_caisse',
+                                                                   'statut_inventaire']:
+                print f, inv[f], rf[f]
                 raise psycopg2.IntegrityError
 
     pc = float(rf['prix_coutant'])
