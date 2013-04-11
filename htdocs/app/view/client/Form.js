@@ -423,7 +423,7 @@ Ext.define('VIN.view.client.Form', {
                             xtype: 'combo',
                             flex: 0.3,
                             displayField: 'no_succursale_saq',
-                            name: 'no_succursale',
+                            name: 'no_succursale_saq',
                             store: Ext.create('Ext.data.Store', {
                                 model: Ext.define('VIN.model.Succursale', {
                                     extend: 'Ext.data.Model',

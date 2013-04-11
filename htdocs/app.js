@@ -11,8 +11,8 @@ var initial_tab = null; //'widget.inventaire_grid';
 var last_update = '2013-04-10';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Modification du statut d'inventaire" +
-    "<br>&bull; Heure du serveur";
+    "<br>&bull; Heure du serveur" +
+    "<br>&bull; Bug avec le # succursale SAQ d'un client";
 
 if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
 
