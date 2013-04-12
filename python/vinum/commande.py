@@ -285,7 +285,8 @@ def _generate_facture(g, ncf):
                                                 where={'representant_id': client['representant_id']})
     rows = pg.select(g.db.cursor(), {'produit':'p', 'commande_item':'ci', 'producteur':'r', 'inventaire':'i'},
                      join={'p.no_produit_interne':'ci.no_produit_interne', 'p.no_producteur':'r.no_producteur',
-                           'ci.no_produit_saq':'i.no_produit_saq'}, where={'ci.no_commande_facture': ncf},
+                           'ci.no_produit_saq':'i.no_produit_saq'}, where={'ci.no_commande_facture': ncf,
+                                                                           'statut_item': 'OK'},
                      order_by='type_vin')
     for row in rows:
         nom = '%s %s' % (row['type_vin'], row['nom_domaine'] or '')
