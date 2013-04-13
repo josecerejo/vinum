@@ -203,17 +203,28 @@ Ext.define('VIN.controller.Commande', {
                         form.email_win.document_type = 'facture';
                         var cdd = form.down('#client_dd');
                         var cr = cdd.findRecordByDisplay(cdd.getValue());
-                        var courriel = cr.get('courriel');
+                        //var courriel = cr.get('courriel');
                         form.email_win.down('#email_f').getForm().url = ajax_url_prefix + '/commande/email_facture';
-                        form.email_win.down('#email_addr_tf').setValue(courriel);
+                        var emails = [];
+                        if (cr.get('mode_facturation') === 'courriel' && cr.get('mode_facturation_note')) {
+                            emails.push({addr: cr.get('mode_facturation_note')});
+                        }
+                        if (cr.get('courriel')) {
+                            emails.push({addr: cr.get('courriel')});
+                        }
+                        form.email_win.down('#email_addr_dd').getStore().removeAll();
+                        if (emails.length > 0) {
+                            form.email_win.down('#email_addr_dd').getStore().add(emails);
+                            form.email_win.down('#email_addr_dd').setValue(emails[0].addr)
+                        }
                         form.email_win.down('#email_subject_tf').setValue(Ext.String.format('Facture #{0}',
                                                                                             form.down('#no_commande_facture_tf').getValue()));
                         form.email_win.down('#email_msg_ta').setValue(form.email_msg_facture);
-                        if (!courriel) {
-                            form.email_win.down('#email_addr_tf').markInvalid("L'adresse courriel de ce client n'est pas définie");
+                        if (emails.length === 0) {
+                            form.email_win.down('#email_addr_dd').markInvalid("Aucune adresse courriel n'a été définie pour ce client");
                             Ext.Msg.show({
                                 title: 'Vinum',
-                                msg: "L'adresse courriel de ce client n'est pas définie",
+                                msg: "Aucune adresse courriel n'a été définie pour ce client",
                                 icon: Ext.MessageBox.WARNING,
                                 buttons: Ext.MessageBox.OK,
                                 fn: function() {

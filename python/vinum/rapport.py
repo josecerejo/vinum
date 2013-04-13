@@ -32,7 +32,7 @@ def _get_rapport_vente_data(request):
 
 
 def _get_rapport_transaction_data(request):
-    q = """ select nom_social, no_client_saq, o.no_commande_facture, o.expedition, date_pickup,
+    q = """ select nom_social, no_client_saq, o.no_commande_facture, o.no_commande_saq, o.expedition, date_pickup,
                    date_direct, o.no_succursale_saq, note_commande, montant, sous_total, tps, tvq,
                    type_vin, nom_domaine, format, no_produit_saq, no_demande_saq, quantite_caisse,
                    quantite_bouteille, quantite_par_caisse, representant_nom
@@ -75,6 +75,7 @@ def download_rapport_vente():
     items = []
     totals = [0] * 6
     for row in rows:
+        row['nom_domaine'] = row['nom_domaine'] if row['nom_domaine'] else ''
         items.append([row[c] for c in ['type_vin', 'nom_domaine', 'format', 'quantite_par_caisse', 'quantite_caisse']])
         for i, f in enumerate(['quantite_caisse', 'quantite_bouteille', 'montant', 'sous_total', 'tps', 'tvq']):
             totals[i] += row[f] if row[f] else 0
@@ -116,13 +117,15 @@ def download_rapport_transaction():
             exp = 'succursale%s' % (' (%s)' % row0['no_succursale_saq'] if row0['no_succursale_saq'] else '')
         note = row0['note_commande'] if row0['note_commande'] else ''
         item = {'top': ['%s (%s)' % (row0['nom_social'], row0['no_client_saq'] if row0['no_client_saq'] else '?'),
-                        row0['no_commande_facture'], '%s %s' % (exp, note), as_currency(row0['montant']),
-                        as_currency(row0['sous_total']), as_currency(row0['tps']), as_currency(row0['tvq'])]}
+                        row0['no_commande_facture'], row0['no_commande_saq'], '%s %s' % (exp, note),
+                        as_currency(row0['montant']), as_currency(row0['sous_total']), as_currency(row0['tps']),
+                        as_currency(row0['tvq'])]}
         if representant == 'tous':
             item['bottom'] = row0['representant_nom']
         subitems = []
         for row in ncf_rows[ncf]:
-            subitems.append(['%s, %s' % (row['type_vin'], row['nom_domaine']), row['format'],
+            nd = ', %s' % row['nom_domaine'] if row['nom_domaine'] else ''
+            subitems.append(['%s%s' % (row['type_vin'], nd), row['format'],
                              '%s(cs)' % row['quantite_caisse'], '%s(bt)' % row['quantite_par_caisse']])
             for i, f in enumerate(['quantite_caisse', 'quantite_bouteille']):
                 totals[i] += row[f] if row[f] else 0
@@ -133,7 +136,7 @@ def download_rapport_transaction():
     totals[2:] = [as_currency(v) for v in totals[2:]]
     doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
                   'type_client': type_client, 'items': items, 'totals': totals}
-    out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client, 
+    out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client,
                                                                           'odt' if hasattr(app, 'is_dev') else 'pdf')
     tmpl_fn = '/home/christian/vinum/docs/rapport_des_transactions.odt' if representant == 'tous' else \
         '/home/christian/vinum/docs/rapport_des_transactions_1repr.odt'
@@ -141,4 +144,3 @@ def download_rapport_transaction():
     ren.run()
     return send_file('/tmp/%s' % out_fn, mimetype='application/pdf',
                      attachment_filename=out_fn, as_attachment=True)
-

@@ -42,11 +42,18 @@ Ext.define('VIN.view.commande.Form', {
                     align: 'stretch'  // Child items are stretched to full width
                 },
                 items: [{
-                    xtype: 'textfield',
-                    fieldLabel: 'Adresse(s)',
+                    xtype: 'combo',
+                    queryMode: 'local',
+                    triggerAction: 'all',
+                    displayField: 'addr',
                     name: 'email_addresses',
-                    itemId: 'email_addr_tf',
-                    allowBlank: false
+                    fieldLabel: 'Adresse(s)',
+                    forceSelection: false,
+                    itemId: 'email_addr_dd',
+                    allowBlank: false,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['addr']
+                    })
                 }, {
                     xtype: 'textfield',
                     fieldLabel: 'Sujet',
