@@ -33,7 +33,7 @@ create table client (
     no_tel_personnel text,
     no_cellulaire text,
     courriel text,
-    type_client text,
+    type_client text check (type_client in ('restaurant', 'particulier')),
     specialite text,
     representant_id integer references representant,
     expedition text check (expedition in ('direct', 'pickup', 'succursale')),

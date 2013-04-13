@@ -23,7 +23,7 @@ Ext.define('VIN.view.MainToolbar', {
             id: 'create_commande_menu_itm'
         }, {
             text: 'Toutes les commandes',
-            iconCls: 'clients-list-icon',
+            iconCls: 'table-icon',
             id: 'list_commandes_menu_itm'
         }]
     }, {
@@ -35,7 +35,7 @@ Ext.define('VIN.view.MainToolbar', {
             id: 'edit_client_menu_itm'
         }, {
             text: 'Tous les clients',
-            iconCls: 'clients-list-icon',
+            iconCls: 'table-icon',
             id: 'list_clients_menu_itm'
         }]
     }, {
@@ -47,7 +47,7 @@ Ext.define('VIN.view.MainToolbar', {
             id: 'produits_pp_menu_itm'
         }, {
             text: 'Inventaire',
-            iconCls: 'clients-list-icon',
+            iconCls: 'table-icon',
             id: 'produits_inv_menu_itm'
         }]
     }, {
@@ -59,7 +59,7 @@ Ext.define('VIN.view.MainToolbar', {
             id: 'bo_create_menu_itm'
         }, {
             text: 'Voir la liste',
-            iconCls: 'clients-list-icon',
+            iconCls: 'table-icon',
             id: 'bo_list_menu_itm'
         }]
     }, {
@@ -73,6 +73,15 @@ Ext.define('VIN.view.MainToolbar', {
             text: 'Rapport des ventes',
             iconCls: 'report-icon',
             id: 'rapport_vente_menu_itm'
+        }]
+    }, {
+        text: 'Autres',
+        iconCls: 'cog-icon',
+        menu: [{
+            text: 'Succursales SAQ',
+            iconCls: 'table-icon',
+            id: 'succ_saq_menu_itm',
+            disabled: true
         }]
     }]
 

@@ -14,7 +14,7 @@ if inventaire_only:
     cursor.execute('delete from inventaire; drop index inventaire_no_produit_interne_idx;')
 else:
     os.system('psql -d vinum -f /home/christian/vinum/data/sql/model.sql')
-export_dir = '/home/christian/vinum/data/raw/access_export_2013-04-08'
+export_dir = '/home/christian/vinum/data/raw/access_export_2013-04-12'
 delim = ';'
 #default_encoding = 'utf8'
 default_encoding = 'cp1252'
