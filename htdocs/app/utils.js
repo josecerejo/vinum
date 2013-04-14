@@ -70,6 +70,9 @@ Ext.define('VIN.utils', {
                 if (item.hasOwnProperty('align')) {
                     col.align = item.align;
                 }
+                if (item.hasOwnProperty('editor')) {
+                    col.editor = item.editor;
+                }
                 if (item.type.type == 'date') {
                     col.xtype = 'datecolumn';
                 } else if (item.type.type == 'float' || item.type.type == 'int') {

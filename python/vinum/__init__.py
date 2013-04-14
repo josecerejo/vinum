@@ -55,4 +55,4 @@ def teardown_request(exception):
 
 
 # these must be imported in the end like that!
-import login, client, commande, produit, producteur, inventaire, rapport, backorder, misc
+import login, client, commande, produit, producteur, inventaire, rapport, backorder, misc, succursale

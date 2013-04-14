@@ -2,10 +2,17 @@ from __future__ import division
 import sys, csv, re, os, math
 from little_pger import *
 
+if len(sys.argv) not in [2, 3]:
+    print 'python import_raw.py yyyy-mm-dd [dbname]'
+    exit()
+
+dbname = 'vinum'
+if len(sys.argv) == 3:
+    dbname = sys.argv[2]
 
 inventaire_only = False
 
-conn = psycopg2.connect("dbname=vinum")
+conn = psycopg2.connect("dbname=%s" % dbname)
 cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 #conn.set_isolation_level(0) # autocommit for psycopg2 < 2.4.x
@@ -13,8 +20,8 @@ cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 if inventaire_only:
     cursor.execute('delete from inventaire; drop index inventaire_no_produit_interne_idx;')
 else:
-    os.system('psql -d vinum -f /home/christian/vinum/data/sql/model.sql')
-export_dir = '/home/christian/vinum/data/raw/access_export_2013-04-12'
+    os.system('psql -d %s -f /home/christian/vinum/data/sql/model.sql' % dbname)
+export_dir = '/home/christian/vinum/data/raw/access_export_%s' % sys.argv[1]
 delim = ';'
 #default_encoding = 'utf8'
 default_encoding = 'cp1252'

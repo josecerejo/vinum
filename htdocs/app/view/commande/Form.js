@@ -271,23 +271,8 @@ Ext.define('VIN.view.commande.Form', {
                             flex: 0.1,
                             displayField: 'no_succursale_saq',
                             name: 'no_succursale_saq',
-                            store: Ext.create('Ext.data.Store', {
-                                model: Ext.define('VIN.model.Succursale', {
-                                    extend: 'Ext.data.Model',
-                                    fields: ['no_succursale_saq', 'ville', 'adresse']
-                                }),
-                                proxy: {
-                                    type: 'ajax',
-                                    limitParam: undefined,
-                                    pageParam: undefined,
-                                    startParam: undefined,
-                                    url: ajax_url_prefix + '/misc/get_succursales',
-                                    reader: {
-                                        type: 'json',
-                                        root: 'rows'
-                                    }
-                                }
-                            }),
+                            queryCaching: false, // important in case the succs are updated elsewhere
+                            store: Ext.create('VIN.store.Succursales'),
                             hideLabel: true,
                             minChars: 3,
                             forceSelection: false, // to allow setting record field no_succursale_saq alone

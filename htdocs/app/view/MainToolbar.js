@@ -80,8 +80,7 @@ Ext.define('VIN.view.MainToolbar', {
         menu: [{
             text: 'Succursales SAQ',
             iconCls: 'table-icon',
-            id: 'succ_saq_menu_itm',
-            disabled: true
+            id: 'succ_saq_menu_itm'
         }]
     }]
 
