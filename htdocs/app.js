@@ -11,8 +11,8 @@ var initial_tab = null; //'widget.inventaire_grid';
 var last_update = '2013-04-16';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Millésime dans l'inventaire" +
-    "<br>&bull; Modifs onglet d'inventaire";
+    "<br>&bull; Modifs onglet d'inventaire" +
+    "<br>&bull; Ajout d'un filtre externe pour le # prod. SAQ dans l'inventaire";
 
 if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
 

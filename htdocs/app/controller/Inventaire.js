@@ -31,6 +31,19 @@ Ext.define('VIN.controller.Inventaire', {
                 }
             },
 
+            'inventaire_grid #no_produit_saq_external_filter_tf': {
+                keyup: function(tf, e, opts) {
+                    var g = tf.up('inventaire_grid');
+                    var nps_filter = g.filters.getFilter('no_produit_saq');
+                    if (tf.getValue()) {
+                        nps_filter.setValue({eq: tf.getValue()});
+                        nps_filter.setActive(true);
+                    } else {
+                        nps_filter.setActive(false);
+                    }
+                }
+            },
+
             '#inventaire_g': {
                 selectionchange: function(model, records) {
                     if (records.length == 0) { return; }
