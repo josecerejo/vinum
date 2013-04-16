@@ -49,7 +49,7 @@ create table client (
     jours_livraison text[],
     date_ouverture_dossier date,
     mode_facturation text check (mode_facturation in ('courriel', 'poste')) default 'courriel',
-    mode_facturation_note text
+    mode_facturation_note text -- courriel ou autre (devrait etre renomme)
     --jour_livraison text
 );
 
@@ -199,7 +199,7 @@ insert into representant values (23, 'Caroline Chouinard');
 --insert into representant values (29, 'bureau');
 insert into representant values (30, 'Pierre Decelles');
 insert into representant values (31, 'Christine Couture');
-insert into representant values (32, 'Marie-Chantale Labarre');
+insert into representant values (35, 'Marie-Chantale Labarre');
 
 insert into timbre_restaurateur values ('375 ml', 0.51);
 insert into timbre_restaurateur values ('500 ml', 0.68);
