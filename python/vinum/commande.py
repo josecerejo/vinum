@@ -323,9 +323,19 @@ def _generate_bdc(g, ncf):
         doc_values['sc'] = 'X'
         doc_values['no_succursale_saq'] = commande['no_succursale_saq']
     cis = pg.select(cursor, 'commande_item', where={'no_commande_facture': ncf, 'statut_item': 'OK'})
-    n_left = int(math.ceil(len(cis) / 2.))
-    doc_values['left_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[:n_left]]
-    doc_values['right_items'] = [(ci['no_produit_saq'], ci['quantite_bouteille']) for ci in cis[n_left:]]
+    left = []
+    right = []
+    if len(cis) <= 10: # left column
+        left = cis
+    elif len(cis) <= 20: # left full, rest right
+        left = cis[:10]
+        right = cis[10:]
+    else: # left/right event
+        n = int(len(cis) / 2) + 1
+        left = cis[:n]
+        right = cis[n:]
+    doc_values['left_items'] = [('%s-' % i, ci['no_produit_saq'], ci['quantite_bouteille']) for i, ci in enumerate(left, 1)]
+    doc_values['right_items'] = [('%s-' % i, ci['no_produit_saq'], ci['quantite_bouteille']) for i, ci in enumerate(right, len(left) + 1)]
     doc_values['no_commande_facture'] = ncf
     out_fn = '/tmp/vinum_bdc_%s.%s' % (ncf, 'odt' if hasattr(app, 'is_dev') else 'pdf')
     ren = Renderer('/home/christian/vinum/docs/bon_de_commande.odt', doc_values,
