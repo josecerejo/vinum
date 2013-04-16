@@ -87,7 +87,8 @@ Ext.define('VIN.view.inventaire.Form', {
                     items: [{
                         xtype: 'numberfield',
                         fieldLabel: 'Millésime',
-                        name: 'millesime'
+                        name: 'millesime',
+                        allowBlank: true
                     }, {
                         xtype: 'textfield',
                         fieldLabel: 'Format',

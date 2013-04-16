@@ -22,7 +22,7 @@ if inventaire_only:
 else:
     os.system('psql -d %s -f /home/christian/vinum/data/sql/model.sql' % dbname)
 export_dir = '/home/christian/vinum/data/raw/access_export_%s' % sys.argv[1]
-delim = ';'
+delim = ','
 #default_encoding = 'utf8'
 default_encoding = 'cp1252'
 

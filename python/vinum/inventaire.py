@@ -34,6 +34,7 @@ def save_inventaire_record():
                                                       'no_demande_saq': inv['no_demande_saq']}):
         for f in pg.getColumns(cur, 'inventaire'):
             if f not in rf: continue
+            if not rf[f] and not inv[f]: continue
             if inv[f].__class__ == float: inv[f] = '%.2f' % inv[f]
             if unicode(str(inv[f]), 'utf8') != rf[f] and f not in ['quantite_recue', 'quantite_commandee',
                                                                    'solde_bouteille', 'solde_caisse',
