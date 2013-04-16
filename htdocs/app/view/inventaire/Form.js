@@ -144,14 +144,16 @@ Ext.define('VIN.view.inventaire.Form', {
                         name: 'prix_restaurant',
                         itemId: 'prix_restaurant_tf',
                         disabled: true,
-                        style: 'margin-left: 10px'
+                        style: 'margin-left: 10px',
+                        fieldStyle: 'background-color: gold; background-image: none;'
                     }, {
                         xtype: 'pricefield',
                         fieldLabel: '$ particulier',
                         name: 'prix_particulier',
                         itemId: 'prix_particulier_tf',
                         disabled: true,
-                        style: 'margin-left: 10px'
+                        style: 'margin-left: 10px',
+                        fieldStyle: 'background-color: hotpink; background-image: none;'
                     }]
                 }, {
                     layout: 'hbox',

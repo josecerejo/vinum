@@ -9,6 +9,9 @@ Ext.define('VIN.store.Inventaires', {
     sorters: [{
         property: 'type_vin',
         direction: 'ASC'
+    }, {
+        property: 'date_commande',
+        direction: 'ASC'
     }],
     proxy: {
         type: 'ajax',
