@@ -17,6 +17,8 @@ cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 #conn.set_isolation_level(0) # autocommit for psycopg2 < 2.4.x
 
+#cursor.execute("set datestyle = 'iso, mdy'")
+
 if inventaire_only:
     cursor.execute('delete from inventaire; drop index inventaire_no_produit_interne_idx;')
 else:
