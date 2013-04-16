@@ -143,8 +143,8 @@ Ext.define('VIN.view.inventaire.Form', {
                         fieldLabel: '$ restaurant',
                         name: 'prix_restaurant',
                         itemId: 'prix_restaurant_tf',
-                        disabled: true,
-                        style: 'margin-left: 10px',
+                        disabled: true,             // see .x-item-disabled .x-form-trigger opacity modif
+                        style: 'margin-left: 10px', // in ext-all-debug.css (0.3 -> 0.6)
                         fieldStyle: 'background-color: gold; background-image: none;'
                     }, {
                         xtype: 'pricefield',
