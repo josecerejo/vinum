@@ -1,30 +1,30 @@
 from __future__ import division
-import sys, csv, re, os, math
+import sys, csv, re, os, math, argparse
 from little_pger import *
 
-if len(sys.argv) not in [2, 3]:
-    print 'python import_raw.py yyyy-mm-dd [dbname]'
-    exit()
-
-dbname = 'vinum'
-if len(sys.argv) == 3:
-    dbname = sys.argv[2]
+parser = argparse.ArgumentParser()
+parser.add_argument('date', help='yyyy-mm-dd')
+parser.add_argument('-d', help='dbname (default vinum)', default='vinum')
+parser.add_argument('-l', help='fr (delim=;, date=ymd) or en (delim=, date=mdy)', choices=['fr', 'en'], default='en')
+try: args = parser.parse_args()
+except IOError, msg: parser.error(str(msg))
 
 inventaire_only = False
 
-conn = psycopg2.connect("dbname=%s" % dbname)
+conn = psycopg2.connect("dbname=%s" % args.d)
 cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 #conn.set_isolation_level(0) # autocommit for psycopg2 < 2.4.x
 
-#cursor.execute("set datestyle = 'iso, mdy'")
+if args.l == 'en':
+    cursor.execute("set datestyle = 'iso, mdy'")
 
 if inventaire_only:
     cursor.execute('delete from inventaire; drop index inventaire_no_produit_interne_idx;')
 else:
-    os.system('psql -d %s -f /home/christian/vinum/data/sql/model.sql' % dbname)
-export_dir = '/home/christian/vinum/data/raw/access_export_%s' % sys.argv[1]
-delim = ','
+    os.system('psql -d %s -f /home/christian/vinum/data/sql/model.sql' % args.d)
+export_dir = '/home/christian/vinum/data/raw/access_export_%s' % args.date
+delim = ',' if args.l == 'en' else ';'
 #default_encoding = 'utf8'
 default_encoding = 'cp1252'
 

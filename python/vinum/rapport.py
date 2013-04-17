@@ -17,7 +17,7 @@ def _get_rapport_vente_data(request):
             where statut_item != 'BO'
             and date_commande >= %s and date_commande <= %s
         """
-    qvals = [request.args['start_date'], request.args['end_date']]
+    qvals = [request.args['start_date'], request.args['end_date'] or request.args['start_date']]
     if request.args['representant_nom']:
         q += ' and representant_nom = %s'
         qvals.append(request.args['representant_nom'])
@@ -44,7 +44,7 @@ def _get_rapport_transaction_data(request):
             where statut_item != 'BO'
             and date_commande >= %s and date_commande <= %s
         """
-    qvals = [request.args['start_date'], request.args['end_date']]
+    qvals = [request.args['start_date'], request.args['end_date'] or request.args['start_date']]
     if request.args['representant_nom']:
         q += ' and representant_nom = %s'
         qvals.append(request.args['representant_nom'])
@@ -68,7 +68,7 @@ def get_rapport_vente():
 @login_required
 def download_rapport_vente():
     start_date = request.args['start_date']
-    end_date = request.args['end_date']
+    end_date = request.args['end_date'] or start_date
     representant = request.args['representant_nom'] if request.args['representant_nom'] else 'tous'
     type_client = request.args['type_client'] if request.args['type_client'] else 'tous'
     rows = _get_rapport_vente_data(request)
@@ -95,7 +95,7 @@ def download_rapport_vente():
 @login_required
 def download_rapport_transaction():
     start_date = request.args['start_date']
-    end_date = request.args['end_date']
+    end_date = request.args['end_date'] or start_date
     representant = request.args['representant_nom'] if request.args['representant_nom'] else 'tous'
     type_client = request.args['type_client'] if request.args['type_client'] else 'tous'
     rows = _get_rapport_transaction_data(request)

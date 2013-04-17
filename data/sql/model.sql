@@ -131,7 +131,7 @@ create table commande_item (
     commande_item_id serial primary key,
     no_commande_facture integer not null references commande,
     no_produit_interne integer not null references produit,
-    no_produit_saq integer,
+    no_produit_saq integer, -- warning: Roucet BOs have this set to 0 (which is bad because it then joins with inventaire items)
     no_demande_saq text,
     quantite_caisse integer,
     quantite_bouteille integer,
@@ -151,7 +151,7 @@ create table inventaire (
     no_demande_saq text,
     quantite_commandee integer,
     quantite_recue integer,
-    date_commande date,
+    date_commande date, -- !!! this should be renamed to avoid conflict with commande
     date_recue date,
     prix_coutant numeric(1000, 2),
     millesime integer,

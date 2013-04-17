@@ -13,11 +13,8 @@ Ext.define('VIN.controller.Rapport', {
                     ed = g.down('#end_date_df').getRawValue();
                     if (!sd) {
                         g.down('#start_date_df').markInvalid('Ce champ est requis');
+                        return;
                     }
-                    if (!ed) {
-                        g.down('#end_date_df').markInvalid('Ce champ est requis');
-                    }
-                    if (!sd || !ed) { return; }
                     g.getStore().load({
                         params: {
                             start_date: sd,
@@ -36,11 +33,8 @@ Ext.define('VIN.controller.Rapport', {
                     ed = g.down('#end_date_df').getRawValue();
                     if (!sd) {
                         g.down('#start_date_df').markInvalid('Ce champ est requis');
+                        return;
                     }
-                    if (!ed) {
-                        g.down('#end_date_df').markInvalid('Ce champ est requis');
-                    }
-                    if (!sd || !ed) { return; }
                     var repr = g.down('#representant_nom_dd').getValue();
                     repr =  repr ? repr : '';
                     var tc = g.down('#type_client_dd').getValue();
@@ -58,11 +52,8 @@ Ext.define('VIN.controller.Rapport', {
                     ed = g.down('#end_date_df').getRawValue();
                     if (!sd) {
                         g.down('#start_date_df').markInvalid('Ce champ est requis');
+                        return;
                     }
-                    if (!ed) {
-                        g.down('#end_date_df').markInvalid('Ce champ est requis');
-                    }
-                    if (!sd || !ed) { return; }
                     var repr = g.down('#representant_nom_dd').getValue();
                     repr =  repr ? repr : '';
                     var tc = g.down('#type_client_dd').getValue();
@@ -110,7 +101,7 @@ Ext.define('VIN.controller.Rapport', {
                     width: 5
                 }, {
                     xtype: 'datefield',
-                    emptyText: 'Date de fin',
+                    emptyText: 'Date de fin (opt)',
                     itemId: 'end_date_df'
                 }, {
                     xtype: 'tbspacer',
@@ -240,7 +231,7 @@ Ext.define('VIN.controller.Rapport', {
                     width: 5
                 }, {
                     xtype: 'datefield',
-                    emptyText: 'Date de fin',
+                    emptyText: 'Date de fin (opt)',
                     itemId: 'end_date_df'
                 }, {
                     xtype: 'tbspacer',

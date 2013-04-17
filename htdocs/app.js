@@ -8,11 +8,11 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-04-16';
+var last_update = '2013-04-17';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Modifs onglet d'inventaire" +
-    "<br>&bull; Ajout d'un filtre externe pour le # prod. SAQ dans l'inventaire";
+    "<br>&bull; Ajout d'un filtre externe pour le # prod. SAQ dans l'inventaire" +
+    "<br>&bull; Date de fin maintenant optionelle pour les rapports";
 
 if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
 
