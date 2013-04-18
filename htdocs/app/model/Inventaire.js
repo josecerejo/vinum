@@ -58,7 +58,7 @@ Ext.define('VIN.model.Inventaire', {
         name: 'date_recue',
         type: 'date'
     }, {
-        header: 'Qté reçue',
+        header: 'Qté reçue (b)',
         name: 'quantite_recue',
         type: 'int',
         useNull: true
@@ -78,7 +78,7 @@ Ext.define('VIN.model.Inventaire', {
         align: 'right'
         // this is not an int!
     }, {
-        header: 'Qté commandée',
+        header: 'Qté commandée (b)',
         name: 'quantite_commandee',
         type: 'int',
         useNull: true
