@@ -13,7 +13,7 @@ Ext.define('VIN.view.commande.ItemGrid', {
             hideGroupedHeader: true
         })];
 
-        this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
+        this.columns = VIN.view.Grid.getColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
         if (this.is_editable) {
 

@@ -2,7 +2,7 @@ Ext.define('VIN.view.Grid', {
 
     extend: 'Ext.grid.Panel',
     alias: 'widget.vin_grid',
-    requires: ['Ext.ux.grid.FiltersFeature'],
+    requires: ['Ext.ux.grid.FiltersFeature', 'Ext.ux.CheckColumn'],
     add_edit_actioncolumn: false,
     add_delete_actioncolumn: false,
     column_flex: 'all',
@@ -11,7 +11,7 @@ Ext.define('VIN.view.Grid', {
     initComponent: function() {
 
         if (!this.columns) {
-            this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
+            this.columns = VIN.view.Grid.getColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
         }
 
         if (this.add_edit_actioncolumn) {
@@ -84,6 +84,63 @@ Ext.define('VIN.view.Grid', {
         };
 
         this.callParent(arguments);
+    },
+
+    statics: {
+
+        getColumnsFromModel: function(model, column_flex) {
+            var cols = [];
+            var items = model.prototype.fields.items;
+            Ext.each(items, function(item) {
+                var name = item.name;
+                var flex = 1;
+                var hidden = false;
+                var filterable = true;
+                if (column_flex != 'all') {
+                    flex = column_flex.hasOwnProperty(name) ? column_flex[name] : 0;
+                    hidden = !column_flex.hasOwnProperty(name);
+                    filterable = item.hasOwnProperty('filterable') ? item.filterable : true;
+                }
+                var col = {
+                    xtype: 'gridcolumn',
+                    text: item.hasOwnProperty('header') ? item.header : Ext.String.capitalize(item.name),
+                    dataIndex: name,
+                    type: item.type.type,
+                    filterable: filterable,
+                    flex: flex,
+                    hidden: hidden
+                };
+                if (item.hasOwnProperty('tdCls')) {
+                    col.tdCls = item.tdCls;
+                }
+                if (item.hasOwnProperty('filter')) {
+                    col.filter = item.filter;
+                }
+                if (item.hasOwnProperty('align')) {
+                    col.align = item.align;
+                }
+                if (item.hasOwnProperty('editor')) {
+                    col.editor = item.editor;
+                }
+                if (item.type.type == 'date') {
+                    col.xtype = 'datecolumn';
+                    col.align = 'center';
+                } else if (item.type.type == 'float' || item.type.type == 'int') {
+                    col.xtype = 'numbercolumn'; // to fix formatting issue
+                    if (item.type.type == 'int') {
+                        col.format = '0';
+                    }
+                } else if (item.type.type == 'bool') {
+                    col.xtype = 'checkcolumn';
+                    col.processEvent = function() {
+                        return false;
+                    }
+                }
+                cols.push(col);
+            });
+            return cols;
+        }
+
     }
 
 });

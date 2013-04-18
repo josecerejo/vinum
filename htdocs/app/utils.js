@@ -40,55 +40,6 @@ Ext.define('VIN.utils', {
                 }
             }).show();
             $(div).html(html);
-        },
-
-        getGridColumnsFromModel: function(model, column_flex) {
-            var cols = [];
-            var items = model.prototype.fields.items;
-            Ext.each(items, function(item) {
-                var name = item.name;
-                var flex = 1;
-                var hidden = false;
-                var filterable = true;
-                if (column_flex != 'all') {
-                    flex = column_flex.hasOwnProperty(name) ? column_flex[name] : 0;
-                    hidden = !column_flex.hasOwnProperty(name);
-                    filterable = item.hasOwnProperty('filterable') ? item.filterable : true;
-                }
-                var col = {
-                    xtype: 'gridcolumn',
-                    text: item.hasOwnProperty('header') ? item.header : Ext.String.capitalize(item.name),
-                    dataIndex: name,
-                    type: item.type.type,
-                    filterable: filterable,
-                    flex: flex,
-                    hidden: hidden
-                };
-                if (item.hasOwnProperty('filter')) {
-                    col.filter = item.filter;
-                }
-                if (item.hasOwnProperty('align')) {
-                    col.align = item.align;
-                }
-                if (item.hasOwnProperty('editor')) {
-                    col.editor = item.editor;
-                }
-                if (item.type.type == 'date') {
-                    col.xtype = 'datecolumn';
-                } else if (item.type.type == 'float' || item.type.type == 'int') {
-                    col.xtype = 'numbercolumn'; // to fix formatting issue
-                    if (item.type.type == 'int') {
-                        col.format = '0';
-                    }
-                } else if (item.type.type == 'bool') {
-                    col.xtype = 'checkcolumn';
-                    col.processEvent = function() {
-                        return false;
-                    }
-                }
-                cols.push(col);
-            });
-            return cols;
         }
 
     }

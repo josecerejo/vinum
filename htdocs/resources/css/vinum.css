@@ -225,3 +225,7 @@
 .main_header {
     position: static !important;
 }
+
+.inventaire-highlighted-column {
+    background: #cdcdcd !important;
+}

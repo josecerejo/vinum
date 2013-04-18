@@ -5,7 +5,7 @@ Ext.define('VIN.view.client.ProduitGrid', {
 
     initComponent: function() {
 
-        this.columns = VIN.utils.getGridColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
+        this.columns = VIN.view.Grid.getColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
 
         this.columns.splice(0, 0, {
             xtype: 'actioncolumn',
