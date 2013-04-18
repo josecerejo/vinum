@@ -1,5 +1,6 @@
 from vinum import *
 from common import *
+import math
 
 
 @app.route('/inventaire/get', methods=['GET'])
@@ -55,6 +56,8 @@ def save_inventaire_record():
     # ***********************************************
 
     rf['prix_restaurant'] = remove_taxes_(pc) * comm_restau_mult + timbre
+    qpc = pg.select1(cur, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
+    rf['solde_caisse'] = int(math.ceil(float(rf['solde_bouteille']) / qpc))
     inv = pg.upsert(cur, 'inventaire', where={'no_inventaire': ni},
                     values=rf, filter_values=True, map_values={'': None})
     g.db.commit()

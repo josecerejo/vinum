@@ -11,8 +11,8 @@ var initial_tab = null; //'widget.inventaire_grid';
 var last_update = '2013-04-18';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Date de fin maintenant optionelle pour les rapports" +
-    "<br>&bull; Tableau d'inventaire";
+    "<br>&bull; Tableau d'inventaire" +
+    "<br>&bull; Le solde (c) est maintenant calculé automatiquement dans l'inventaire";
 
 if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
 

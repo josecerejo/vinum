@@ -173,8 +173,8 @@ Ext.define('VIN.view.inventaire.Form', {
                         xtype: 'numberfield',
                         fieldLabel: 'Solde (c)',
                         name: 'solde_caisse',
-                        allowBlank: true,
                         style: 'margin-left: 10px',
+                        disabled: true
                     }]
                 }, {
                     layout: 'hbox',
