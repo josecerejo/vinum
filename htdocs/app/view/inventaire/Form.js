@@ -186,11 +186,11 @@ Ext.define('VIN.view.inventaire.Form', {
                     },
                     items: [{
                         xtype: 'numberfield',
-                        fieldLabel: 'Qté commandée',
+                        fieldLabel: 'Qté commandée (b)',
                         name: 'quantite_commandee'
                     }, {
                         xtype: 'numberfield',
-                        fieldLabel: 'Qté reçue',
+                        fieldLabel: 'Qté reçue (b)',
                         name: 'quantite_recue',
                         style: 'margin-left: 10px',
                         allowBlank: true
