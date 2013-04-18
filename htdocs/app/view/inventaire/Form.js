@@ -18,6 +18,7 @@ Ext.define('VIN.view.inventaire.Form', {
                 store: Ext.create('VIN.store.Inventaires'),
                 column_flex: {
                     type_vin: 3,
+                    nom_producteur: 2,
                     format: 1,
                     millesime: 1,
                     prix_particulier: 1,

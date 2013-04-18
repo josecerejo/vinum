@@ -16,6 +16,9 @@ Ext.define('VIN.model.Inventaire', {
         header: 'Type de vin',
         name: 'type_vin'
     }, {
+        header: 'Producteur',
+        name: 'nom_producteur'
+    }, {
         header: 'Format',
         name: 'format',
         align: 'right'
