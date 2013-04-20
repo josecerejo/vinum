@@ -456,7 +456,7 @@ Ext.define('VIN.view.commande.Form', {
                         solde_caisse: 1
                     },
                     height: grid_height - 110,
-                    style: 'margin-bottom: 16px'
+                    style: 'margin-bottom: 14px'
                 }, {
                     xtype: 'commande_item_grid',
                     itemId: 'commande_item_g',

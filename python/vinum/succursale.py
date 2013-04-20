@@ -27,6 +27,8 @@ def save_succ():
 @app.route('/succursale/remove', methods=['POST'])
 @login_required
 def remove_succ():
-    pg.delete(g.db.cursor(), 'succursale_saq', where={'no_succursale_saq': request.form['no_succursale_saq']})
+    pg.delete(g.db.cursor(), 'succursale_saq',
+              where={'no_succursale_saq': request.form['no_succursale_saq']},
+              tighten_sequence=True)
     g.db.commit()
     return {'success': True}

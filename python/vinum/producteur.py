@@ -24,6 +24,7 @@ def save_producteur():
 @app.route('/producteur/delete', methods=['POST'])
 @login_required
 def delete_producteur():
-    pg.delete(g.db.cursor(), 'producteur', where={'no_producteur': request.form['no_producteur']})
+    pg.delete(g.db.cursor(), 'producteur', where={'no_producteur': request.form['no_producteur']},
+              tighten_sequence=True)
     g.db.commit()
     return {'success': True}

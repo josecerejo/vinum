@@ -8,11 +8,11 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-04-18';
+var last_update = '2013-04-20';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Tableau d'inventaire" +
-    "<br>&bull; Le solde (c) est maintenant calculé automatiquement dans l'inventaire";
+    "<br>&bull; Le solde (c) est maintenant calculé automatiquement dans l'inventaire" +
+    "<br>&bull; La destruction d'objets ne laisse plus de 'trous' dans les séquences d'IDs";
 
 if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
 

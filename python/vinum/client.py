@@ -55,8 +55,8 @@ def create_client():
 @app.route('/client/delete', methods=['POST'])
 @login_required
 def delete_client():
-    pg.delete(g.db.cursor(), 'client', where={'no_client':
-                                              request.form['no_client']})
+    pg.delete(g.db.cursor(), 'client', where={'no_client': request.form['no_client']},
+              tighten_sequence=True)
     g.db.commit()
     return {'success': True}
 
@@ -66,8 +66,10 @@ def delete_client():
 def remove_produit():
     cursor = g.db.cursor()
     request.form = dict([(c, f if f else None) for c, f in request.form.items()])
-    pg.delete(cursor, 'client_produit', where={'no_client': request.form['no_client'],
-                                                'no_produit_interne': request.form['no_produit_interne']})
+    pg.delete(cursor, 'client_produit',
+              where={'no_client': request.form['no_client'],
+                     'no_produit_interne': request.form['no_produit_interne']},
+              tighten_sequence=True)
     g.db.commit()
     return {'success': True}
 

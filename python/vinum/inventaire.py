@@ -76,6 +76,7 @@ def delete_inventaire_record():
                                               'no_demande_saq': inv['no_demande_saq']}):
         raise psycopg2.IntegrityError
 
-    pg.delete(cur, 'inventaire', where={'no_inventaire': request.form['no_inventaire']})
+    pg.delete(cur, 'inventaire', where={'no_inventaire': request.form['no_inventaire']},
+              tighten_sequence=True)
     g.db.commit()
     return {'success': True}

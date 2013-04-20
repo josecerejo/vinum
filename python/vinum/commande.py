@@ -91,7 +91,7 @@ def delete_commande():
                      where={'no_commande_facture': ncf})
     for row in rows:
         _remove_produit_from_commande(cursor, ncf, row['no_produit_interne'])
-    pg.delete(cursor, 'commande', where={'no_commande_facture': ncf})
+    pg.delete(cursor, 'commande', where={'no_commande_facture': ncf}, tighten_sequence=True)
     g.db.commit()
     return {'success': True}
 
@@ -226,11 +226,15 @@ def remove_item_from_commande():
                                              'solde_caisse': ci_inv['solde_caisse'] + ci_inv['quantite_caisse'],
                                              'statut_inventaire': 'actif' if to_be_set_active else u'en réserve'},
                   where={'no_inventaire': ci_inv['no_inventaire']})
-        pg.delete(cursor, 'commande_item', where={'no_commande_facture': ncf, 'no_produit_saq': nps})
+        pg.delete(cursor, 'commande_item',
+                  where={'no_commande_facture': ncf, 'no_produit_saq': nps},
+                  tighten_sequence=True)
     else:
         # statut_item=='BO'
         npi = rf['no_produit_interne']
-        pg.delete(cursor, 'commande_item', where={'no_commande_facture': ncf, 'no_produit_interne': npi})
+        pg.delete(cursor, 'commande_item',
+                  where={'no_commande_facture': ncf, 'no_produit_interne': npi},
+                  tighten_sequence=True)
     _update_commande(cursor, ncf)
     g.db.commit()
     return {'success': True}
@@ -253,7 +257,9 @@ def _remove_produit_from_commande(cursor, ncf, npi):
                                              'solde_caisse': ci_inv['solde_caisse'] + ci_inv['quantite_caisse'],
                                              'statut_inventaire': 'actif' if i == 0 else u'en réserve'},
                   where={'no_inventaire': ci_inv['no_inventaire']})
-    pg.delete(cursor, 'commande_item', where={'no_commande_facture':ncf, 'no_produit_interne':npi})
+    pg.delete(cursor, 'commande_item',
+              where={'no_commande_facture':ncf, 'no_produit_interne':npi},
+              tighten_sequence=True)
 
 
 @app.route('/commande/update_item', methods=['POST'])

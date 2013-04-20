@@ -51,7 +51,8 @@ def save_produit():
 @app.route('/produit/delete', methods=['POST'])
 @login_required
 def delete_produit():
-    pg.delete(g.db.cursor(), 'produit', where={'no_produit_interne':
-                                               request.form['no_produit_interne']})
+    pg.delete(g.db.cursor(), 'produit',
+              where={'no_produit_interne': request.form['no_produit_interne']},
+              tighten_sequence=True)
     g.db.commit()
     return {'success': True}

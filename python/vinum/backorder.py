@@ -15,7 +15,9 @@ def get_bos():
 @app.route('/backorder/remove', methods=['POST'])
 @login_required
 def remove_bo():
-    pg.delete(g.db.cursor(), 'backorder', where={'backorder_id': request.form['backorder_id']})
+    pg.delete(g.db.cursor(), 'backorder',
+              where={'backorder_id': request.form['backorder_id']},
+              tighten_sequence=True)
     g.db.commit()
     return {'success': True}
 
