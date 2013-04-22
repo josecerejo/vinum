@@ -46,6 +46,7 @@ Ext.define('VIN.view.inventaire.Form', {
             flex: 0.25,
             xtype: 'panel',
             layout: 'fit',
+            itemId: 'editor_pnl',
             collapsible: true,
             items: {
                 xtype: 'form',
