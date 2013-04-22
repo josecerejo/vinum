@@ -12,7 +12,7 @@ var last_update = '2013-04-22';
 var vinum_version = 'alpha';
 var dev_msg = '<b>Dernières mises à jour:</b>' +
     "<br>&bull; La destruction d'objets ne laisse plus de 'trous' dans les séquences d'IDs" +
-    "<br>&bull; Le panneau d'édition de l'inventaire est rétracté par défaut pour les représentants";
+    "<br>&bull; Le panneau d'édition de l'inventaire est rétracté par défaut pour les repr.";
 
 if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
 
