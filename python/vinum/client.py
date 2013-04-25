@@ -34,22 +34,14 @@ def save_client():
     else: rf['no_client'] = no_client # to allow resaving it back after delete with the same id
     rf['representant_id'] = pg.selectId(g.db.cursor(), 'representant',
                                         where={'representant_nom': rf.get('representant_nom')})
+    if rf['expedition'] != 'direct':
+        rf['jours_livraison'] = None
+    if rf['expedition'] != 'succursale':
+        rf['no_succursale_saq'] = None
     client = pg.upsert(g.db.cursor(), 'client', where={'no_client': no_client},
                        values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
     return {'success': True, 'data': client}
-
-
-@app.route('/client/update', methods=['POST'])
-@login_required
-def update_client():
-    return update(g, request, 'client', 'no_client')
-
-
-@app.route('/client/create', methods=['POST'])
-@login_required
-def create_client():
-    return create(g, request, 'client', 'no_client')
 
 
 @app.route('/client/delete', methods=['POST'])

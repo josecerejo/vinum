@@ -8,13 +8,21 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-04-22';
+var last_update = '2013-04-25';
 var vinum_version = 'alpha';
-var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; La destruction d'objets ne laisse plus de 'trous' dans les séquences d'IDs" +
-    "<br>&bull; Le panneau d'édition de l'inventaire est rétracté par défaut pour les repr.";
+var server;
+if (window.location.href.indexOf('localhost') !== -1) {
+    server_name = 'localhost';
+    document.title = 'Vinum (local)';
+} else if (window.location.href.match(/.*\d+[.]\d+[.]\d+[.]\d+.*/)) {
+    server_name = 'DigitalOcean';
+} else {
+    server_name = 'AWS';
+}
 
-if (window.location.href.indexOf('localhost') !== -1) { document.title = 'Vinum (local)'; }
+var dev_msg = '<b>Dernières mises à jour:</b>' +
+    "<br>&bull; Le panneau d'édition de l'inventaire est rétracté par défaut pour les repr." +
+    "<br>&bull; Bug avec les champs d'expédition du client";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
