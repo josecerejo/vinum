@@ -207,11 +207,12 @@ Ext.define('VIN.controller.Commande', {
                         //var courriel = cr.get('courriel');
                         form.email_win.down('#email_f').getForm().url = ajax_url_prefix + '/commande/email_facture';
                         var emails = [];
-                        if (cr.get('mode_facturation') === 'courriel' && cr.get('mode_facturation_note')) {
-                            emails.push({addr: cr.get('mode_facturation_note')});
-                        }
-                        if (cr.get('courriel') && !Ext.Array.contains(emails, {addr: cr.get('courriel')})) {
+                        if (cr.get('courriel')) {
                             emails.push({addr: cr.get('courriel')});
+                        }
+                        if (cr.get('mode_facturation') === 'courriel' && cr.get('mode_facturation_note') &&
+                            cr.get('mode_facturation_note') !== cr.get('courriel')) {
+                            emails.push({addr: cr.get('mode_facturation_note')});
                         }
                         form.email_win.down('#email_addr_dd').getStore().removeAll();
                         if (emails.length > 0) {
