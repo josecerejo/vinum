@@ -31,7 +31,8 @@ Ext.define('VIN.controller.Login', {
         form.submit({
             url: ajax_url_prefix + '/login',
             success: Ext.bind(function(_form, action) {
-                this.setUserPrivileges(action.result);
+                current_user = action.result;
+                this.setUserPrivileges(current_user);
                 win.hide();
                 win.successful_login_callback();
                 win.successful_login_callback = Ext.emptyFn;

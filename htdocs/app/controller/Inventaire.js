@@ -146,7 +146,7 @@ Ext.define('VIN.controller.Inventaire', {
             Ext.getCmp('main_pnl').add(invf);
         }
         Ext.getCmp('main_pnl').setActiveTab(invf);
-        if (jQuery('#login_name').html().indexOf('(représentant)') !== -1) {
+        if (current_user.representant_id) {
             invf.down('#editor_pnl').collapse();
         } else {
             invf.down('#editor_pnl').expand();

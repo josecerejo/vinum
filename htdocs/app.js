@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-04-25';
+var last_update = '2013-04-27';
 var vinum_version = 'alpha';
 var server;
 if (window.location.href.indexOf('localhost') !== -1) {
@@ -21,8 +21,8 @@ if (window.location.href.indexOf('localhost') !== -1) {
 }
 
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Le panneau d'édition de l'inventaire est rétracté par défaut pour les repr." +
-    "<br>&bull; Bug avec les champs d'expédition du client";
+    "<br>&bull; Bug avec les champs d'expédition du client" +
+    "<br>&bull; Un représentant peut maintenant envoyer une facture par courriel";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
@@ -132,6 +132,7 @@ Ext.application({
         wait_mask = new Ext.LoadMask(Ext.getBody(), {msg:"Un moment svp..."});
         login_win = Ext.create('VIN.view.LoginWindow');
         backorder_win = Ext.create('VIN.view.BackorderWindow');
+        current_user = null;
 
         // FF doesn't render the login_name td correctly without this:
         jQuery('#main_header').width($(document).width() - 20); // padding=10+10
@@ -145,7 +146,8 @@ Ext.application({
                 login_win.pop();
             },
             success: function(resp) {
-                VIN.app.getController('Login').setUserPrivileges(Ext.JSON.decode(resp.responseText));
+                current_user = Ext.JSON.decode(resp.responseText);
+                VIN.app.getController('Login').setUserPrivileges(current_user);
             }
         });
 

@@ -199,7 +199,8 @@ Ext.define('VIN.controller.Commande', {
             '#email_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommandeFormPart(form, Ext.bind(function() {
+
+                    var popEmailComposeCallback = Ext.bind(function() {
                         form.email_win.document_type = 'facture';
                         var cdd = form.down('#client_dd');
                         var cr = cdd.findRecordByDisplay(cdd.getValue());
@@ -235,7 +236,14 @@ Ext.define('VIN.controller.Commande', {
                         } else {
                             form.email_win.show();
                         }
-                    }, this));
+                    }, this);
+
+                    // if representant, don't save commande, pop email compose dialog right away
+                    if (current_user.representant_id) {
+                        popEmailComposeCallback();
+                    } else {
+                        this.saveCommandeFormPart(form, popEmailComposeCallback);
+                    }
                 }
             },
             '#email_bon_de_commande_btn': {
