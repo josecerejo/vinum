@@ -210,7 +210,7 @@ Ext.define('VIN.controller.Commande', {
                         if (cr.get('mode_facturation') === 'courriel' && cr.get('mode_facturation_note')) {
                             emails.push({addr: cr.get('mode_facturation_note')});
                         }
-                        if (cr.get('courriel')) {
+                        if (cr.get('courriel') && !Ext.Array.contains(emails, cr.get('courriel'))) {
                             emails.push({addr: cr.get('courriel')});
                         }
                         form.email_win.down('#email_addr_dd').getStore().removeAll();

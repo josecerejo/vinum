@@ -185,6 +185,7 @@ create table usager (
     representant_id integer references representant
 );
 
+insert into representant values (1, 'Vinum');
 insert into representant values (2, 'David Doucet');
 insert into representant values (4, 'Nicolas Giroux');
 insert into representant values (7, 'Jocelyn Racicot');

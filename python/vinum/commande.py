@@ -396,7 +396,7 @@ def email_facture():
     # to do so, we momentarily grant update priviledge on the commande table, to
     # allow setting facture_est_envoyee to true, and update the logging fields
     if current_user.u['representant_id']:
-        admin_conn = psycopg2.connect("dbname=vinum user=vinum")
+        admin_conn = psycopg2.connect("dbname=vinum user=vinum_su")
         admin_cur = admin_conn.cursor()
         admin_cur.execute('grant update on table commande to %s' % current_user.u['usager_nom'])
         admin_conn.commit()

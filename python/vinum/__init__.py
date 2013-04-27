@@ -45,7 +45,7 @@ app.handle_exception = general_error_handler
 
 @app.before_request
 def before_request():
-    g.db = psycopg2.connect("dbname=vinum user=christian",
+    g.db = psycopg2.connect("dbname=vinum user=vinum_su",
                             connection_factory=psycopg2.extras.RealDictConnection)
 
 @app.teardown_request
