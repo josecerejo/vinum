@@ -15,7 +15,7 @@ Ext.define('VIN.view.Viewport', {
                 cls: 'title',
                 componentCls: 'main_header',
                 html: '<table style="width: 100%; table-layout: fixed"><tr>' +
-                      Ext.String.format('<td style="padding: 10px">Vinum (alpha@{0})</td>', server_name) +
+                      Ext.String.format('<td style="padding: 10px">Vinum ({0}@{1})</td>', vinum_version, server_name) +
                       '<td id="dev_msg" style="font-size: 50%; border: 1px dashed; padding-left: 5px"></td>' +
                       '<td id="login_name" style="font-size: 60%" align="right"></td>' +
                       '</tr></table>'

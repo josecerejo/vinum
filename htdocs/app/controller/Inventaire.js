@@ -80,10 +80,8 @@ Ext.define('VIN.controller.Inventaire', {
                             url: ajax_url_prefix + '/inventaire/save',
                             success: function(_form, action) {
 
-                                // to no_inv and prices field values (which are readonly)
-                                form.down('#no_inventaire_tf').setValue(action.result.data.no_inventaire);
-                                form.down('#prix_restaurant_tf').setValue(action.result.data.prix_restaurant);
-                                form.down('#prix_particulier_tf').setValue(action.result.data.prix_particulier);
+                                // update no_inv, price fields, etc.
+                                form.loadRecord(action.result);
 
                                 var cb = function(records, operation, success) {
                                     // reset selection state before load

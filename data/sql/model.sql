@@ -149,8 +149,8 @@ create table inventaire (
     no_produit_interne integer not null references produit,
     no_produit_saq integer,
     no_demande_saq text,
-    quantite_commandee integer,
-    quantite_recue integer,
+    quantite_commandee_en_caisses integer,
+    quantite_recue_en_bouteilles integer,
     date_commande date, -- !!! this should be renamed to avoid conflict with commande
     date_recue date,
     prix_coutant numeric(1000, 2),

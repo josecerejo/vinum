@@ -167,15 +167,14 @@ Ext.define('VIN.view.inventaire.Form', {
                     },
                     items: [{
                         xtype: 'numberfield',
-                        fieldLabel: 'Solde (b)',
-                        name: 'solde_bouteille',
-                        allowBlank: true
+                        fieldLabel: 'Qté commandée (c)',
+                        name: 'quantite_commandee_en_caisses'
                     }, {
                         xtype: 'numberfield',
-                        fieldLabel: 'Solde (c)',
-                        name: 'solde_caisse',
-                        style: 'margin-left: 10px',
-                        disabled: true
+                        fieldLabel: 'Qté reçue (b)',
+                        name: 'quantite_recue_en_bouteilles',
+                        allowBlank: true,
+                        style: 'margin-left: 10px'
                     }]
                 }, {
                     layout: 'hbox',
@@ -187,14 +186,15 @@ Ext.define('VIN.view.inventaire.Form', {
                     },
                     items: [{
                         xtype: 'numberfield',
-                        fieldLabel: 'Qté commandée (b)',
-                        name: 'quantite_commandee'
+                        fieldLabel: 'Solde (c)',
+                        name: 'solde_caisse',
+                        disabled: true
                     }, {
                         xtype: 'numberfield',
-                        fieldLabel: 'Qté reçue (b)',
-                        name: 'quantite_recue',
-                        style: 'margin-left: 10px',
-                        allowBlank: true
+                        fieldLabel: 'Solde (b)',
+                        name: 'solde_bouteille',
+                        allowBlank: true,
+                        style: 'margin-left: 10px'
                     }]
                 }, {
                     layout: 'hbox',

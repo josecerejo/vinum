@@ -38,7 +38,8 @@ def save_inventaire_record():
             if f not in rf: continue
             if not rf[f] and not inv[f]: continue
             if inv[f].__class__ == float: inv[f] = '%.2f' % inv[f]
-            if unicode(str(inv[f]), 'utf8') != rf[f] and f not in ['quantite_recue', 'quantite_commandee',
+            if unicode(str(inv[f]), 'utf8') != rf[f] and f not in ['quantite_commandee_en_caisses',
+                                                                   'quantite_recue_en_bouteilles',
                                                                    'solde_bouteille', 'solde_caisse',
                                                                    'statut_inventaire']:
                 print f, inv[f], rf[f]
@@ -56,9 +57,13 @@ def save_inventaire_record():
     # ***********************************************
 
     rf['prix_restaurant'] = remove_taxes_(pc) * comm_restau_mult + timbre
+    if rf['quantite_recue_en_bouteilles'] and not rf['solde_bouteille']:
+        rf['solde_bouteille'] = rf['quantite_recue_en_bouteilles']
     qpc = pg.select1(cur, 'produit', 'quantite_par_caisse', where={'no_produit_interne': rf['no_produit_interne']})
     if rf['solde_bouteille'] and qpc:
         rf['solde_caisse'] = int(math.ceil(float(rf['solde_bouteille']) / qpc))
+    else:
+        rf['solde_caisse'] = None
     inv = pg.upsert(cur, 'inventaire', where={'no_inventaire': ni},
                     values=rf, filter_values=True, map_values={'': None})
     g.db.commit()
