@@ -16,7 +16,7 @@ if (window.location.href.indexOf('localhost') !== -1) {
     document.title = 'Vinum (local)';
 } else if (window.location.href.match(/.*\d+[.]\d+[.]\d+[.]\d+.*/)) {
     server_name = 'DigitalOcean';
-    vinum_version = 'testing';
+    vinum_version = 'test';
 } else {
     server_name = 'AWS';
 }
