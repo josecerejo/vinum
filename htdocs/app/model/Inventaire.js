@@ -58,6 +58,31 @@ Ext.define('VIN.model.Inventaire', {
         name: 'date_recue',
         type: 'date'
     }, {
+        header: 'Date de commande',
+        name: 'date_commande',
+        type: 'date'
+    }, {
+        header: 'Qté commandée (c)',
+        name: 'quantite_commandee_en_caisses',
+        type: 'int',
+        useNull: true,
+        tdCls: 'inventaire-highlighted-column'
+    }, {
+        header: '# demande SAQ',
+        name: 'no_demande_saq',
+        align: 'right'
+        // this is not an int!
+    }, {
+        header: '# produit SAQ',
+        name: 'no_produit_saq',
+        type: 'int',
+        useNull: true
+    }, {
+        header: 'Prix coûtant',
+        name: 'prix_coutant',
+        type: 'float',
+        useNull: true
+    }, {
         header: 'Qté reçue (b)',
         name: 'quantite_recue_en_bouteilles',
         type: 'int',
@@ -66,30 +91,6 @@ Ext.define('VIN.model.Inventaire', {
         header: 'Solde (b)',
         name: 'solde_bouteille',
         type: 'int',
-        useNull: true
-    }, {
-        header: '# produit SAQ',
-        name: 'no_produit_saq',
-        type: 'int',
-        useNull: true
-    }, {
-        header: '# demande SAQ',
-        name: 'no_demande_saq',
-        align: 'right'
-        // this is not an int!
-    }, {
-        header: 'Qté commandée (c)',
-        name: 'quantite_commandee_en_caisses',
-        type: 'int',
-        useNull: true
-    }, {
-        header: 'Date de commande',
-        name: 'date_commande',
-        type: 'date'
-    }, {
-        header: 'Prix coûtant',
-        name: 'prix_coutant',
-        type: 'float',
         useNull: true
     }, {
         header: 'Qté par caisse',
