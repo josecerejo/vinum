@@ -198,8 +198,14 @@ Ext.define('VIN.controller.Commande', {
             },
             '#email_facture_btn': {
                 click: function(btn) {
-                    var form = this._getFormViewInstance(btn);
 
+                    /*
+                    var pdf = window.open('test.pdf');
+                    pdf.print();
+                    return;
+                    */
+
+                    var form = this._getFormViewInstance(btn);
                     var popEmailComposeCallback = Ext.bind(function() {
                         form.email_win.document_type = 'facture';
                         var cdd = form.down('#client_dd');
