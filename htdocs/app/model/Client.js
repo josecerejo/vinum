@@ -41,7 +41,7 @@ Ext.define('VIN.model.Client', {
         header: '# téléphone personnel',
         name: 'no_tel_personnel',
     }, {
-        header: '# portable',
+        header: '# mobile',
         name: 'no_cellulaire',
     }, {
         name: 'courriel',

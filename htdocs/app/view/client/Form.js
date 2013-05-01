@@ -365,7 +365,7 @@ Ext.define('VIN.view.client.Form', {
                             flex: 1/3
                         }, {
                             xtype: 'textfield',
-                            fieldLabel: 'Portable',
+                            fieldLabel: 'Mobile',
                             name: 'no_cellulaire',
                             flex: 1/3
                         }, {

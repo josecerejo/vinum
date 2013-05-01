@@ -7,8 +7,9 @@ from appy.pod.renderer import Renderer
 def _get_rapport_vente_data(request):
     q = """ select ci.no_produit_interne, p.type_vin, p.nom_domaine, p.format,
                    p.quantite_par_caisse, sum(ci.quantite_caisse) as quantite_caisse,
-                   sum(ci.quantite_bouteille) as quantite_bouteille, sum(o.montant) as montant,
-                   sum(o.sous_total) as sous_total, sum(o.tps) as tps, sum(o.tvq) as tvq
+                   sum(ci.quantite_bouteille) as quantite_bouteille, o.no_commande_facture,
+                   sum(o.montant) as montant, sum(o.sous_total) as sous_total,
+                   sum(o.tps) as tps, sum(o.tvq) as tvq
             from produit p
             inner join commande_item ci on ci.no_produit_interne = p.no_produit_interne
             inner join commande o on o.no_commande_facture = ci.no_commande_facture
@@ -24,7 +25,8 @@ def _get_rapport_vente_data(request):
     if request.args['type_client']:
         q += ' and type_client = %s'
         qvals.append(request.args['type_client'])
-    q += """ group by type_vin, nom_domaine, format, quantite_par_caisse, ci.no_produit_interne
+    q += """ group by type_vin, nom_domaine, format, quantite_par_caisse,
+             ci.no_produit_interne, o.no_commande_facture
              order by type_vin"""
     cur = g.db.cursor()
     cur.execute(q, qvals)
@@ -73,15 +75,24 @@ def download_rapport_vente():
     type_client = request.args['type_client'] if request.args['type_client'] else 'tous'
     rows = _get_rapport_vente_data(request)
     items = []
-    totals = [0] * 6
+    qte_totals = [0, 0]
+    commande_totals_map = {} # ncf -> [0, 0, 0, 0]
     for row in rows:
         row['nom_domaine'] = row['nom_domaine'] if row['nom_domaine'] else ''
         items.append([row[c] for c in ['type_vin', 'nom_domaine', 'format', 'quantite_par_caisse', 'quantite_caisse']])
-        for i, f in enumerate(['quantite_caisse', 'quantite_bouteille', 'montant', 'sous_total', 'tps', 'tvq']):
-            totals[i] += row[f] if row[f] else 0
-    totals[2:] = [as_currency(v) for v in totals[2:]]
+        for i, f in enumerate(['quantite_caisse', 'quantite_bouteille']):
+            qte_totals[i] += row[f] if row[f] else 0
+        if row['no_commande_facture'] not in commande_totals_map:
+            commande_totals_map[row['no_commande_facture']] = []
+            for f in ['montant', 'sous_total', 'tps', 'tvq']:
+                commande_totals_map[row['no_commande_facture']].append(row[f] if row[f] else 0)
+    commande_totals = [0, 0, 0, 0]
+    for vals in commande_totals_map.values():
+        for i in range(4):
+            commande_totals[i] += vals[i]
+    commande_totals = [as_currency(v) for v in commande_totals]
     doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
-                  'type_client': type_client, 'items': items, 'totals': totals}
+                  'type_client': type_client, 'items': items, 'totals': qte_totals + commande_totals}
     out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client,
                                                                     'odt' if hasattr(app, 'is_dev') else 'pdf')
     ren = Renderer('/home/christian/vinum/docs/rapport_des_ventes.odt', doc_values,

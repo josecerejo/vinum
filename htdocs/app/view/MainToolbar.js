@@ -37,7 +37,42 @@ Ext.define('VIN.view.MainToolbar', {
             text: 'Tous les clients',
             iconCls: 'table-icon',
             id: 'list_clients_menu_itm'
-        }]
+        }/*, {
+            text: 'Bottin',
+            iconCls: 'report-icon',
+            menu: {
+                items: [{
+                    xtype: 'combo',
+                    emptyText: 'Représentant',
+                    displayField: 'representant_nom',
+                    name: 'representant_nom',
+                    itemId: 'representant_nom_dd',
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['representant_nom'],
+                        proxy: {
+                            type: 'ajax',
+                            limitParam: undefined,
+                            pageParam: undefined,
+                            startParam: undefined,
+                            url: ajax_url_prefix + '/misc/get_representants',
+                            reader: {
+                                type: 'json',
+                                root: 'rows'
+                            }
+                        }
+                    }),
+                    minChars: 3,
+                    forceSelection: false,
+                    listConfig: {
+                        loadingText: 'Recherche...',
+                        emptyText: 'Aucun représentant ne correspond à cette recherche..'
+                    }
+                }, {
+                    text: 'Télécharger',
+                    iconCls: 'disk-icon'
+                }]
+            }
+        }*/]
     }, {
         text: 'Produits',
         iconCls: 'produits-icon',
