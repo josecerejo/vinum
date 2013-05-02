@@ -178,7 +178,7 @@ Ext.define('VIN.controller.Commande', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     var showPreviewCallback = function() {
-                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&_dc={2}',
+                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&logo=1&_dc={2}',
                                                     ajax_url_prefix, form.down('#no_commande_facture_tf').getValue(),
                                                     Ext.Number.randomInt(1000, 100000));
                         window.open(url, '_blank');
@@ -359,29 +359,16 @@ Ext.define('VIN.controller.Commande', {
                     this.createCommandeForm(record);
                 }
             },
-            '#facture_print_btn': {
+            '#facture_print_logo_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    var popPrintDialogCallback = function() {
-                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&_dc={2}',
-                                                    ajax_url_prefix, form.down('#no_commande_facture_tf').getValue(),
-                                                    Ext.Number.randomInt(1000, 100000));
-                        window.open(url).print();
-                    };
-                    form.down('#facture_est_envoyee_hidden').setValue('true');
-                    if (current_user.representant_id) {
-                        popPrintDialogCallback();
-                        // if the user is a repr, we need to set the commande.facture_est_envoyee
-                        // using this separated proc, given that saveCommande wasn't used
-                        form.submit({
-                            url: ajax_url_prefix + '/representant/set_facture_est_envoyee',
-                            params: {
-                                no_commande_facture: form.down('#no_commande_facture_tf').getValue()
-                            }
-                        });
-                    } else {
-                        this.saveCommandeFormPart(form, popPrintDialogCallback);
-                    }
+                    this.printFacture(form, true);
+                }
+            },
+            '#facture_print_no_logo_btn': {
+                click: function(btn) {
+                    var form = this._getFormViewInstance(btn);
+                    this.printFacture(form, false);
                 }
             },
             '#save_commande_btn': {
@@ -748,6 +735,29 @@ Ext.define('VIN.controller.Commande', {
             Ext.getCmp('main_pnl').add(cg);
         }
         Ext.getCmp('main_pnl').setActiveTab(cg);
+    },
+
+    printFacture: function(form, with_logo) {
+        var popPrintDialogCallback = function() {
+            var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&logo={2}&_dc={3}',
+                                        ajax_url_prefix, form.down('#no_commande_facture_tf').getValue(),
+                                        with_logo ? '1' : '0', Ext.Number.randomInt(1000, 100000));
+            window.open(url).print();
+        };
+        form.down('#facture_est_envoyee_hidden').setValue('true');
+        if (current_user.representant_id) {
+            popPrintDialogCallback();
+            // if the user is a repr, we need to set the commande.facture_est_envoyee
+            // using this separated proc, given that saveCommande wasn't used
+            form.submit({
+                url: ajax_url_prefix + '/representant/set_facture_est_envoyee',
+                params: {
+                    no_commande_facture: form.down('#no_commande_facture_tf').getValue()
+                }
+            });
+        } else {
+            this.saveCommandeFormPart(form, popPrintDialogCallback);
+        }
     }
 
 });

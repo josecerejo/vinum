@@ -126,8 +126,16 @@ Ext.define('VIN.view.commande.Form', {
                     iconCls: 'email-icon'
                 }, {
                     text: 'Imprimer',
-                    itemId: 'facture_print_btn',
-                    iconCls: 'printer-icon'
+                    iconCls: 'printer-icon',
+                    menu: [{
+                        text: 'Avec logo',
+                        itemId: 'facture_print_logo_btn',
+                        iconCls: 'bullet-add-icon'
+                    }, {
+                        text: 'Sans logo',
+                        itemId: 'facture_print_no_logo_btn',
+                        iconCls: 'bullet-delete-icon'
+                    }]
                 }]
             }]
         };

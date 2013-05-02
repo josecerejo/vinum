@@ -280,7 +280,7 @@ def update_commande_item():
     return {'success': True, 'data': ci}
 
 
-def _generate_facture(g, ncf):
+def _generate_facture(g, ncf, with_logo=True):
     cursor = g.db.cursor()
     commande = pg.select1r(cursor, 'commande', where={'no_commande_facture':ncf})
     client = pg.select1r(cursor, 'client', where={'no_client': commande['no_client']})
@@ -302,7 +302,7 @@ def _generate_facture(g, ncf):
     for f in ['sous_total', 'tps', 'tvq', 'montant']:
         doc_values[f] = locale.currency(doc_values[f])
     out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, 'odt' if hasattr(app, 'is_dev') else 'pdf')
-    tmpl_fn = 'facture.odt' if client['mode_facturation'] == 'courriel' else 'facture_sans_logo.odt'
+    tmpl_fn = 'facture.odt' if with_logo else 'facture_sans_logo.odt'
     ren = Renderer('/home/christian/vinum/docs/%s' % tmpl_fn, doc_values,
                    out_fn, overwriteExisting=True)
     ren.run()
@@ -354,7 +354,7 @@ def _generate_bdc(g, ncf):
 @login_required
 def download_facture():
     ncf = request.args['no_commande_facture']
-    out_fn = _generate_facture(g, ncf)
+    out_fn = _generate_facture(g, ncf, request.args['logo']=='1')
     return send_file(out_fn,
                      mimetype='application/pdf',
                      attachment_filename='vinum_facture_%s.%s' % (ncf, 'pdf'),
@@ -382,7 +382,10 @@ def email_facture():
     to_list = re.split('[ ,;:\t\n]+', request.form['email_addresses'])
     msg['To'] = COMMASPACE.join(to_list)
     msg['Reply-to'] = 'commande@roucet.com'
-    msg.attach(MIMEText(request.form['msg'].encode(enc), 'plain', enc))
+    try:
+        msg.attach(MIMEText(request.form['msg'].encode(enc), 'plain', enc))
+    except:
+        msg.attach(MIMEText(request.form['msg'].encode('utf8'), 'plain', 'utf8'))
     if 'include_pdf' in request.form:
         out_fn = _generate_facture(g, request.form['no_commande_facture'])
         part = MIMEApplication(open(out_fn, "rb").read())
