@@ -131,7 +131,7 @@ Ext.define('VIN.view.client.Form', {
                                 limitParam: undefined,
                                 pageParam: undefined,
                                 startParam: undefined,
-                                url: ajax_url_prefix + '/misc/get_representants',
+                                url: ajax_url_prefix + '/representant/get_representants',
                                 reader: {
                                     type: 'json',
                                     root: 'rows'

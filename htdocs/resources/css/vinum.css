@@ -168,6 +168,10 @@
     background: url(../images/icons/page_white_acrobat.png) no-repeat !important;
 }
 
+.printer-icon {
+    background: url(../images/icons/printer.png) no-repeat !important;
+}
+
 .nav-menu {
     padding: 0 3px 0 3px;
 }

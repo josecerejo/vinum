@@ -177,12 +177,19 @@ Ext.define('VIN.controller.Commande', {
             '#preview_facture_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    this.saveCommandeFormPart(form, Ext.bind(function() {
+                    var showPreviewCallback = function() {
                         var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&_dc={2}',
                                                     ajax_url_prefix, form.down('#no_commande_facture_tf').getValue(),
                                                     Ext.Number.randomInt(1000, 100000));
                         window.open(url, '_blank');
-                    }, this));
+                    };
+                    if (current_user.representant_id) {
+                        // if repr, do not save
+                        showPreviewCallback();
+                    } else {
+                        // if admin, save then preview
+                        this.saveCommandeFormPart(form, showPreviewCallback);
+                    }
                 }
             },
             '#preview_bdc_btn': {
@@ -198,13 +205,6 @@ Ext.define('VIN.controller.Commande', {
             },
             '#email_facture_btn': {
                 click: function(btn) {
-
-                    /*
-                    var pdf = window.open('test.pdf');
-                    pdf.print();
-                    return;
-                    */
-
                     var form = this._getFormViewInstance(btn);
                     var popEmailComposeCallback = Ext.bind(function() {
                         form.email_win.document_type = 'facture';
@@ -278,11 +278,12 @@ Ext.define('VIN.controller.Commande', {
                     var ew = btn.up('#email_win');
                     var form = ew.parent_form;
                     var ef = ew.down('#email_f');
+                    var ncf = form.down('#no_commande_facture_tf').getValue();
                     if (ef.getForm().isValid()) {
                         wait_mask.show();
                         ef.submit({
                             params: {
-                                no_commande_facture: form.down('#no_commande_facture_tf').getValue()
+                                no_commande_facture: ncf
                             },
                             success: function(_form, action) {
                                 wait_mask.hide();
@@ -293,8 +294,19 @@ Ext.define('VIN.controller.Commande', {
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
                                 });
-                                form.down(Ext.String.format('#email_{0}_btn',
-                                                            form.email_win.document_type)).setIconCls('tick-icon');
+                                form.down('#facture_est_envoyee_hidden').setValue('true');
+                                // if the user is a repr, we need to set the commande.facture_est_envoyee 
+                                // using this separated proc, given that saveCommande wasn't used
+                                if (current_user.representant_id) {
+                                    form.submit({
+                                        url: ajax_url_prefix + '/representant/set_facture_est_envoyee',
+                                        params: {
+                                            no_commande_facture: form.down('#no_commande_facture_tf').getValue()
+                                        }
+                                    });
+                                }
+                                // form.down(Ext.String.format('#email_{0}_btn',
+                                //                             form.email_win.document_type)).setIconCls('tick-icon');
                             }
                         });
                     }
@@ -347,16 +359,29 @@ Ext.define('VIN.controller.Commande', {
                     this.createCommandeForm(record);
                 }
             },
-            '#facture_poste_btn': {
+            '#facture_print_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
-                    form.down('#facture_poste_btn').setIconCls(btn.pressed ? 'tick-icon' : 'poste-icon');
-                    // Ext.Msg.show({
-                    //     title: 'Vinum',
-                    //     msg: btn.pressed ? "La facture a été envoyée électroniquement à Postes Canada, pour impression suivi d'un envoi par la poste régulière." : 'Il est malheureusement trop tard pour annuler, car la facture est déjà en cours d\'envoi par la poste régulière.',
-                    //     icon: Ext.MessageBox.INFO,
-                    //     buttons: Ext.MessageBox.OK
-                    // });
+                    var popPrintDialogCallback = function() {
+                        var url = Ext.String.format('{0}/commande/download_facture?no_commande_facture={1}&attach=0&_dc={2}',
+                                                    ajax_url_prefix, form.down('#no_commande_facture_tf').getValue(),
+                                                    Ext.Number.randomInt(1000, 100000));
+                        window.open(url).print();
+                    };
+                    form.down('#facture_est_envoyee_hidden').setValue('true');
+                    if (current_user.representant_id) {
+                        popPrintDialogCallback();
+                        // if the user is a repr, we need to set the commande.facture_est_envoyee
+                        // using this separated proc, given that saveCommande wasn't used
+                        form.submit({
+                            url: ajax_url_prefix + '/representant/set_facture_est_envoyee',
+                            params: {
+                                no_commande_facture: form.down('#no_commande_facture_tf').getValue()
+                            }
+                        });
+                    } else {
+                        this.saveCommandeFormPart(form, popPrintDialogCallback);
+                    }
                 }
             },
             '#save_commande_btn': {
@@ -565,9 +590,6 @@ Ext.define('VIN.controller.Commande', {
             var cdd = form.down('#client_dd');
             var cr = cdd.findRecordByDisplay(cdd.getValue());
             var params = {no_client: cr.get('no_client')};
-            if (cr.get('mode_facturation') === 'poste') {
-                params['facture_est_envoyee'] = form.down('#facture_poste_btn').pressed;
-            }
             form.submit({
                 url: ajax_url_prefix + '/commande/save',
                 params: params,
@@ -628,6 +650,7 @@ Ext.define('VIN.controller.Commande', {
     getLoadClientPartOfCommmandeFormCallback: function(form, commande_rec) {
         return Ext.bind(function(form, client_rec) {
             this.loadClientProduits(form);
+            /*
             form.down('#email_facture_btn').setDisabled(client_rec.get('mode_facturation') === 'poste');
             form.down('#facture_poste_btn').setDisabled(client_rec.get('mode_facturation') === 'courriel');
             // commande_rec might or might not have been defined (by the close creation call)
@@ -644,6 +667,7 @@ Ext.define('VIN.controller.Commande', {
                     form.down('#email_bon_de_commande_btn').setIconCls('tick-icon');
                 }
             }
+            */
         }, this);
     },
 

@@ -125,10 +125,9 @@ Ext.define('VIN.view.commande.Form', {
                     itemId: 'email_facture_btn',
                     iconCls: 'email-icon'
                 }, {
-                    text: 'Envoyer par la poste',
-                    itemId: 'facture_poste_btn',
-                    iconCls: 'poste-icon',
-                    enableToggle: true
+                    text: 'Imprimer',
+                    itemId: 'facture_print_btn',
+                    iconCls: 'printer-icon'
                 }]
             }]
         };
@@ -145,6 +144,10 @@ Ext.define('VIN.view.commande.Form', {
             layout: 'hbox',
             items: [{
                 items: [{
+                    xtype: 'hidden',
+                    name: 'facture_est_envoyee',
+                    itemId: 'facture_est_envoyee_hidden'
+                }, {
                     // -----------------------------------------------------
                     // left part panel
                     xtype: 'fieldset',
