@@ -192,7 +192,6 @@ Ext.define('VIN.view.commande.Form', {
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Type',
-                            itemId: 'type_client_tf',
                             name: 'type_client',
                             flex: 0.2,
                             readOnly: true,
@@ -205,13 +204,20 @@ Ext.define('VIN.view.commande.Form', {
                         defaults: {
                             padding: 5
                         },
-                        items: {
-                            flex: 1,
+                        items: [{
+                            flex: 0.8,
                             xtype: 'textfield',
                             fieldLabel: 'Notes (client)',
                             name: 'note_client',
                             disabled: true
-                        }
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Facturation',
+                            name: 'mode_facturation',
+                            flex: 0.2,
+                            readOnly: true,
+                            cls: 'x-item-disabled'
+                        }]
                     }, {
                         layout: 'hbox',
                         defaults: {
