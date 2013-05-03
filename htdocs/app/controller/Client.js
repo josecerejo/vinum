@@ -109,6 +109,12 @@ Ext.define('VIN.controller.Client', {
                         ns_filter.setActive(false);
                     }
                 }
+            },
+
+            '#client_grid_add_btn': {
+                click: function(btn) {
+                    this.createClientForm();
+                }
             }
 
         });
@@ -220,18 +226,28 @@ Ext.define('VIN.controller.Client', {
                 dockedItems: {
                     xtype: 'toolbar',
                     dock: 'top',
-                    items: {
+                    items: [{
+                        text: 'Créer un client',
+                        iconCls: 'add-icon',
+                        itemId: 'client_grid_add_btn'
+                    }, {
                         xtype: 'textfield',
                         enableKeyEvents: true,
                         emptyText: 'Filtrer les clients (par nom social)',
                         itemId: 'nom_social_external_filter_tf',
                         width: 250
-                    }
+                    }]
                 }
             });
             Ext.getCmp('main_pnl').add(cg);
         }
         Ext.getCmp('main_pnl').setActiveTab(cg);
+    },
+
+    downloadBottinRepr: function() {
+        var url = Ext.String.format('{0}/representant/download_bottin?_dc={1}',
+                                    ajax_url_prefix, Ext.Number.randomInt(1000, 100000));
+        window.open(url, '_blank');
     }
 
 });

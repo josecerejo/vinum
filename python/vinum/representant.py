@@ -1,5 +1,6 @@
 from vinum import *
 from common import *
+from appy.pod.renderer import Renderer
 
 
 @app.route('/representant/get_representants', methods=['GET'])
@@ -29,3 +30,19 @@ def set_facture_est_envoyee():
     admin_conn.close()
     g.db.commit()
     return {'success': True}
+
+
+@app.route('/representant/download_bottin', methods=['GET'])
+@login_required
+def download_bottin():
+    assert current_user.u['representant_id']
+    cur = g.db.cursor()
+    out_fn = 'bottin_des_restaurateurs_repr=%s.%s' % (current_user.u['usager_nom'], 'odt' if hasattr(app, 'is_dev') else 'pdf')
+    restos = pg.select(cur, 'client', where={'representant_id': current_user.u['representant_id'],
+                                             'type_client': 'restaurant'}, order_by='nom_social')
+    doc_values = {'items': restos}
+    ren = Renderer('/home/christian/vinum/docs/bottin.odt', doc_values,
+                   '/tmp/%s' % out_fn, overwriteExisting=True)
+    ren.run()
+    return send_file('/tmp/%s' % out_fn, mimetype='application/pdf',
+                     attachment_filename=out_fn, as_attachment=True)

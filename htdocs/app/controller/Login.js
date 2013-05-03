@@ -63,6 +63,7 @@ Ext.define('VIN.controller.Login', {
         Ext.getCmp('edit_client_menu_itm').setDisabled(u.representant_id);
         Ext.getCmp('produits_pp_menu_itm').setDisabled(u.representant_id);
         Ext.getCmp('bo_create_menu_itm').setDisabled(u.representant_id);
+        Ext.getCmp('bottin_restos_menu_itm').setDisabled(!u.representant_id);
     }
 
 });

@@ -294,19 +294,19 @@ Ext.define('VIN.controller.Commande', {
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
                                 });
-                                form.down('#facture_est_envoyee_hidden').setValue('true');
-                                // if the user is a repr, we need to set the commande.facture_est_envoyee 
-                                // using this separated proc, given that saveCommande wasn't used
-                                if (current_user.representant_id) {
-                                    form.submit({
-                                        url: ajax_url_prefix + '/representant/set_facture_est_envoyee',
-                                        params: {
-                                            no_commande_facture: form.down('#no_commande_facture_tf').getValue()
-                                        }
-                                    });
+                                if (ew.document_type === 'facture') {
+                                    form.down('#facture_est_envoyee_hidden').setValue('true');
+                                    // if the user is a repr, we need to set the commande.facture_est_envoyee
+                                    // using this separated proc, given that saveCommande wasn't used
+                                    if (current_user.representant_id) {
+                                        form.submit({
+                                            url: ajax_url_prefix + '/representant/set_facture_est_envoyee',
+                                            params: {
+                                                no_commande_facture: form.down('#no_commande_facture_tf').getValue()
+                                            }
+                                        });
+                                    }
                                 }
-                                // form.down(Ext.String.format('#email_{0}_btn',
-                                //                             form.email_win.document_type)).setIconCls('tick-icon');
                             }
                         });
                     }
@@ -357,6 +357,11 @@ Ext.define('VIN.controller.Commande', {
                 },
                 edit_click: function(grid, el, rowIndex, colIndex, e, record, rowEl) {
                     this.createCommandeForm(record);
+                }
+            },
+            '#commande_grid_add_btn': {
+                click: function(btn) {
+                    this.createCommandeForm();
                 }
             },
             '#facture_print_logo_btn': {
@@ -723,13 +728,20 @@ Ext.define('VIN.controller.Commande', {
                 dockedItems: {
                     xtype: 'toolbar',
                     dock: 'top',
-                    items: {
+                    items: [{
+                        text: 'Créer une commande',
+                        iconCls: 'add-icon',
+                        itemId: 'commande_grid_add_btn'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
                         xtype: 'textfield',
                         enableKeyEvents: true,
                         emptyText: 'Filtrer les clients (par nom social)',
                         itemId: 'nom_social_external_filter_tf',
                         width: 250
-                    }
+                    }]
                 }
             });
             Ext.getCmp('main_pnl').add(cg);

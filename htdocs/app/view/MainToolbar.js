@@ -37,9 +37,11 @@ Ext.define('VIN.view.MainToolbar', {
             text: 'Tous les clients',
             iconCls: 'table-icon',
             id: 'list_clients_menu_itm'
-        }/*, {
-            text: 'Bottin',
+        }, {
+            text: 'Bottin des restaurateurs (mes clients)',
             iconCls: 'report-icon',
+            id: 'bottin_restos_menu_itm'
+/*
             menu: {
                 items: [{
                     xtype: 'combo',
@@ -72,7 +74,8 @@ Ext.define('VIN.view.MainToolbar', {
                     iconCls: 'disk-icon'
                 }]
             }
-        }*/]
+*/
+        }]
     }, {
         text: 'Produits',
         iconCls: 'produits-icon',

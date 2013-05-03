@@ -43,6 +43,9 @@ Ext.define('VIN.controller.MainToolbar', {
                     case 'list_clients_menu_itm':
                         VIN.app.getController('Client').createClientGrid();
                         break;
+                    case 'bottin_restos_menu_itm':
+                        VIN.app.getController('Client').downloadBottinRepr();
+                        break;
                     case 'list_commandes_menu_itm':
                         VIN.app.getController('Commande').createCommandeGrid();
                         break;
