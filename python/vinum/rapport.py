@@ -2,6 +2,7 @@ from vinum import *
 from common import *
 from collections import defaultdict
 from appy.pod.renderer import Renderer
+from unidecode import unidecode
 
 
 def _get_rapport_vente_data(request):
@@ -93,6 +94,7 @@ def download_rapport_vente():
                   'type_client': type_client, 'items': items, 'totals': qte_totals + commande_totals}
     out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client,
                                                                     'odt' if hasattr(app, 'is_dev') else 'pdf')
+    out_fn = unidecode(out_fn)
     ren = Renderer('/home/christian/vinum/docs/rapport_des_ventes.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
@@ -147,6 +149,7 @@ def download_rapport_transaction():
                   'type_client': type_client, 'items': items, 'totals': totals}
     out_fn = 'rapport_des_transactions_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client,
                                                                           'odt' if hasattr(app, 'is_dev') else 'pdf')
+    out_fn = unidecode(out_fn)
     tmpl_fn = '/home/christian/vinum/docs/rapport_des_transactions.odt' if representant == 'tous' else \
         '/home/christian/vinum/docs/rapport_des_transactions_1repr.odt'
     ren = Renderer(tmpl_fn, doc_values, '/tmp/%s' % out_fn, overwriteExisting=True)

@@ -76,100 +76,103 @@ Ext.define('VIN.controller.Rapport', {
         });
         store.proxy.url = ajax_url_prefix + '/rapport/vente';
 
-        var g = Ext.create('VIN.view.Grid', {
-            itemId: 'rapport_vente_g',
-            title: 'Rapport des ventes',
-            load_after_render: false,
-            closable: true,
-            store: store,
-            column_flex: {
-                type_vin: 0.35,
-                nom_domaine: 0.35,
-                format: 0.1,
-                quantite_par_caisse: 0.1,
-                quantite_caisse: 0.1
-            },
-            dockedItems: {
-                xtype: 'toolbar',
-                dock: 'top',
-                items: [{
-                    xtype: 'datefield',
-                    emptyText: 'Date de début',
-                    itemId: 'start_date_df'
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'datefield',
-                    emptyText: 'Date de fin (opt)',
-                    itemId: 'end_date_df'
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'combo',
-                    emptyText: 'Représentant',
-                    displayField: 'representant_nom',
-                    name: 'representant_nom',
-                    itemId: 'representant_nom_dd',
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['representant_nom'],
-                        proxy: {
-                            type: 'ajax',
-                            limitParam: undefined,
-                            pageParam: undefined,
-                            startParam: undefined,
-                            url: ajax_url_prefix + '/representant/get_representants',
-                            reader: {
-                                type: 'json',
-                                root: 'rows'
+        var g = Ext.getCmp('main_pnl').down('#rapport_vente_g');
+        if (!g) {
+            g = Ext.create('VIN.view.Grid', {
+                itemId: 'rapport_vente_g',
+                title: 'Rapport des ventes',
+                load_after_render: false,
+                closable: true,
+                store: store,
+                column_flex: {
+                    type_vin: 0.35,
+                    nom_domaine: 0.35,
+                    format: 0.1,
+                    quantite_par_caisse: 0.1,
+                    quantite_caisse: 0.1
+                },
+                dockedItems: {
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    items: [{
+                        xtype: 'datefield',
+                        emptyText: 'Date de début',
+                        itemId: 'start_date_df'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'datefield',
+                        emptyText: 'Date de fin (opt)',
+                        itemId: 'end_date_df'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'combo',
+                        emptyText: 'Représentant',
+                        displayField: 'representant_nom',
+                        name: 'representant_nom',
+                        itemId: 'representant_nom_dd',
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['representant_nom'],
+                            proxy: {
+                                type: 'ajax',
+                                limitParam: undefined,
+                                pageParam: undefined,
+                                startParam: undefined,
+                                url: ajax_url_prefix + '/representant/get_representants',
+                                reader: {
+                                    type: 'json',
+                                    root: 'rows'
+                                }
                             }
+                        }),
+                        minChars: 3,
+                        forceSelection: false,
+                        listConfig: {
+                            loadingText: 'Recherche...',
+                            emptyText: 'Aucun représentant ne correspond à cette recherche..'
                         }
-                    }),
-                    minChars: 3,
-                    forceSelection: false,
-                    listConfig: {
-                        loadingText: 'Recherche...',
-                        emptyText: 'Aucun représentant ne correspond à cette recherche..'
-                    }
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'combo',
-                    name: 'type_client',
-                    itemId: 'type_client_dd',
-                    queryMode: 'local',
-                    triggerAction: 'all',
-                    displayField: 'type_client',
-                    valueField: 'type_client',
-                    emptyText: 'Type de client',
-                    forceSelection: false,
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['type_client'],
-                        data: [{type_client: 'restaurant'},
-                               {type_client: 'particulier'}]
-                    })
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'button',
-                    iconCls: 'cog-icon',
-                    text: 'Voir les données',
-                    itemId: 'run_rapport_vente_btn'
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'button',
-                    iconCls: 'disk-icon',
-                    text: 'Télécharger le rapport',
-                    itemId: 'download_rapport_vente_btn'
-                }]
-            }
-        });
-        Ext.getCmp('main_pnl').add(g);
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'combo',
+                        name: 'type_client',
+                        itemId: 'type_client_dd',
+                        queryMode: 'local',
+                        triggerAction: 'all',
+                        displayField: 'type_client',
+                        valueField: 'type_client',
+                        emptyText: 'Type de client',
+                        forceSelection: false,
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['type_client'],
+                            data: [{type_client: 'restaurant'},
+                                   {type_client: 'particulier'}]
+                        })
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'button',
+                        iconCls: 'cog-icon',
+                        text: 'Voir les données',
+                        itemId: 'run_rapport_vente_btn'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'button',
+                        iconCls: 'disk-icon',
+                        text: 'Télécharger le rapport',
+                        itemId: 'download_rapport_vente_btn'
+                    }]
+                }
+            });
+            Ext.getCmp('main_pnl').add(g);
+        }
         Ext.getCmp('main_pnl').setActiveTab(g);
     },
 
@@ -211,93 +214,96 @@ Ext.define('VIN.controller.Rapport', {
         });
         store.proxy.url = ajax_url_prefix + '/rapport/transaction';
 
-        var g = Ext.create('VIN.view.Grid', {
-            itemId: 'rapport_transaction_g',
-            title: 'Rapport des transactions',
-            load_after_render: false,
-            closable: true,
-            store: store,
-            column_flex: {
-            },
-            dockedItems: {
-                xtype: 'toolbar',
-                dock: 'top',
-                items: [{
-                    xtype: 'datefield',
-                    emptyText: 'Date de début',
-                    itemId: 'start_date_df'
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'datefield',
-                    emptyText: 'Date de fin (opt)',
-                    itemId: 'end_date_df'
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'combo',
-                    emptyText: 'Représentant',
-                    displayField: 'representant_nom',
-                    name: 'representant_nom',
-                    itemId: 'representant_nom_dd',
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['representant_nom'],
-                        proxy: {
-                            type: 'ajax',
-                            limitParam: undefined,
-                            pageParam: undefined,
-                            startParam: undefined,
-                            url: ajax_url_prefix + '/representant/get_representants',
-                            reader: {
-                                type: 'json',
-                                root: 'rows'
+        var g = Ext.getCmp('main_pnl').down('#rapport_transaction_g');
+        if (!g) {
+            g = Ext.create('VIN.view.Grid', {
+                itemId: 'rapport_transaction_g',
+                title: 'Rapport des transactions',
+                load_after_render: false,
+                closable: true,
+                store: store,
+                column_flex: {
+                },
+                dockedItems: {
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    items: [{
+                        xtype: 'datefield',
+                        emptyText: 'Date de début',
+                        itemId: 'start_date_df'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'datefield',
+                        emptyText: 'Date de fin (opt)',
+                        itemId: 'end_date_df'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'combo',
+                        emptyText: 'Représentant',
+                        displayField: 'representant_nom',
+                        name: 'representant_nom',
+                        itemId: 'representant_nom_dd',
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['representant_nom'],
+                            proxy: {
+                                type: 'ajax',
+                                limitParam: undefined,
+                                pageParam: undefined,
+                                startParam: undefined,
+                                url: ajax_url_prefix + '/representant/get_representants',
+                                reader: {
+                                    type: 'json',
+                                    root: 'rows'
+                                }
                             }
+                        }),
+                        minChars: 3,
+                        forceSelection: false,
+                        listConfig: {
+                            loadingText: 'Recherche...',
+                            emptyText: 'Aucun représentant ne correspond à cette recherche..'
                         }
-                    }),
-                    minChars: 3,
-                    forceSelection: false,
-                    listConfig: {
-                        loadingText: 'Recherche...',
-                        emptyText: 'Aucun représentant ne correspond à cette recherche..'
-                    }
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'combo',
-                    name: 'type_client',
-                    itemId: 'type_client_dd',
-                    queryMode: 'local',
-                    triggerAction: 'all',
-                    displayField: 'type_client',
-                    valueField: 'type_client',
-                    emptyText: 'Type de client',
-                    forceSelection: false,
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['type_client'],
-                        data: [{type_client: 'restaurant'},
-                               {type_client: 'particulier'}]
-                    })
-                }, {
-                    xtype: 'button',
-                    iconCls: 'cog-icon',
-                    text: 'Voir les données',
-                    itemId: 'run_rapport_transaction_btn',
-                    disabled: true
-                }, {
-                    xtype: 'tbspacer',
-                    width: 5
-                }, {
-                    xtype: 'button',
-                    iconCls: 'disk-icon',
-                    text: 'Télécharger le rapport',
-                    itemId: 'download_rapport_transaction_btn'
-                }]
-            }
-        });
-        Ext.getCmp('main_pnl').add(g);
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'combo',
+                        name: 'type_client',
+                        itemId: 'type_client_dd',
+                        queryMode: 'local',
+                        triggerAction: 'all',
+                        displayField: 'type_client',
+                        valueField: 'type_client',
+                        emptyText: 'Type de client',
+                        forceSelection: false,
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['type_client'],
+                            data: [{type_client: 'restaurant'},
+                                   {type_client: 'particulier'}]
+                        })
+                    }, {
+                        xtype: 'button',
+                        iconCls: 'cog-icon',
+                        text: 'Voir les données',
+                        itemId: 'run_rapport_transaction_btn',
+                        disabled: true
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'button',
+                        iconCls: 'disk-icon',
+                        text: 'Télécharger le rapport',
+                        itemId: 'download_rapport_transaction_btn'
+                    }]
+                }
+            });
+            Ext.getCmp('main_pnl').add(g);
+        }
         Ext.getCmp('main_pnl').setActiveTab(g);
     }
 
