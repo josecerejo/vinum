@@ -123,7 +123,7 @@ Ext.define('VIN.field.PriceField', {
 Ext.application({
     name: 'VIN',
     controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur',
-                  'Login', 'Rapport', 'Backorder', 'Succursale'],
+                  'Login', 'Rapport', 'Backorder', 'Succursale', 'Visu'],
     autoCreateViewport: true,
     launch: function() {
 
