@@ -44,13 +44,13 @@ def _save_commande(cursor, rf):
         rf['date_direct'] = None
         rf['no_succursale_saq'] = None
     return pg.upsert(cursor, 'commande', where={'no_commande_facture': ncf},
-                     values=rf, filter_values=True, map_values={'': None}, debug_print=True)
+                     values=rf, filter_values=True, map_values={'': None})
 
 
 def _update_commande(cursor, ncf):
     # here it seems that there is no need to restrict on statut=BO, because those have their mc/qb fields set to null
     sous_total = pg.select(g.db.cursor(), 'commande_item', what={'sum(montant_commission * quantite_bouteille)': 'st'},
-                           where={'no_commande_facture': ncf}, debug_print=True)[0]['st'] or 0
+                           where={'no_commande_facture': ncf})[0]['st'] or 0
     tps = sous_total * TPS
     tvq = sous_total * TVQ
     montant = sous_total + tps + tvq
@@ -233,7 +233,8 @@ def remove_item_from_commande():
         # statut_item=='BO'
         npi = rf['no_produit_interne']
         pg.delete(cursor, 'commande_item',
-                  where={'no_commande_facture': ncf, 'no_produit_interne': npi},
+                  where={'no_commande_facture': ncf, 'no_produit_interne': npi,
+                         'statut_item': 'BO'},
                   tighten_sequence=True)
     _update_commande(cursor, ncf)
     g.db.commit()
@@ -297,10 +298,10 @@ def _generate_facture(g, ncf, with_logo=True):
     for row in rows:
         nom = '%s %s' % (row['type_vin'], row['nom_domaine'] or '')
         doc_values['elems'].append([row['quantite_bouteille'], nom, row['nom_producteur'], row['millesime'],
-                                    row['no_produit_saq'], row['format'], locale.currency(row['montant_commission']),
-                                    locale.currency(row['montant_commission'] * row['quantite_bouteille'])])
+                                    row['no_produit_saq'], row['format'], as_currency(row['montant_commission']),
+                                    as_currency(row['montant_commission'] * row['quantite_bouteille'])])
     for f in ['sous_total', 'tps', 'tvq', 'montant']:
-        doc_values[f] = locale.currency(doc_values[f])
+        doc_values[f] = as_currency(doc_values[f])
     out_fn = '/tmp/vinum_facture_%s.%s' % (ncf, 'odt' if hasattr(app, 'is_dev') else 'pdf')
     tmpl_fn = 'facture.odt' if with_logo else 'facture_sans_logo.odt'
     ren = Renderer('/home/christian/vinum/docs/%s' % tmpl_fn, doc_values,
