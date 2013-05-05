@@ -120,6 +120,14 @@ Ext.define('VIN.view.MainToolbar', {
             iconCls: 'table-icon',
             id: 'succ_saq_menu_itm'
         }]
+    }, {
+        text: 'Visualisation',
+        iconCls: 'chart-bar-icon',
+        menu: [{
+            text: "Chiffre d'affaires annuel",
+            iconCls: 'chart-curve-icon',
+            id: 'visu_ventes_menu_itm'
+        }]
     }]
 
 });
