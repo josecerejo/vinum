@@ -8,13 +8,13 @@ Ext.define('VIN.model.Client', {
         type: 'int',
         useNull: true
     }, {
+        header: 'Nom social',
+        name: 'nom_social'
+    }, {
         header: '# SAQ',
         name: 'no_client_saq',
         type: 'int',
         useNull: true
-    }, {
-        header: 'Nom social',
-        name: 'nom_social'
     }, {
         header: '# civique',
         name: 'no_civique',

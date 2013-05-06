@@ -115,7 +115,36 @@ Ext.define('VIN.controller.Client', {
                 click: function(btn) {
                     this.createClientForm();
                 }
+            },
+
+            '#client_grid_repr_filter_dd': {
+                change: function(field, records, eopts) {
+                    var g = field.up('#client_g');
+                    var filter = g.filters.getFilter('representant_nom');
+                    if (field.getValue()) {
+                        filter.setValue(field.getValue());
+                        filter.setActive(true);
+                    } else {
+                        filter.setValue('');
+                        filter.setActive(false);
+                    }
+                }
+            },
+
+            '#client_grid_type_client_filter_dd': {
+                change: function(field, records, eopts) {
+                    var g = field.up('#client_g');
+                    var filter = g.filters.getFilter('type_client');
+                    if (field.getValue()) {
+                        filter.setValue(field.getValue());
+                        filter.setActive(true);
+                    } else {
+                        filter.setValue('');
+                        filter.setActive(false);
+                    }
+                }
             }
+
 
         });
     },
@@ -214,10 +243,10 @@ Ext.define('VIN.controller.Client', {
                 add_edit_actioncolumn: true,
                 add_delete_actioncolumn: true,
                 column_flex: {
-                    no_client: 0.1,
+                    nom_social: 0.3,
                     no_client_saq: 0.1,
-                    nom_social: 0.4,
-                    representant_nom: 0.15,
+                    type_client: 0.1,
+                    representant_nom: 0.2,
                     expedition: 0.1,
                     mode_facturation: 0.1,
                     mode_facturation_note: 0.1,
@@ -233,9 +262,56 @@ Ext.define('VIN.controller.Client', {
                     }, {
                         xtype: 'textfield',
                         enableKeyEvents: true,
-                        emptyText: 'Filtrer les clients (par nom social)',
+                        emptyText: 'Nom social',
                         itemId: 'nom_social_external_filter_tf',
                         width: 250
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'combo',
+                        emptyText: 'Représentant',
+                        displayField: 'representant_nom',
+                        itemId: 'client_grid_repr_filter_dd',
+                        name: 'representant_nom',
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['representant_nom'],
+                            proxy: {
+                                type: 'ajax',
+                                limitParam: undefined,
+                                pageParam: undefined,
+                                startParam: undefined,
+                                url: ajax_url_prefix + '/representant/get_representants',
+                                reader: {
+                                    type: 'json',
+                                    root: 'rows'
+                                }
+                            }
+                        }),
+                        minChars: 3,
+                        forceSelection: false,
+                        listConfig: {
+                            loadingText: 'Recherche...',
+                            emptyText: 'Aucun représentant ne correspond à cette recherche..'
+                        }
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'combo',
+                        name: 'type_client',
+                        queryMode: 'local',
+                        triggerAction: 'all',
+                        emptyText: 'Type de client',
+                        displayField: 'type_client',
+                        valueField: 'type_client',
+                        itemId: 'client_grid_type_client_filter_dd',
+                        //forceSelection: true,
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['type_client'],
+                            data: [{type_client: 'restaurant'},
+                                   {type_client: 'particulier'}]
+                        })
                     }]
                 }
             });
