@@ -83,14 +83,14 @@ Ext.define('VIN.view.Grid', {
                 // char filter is used; for other types like combo for instance, the problem is more
                 // apparent; so what this does is simply to set an empty filter on the first string/auto
                 // filter found in the grid, so that the first time the user use ANY filter, it's actually the second!
-                for (var i = 0; i < grid.columns.length; i++) {
-                    var filter = grid.filters.getFilter(grid.columns[i].dataIndex);
-                    if (filter && filter.type === 'auto') {
-                        filter.setValue('');
-                        filter.setActive(true);
-                        break;
-                    }
-                }
+                // for (var i = 0; i < grid.columns.length; i++) {
+                //     var filter = grid.filters.getFilter(grid.columns[i].dataIndex);
+                //     if (filter && filter.type === 'auto') {
+                //         filter.setValue('');
+                //         filter.setActive(true);
+                //         break;
+                //     }
+                // }
                 if (this.load_after_render) {
                     grid.getStore().load();
                 }
