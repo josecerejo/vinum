@@ -97,6 +97,12 @@ Ext.define('VIN.controller.Client', {
                 }
             },
 
+            '#client_g #add_btn': {
+                click: function(btn) {
+                    this.createClientForm();
+                }
+            },
+
             '#client_g #nom_social_external_filter_tf': {
                 keyup: function(tf, e, opts) {
                     var g = tf.up('#client_g');
@@ -111,37 +117,17 @@ Ext.define('VIN.controller.Client', {
                 }
             },
 
-            '#client_grid_add_btn': {
-                click: function(btn) {
-                    this.createClientForm();
+            '#client_g #repr_external_filter_dd': {
+                change: function(field, records, eopts) {
+                    var g = field.up('#client_g');
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'representant_nom');
                 }
             },
 
-            '#client_grid_repr_filter_dd': {
+            '#client_g #type_client_external_filter_dd': {
                 change: function(field, records, eopts) {
                     var g = field.up('#client_g');
-                    var filter = g.filters.getFilter('representant_nom');
-                    if (field.getValue()) {
-                        filter.setValue(field.getValue());
-                        filter.setActive(true);
-                    } else {
-                        filter.setValue('');
-                        filter.setActive(false);
-                    }
-                }
-            },
-
-            '#client_grid_type_client_filter_dd': {
-                change: function(field, records, eopts) {
-                    var g = field.up('#client_g');
-                    var filter = g.filters.getFilter('type_client');
-                    if (field.getValue()) {
-                        filter.setValue(field.getValue());
-                        filter.setActive(true);
-                    } else {
-                        filter.setValue('');
-                        filter.setActive(false);
-                    }
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'type_client');
                 }
             }
 
@@ -258,7 +244,7 @@ Ext.define('VIN.controller.Client', {
                     items: [{
                         text: 'Créer un client',
                         iconCls: 'add-icon',
-                        itemId: 'client_grid_add_btn'
+                        itemId: 'add_btn'
                     }, {
                         xtype: 'textfield',
                         enableKeyEvents: true,
@@ -272,7 +258,7 @@ Ext.define('VIN.controller.Client', {
                         xtype: 'combo',
                         emptyText: 'Représentant',
                         displayField: 'representant_nom',
-                        itemId: 'client_grid_repr_filter_dd',
+                        itemId: 'repr_external_filter_dd',
                         name: 'representant_nom',
                         store: Ext.create('Ext.data.Store', {
                             fields: ['representant_nom'],
@@ -305,7 +291,7 @@ Ext.define('VIN.controller.Client', {
                         emptyText: 'Type de client',
                         displayField: 'type_client',
                         valueField: 'type_client',
-                        itemId: 'client_grid_type_client_filter_dd',
+                        itemId: 'type_client_external_filter_dd',
                         //forceSelection: true,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['type_client'],

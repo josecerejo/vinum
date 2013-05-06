@@ -50,6 +50,20 @@ Ext.define('VIN.controller.Backorder', {
                     var rec = Ext.create('VIN.model.Backorder', f.getForm().getFieldValues());
                     this.deleteBO(rec);
                 }
+            },
+
+            '#backorder_g #type_vin_external_filter_tf': {
+                keyup: function(field, e, opts) {
+                    var g = field.up('#backorder_g');
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'type_vin');
+                }
+            },
+
+            '#backorder_g #repr_external_filter_dd': {
+                change: function(field, records, eopts) {
+                    var g = field.up('#backorder_g');
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'representant_nom');
+                }
             }
 
         });
@@ -131,6 +145,44 @@ Ext.define('VIN.controller.Backorder', {
                         iconCls: 'add-icon',
                         text: 'Créer un BO',
                         itemId: 'add_bo_btn'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'textfield',
+                        enableKeyEvents: true,
+                        emptyText: 'Filtrer par type de vin',
+                        itemId: 'type_vin_external_filter_tf',
+                        width: 200
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'combo',
+                        emptyText: 'Représentant',
+                        displayField: 'representant_nom',
+                        itemId: 'repr_external_filter_dd',
+                        name: 'representant_nom',
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['representant_nom'],
+                            proxy: {
+                                type: 'ajax',
+                                limitParam: undefined,
+                                pageParam: undefined,
+                                startParam: undefined,
+                                url: ajax_url_prefix + '/representant/get_representants',
+                                reader: {
+                                    type: 'json',
+                                    root: 'rows'
+                                }
+                            }
+                        }),
+                        minChars: 3,
+                        forceSelection: false,
+                        listConfig: {
+                            loadingText: 'Recherche...',
+                            emptyText: 'Aucun représentant ne correspond à cette recherche..'
+                        }
                     }]
                 }
             });

@@ -391,16 +391,9 @@ Ext.define('VIN.controller.Commande', {
                 }
             },
             '#commande_g #nom_social_external_filter_tf': {
-                keyup: function(tf, e, opts) {
-                    var g = tf.up('#commande_g');
-                    var ns_filter = g.filters.getFilter('nom_social');
-                    if (tf.getValue()) {
-                        ns_filter.setValue(tf.getValue());
-                        ns_filter.setActive(true);
-                    } else {
-                        ns_filter.setValue('');
-                        ns_filter.setActive(false);
-                    }
+                keyup: function(field, e, opts) {
+                    var g = field.up('#commande_g');
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'nom_social');
                 }
             }
         });

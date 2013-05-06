@@ -18,25 +18,27 @@ Ext.define('VIN.controller.Inventaire', {
             },
 
             'inventaire_grid #type_vin_external_filter_tf': {
-                keyup: function(tf, e, opts) {
-                    var g = tf.up('inventaire_grid');
-                    var tv_filter = g.filters.getFilter('type_vin');
-                    if (tf.getValue()) {
-                        tv_filter.setValue(tf.getValue());
-                        tv_filter.setActive(true);
-                    } else {
-                        tv_filter.setValue('');
-                        tv_filter.setActive(false);
-                    }
+                keyup: function(field, e, opts) {
+                    var g = field.up('inventaire_grid');
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'type_vin');
+                }
+            },
+
+            'inventaire_grid #producteur_external_filter_tf': {
+                keyup: function(field, e, opts) {
+                    var g = field.up('inventaire_grid');
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'nom_producteur');
                 }
             },
 
             'inventaire_grid #no_produit_saq_external_filter_tf': {
-                keyup: function(tf, e, opts) {
-                    var g = tf.up('inventaire_grid');
+                keyup: function(field, e, opts) {
+                    // this numerical filter doesn't seem to be affected by this bug:
+                    // http://stackoverflow.com/questions/9629531/apply-grid-filter-programmatically-from-function
+                    var g = field.up('inventaire_grid');
                     var nps_filter = g.filters.getFilter('no_produit_saq');
-                    if (tf.getValue()) {
-                        nps_filter.setValue({eq: tf.getValue()});
+                    if (field.getValue()) {
+                        nps_filter.setValue({eq: field.getValue()});
                         nps_filter.setActive(true);
                     } else {
                         nps_filter.setActive(false);

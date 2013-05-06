@@ -77,20 +77,6 @@ Ext.define('VIN.view.Grid', {
             // for the filters default value to be set; loading must follow, not precede
             afterrender: function(grid) {
                 grid.filters.createFilters();
-                // HACK!! this is to counter a problem I noticed with grid filters used
-                // with external/docked widgets: they seem to only work the second time they're (any filter actually)
-                // used (for textfields I took a long time to notice since it's rare that a single
-                // char filter is used; for other types like combo for instance, the problem is more
-                // apparent; so what this does is simply to set an empty filter on the first string/auto
-                // filter found in the grid, so that the first time the user use ANY filter, it's actually the second!
-                // for (var i = 0; i < grid.columns.length; i++) {
-                //     var filter = grid.filters.getFilter(grid.columns[i].dataIndex);
-                //     if (filter && filter.type === 'auto') {
-                //         filter.setValue('');
-                //         filter.setActive(true);
-                //         break;
-                //     }
-                // }
                 if (this.load_after_render) {
                     grid.getStore().load();
                 }
@@ -153,6 +139,21 @@ Ext.define('VIN.view.Grid', {
                 cols.push(col);
             });
             return cols;
+        },
+
+        applyExternalGridFilter: function(grid, field, filter_name) {
+            var filter = grid.filters.getFilter(filter_name);
+            var value = field.getValue();
+            filter.setValue(value);
+            if (value) {
+                // must apply filter twice (bug):
+                // http://stackoverflow.com/questions/9629531/apply-grid-filter-programmatically-from-function
+                filter = grid.filters.getFilter(filter_name);
+                filter.setValue(value);
+                filter.setActive(true);
+            } else {
+                filter.setActive(false);
+            }
         }
 
     }
