@@ -30,6 +30,33 @@ Ext.define('VIN.view.client.Form', {
             }]
         };
 
+        // an object is created just to be able to set a callback
+        // on afterrender to disable the grouping feature
+        var ci_grid = Ext.create('VIN.view.commande.ItemGrid', {
+            //style: 'margin-top: 49px', // align with grid on left
+            itemId: 'commande_item_g',
+            title: 'Produits commandés',
+            store: Ext.create('VIN.store.CommandeItems'),
+            load_after_render: false,
+            resizable: { handles: 's' },
+            is_editable: false,
+            column_flex: {
+                type_vin: 1.5,
+                format: 1,
+                nom_producteur: 1.5,
+                no_produit_saq: 1,
+                quantite_caisse: 0.5,
+                quantite_bouteille: 0.5,
+                commission: 0.75,
+                montant_commission: 0.75,
+                statut_item: 0.5
+            },
+            height: grid_height + 72
+        });
+        ci_grid.on('afterrender', function(grid) {
+            grid.features[0].disable();
+        });
+
         this.items = {
             bodyStyle: 'background-color:#dfe8f5',
             border: false,
@@ -322,7 +349,7 @@ Ext.define('VIN.view.client.Form', {
                     fieldLabel: 'Notes',
                     name: 'note_client',
                     anchor: '100%',
-                    height: 75,
+                    height: 40,
                     resizable: { handles: 's' },
                     style: 'margin-bottom: 10px'
                 }, {
@@ -449,27 +476,7 @@ Ext.define('VIN.view.client.Form', {
                             itemId: 'pickup_rb'
                         }]
                     }]
-                }, {
-                    xtype: 'commande_item_grid',
-                    style: 'margin-top: 49px', // align with grid on left
-                    itemId: 'commande_item_g',
-                    title: 'Produits commandés',
-                    store: Ext.create('VIN.store.CommandeItems'),
-                    load_after_render: false,
-                    resizable: { handles: 's' },
-                    is_editable: false,
-                    column_flex: {
-                        type_vin: 1,
-                        format: 1,
-                        no_produit_saq: 1,
-                        quantite_caisse: 0.5,
-                        quantite_bouteille: 0.5,
-                        commission: 0.75,
-                        montant_commission: 0.75,
-                        statut_item: 0.5
-                    },
-                    height: grid_height
-                }]
+                }, ci_grid]
             }]
         };
 

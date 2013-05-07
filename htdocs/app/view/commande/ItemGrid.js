@@ -8,7 +8,7 @@ Ext.define('VIN.view.commande.ItemGrid', {
     initComponent: function() {
 
         // this.store.groupField must be set!
-        this.features = [Ext.create('Ext.grid.feature.Grouping',{
+        this.features = [Ext.create('Ext.grid.feature.Grouping', {
             groupHeaderTpl: '{name}',
             hideGroupedHeader: true
         })];

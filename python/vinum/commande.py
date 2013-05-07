@@ -99,8 +99,8 @@ def delete_commande():
 @app.route('/commande/get_items', methods=['GET'])
 @login_required
 def get_items_for_commande():
-    return get(g, request, {'commande_item': 'ci', 'produit': 'p'},
-               join={'ci.no_produit_interne': 'p.no_produit_interne'},
+    return get(g, request, {'commande_item': 'ci', 'produit': 'p', 'producteur': 'r'},
+               join={'ci.no_produit_interne': 'p.no_produit_interne', 'p.no_producteur': 'r.no_producteur'},
                where={'ci.no_commande_facture': request.args['no_commande_facture']})
 
 

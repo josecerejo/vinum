@@ -22,6 +22,9 @@ Ext.define('VIN.model.CommandeItem', {
     }, {
         name: 'format'
     }, {
+        header: 'Producteur',
+        name: 'nom_producteur'
+    },{
         header: '# produit SAQ',
         name: 'no_produit_saq',
         type: 'int',
