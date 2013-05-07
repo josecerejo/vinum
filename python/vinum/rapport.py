@@ -6,16 +6,15 @@ from unidecode import unidecode
 
 
 def _get_rapport_vente_data(request):
-    q = """ select ci.no_produit_interne, p.type_vin, p.nom_domaine, p.format,
-                   p.quantite_par_caisse, sum(ci.quantite_caisse) as quantite_caisse,
-                   sum(ci.quantite_bouteille) as quantite_bouteille
+    q = """ select ci.no_produit_interne, p.type_vin, p.nom_domaine, p.format, p.quantite_par_caisse,
+                   sum(ci.quantite_caisse) as quantite_caisse
             from produit p
             inner join commande_item ci on ci.no_produit_interne = p.no_produit_interne
             inner join commande o on o.no_commande_facture = ci.no_commande_facture
             inner join client c on o.no_client = c.no_client
             left join representant r on c.representant_id = r.representant_id
-            where statut_item != 'BO'
-            and date_commande >= %s and date_commande <= %s
+            where statut_item != 'BO' and
+            date_commande >= %s and date_commande <= %s
         """
     qvals = [request.args['start_date'], request.args['end_date'] or request.args['start_date']]
     if request.args['representant_nom']:
@@ -24,7 +23,7 @@ def _get_rapport_vente_data(request):
     if request.args['type_client']:
         q += ' and type_client = %s'
         qvals.append(request.args['type_client'])
-    q += """ group by type_vin, nom_domaine, format, quantite_par_caisse, ci.no_produit_interne
+    q += """ group by ci.no_produit_interne, type_vin, nom_domaine, format, quantite_par_caisse
              order by type_vin"""
     cur = g.db.cursor()
     cur.execute(q, qvals)
@@ -64,6 +63,41 @@ def get_rapport_vente():
     return {'success': True, 'total': len(rows), 'rows': rows}
 
 
+def _get_rapport_vente_summary(request, cur):
+    q = """ select sum(quantite_caisse)::int as quantite_caisse, sum(quantite_bouteille)::int as quantite_bouteille,
+                   sum(montant) as montant, sum(sous_total) as sous_total, sum(tps) as tps, sum(tvq) as tvq from
+                (select o.no_commande_facture, o.montant, o.sous_total, o.tps, o.tvq,
+                        sum(quantite_caisse) as quantite_caisse, sum(quantite_bouteille) as quantite_bouteille
+                    from commande o, commande_item ci, client c, representant r
+                    where o.no_commande_facture = ci.no_commande_facture and
+                    ci.statut_item != 'BO' and c.no_client = o.no_client and
+                    c.representant_id = r.representant_id and
+                    date_commande between %s and %s
+        """
+    qvals = [request.args['start_date'], request.args['end_date'] or request.args['start_date']]
+    if request.args['representant_nom']:
+        q += ' and representant_nom = %s'
+        qvals.append(request.args['representant_nom'])
+    if request.args['type_client']:
+        q += ' and type_client = %s'
+        qvals.append(request.args['type_client'])
+    q += "group by o.no_commande_facture, o.montant, o.sous_total, o.tps, o.tvq) _;"
+    cur = g.db.cursor()
+    cur.execute(q, qvals)
+    return cur.fetchone()
+
+
+@app.route('/rapport/vente_summary', methods=['GET'])
+@login_required
+def get_rapport_vente_summary():
+    data = _get_rapport_vente_summary(request, g.db.cursor())
+    for f in ['montant', 'tps', 'tvq']:
+        data[f] = as_currency(data[f])
+    data['quantite_caisse'] = '%s caisses' % data['quantite_caisse']
+    data['quantite_bouteille'] = '%s bouteilles' % data['quantite_bouteille']
+    return {'success': True, 'data': data}
+
+
 @app.route('/rapport/vente_download', methods=['GET'])
 @login_required
 def download_rapport_vente():
@@ -73,25 +107,13 @@ def download_rapport_vente():
     type_client = request.args['type_client'] if request.args['type_client'] else 'tous'
     rows = _get_rapport_vente_data(request)
     items = []
-    qte_totals = [0, 0]
     for row in rows:
         row['nom_domaine'] = row['nom_domaine'] if row['nom_domaine'] else ''
         items.append([row[c] for c in ['type_vin', 'nom_domaine', 'format', 'quantite_par_caisse', 'quantite_caisse']])
-        for i, f in enumerate(['quantite_caisse', 'quantite_bouteille']):
-            qte_totals[i] += row[f] if row[f] else 0
-    where = {('date_commande', '>='): start_date, ('date_commande', '<='): end_date}
-    if request.args['representant_nom']:
-        where['representant_nom'] = representant
-    if request.args['type_client']:
-        where['type_client'] = type_client
-    commande_totals = pg.select1r(g.db.cursor(), {'commande': 'o', 'client': 'c', 'representant': 'r'},
-                                  what={'sum(o.montant)': 'montant', 'sum(o.sous_total)': 'sous_total',
-                                        'sum(o.tps)': 'tps', 'sum(o.tvq)': 'tvq'},
-                                  join={'o.no_client': 'c.no_client', 'c.representant_id': 'r.representant_id'},
-                                  where=where)
-    commande_totals = [as_currency(commande_totals[f]) for f in ['montant', 'sous_total', 'tps', 'tvq']]
+    totals = _get_rapport_vente_summary(request, g.db.cursor())
+    totals = [totals['quantite_caisse'], totals['quantite_bouteille']] + [as_currency(totals[f]) for f in ['montant', 'sous_total', 'tps', 'tvq']]
     doc_values = {'start_date': start_date, 'end_date': end_date, 'representant_nom': representant,
-                  'type_client': type_client, 'items': items, 'totals': qte_totals + commande_totals}
+                  'type_client': type_client, 'items': items, 'totals': totals}
     out_fn = 'rapport_des_ventes_%s_au_%s_repr=%s_clients=%s.%s' % (start_date, end_date, representant, type_client,
                                                                     'odt' if hasattr(app, 'is_dev') else 'pdf')
     out_fn = unidecode(out_fn)

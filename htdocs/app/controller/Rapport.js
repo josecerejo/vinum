@@ -15,12 +15,26 @@ Ext.define('VIN.controller.Rapport', {
                         g.down('#start_date_df').markInvalid('Ce champ est requis');
                         return;
                     }
+                    var params = {
+                        start_date: sd,
+                        end_date: ed,
+                        representant_nom: g.down('#representant_nom_dd').getValue(),
+                        type_client: g.down('#type_client_dd').getValue()
+                    };
                     g.getStore().load({
-                        params: {
-                            start_date: sd,
-                            end_date: ed,
-                            representant_nom: g.down('#representant_nom_dd').getValue(),
-                            type_client: g.down('#type_client_dd').getValue()
+                        params: params
+                    });
+                    var dummy_form = Ext.create('Ext.form.Panel');
+                    dummy_form.load({
+                        url: ajax_url_prefix + '/rapport/vente_summary',
+                        method: 'GET',
+                        params: params,
+                        success: function(form, action) {
+                            var g = btn.up('#rapport_vente_g');
+                            var d = action.result.data;
+                            g.down('#rapport_vente_summary_montant_tf').setValue(d.montant);
+                            g.down('#rapport_vente_summary_qc_tf').setValue(d.quantite_caisse);
+                            g.down('#rapport_vente_summary_qb_tf').setValue(d.quantite_bouteille);
                         }
                     });
                 }
@@ -168,6 +182,33 @@ Ext.define('VIN.controller.Rapport', {
                         iconCls: 'disk-icon',
                         text: 'Télécharger le rapport',
                         itemId: 'download_rapport_vente_btn'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'textfield',
+                        name: 'montant',
+                        emptyText: 'Montant total',
+                        itemId: 'rapport_vente_summary_montant_tf',
+                        readOnly: true
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'textfield',
+                        name: 'quantite_caisse',
+                        emptyText: 'Quantité totale (c)',
+                        itemId: 'rapport_vente_summary_qc_tf',
+                        readOnly: true
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'textfield',
+                        name: 'quantite_bouteille',
+                        emptyText: 'Quantité totale (b)',
+                        itemId: 'rapport_vente_summary_qb_tf',
+                        readOnly: true
                     }]
                 }
             });
