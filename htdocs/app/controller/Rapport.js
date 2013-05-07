@@ -32,9 +32,9 @@ Ext.define('VIN.controller.Rapport', {
                         success: function(form, action) {
                             var g = btn.up('#rapport_vente_g');
                             var d = action.result.data;
-                            g.down('#rapport_vente_summary_montant_tf').setValue(d.montant);
                             g.down('#rapport_vente_summary_qc_tf').setValue(d.quantite_caisse);
                             g.down('#rapport_vente_summary_qb_tf').setValue(d.quantite_bouteille);
+                            g.down('#rapport_vente_summary_montant_tf').setValue(d.montant);
                         }
                     });
                 }
@@ -187,15 +187,6 @@ Ext.define('VIN.controller.Rapport', {
                         width: 5
                     }, {
                         xtype: 'textfield',
-                        name: 'montant',
-                        emptyText: 'Montant total',
-                        itemId: 'rapport_vente_summary_montant_tf',
-                        readOnly: true
-                    }, {
-                        xtype: 'tbspacer',
-                        width: 5
-                    }, {
-                        xtype: 'textfield',
                         name: 'quantite_caisse',
                         emptyText: 'Quantité totale (c)',
                         itemId: 'rapport_vente_summary_qc_tf',
@@ -208,6 +199,15 @@ Ext.define('VIN.controller.Rapport', {
                         name: 'quantite_bouteille',
                         emptyText: 'Quantité totale (b)',
                         itemId: 'rapport_vente_summary_qb_tf',
+                        readOnly: true
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'textfield',
+                        name: 'montant',
+                        emptyText: 'Montant total',
+                        itemId: 'rapport_vente_summary_montant_tf',
                         readOnly: true
                     }]
                 }
