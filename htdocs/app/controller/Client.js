@@ -65,6 +65,13 @@ Ext.define('VIN.controller.Client', {
                 }
             },
 
+            'client_form #est_actif_btn': {
+                click: function(btn) {
+                    btn.setIconCls(btn.pressed ? 'accept-icon' : 'error-icon');
+                    btn.setText(Ext.String.format('Ce client est {0}', btn.pressed ? 'actif' : 'inactif'));
+                }
+            },
+
             '#client_g actioncolumn': {
                 del_click: function(grid, el, rowIndex, colIndex, e, rec, rowEl) {
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le client #{0} de la base de données',
@@ -158,9 +165,11 @@ Ext.define('VIN.controller.Client', {
             },
             success: function(_form, action) {
 
-                // I guess this was never user (it was im "callback", instead of "success",
-                // which doesn't exist for a form.load); but anyway I'll let it here for a while
-                //form.down('#client_dd').getStore().load();
+                // est_actif toggle
+                var btn = form.down('#est_actif_btn');
+                btn.setIconCls(action.result.data.est_actif ? 'accept-icon' : 'error-icon');
+                btn.setText(Ext.String.format('Ce client est {0}', action.result.data.est_actif ? 'actif' : 'inactif'));
+                btn.toggle(action.result.data.est_actif);
 
                 var cg = form.down('#commande_g');
                 // bind this commande grid to this particular client, so that every operation
@@ -178,6 +187,9 @@ Ext.define('VIN.controller.Client', {
         if (form.getForm().isValid()) {
             form.submit({
                 url: ajax_url_prefix + '/client/save',
+                params: {
+                    est_actif: form.down('#est_actif_btn').pressed
+                },
                 success: function(_form, action) {
                     var client_rec = Ext.create('VIN.model.Client', action.result.data);
                     var no_client = client_rec.get('no_client');
@@ -229,14 +241,15 @@ Ext.define('VIN.controller.Client', {
                 add_edit_actioncolumn: true,
                 add_delete_actioncolumn: true,
                 column_flex: {
-                    nom_social: 0.3,
-                    no_client_saq: 0.1,
-                    type_client: 0.1,
-                    representant_nom: 0.2,
-                    expedition: 0.1,
-                    mode_facturation: 0.1,
-                    mode_facturation_note: 0.1,
-                    date_ouverture_dossier: 0.1
+                    nom_social: 3,
+                    no_client_saq: 1,
+                    type_client: 1,
+                    representant_nom: 2,
+                    expedition: 1,
+                    mode_facturation: 1,
+                    mode_facturation_note: 1,
+                    date_ouverture_dossier: 1,
+                    est_actif: 0.5
                 },
                 dockedItems: {
                     xtype: 'toolbar',

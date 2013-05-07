@@ -39,7 +39,7 @@ def download_bottin():
     cur = g.db.cursor()
     out_fn = 'bottin_des_restaurateurs_repr=%s.%s' % (current_user.u['usager_nom'], 'odt' if hasattr(app, 'is_dev') else 'pdf')
     restos = pg.select(cur, 'client', where={'representant_id': current_user.u['representant_id'],
-                                             'type_client': 'restaurant'}, order_by='nom_social')
+                                             'type_client': 'restaurant', 'est_actif': True}, order_by='nom_social')
     doc_values = {'items': restos}
     ren = Renderer('/home/christian/vinum/docs/bottin.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)

@@ -77,6 +77,10 @@ Ext.define('VIN.model.Client', {
         header: 'Ouverture du dossier',
         name: 'date_ouverture_dossier',
         type: 'date'
+    }, {
+        header: 'Actif',
+        name: 'est_actif',
+        type: 'bool'
     }],
 
     idProperty: 'no_client'

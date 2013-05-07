@@ -27,6 +27,12 @@ Ext.define('VIN.view.client.Form', {
                 text: 'Créer une commande pour ce client',
                 itemId: 'create_commande_btn',
                 iconCls: 'commandes-add-icon'
+            }, {
+                enableToggle: true,
+                text: 'Ce client est actif',
+                pressed: true,
+                iconCls: 'accept-icon',
+                itemId: 'est_actif_btn'
             }]
         };
 

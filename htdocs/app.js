@@ -22,8 +22,8 @@ if (window.location.href.indexOf('localhost') !== -1) {
 }
 
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Ajouts de champs totaux pour le rapport des ventes" +
-    "<br>&bull; Modifs à l'écran d'édition d'un client";
+    "<br>&bull; Modifs à l'écran d'édition d'un client" +
+    "<br>&bull; Ajout d'un champ \"est actif\" au client";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
