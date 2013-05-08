@@ -259,6 +259,9 @@ Ext.define('VIN.controller.Client', {
                         iconCls: 'add-icon',
                         itemId: 'add_btn'
                     }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
                         xtype: 'textfield',
                         enableKeyEvents: true,
                         emptyText: 'Nom social',

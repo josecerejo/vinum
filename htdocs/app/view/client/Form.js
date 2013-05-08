@@ -24,9 +24,15 @@ Ext.define('VIN.view.client.Form', {
                 itemId: 'save_btn',
                 iconCls: 'disk-icon'
             }, {
+                xtype: 'tbspacer',
+                width: 5
+            }, {
                 text: 'Créer une commande pour ce client',
                 itemId: 'create_commande_btn',
                 iconCls: 'commandes-add-icon'
+            }, {
+                xtype: 'tbspacer',
+                width: 5
             }, {
                 enableToggle: true,
                 text: 'Ce client est actif',

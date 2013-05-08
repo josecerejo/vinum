@@ -102,6 +102,9 @@ Ext.define('VIN.view.commande.Form', {
                 itemId: 'save_commande_btn',
                 iconCls: 'disk-icon'
             }, {
+                xtype: 'tbspacer',
+                width: 5
+            }, {
                 xtype: 'buttongroup',
                 title: 'Bon de commande',
                 items: [{
@@ -109,10 +112,16 @@ Ext.define('VIN.view.commande.Form', {
                     itemId: 'preview_bdc_btn',
                     iconCls: 'monitor-icon'
                 }, {
+                    xtype: 'tbspacer',
+                    width: 5
+                }, {
                     text: 'Envoyer par courriel',
                     itemId: 'email_bon_de_commande_btn',
                     iconCls: 'email-icon'
                 }]
+            }, {
+                xtype: 'tbspacer',
+                width: 5
             }, {
                 xtype: 'buttongroup',
                 title: 'Facture',
@@ -121,9 +130,15 @@ Ext.define('VIN.view.commande.Form', {
                     itemId: 'preview_facture_btn',
                     iconCls: 'monitor-icon'
                 }, {
+                    xtype: 'tbspacer',
+                    width: 5
+                }, {
                     text: 'Envoyer par courriel',
                     itemId: 'email_facture_btn',
                     iconCls: 'email-icon'
+                }, {
+                    xtype: 'tbspacer',
+                    width: 5
                 }, {
                     text: 'Imprimer',
                     iconCls: 'printer-icon',
