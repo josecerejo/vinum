@@ -80,7 +80,11 @@ Ext.define('VIN.model.Client', {
     }, {
         header: 'Actif',
         name: 'est_actif',
-        type: 'bool'
+        type: 'bool',
+        filter: {
+            active: true,
+            value: true
+        }
     }],
 
     idProperty: 'no_client'
