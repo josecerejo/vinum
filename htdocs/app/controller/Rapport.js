@@ -123,7 +123,7 @@ Ext.define('VIN.controller.Rapport', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'combo',
+                        xtype: 'clearablecombo',
                         emptyText: 'Représentant',
                         displayField: 'representant_nom',
                         name: 'representant_nom',
@@ -152,7 +152,7 @@ Ext.define('VIN.controller.Rapport', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'combo',
+                        xtype: 'clearablecombo',
                         name: 'type_client',
                         itemId: 'type_client_dd',
                         queryMode: 'local',
@@ -283,7 +283,7 @@ Ext.define('VIN.controller.Rapport', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'combo',
+                        xtype: 'clearablecombo',
                         emptyText: 'Représentant',
                         displayField: 'representant_nom',
                         name: 'representant_nom',
@@ -312,7 +312,7 @@ Ext.define('VIN.controller.Rapport', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'combo',
+                        xtype: 'clearablecombo',
                         name: 'type_client',
                         itemId: 'type_client_dd',
                         queryMode: 'local',

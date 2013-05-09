@@ -120,6 +120,20 @@ Ext.define('VIN.field.PriceField', {
     }
 });
 
+Ext.define('VIN.field.ClearableComboBox', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.clearablecombo',
+    trigger2Cls: 'x-form-clear-trigger',
+    initComponent: function() {
+        var me = this;
+        me.callParent(arguments);
+    },
+    onTrigger2Click: function(event) {
+        var me = this;
+        me.clearValue();
+    }
+});
+
 Ext.application({
     name: 'VIN',
     controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur',
