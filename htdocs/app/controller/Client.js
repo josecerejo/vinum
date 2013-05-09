@@ -111,8 +111,10 @@ Ext.define('VIN.controller.Client', {
             },
 
             '#client_g #nom_social_external_filter_tf': {
-                keyup: function(tf, e, opts) {
-                    var g = tf.up('#client_g');
+                change: function(field, e, opts) {
+                    var g = field.up('#client_g');
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'nom_social');
+/*
                     var ns_filter = g.filters.getFilter('nom_social');
                     if (tf.getValue()) {
                         ns_filter.setValue(tf.getValue());
@@ -121,6 +123,7 @@ Ext.define('VIN.controller.Client', {
                         ns_filter.setValue('');
                         ns_filter.setActive(false);
                     }
+*/
                 }
             },
 
@@ -262,7 +265,7 @@ Ext.define('VIN.controller.Client', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'textfield',
+                        xtype: 'clearabletextfield',
                         enableKeyEvents: true,
                         emptyText: 'Nom social',
                         itemId: 'nom_social_external_filter_tf',
@@ -271,7 +274,7 @@ Ext.define('VIN.controller.Client', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'combo',
+                        xtype: 'clearablecombo',
                         emptyText: 'Représentant',
                         displayField: 'representant_nom',
                         itemId: 'repr_external_filter_dd',
@@ -300,7 +303,7 @@ Ext.define('VIN.controller.Client', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'combo',
+                        xtype: 'clearablecombo',
                         name: 'type_client',
                         queryMode: 'local',
                         triggerAction: 'all',

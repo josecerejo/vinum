@@ -391,7 +391,7 @@ Ext.define('VIN.controller.Commande', {
                 }
             },
             '#commande_g #nom_social_external_filter_tf': {
-                keyup: function(field, e, opts) {
+                change: function(field, e, opts) {
                     var g = field.up('#commande_g');
                     VIN.view.Grid.applyExternalGridFilter(g, field, 'nom_social');
                 }
@@ -729,7 +729,7 @@ Ext.define('VIN.controller.Commande', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'textfield',
+                        xtype: 'clearabletextfield',
                         enableKeyEvents: true,
                         emptyText: 'Filtrer les clients (par nom social)',
                         itemId: 'nom_social_external_filter_tf',

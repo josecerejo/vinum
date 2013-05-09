@@ -53,7 +53,7 @@ Ext.define('VIN.controller.Backorder', {
             },
 
             '#backorder_g #type_vin_external_filter_tf': {
-                keyup: function(field, e, opts) {
+                change: function(field, e, opts) {
                     var g = field.up('#backorder_g');
                     VIN.view.Grid.applyExternalGridFilter(g, field, 'type_vin');
                 }
@@ -149,7 +149,7 @@ Ext.define('VIN.controller.Backorder', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'textfield',
+                        xtype: 'clearabletextfield',
                         enableKeyEvents: true,
                         emptyText: 'Filtrer par type de vin',
                         itemId: 'type_vin_external_filter_tf',
@@ -158,7 +158,7 @@ Ext.define('VIN.controller.Backorder', {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
-                        xtype: 'combo',
+                        xtype: 'clearablecombo',
                         emptyText: 'Représentant',
                         displayField: 'representant_nom',
                         itemId: 'repr_external_filter_dd',

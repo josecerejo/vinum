@@ -19,7 +19,7 @@ Ext.define('VIN.view.inventaire.Grid', {
                 xtype: 'tbspacer',
                 width: 5
             }, {
-                xtype: 'textfield',
+                xtype: 'clearabletextfield',
                 enableKeyEvents: true,
                 emptyText: 'Filtrer par producteur',
                 itemId: 'producteur_external_filter_tf',
@@ -28,7 +28,7 @@ Ext.define('VIN.view.inventaire.Grid', {
                 xtype: 'tbspacer',
                 width: 5
             }, {
-                xtype: 'textfield',
+                xtype: 'clearabletextfield',
                 enableKeyEvents: true,
                 emptyText: 'Type de vin',
                 itemId: 'type_vin_external_filter_tf',
@@ -37,7 +37,7 @@ Ext.define('VIN.view.inventaire.Grid', {
                 xtype: 'tbspacer',
                 width: 5
             }, {
-                xtype: 'numberfield',
+                xtype: 'clearabletextfield',
                 enableKeyEvents: true,
                 emptyText: '# produit SAQ',
                 itemId: 'no_produit_saq_external_filter_tf',

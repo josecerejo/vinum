@@ -18,21 +18,21 @@ Ext.define('VIN.controller.Inventaire', {
             },
 
             'inventaire_grid #type_vin_external_filter_tf': {
-                keyup: function(field, e, opts) {
+                change: function(field, e, opts) {
                     var g = field.up('inventaire_grid');
                     VIN.view.Grid.applyExternalGridFilter(g, field, 'type_vin');
                 }
             },
 
             'inventaire_grid #producteur_external_filter_tf': {
-                keyup: function(field, e, opts) {
+                change: function(field, e, opts) {
                     var g = field.up('inventaire_grid');
                     VIN.view.Grid.applyExternalGridFilter(g, field, 'nom_producteur');
                 }
             },
 
             'inventaire_grid #no_produit_saq_external_filter_tf': {
-                keyup: function(field, e, opts) {
+                change: function(field, e, opts) {
                     // this numerical filter doesn't seem to be affected by this bug:
                     // http://stackoverflow.com/questions/9629531/apply-grid-filter-programmatically-from-function
                     var g = field.up('inventaire_grid');
