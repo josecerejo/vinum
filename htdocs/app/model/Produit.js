@@ -32,6 +32,9 @@ Ext.define('VIN.model.Produit', {
     }, {
         name: 'couleur'
     }, {
+        header: 'Millsésime',
+        name: 'millesime'
+    }, {
         header: 'Qté par caisse',
         name: 'quantite_par_caisse',
         type: 'int',
@@ -52,6 +55,11 @@ Ext.define('VIN.model.Produit', {
         header: 'Quantité (b)',
         name: 'quantite_bouteille',
         type: 'int',
+        useNull: true
+    }, {
+        header: 'Prix',
+        name: 'prix',
+        type: 'float',
         useNull: true
     }],
 

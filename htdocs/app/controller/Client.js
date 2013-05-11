@@ -114,16 +114,6 @@ Ext.define('VIN.controller.Client', {
                 change: function(field, e, opts) {
                     var g = field.up('#client_g');
                     VIN.view.Grid.applyExternalGridFilter(g, field, 'nom_social');
-/*
-                    var ns_filter = g.filters.getFilter('nom_social');
-                    if (tf.getValue()) {
-                        ns_filter.setValue(tf.getValue());
-                        ns_filter.setActive(true);
-                    } else {
-                        ns_filter.setValue('');
-                        ns_filter.setActive(false);
-                    }
-*/
                 }
             },
 

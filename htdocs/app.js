@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-05-08';
+var last_update = '2013-05-11';
 var vinum_version = 'alpha';
 var server;
 if (window.location.href.indexOf('localhost') !== -1) {
@@ -22,8 +22,8 @@ if (window.location.href.indexOf('localhost') !== -1) {
 }
 
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Modifs à l'écran d'édition d'un client" +
-    "<br>&bull; Ajout d'un champ \"est actif\" au client";
+    "<br>&bull; Ajout d'un champ \"est actif\" au client" +
+    "<br>&bull; Liste de prix";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
@@ -152,7 +152,7 @@ Ext.define('Ext.ux.CustomTrigger', {
 Ext.application({
     name: 'VIN',
     controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur',
-                  'Login', 'Rapport', 'Backorder', 'Succursale'],
+                  'Login', 'Rapport', 'Backorder', 'Succursale', 'Prix'],
     autoCreateViewport: true,
     launch: function() {
 

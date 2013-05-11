@@ -46,7 +46,7 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
     json_out = {'success': True}
     json_out['total'] = pg.count(cursor, tables, what=what, join=join, where=where, debug_assert=False)
     json_out['rows'] = pg.select(cursor, tables, what=what, join=join, where=where,
-                                 offset=request.args.get('start', None), limit=request.args.get('limit', None),
+                                 offset=request.args.get('start', None), limit=request.args.get('limit', None) or None,
                                  order_by=order_by, debug_assert=False)
     return json_out
 

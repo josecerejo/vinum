@@ -180,6 +180,10 @@
     background: url(../images/icons/bullet_delete.png) no-repeat !important;
 }
 
+.money-icon {
+    background: url(../images/icons/money_dollar.png) no-repeat !important;
+}
+
 .nav-menu {
     padding: 0 3px 0 3px;
 }

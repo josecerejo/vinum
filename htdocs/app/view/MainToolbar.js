@@ -87,6 +87,10 @@ Ext.define('VIN.view.MainToolbar', {
             text: 'Inventaire',
             iconCls: 'table-icon',
             id: 'produits_inv_menu_itm'
+        }, {
+            text: 'Liste de prix',
+            iconCls: 'money-icon',
+            id: 'produits_prix_menu_itm'
         }]
     }, {
         text: 'Ruptures de stock (BOs)',
