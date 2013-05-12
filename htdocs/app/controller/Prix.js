@@ -56,18 +56,13 @@ Ext.define('VIN.controller.Prix', {
                                                });
 
                     dummy_form.submit({
-                        url: ajax_url_prefix + '/produit/create_liste_prix',
+                        url: ajax_url_prefix + '/produit/download_liste_prix',
+                        standardSubmit: true,
                         params: {
                             selected: Ext.JSON.encode(sels),
                             filter: Ext.JSON.encode(filters),
                             sort: Ext.JSON.encode(sorters),
                             type_client: g.getStore().getProxy().extraParams.type_client
-                        },
-                        success: function(form, action) {
-                            var url = Ext.String.format('{0}/produit/download_liste_prix?ticket={1}&_dc={2}',
-                                                        ajax_url_prefix, action.result.ticket,
-                                                        Ext.Number.randomInt(1000, 100000));
-                            location.href = url;
                         }
                     });
                 }

@@ -1,7 +1,6 @@
 from vinum import *
 from common import *
 from appy.pod.renderer import Renderer
-from random import randint
 
 
 @app.route('/produit/get', methods=['GET'])
@@ -63,29 +62,19 @@ def get_prix():
     return  {'success': True, 'rows': rows, 'total': len(rows)}
 
 
-@app.route('/produit/create_liste_prix', methods=['POST'])
+@app.route('/produit/download_liste_prix', methods=['POST'])
 @login_required
-def create_liste_prix():
+def download_liste_prix():
     rf = request.form.to_dict()
     sels = set(json.loads(rf['selected']))
     rows = _get_prix_data(rf)
     for r in rows: r['prix'] = as_currency(r['prix'])
     doc_values = {'items': [r for r in rows if r['no_produit_interne'] in sels or not sels]}
-    ticket = randint(0, 99999999)
-    out_fn = 'liste_de_prix_ticket=%s.%s' % (ticket, ('odt' if hasattr(app, 'is_dev') else 'pdf'))
+    out_fn = 'liste_de_prix.%s' % ('odt' if hasattr(app, 'is_dev') else 'pdf')
     ren = Renderer('/home/christian/vinum/docs/liste_de_prix.odt', doc_values,
                    '/tmp/%s' % out_fn, overwriteExisting=True)
     ren.run()
-    return {'success': True, 'ticket': ticket}
-
-
-@app.route('/produit/download_liste_prix', methods=['GET'])
-@login_required
-def download_liste_prix():
-    fn_ext = 'odt' if hasattr(app, 'is_dev') else 'pdf'
-    fn = 'liste_de_prix_ticket=%s.%s' % (request.args['ticket'], fn_ext)
-    out_fn = 'liste_de_prix.%s' % fn_ext
-    return send_file('/tmp/%s' % fn, mimetype='application/pdf',
+    return send_file('/tmp/%s' % out_fn, mimetype='application/pdf',
                      attachment_filename=out_fn, as_attachment=True)
 
 
