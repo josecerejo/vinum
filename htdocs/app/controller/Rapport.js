@@ -53,8 +53,8 @@ Ext.define('VIN.controller.Rapport', {
                     repr =  repr ? repr : '';
                     var tc = g.down('#type_client_dd').getValue();
                     tc =  tc ? tc : '';
-                    var url = Ext.String.format('{0}/rapport/vente_download?start_date={1}&end_date={2}&representant_nom={3}&type_client={4}',
-                                                ajax_url_prefix, sd, ed, repr, tc);
+                    var url = Ext.String.format('{0}/rapport/vente_download?start_date={1}&end_date={2}&representant_nom={3}&type_client={4}&_dc={5}',
+                                                ajax_url_prefix, sd, ed, repr, tc, Ext.Number.randomInt(1000, 100000));
                     location.href = url;
                 }
             },
@@ -72,8 +72,8 @@ Ext.define('VIN.controller.Rapport', {
                     repr =  repr ? repr : '';
                     var tc = g.down('#type_client_dd').getValue();
                     tc =  tc ? tc : '';
-                    var url = Ext.String.format('{0}/rapport/transaction_download?start_date={1}&end_date={2}&representant_nom={3}&type_client={4}',
-                                                ajax_url_prefix, sd, ed, repr, tc);
+                    var url = Ext.String.format('{0}/rapport/transaction_download?start_date={1}&end_date={2}&representant_nom={3}&type_client={4}&_dc={5}',
+                                                ajax_url_prefix, sd, ed, repr, tc, Ext.Number.randomInt(1000, 100000));
                     location.href = url;
                     Ext.getCmp('main_header').getEl().removeCls('x-box-item');
                 }
