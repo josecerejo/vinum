@@ -38,7 +38,8 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         format: 1,
                         couleur: 1,
                         quantite_par_caisse: 1,
-                        nom_producteur: 2
+                        nom_producteur: 2,
+                        est_actif: 0.5
                     },
                     dockedItems: {
                         xtype: 'toolbar',
@@ -101,6 +102,12 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             name: 'type_vin',
                             itemId: 'type_vin_tf',
                             flex: 0.75
+                        }, {
+                            xtype: 'checkbox',
+                            boxLabel: 'Est actif (i.e. visible dans les listes de prix)',
+                            name: 'est_actif',
+                            itemId: 'est_actif_cb',
+                            style: 'margin-top: 20px'
                         }]
                     }, {
                         layout: 'hbox',
@@ -144,6 +151,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             fieldLabel: 'Format',
                             displayField: 'format',
                             name: 'format',
+                            itemId: 'format_dd',
                             forceSelection: true,
                             store: Ext.create('Ext.data.Store', {
                                 fields: ['format'],
@@ -197,6 +205,7 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             fieldLabel: 'Pays',
                             displayField: 'pays',
                             name: 'pays',
+                            itemId: 'pays_dd',
                             allowBlank: false,
                             forceSelection: true,
                             store: Ext.create('Ext.data.Store', {

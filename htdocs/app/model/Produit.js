@@ -61,6 +61,14 @@ Ext.define('VIN.model.Produit', {
         name: 'prix',
         type: 'float',
         useNull: true
+    }, {
+        header: 'Actif',
+        name: 'est_actif',
+        type: 'bool',
+        filter: {
+            active: true,
+            value: true
+        }
     }],
 
     idProperty: 'no_produit_interne'

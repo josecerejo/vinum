@@ -84,7 +84,8 @@ create table produit (
     couleur text not null,
     quantite_par_caisse integer not null,
     pays text,
-    suc_num integer
+    suc_num integer,
+    est_actif bool default true
 );
 
 drop table if exists client_produit cascade;

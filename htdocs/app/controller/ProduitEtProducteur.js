@@ -14,11 +14,16 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                     if (records.length == 0) { return; }
                     var form = this._getFormViewInstance(model.view).down('#pp_produit_f');
                     form.down('#nom_producteur_dd').forceSelection = false;
+                    form.down('#format_dd').forceSelection = false;
+                    form.down('#pays_dd').forceSelection = false;
                     form.getForm().loadRecord(records[0]);
-                    // this hack is required to load a full producteur model in the dd,
+                    // this is required to load a full producteur model in the dd,
                     // to allow form.load to retrieve its no_producteur field later
                     form.down('#nom_producteur_dd').getStore().loadRecords([records[0]]);
+                    // -------------------------------------------------------------------
                     form.down('#nom_producteur_dd').forceSelection = true;
+                    form.down('#format_dd').forceSelection = true;
+                    form.down('#pays_dd').forceSelection = true;
                 }
             },
             'pp_forms #producteur_g': {
@@ -63,7 +68,8 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                         pf.submit({
                             url: ajax_url_prefix + '/produit/save',
                             params: {
-                                no_producteur: pr.get('no_producteur')
+                                no_producteur: pr.get('no_producteur'),
+                                est_actif: form.down('#est_actif_cb').getValue()
                             },
                             success: Ext.bind(function(_form, action) {
                                 Ext.Msg.show({
@@ -73,7 +79,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
                                 });
-                                pf.loadRecord(action.result); // to load no_produit_interne_tf
+                                pf.down('#no_produit_interne_tf').setValue(action.result.data.no_produit_interne);
                                 form.down('#produit_g').getStore().reload();
                             }, this)
                         });

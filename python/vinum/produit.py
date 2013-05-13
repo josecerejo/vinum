@@ -26,16 +26,19 @@ def _get_prix_data(request):
                 -- actif/en reserve/en attente
                 select p.*, i.*, r.nom_producteur, %s
                      from produit p, inventaire i, producteur r where p.no_producteur = r.no_producteur and
-                                                            i.no_inventaire = (select no_inventaire from inventaire i
-                                                             where i.no_produit_interne = p.no_produit_interne and statut_inventaire != 'inactif'
-                                                              order by date_commande limit 1)
+                                i.no_inventaire = (select no_inventaire from inventaire i
+                                                   where i.no_produit_interne = p.no_produit_interne and statut_inventaire != 'inactif'
+                                                   order by date_commande limit 1)
                 union
                 -- inactif records
                 select p.*, i.*, r.nom_producteur, %s
                          from produit p, inventaire i, producteur r where p.no_producteur = r.no_producteur and
-                                                                i.no_inventaire = (select no_inventaire from inventaire i
-                                                                                 where i.no_produit_interne = p.no_produit_interne order by date_commande desc limit 1)
-                               and not exists (select 1 from inventaire i where i.no_produit_interne = p.no_produit_interne and statut_inventaire != 'inactif')
+                                i.no_inventaire = (select no_inventaire from inventaire i
+                                                   where i.no_produit_interne = p.no_produit_interne
+                                                   order by date_commande desc limit 1)
+                                and not exists (select 1 from inventaire i
+                                                where i.no_produit_interne = p.no_produit_interne and
+                                                statut_inventaire != 'inactif')
             ) _ where true """ % (ptc, ptc)
     if request.get('filter', '').strip():
         for filter_arg in json.loads(request['filter']):
@@ -44,7 +47,7 @@ def _get_prix_data(request):
                 qvals.append('%%%s%%' % filter_arg['value'])
             else:
                 comp_op_map = {'lt':'<', 'gt':'>', 'le':'<=', 'ge':'>=', 'eq':'='}
-                q += ' and %s %s %%s' % (filter_arg['field'], comp_op_map[filter_arg.get('comparison', 'eq')])
+                q += ' and %s %s %%s ' % (filter_arg['field'], comp_op_map[filter_arg.get('comparison', 'eq')])
                 qvals.append(filter_arg['value'])
     if 'sort' in request:
         sort_args = json.loads(request['sort'])
