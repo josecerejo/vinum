@@ -294,6 +294,7 @@ Ext.define('VIN.controller.Commande', {
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
                                 });
+                                form.down(Ext.String.format('#email_{0}_btn', form.email_win.document_type)).setIconCls('tick-icon');
                                 if (ew.document_type === 'facture') {
                                     form.down('#facture_est_envoyee_hidden').setValue('true');
                                     // if the user is a repr, we need to set the commande.facture_est_envoyee
@@ -750,6 +751,7 @@ Ext.define('VIN.controller.Commande', {
             window.open(url).print();
         };
         form.down('#facture_est_envoyee_hidden').setValue('true');
+        form.down('#facture_print_menu_btn').setIconCls('tick-icon');
         if (current_user.representant_id) {
             popPrintDialogCallback();
             // if the user is a repr, we need to set the commande.facture_est_envoyee

@@ -290,7 +290,7 @@ def _generate_facture(g, ncf, with_logo=True):
     doc_values.update(client)
     doc_values['representant_nom'] = pg.select1(cursor, 'representant', 'representant_nom',
                                                 where={'representant_id': client['representant_id']})
-    rows = pg.select(g.db.cursor(), {'produit':'p', 'commande_item':'ci', 'producteur':'r', 'inventaire':'i'},
+    rows = pg.select(cursor, {'produit':'p', 'commande_item':'ci', 'producteur':'r', 'inventaire':'i'},
                      join={'p.no_produit_interne':'ci.no_produit_interne', 'p.no_producteur':'r.no_producteur',
                            'ci.no_produit_saq':'i.no_produit_saq'}, where={'ci.no_commande_facture': ncf,
                                                                            'statut_item': 'OK'},
