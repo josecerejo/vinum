@@ -50,8 +50,8 @@ create table client (
     date_ouverture_dossier date,
     mode_facturation text check (mode_facturation in ('courriel', 'poste')) default 'courriel',
     mode_facturation_note text -- courriel ou autre (devrait etre renomme)
-    est_actif bool default true
-    --jour_livraison text
+    est_actif bool default true,
+    a_probleme_comptabilite bool default false
 );
 
 drop table if exists producteur cascade;

@@ -34,11 +34,16 @@ Ext.define('VIN.view.client.Form', {
                 xtype: 'tbspacer',
                 width: 5
             }, {
-                enableToggle: true,
                 text: 'Ce client est actif',
-                pressed: true,
                 iconCls: 'accept-icon',
                 itemId: 'est_actif_btn'
+            }, {
+                xtype: 'tbspacer',
+                width: 5
+            }, {
+                text: "Ce client n'a pas de problème avec la comptabilité",
+                iconCls: 'accept-icon',
+                itemId: 'a_probleme_comptabilite_btn'
             }]
         };
 

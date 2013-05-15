@@ -85,6 +85,10 @@ Ext.define('VIN.model.Client', {
             active: true,
             value: true
         }
+    }, {
+        header: 'Problème de comptabilité',
+        name: 'a_probleme_comptabilite',
+        type: 'bool'
     }],
 
     idProperty: 'no_client'

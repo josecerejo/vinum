@@ -67,8 +67,19 @@ Ext.define('VIN.controller.Client', {
 
             'client_form #est_actif_btn': {
                 click: function(btn) {
-                    btn.setIconCls(btn.pressed ? 'accept-icon' : 'error-icon');
-                    btn.setText(Ext.String.format('Ce client est {0}', btn.pressed ? 'actif' : 'inactif'));
+                    btn.setIconCls(btn.iconCls==='accept-icon' ? 'error-icon' : 'accept-icon');
+                    btn.setText(Ext.String.format('Ce client est {0}', btn.iconCls==='accept-icon' ? 'actif' : 'inactif'));
+                }
+            },
+
+            'client_form #a_probleme_comptabilite_btn': {
+                click: function(btn) {
+                    btn.setIconCls(btn.iconCls==='accept-icon' ? 'error-icon' : 'accept-icon');
+                    if (btn.iconCls === 'accept-icon') {
+                        btn.setText("Ce client n'a pas de problème avec la comptabilité");
+                    } else {
+                        btn.setText("Ce client a un problème avec la comptabilité");
+                    }
                 }
             },
 
@@ -158,11 +169,19 @@ Ext.define('VIN.controller.Client', {
             },
             success: function(_form, action) {
 
-                // est_actif toggle
+                // est_actif button
                 var btn = form.down('#est_actif_btn');
                 btn.setIconCls(action.result.data.est_actif ? 'accept-icon' : 'error-icon');
                 btn.setText(Ext.String.format('Ce client est {0}', action.result.data.est_actif ? 'actif' : 'inactif'));
-                btn.toggle(action.result.data.est_actif);
+
+                // a_probleme_comptabilite button
+                btn = form.down('#a_probleme_comptabilite_btn');
+                btn.setIconCls(action.result.data.a_probleme_comptabilite ? 'error-icon' : 'accept-icon');
+                if (btn.iconCls === 'accept-icon') {
+                    btn.setText("Ce client n'a pas de problème avec la comptabilité");
+                } else {
+                    btn.setText("Ce client a un problème avec la comptabilité");
+                }
 
                 var cg = form.down('#commande_g');
                 // bind this commande grid to this particular client, so that every operation
@@ -181,7 +200,8 @@ Ext.define('VIN.controller.Client', {
             form.submit({
                 url: ajax_url_prefix + '/client/save',
                 params: {
-                    est_actif: form.down('#est_actif_btn').pressed
+                    est_actif: (form.down('#est_actif_btn').iconCls === 'accept-icon'),
+                    a_probleme_comptabilite: (form.down('#a_probleme_comptabilite_btn').iconCls === 'error-icon')
                 },
                 success: function(_form, action) {
                     var client_rec = Ext.create('VIN.model.Client', action.result.data);
@@ -213,7 +233,7 @@ Ext.define('VIN.controller.Client', {
                             msg: Ext.String.format("Le client #{0} a été {1}{2}", no_client,
                                                    form.down('#no_client_tf').getValue() ? 'modifié' : 'créé',
                                                    form.down('#no_client_tf').getValue() ? ' (ainsi que tous les onglets qui y font référence)' : ''),
-                            icon: Ext.MessageBox.WARNING,
+                            icon: Ext.MessageBox.INFO,
                             buttons: Ext.MessageBox.OK
                         });
                     }

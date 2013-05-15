@@ -625,6 +625,14 @@ Ext.define('VIN.controller.Commande', {
                 var adresse = Ext.String.format('{0} {1} {2} {3}', cr.get('no_civique')||'', cr.get('rue')||'',
                                                 cr.get('ville')||'', cr.get('code_postal')||'');
                 form.down('#adresse_tf').setValue(adresse);
+                if (cr.get('a_probleme_comptabilite')) {
+                    Ext.Msg.show({
+                        title: 'Vinum',
+                        msg: 'Ce client a un problème avec la comptabilité',
+                        icon: Ext.MessageBox.WARNING,
+                        buttons: Ext.MessageBox.OK
+                    });
+                }
                 if (typeof callback === 'function') {
                     callback(form, cr);
                 }
