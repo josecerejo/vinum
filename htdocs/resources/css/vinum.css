@@ -24,6 +24,18 @@
     /* margin: 5px; */
 }
 
+.header .title_dev {
+    /* padding: 10px 10px 10px 10px; */
+    /* background: url(../images/logo-roucet.gif) no-repeat; */
+    color: #ff0;
+    font-size: 25px;
+    /* font-weight: bold; */
+    text-shadow: 0 1px 0 #4e691f;
+    /* font: normal 20px tahoma, arial, sans-serif; */
+    /* color: white; */
+    /* margin: 5px; */
+}
+
 .home-icon {
     background: url(../images/icons/house.png) no-repeat !important;
 }

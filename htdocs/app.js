@@ -8,11 +8,12 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-05-15';
+var last_update = '2013-05-24';
 var vinum_version = 'alpha';
 var server;
 if (window.location.href.indexOf('localhost') !== -1) {
     server_name = 'localhost';
+    vinum_version = 'dev';
     document.title = 'Vinum (local)';
 } else if (window.location.href.match(/.*\d+[.]\d+[.]\d+[.]\d+.*/)) {
     server_name = 'DigitalOcean';
