@@ -71,26 +71,30 @@ Ext.define('VIN.controller.Backorder', {
 
     deleteBO: function(rec) {
         var f = backorder_win.down('#backorder_f');
-        Ext.Msg.confirm('Vinum', Ext.String.format("Êtes-vous certain de vouloir détruire ce BO ('{0}' pour '{1}')?",
-                                                   rec.get('type_vin'), rec.get('nom_social')),
-                        Ext.bind(function(btn) {
-                            if (btn == 'yes') {
-                                var dummy_form = Ext.create('Ext.form.Panel');
-                                dummy_form.submit({
-                                    url: ajax_url_prefix + '/backorder/remove',
-                                    params: {
-                                        backorder_id: rec.get('backorder_id')
-                                    },
-                                    success: function(_form, action) {
-                                        var g = Ext.getCmp('main_pnl').down('#backorder_g');
-                                        if (g) {
-                                            g.getStore().load();
-                                        }
-                                        backorder_win.hide();
-                                    }
-                                });
-                            }
-                        }, this));
+        if (rec.get('type_vin')) {
+            var msg = Ext.String.format("Êtes-vous certain de vouloir détruire ce BO ('{0}' pour '{1}')?",
+                                        rec.get('type_vin'), rec.get('nom_social'));
+        } else {
+            var msg = "Êtes-vous certain de vouloir détruire ce BO?";
+        }
+        Ext.Msg.confirm('Vinum', msg, Ext.bind(function(btn) {
+            if (btn == 'yes') {
+                var dummy_form = Ext.create('Ext.form.Panel');
+                dummy_form.submit({
+                    url: ajax_url_prefix + '/backorder/remove',
+                    params: {
+                        backorder_id: rec.get('backorder_id')
+                    },
+                    success: function(_form, action) {
+                        var g = Ext.getCmp('main_pnl').down('#backorder_g');
+                        if (g) {
+                            g.getStore().load();
+                        }
+                        backorder_win.hide();
+                    }
+                });
+            }
+        }, this));
     },
 
     editBO: function(rec, win_title) {
@@ -105,9 +109,9 @@ Ext.define('VIN.controller.Backorder', {
             success: function(_form, action) {
                 backorder_win.show();
                 f.down('#client_dd').forceSelection = true;
-                f.down('#client_dd').addCls('x-item-disabled');
+                f.down('#client_dd').setDisabled(true);
                 f.down('#produit_dd').forceSelection = true;
-                f.down('#produit_dd').addCls('x-item-disabled');
+                f.down('#produit_dd').setDisabled(true);
                 backorder_win.down('#del_btn').setDisabled(false);
                 if (win_title !== undefined) {
                     backorder_win.setTitle(win_title);
@@ -194,8 +198,8 @@ Ext.define('VIN.controller.Backorder', {
     popNewBOWindow: function() {
         var f = backorder_win.down('#backorder_f');
         f.getForm().reset();
-        f.down('#client_dd').removeCls('x-item-disabled');
-        f.down('#produit_dd').removeCls('x-item-disabled');
+        f.down('#client_dd').setDisabled(false);
+        f.down('#produit_dd').setDisabled(false);
         backorder_win.down('#del_btn').setDisabled(true);
         backorder_win.show();
     }
