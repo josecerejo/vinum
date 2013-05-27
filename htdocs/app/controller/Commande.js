@@ -16,24 +16,12 @@ Ext.define('VIN.controller.Commande', {
                 // on Chrome/OSX (why only for this particular tab though?)
                 beforeclose: function(form) {
                     form.ownerCt.remove(form);
-                    // Ext.Msg.confirm('Vinum', "Voulez-vous sauvegarder cette commande avant de la fermer?",
-                    //                 Ext.bind(function(btn) {
-                    //                     if (btn == 'yes') {
-                    //                         this.saveCommandeFormPart(form, function() {
-                    //                             form.ownerCt.remove(form);
-                    //                         }, 'both'); // will both both created/saved msgs
-                    //                     } else {
-                    //                         form.ownerCt.remove(form);
-                    //                     }
-                    //                 }, this));
-                    // return false;
                 }
             },
-            'commande_form #client_dd': {
+            'form_form #client_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
-                    this.loadClientPartOfCommandeForm(form, records[0].get('no_client'),
-                                                      this.getLoadClientPartOfCommmandeFormCallback(form));
+                    this.loadClientPartOfCommandeForm(form, records[0].get('no_client'));
                 }
             },
             '#details_client_btn': {
@@ -603,7 +591,8 @@ Ext.define('VIN.controller.Commande', {
         }
     },
 
-    loadClientPartOfCommandeForm: function(form, no_client, callback) {
+    // is_client_tab_update: to distinguish between being called from this controller or the client one
+    loadClientPartOfCommandeForm: function(form, no_client, is_client_tab_update) {
         var cdd = form.down('#client_dd');
         cdd.forceSelection = false;
         form.load({
@@ -625,44 +614,20 @@ Ext.define('VIN.controller.Commande', {
                 var adresse = Ext.String.format('{0} {1} {2} {3}', cr.get('no_civique')||'', cr.get('rue')||'',
                                                 cr.get('ville')||'', cr.get('code_postal')||'');
                 form.down('#adresse_tf').setValue(adresse);
-                if (cr.get('a_probleme_comptabilite')) {
-                    Ext.Msg.show({
-                        title: 'Vinum',
-                        msg: 'Ce client a un problème avec la comptabilité',
-                        icon: Ext.MessageBox.WARNING,
-                        buttons: Ext.MessageBox.OK
-                    });
-                }
-                if (typeof callback === 'function') {
-                    callback(form, cr);
+                // if NOT a client tab update (i.e. called from this controller, i.e. the default)..
+                if (is_client_tab_update === undefined) {
+                    if (cr.get('a_probleme_comptabilite')) {
+                        Ext.Msg.show({
+                            title: 'Vinum',
+                            msg: 'Ce client a un problème avec la comptabilité',
+                            icon: Ext.MessageBox.WARNING,
+                            buttons: Ext.MessageBox.OK
+                        });
+                    }
+                    this.loadClientProduits(form);
                 }
             }, this)
         });
-    },
-
-    // returns closure on commande_rec, callable with client_rec
-    getLoadClientPartOfCommmandeFormCallback: function(form, commande_rec) {
-        return Ext.bind(function(form, client_rec) {
-            this.loadClientProduits(form);
-            /*
-            form.down('#email_facture_btn').setDisabled(client_rec.get('mode_facturation') === 'poste');
-            form.down('#facture_poste_btn').setDisabled(client_rec.get('mode_facturation') === 'courriel');
-            // commande_rec might or might not have been defined (by the close creation call)
-            if (typeof commande_rec !== 'undefined') {
-                if (commande_rec.get('facture_est_envoyee')) {
-                    if (client_rec.get('mode_facturation') === 'courriel') {
-                        form.down('#email_facture_btn').setIconCls('tick-icon');
-                    } else {
-                        form.down('#facture_poste_btn').setIconCls('tick-icon');
-                        form.down('#facture_poste_btn').toggle();
-                    }
-                }
-                if (commande_rec.get('bon_de_commande_est_envoye')) {
-                    form.down('#email_bon_de_commande_btn').setIconCls('tick-icon');
-                }
-            }
-            */
-        }, this);
     },
 
     loadCommandePartOfCommandeForm: function(form, commande_rec) {
@@ -694,13 +659,12 @@ Ext.define('VIN.controller.Commande', {
         mp.setActiveTab(cf);
         if (typeof commande_rec_or_no_client === 'object') {
             var commande_rec = commande_rec_or_no_client;
-            this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'),
-                                              this.getLoadClientPartOfCommmandeFormCallback(cf, commande_rec));
+            this.loadClientPartOfCommandeForm(cf, commande_rec.get('no_client'));
             this.loadCommandePartOfCommandeForm(cf, commande_rec);
             cf.setTitle(Ext.String.format('Commande {0}', commande_rec.get('no_commande_facture')));
         } else if (typeof commande_rec_or_no_client !== 'undefined') {
             var no_client = commande_rec_or_no_client;
-            this.loadClientPartOfCommandeForm(cf, no_client, this.getLoadClientPartOfCommmandeFormCallback(cf));
+            this.loadClientPartOfCommandeForm(cf, no_client);
         }
     },
 
