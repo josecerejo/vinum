@@ -35,8 +35,8 @@ Ext.define('VIN.controller.Client', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     Ext.Array.forEach(['no_civique', 'rue', 'ville', 'province', 'code_postal'], function(item) {
-                        var src = form.down(Ext.String.format('#{0}_tf', item));
-                        var dst = form.down(Ext.String.format('#{0}_fact_tf', item));
+                        var src = form.down(Ext.String.format('#{0}_fact_tf', item));
+                        var dst = form.down(Ext.String.format('#{0}_tf', item));
                         dst.setValue(src.getValue());
                     });
                 }

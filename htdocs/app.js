@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-05-24';
+var last_update = '2013-05-27';
 var vinum_version = 'alpha';
 var server;
 if (window.location.href.indexOf('localhost') !== -1) {
@@ -23,8 +23,8 @@ if (window.location.href.indexOf('localhost') !== -1) {
 }
 
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    "<br>&bull; Ajout d'un champ \"est actif\" au produit" +
-    "<br>&bull; Popup \"problème de comptabilité\" pour les clients";
+    "<br>&bull; Ajout d'un champ \"est actif\" au client" +
+    "<br>&bull; Inversion des adresses de livraison et de facturation dans l'onglet client";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',

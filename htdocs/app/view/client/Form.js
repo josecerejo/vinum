@@ -195,65 +195,6 @@ Ext.define('VIN.view.client.Form', {
                     border: false,
                     items: [{
                         xtype: 'fieldset',
-                        title: 'Adresse de livraison',
-                        flex: 0.5,
-                        defaults: {
-                            bodyStyle: 'background-color:#dfe8f5',
-                            border: false
-                        },
-                        items: [{
-                            layout: 'hbox',
-                            defaults: {
-                                padding: 5,
-                            },
-                            items: [{
-                                xtype: 'textfield',
-                                fieldLabel: 'No',
-                                name: 'no_civique',
-                                itemId: 'no_civique_tf',
-                                flex: 0.1
-                            }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'Rue',
-                                name: 'rue',
-                                itemId: 'rue_tf',
-                                flex: 0.4
-                            }]
-                        }, {
-                            layout: 'hbox',
-                            defaults: {
-                                padding: 5,
-                            },
-                            items: [{
-                                xtype: 'textfield',
-                                fieldLabel: 'Ville',
-                                name: 'ville',
-                                itemId: 'ville_tf',
-                                flex: 1/6
-                            }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'Province',
-                                name: 'province',
-                                itemId: 'province_tf',
-                                flex: 1/6
-                            }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'Code postal',
-                                regex: /^[A-Z]\d[A-Z] \d[A-Z]\d$/,
-                                regexText: 'Le format doit être: H0H 0H0',
-                                name: 'code_postal',
-                                itemId: 'code_postal_tf',
-                                flex: 1/6
-                            }]
-                        }]
-                    }, {
-                        xtype: 'button',
-                        scale: 'small',
-                        itemId: 'copy_addr_btn',
-                        iconCls: 'arrow-right-icon',
-                        style: 'margin-right: 5px; margin-left: 5px; margin-top: 60px'
-                    }, {
-                        xtype: 'fieldset',
                         title: 'Adresse de facturation',
                         flex: 0.5,
                         defaults: {
@@ -302,6 +243,65 @@ Ext.define('VIN.view.client.Form', {
                                 regexText: 'Le format doit être: H0H 0H0',
                                 name: 'code_postal_fact',
                                 itemId: 'code_postal_fact_tf',
+                                flex: 1/6
+                            }]
+                        }]
+                    }, {
+                        xtype: 'button',
+                        scale: 'small',
+                        itemId: 'copy_addr_btn',
+                        iconCls: 'arrow-right-icon',
+                        style: 'margin-right: 5px; margin-left: 5px; margin-top: 60px'
+                    }, {
+                        xtype: 'fieldset',
+                        title: 'Adresse de livraison',
+                        flex: 0.5,
+                        defaults: {
+                            bodyStyle: 'background-color:#dfe8f5',
+                            border: false
+                        },
+                        items: [{
+                            layout: 'hbox',
+                            defaults: {
+                                padding: 5,
+                            },
+                            items: [{
+                                xtype: 'textfield',
+                                fieldLabel: 'No',
+                                name: 'no_civique',
+                                itemId: 'no_civique_tf',
+                                flex: 0.1
+                            }, {
+                                xtype: 'textfield',
+                                fieldLabel: 'Rue',
+                                name: 'rue',
+                                itemId: 'rue_tf',
+                                flex: 0.4
+                            }]
+                        }, {
+                            layout: 'hbox',
+                            defaults: {
+                                padding: 5,
+                            },
+                            items: [{
+                                xtype: 'textfield',
+                                fieldLabel: 'Ville',
+                                name: 'ville',
+                                itemId: 'ville_tf',
+                                flex: 1/6
+                            }, {
+                                xtype: 'textfield',
+                                fieldLabel: 'Province',
+                                name: 'province',
+                                itemId: 'province_tf',
+                                flex: 1/6
+                            }, {
+                                xtype: 'textfield',
+                                fieldLabel: 'Code postal',
+                                regex: /^[A-Z]\d[A-Z] \d[A-Z]\d$/,
+                                regexText: 'Le format doit être: H0H 0H0',
+                                name: 'code_postal',
+                                itemId: 'code_postal_tf',
                                 flex: 1/6
                             }]
                         }]
