@@ -713,6 +713,7 @@ Ext.define('VIN.controller.Commande', {
             Ext.getCmp('main_pnl').add(cg);
         }
         Ext.getCmp('main_pnl').setActiveTab(cg);
+        return cg;
     },
 
     printFacture: function(form, with_logo) {

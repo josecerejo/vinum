@@ -121,7 +121,7 @@ Ext.define('VIN.field.PriceField', {
     }
 });
 
-http://www.sencha.com/forum/showthread.php?255620-Revisiting-Clearable-combo-boxes-in-Ext-4#7
+// http://www.sencha.com/forum/showthread.php?255620-Revisiting-Clearable-combo-boxes-in-Ext-4#7
 Ext.define('VIN.field.ClearableComboBox', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.clearablecombo',
@@ -136,7 +136,21 @@ Ext.define('VIN.field.ClearableComboBox', {
     }
 });
 
-http://stackoverflow.com/a/13589752/787842
+Ext.define('VIN.field.ClearableComboBoxWithoutTrigger', {
+    extend: 'Ext.form.field.ComboBox',
+    alias: 'widget.clearablecombo_notrigger',
+    triggerCls: 'x-form-clear-trigger',
+    initComponent: function() {
+        var me = this;
+        me.callParent(arguments);
+    },
+    onTriggerClick: function(event) {
+        var me = this;
+        me.clearValue();
+    }
+});
+
+// http://stackoverflow.com/a/13589752/787842
 Ext.define('Ext.ux.CustomTrigger', {
     extend: 'Ext.form.field.Trigger',
     alias: 'widget.clearabletextfield',
@@ -153,7 +167,7 @@ Ext.define('Ext.ux.CustomTrigger', {
 Ext.application({
     name: 'VIN',
     controllers: ['MainToolbar', 'Client', 'Commande', 'Inventaire', 'ProduitEtProducteur',
-                  'Login', 'Rapport', 'Backorder', 'Succursale', 'Prix'],
+                  'Login', 'Rapport', 'Backorder', 'Succursale', 'Prix', 'Assistant'],
     autoCreateViewport: true,
     launch: function() {
 

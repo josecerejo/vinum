@@ -151,6 +151,7 @@ Ext.define('VIN.controller.Inventaire', {
         } else {
             invf.down('#editor_pnl').expand();
         }
+        return invf;
     }
 
 });

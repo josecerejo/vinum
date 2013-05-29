@@ -124,6 +124,34 @@ Ext.define('VIN.view.MainToolbar', {
             iconCls: 'table-icon',
             id: 'succ_saq_menu_itm'
         }]
+    }, {
+        xtype: 'clearablecombo_notrigger',
+        emptyText: 'Assistant intelligent',
+        width: 300,
+        hideTrigger1: true,
+        displayField: 'suggestion',
+        id: 'assistant_dd',
+        store: Ext.create('Ext.data.Store', {
+            fields: ['suggestion'],
+            proxy: {
+                type: 'ajax',
+                limitParam: undefined,
+                pageParam: undefined,
+                startParam: undefined,
+                url: ajax_url_prefix + '/assistant/ask',
+                reader: {
+                    type: 'json',
+                    root: 'rows'
+                }
+            }
+        }),
+        minChars: 3,
+        forceSelection: false,
+        matchFieldWidth: false,
+        listConfig: {
+            loadingText: 'Recherche...',
+            emptyText: 'L\'assistant intelligent ne peut pas interpréter votre requête..'
+        }
     }]
 
 });

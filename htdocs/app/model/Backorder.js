@@ -20,6 +20,10 @@ Ext.define('VIN.model.Backorder', {
         header: 'Nom social',
         name: 'nom_social'
     }, {
+        header: '# client',
+        name: 'no_client',
+        type: 'int'
+    }, {
         header: 'Date',
         name: 'date_bo',
         type: 'date'

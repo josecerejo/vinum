@@ -193,6 +193,7 @@ Ext.define('VIN.controller.Backorder', {
             Ext.getCmp('main_pnl').add(g);
         }
         Ext.getCmp('main_pnl').setActiveTab(g);
+        return g;
     },
 
     popNewBOWindow: function() {

@@ -67,6 +67,8 @@ def get_commandes():
         # this is a bit hack-ish, should be revised
         request.args = request.args.to_dict()
         request.args['sort'] = request.args['sort'].replace('"no_client"', '"o.no_client"')
+        if 'filter' in request.args:
+            request.args['filter'] = request.args['filter'].replace('"no_client"', '"o.no_client"')
         return get(g, request, {'commande': 'o', 'client': 'c', 'representant': 'r'},
                    join={'o.no_client': 'c.no_client', 'c.representant_id': 'r.representant_id'})
 

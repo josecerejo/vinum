@@ -150,6 +150,7 @@ Ext.define('VIN.controller.Client', {
         return any_contained_view.up('client_form');
     },
 
+    // TODO: put focus on tab if one already exists instead of creating one
     createClientForm: function(client_rec) {
         var cf = Ext.create('widget.client_form');
         var mp = Ext.getCmp('main_pnl');
@@ -161,6 +162,7 @@ Ext.define('VIN.controller.Client', {
     },
 
     loadClientForm: function(form, no_client) {
+        form.setTitle(Ext.String.format('Client {0}', no_client));
         // load client form
         form.load({
             url: ajax_url_prefix + '/client/load',
@@ -235,6 +237,7 @@ Ext.define('VIN.controller.Client', {
                         });
                     }
                     form.down('#no_client_tf').setValue(no_client);
+                    form.setTitle(Ext.String.format('Client {0}', no_client));
                 }
             });
         }
