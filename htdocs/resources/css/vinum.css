@@ -12,6 +12,20 @@
    /* padding-left: 3px; */
 }
 
+.header_dev {
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #D62020), Color-stop(100%, #9C1313));
+    Background-image: -webkit-linear-gradient(top, #D62020, #9C1313);
+    background-image: -moz-linear-gradient(top, #D62020, #9C1313);
+    background-image: -o-linear-gradient(top, #D62020, #9C1313);
+    background-image: -ms-linear-gradient(top, #D62020, #9C1313);
+    background-image: linear-gradient(top, #D62020, #9C1313);
+    /* border-bottom: 1px solid #567422; */
+    border: 0 none;
+   /* background: #1E4176; */
+   /* padding-top: 3px; */
+   /* padding-left: 3px; */
+}
+
 .header .title {
     /* padding: 10px 10px 10px 10px; */
     /* background: url(../images/logo-roucet.gif) no-repeat; */
@@ -24,7 +38,7 @@
     /* margin: 5px; */
 }
 
-.header .title_dev {
+.header_dev .title {
     /* padding: 10px 10px 10px 10px; */
     /* background: url(../images/logo-roucet.gif) no-repeat; */
     color: #ff0;

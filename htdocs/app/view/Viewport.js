@@ -8,11 +8,11 @@ Ext.define('VIN.view.Viewport', {
         border: false,
         items: [{
             xtype: 'toolbar',
-            cls: 'header',
+            cls: vinum_version == 'alpha' ? 'header' : 'header_dev',
             items: {
                 xtype: 'component',
                 id: 'main_header',
-                cls: vinum_version == 'alpha' ? 'title' : 'title_dev',
+                cls: 'title',
                 componentCls: 'main_header',
                 html: '<table style="width: 100%; table-layout: fixed"><tr>' +
                       Ext.String.format('<td style="padding: 10px">Vinum (<b>{0}</b>@{1})</td>', vinum_version, server_name) +
