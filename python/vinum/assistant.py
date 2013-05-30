@@ -12,7 +12,7 @@ MAX_N_RESULTS = 25
 @app.route('/assistant/ask', methods=['GET'])
 @login_required
 def ask():
-    q = request.args['query'].strip()
+    q = request.args['query'].strip().lower()
     cur = g.db.cursor()
     results = []
     tokens = re.split('\W+', q)
@@ -25,8 +25,8 @@ def ask():
                                               {'%%%s%%' % t for t in ts}})
         if rows and len(rows) <= MAX_N_RESULTS:
             for row in rows:
-                if 'créer' in q and 'commande' in q:
-                    results.append({'suggestion': 'Créer une commande pour le client %s' % row['nom_social'],
+                if u'créer' in q and 'commande' in q:
+                    results.append({'suggestion': u'Créer une commande pour le client %s' % row['nom_social'],
                                     'target': 'commande',
                                     'filter': {'no_client': row['no_client']}})
                 if 'commande' in q:
