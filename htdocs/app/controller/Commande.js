@@ -18,7 +18,7 @@ Ext.define('VIN.controller.Commande', {
                     form.ownerCt.remove(form);
                 }
             },
-            'form_form #client_dd': {
+            'commande_form #client_dd': {
                 select: function(field, records, eopts) {
                     var form = this._getFormViewInstance(field);
                     this.loadClientPartOfCommandeForm(form, records[0].get('no_client'));
