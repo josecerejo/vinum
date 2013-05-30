@@ -107,7 +107,8 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             boxLabel: 'Est actif (i.e. visible dans les listes de prix)',
                             name: 'est_actif',
                             itemId: 'est_actif_cb',
-                            style: 'margin-top: 20px'
+                            style: 'margin-top: 20px',
+                            checked: true
                         }]
                     }, {
                         layout: 'hbox',
