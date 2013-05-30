@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from vinum import *
 from common import *
 from itertools import *
@@ -23,6 +25,10 @@ def ask():
                                               {'%%%s%%' % t for t in ts}})
         if rows and len(rows) <= MAX_N_RESULTS:
             for row in rows:
+                if 'créer' in q and 'commande' in q:
+                    results.append({'suggestion': 'Créer une commande pour le client %s' % row['nom_social'],
+                                    'target': 'commande',
+                                    'filter': {'no_client': row['no_client']}})
                 if 'commande' in q:
                     results.append({'suggestion': 'Voir les commandes du client %s' % row['nom_social'],
                                     'target': 'commande',
@@ -36,7 +42,6 @@ def ask():
                                     'target': 'client',
                                     'id': row['no_client']})
             # else: too many results!
-            print ts
             break
     if not results:
         # search for a produit
@@ -52,6 +57,6 @@ def ask():
                     else:
                         results.append({'suggestion': "Voir l'inventaire pour le produit %s" % row['type_vin'],
                                         'target': 'inventaire',
-                                        'filter': {'no_produit_interne': row['no_produit_interne']}})
+                                        'filter': {'type_vin': row['type_vin']}})
                 break
     return {'success': True, 'rows': results}

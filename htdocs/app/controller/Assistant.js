@@ -14,19 +14,23 @@ Ext.define('VIN.controller.Assistant', {
                         VIN.app.getController('Client').createClientForm(client_rec);
                     }
                     if (r.target === 'commande' && r.hasOwnProperty('filter')) {
-                        var cg = VIN.app.getController('Commande').createCommandeGrid(true);
+                        var cg = VIN.app.getController('Commande').createCommandeGrid();
                         var filter = cg.filters.getFilter('no_client');
                         filter.setValue({eq: r.filter.no_client});
                         filter.setActive(true);
                     }
                     if (r.target === 'inventaire' && r.hasOwnProperty('filter')) {
-                        var ig = VIN.app.getController('Inventaire').createInventaireForm(true).down('#inventaire_g');
-                        var filter = ig.filters.getFilter('no_produit_interne');
-                        filter.setValue({eq: r.filter.no_produit_interne});
+                        var ig = VIN.app.getController('Inventaire').createInventaireForm().down('#inventaire_g');
+                        var filter = ig.filters.getFilter('type_vin');
+                        filter.setValue(r.filter.type_vin);
+                        // must apply filter twice (bug):
+                        // http://stackoverflow.com/questions/9629531/apply-grid-filter-programmatically-from-function
+                        filter = ig.filters.getFilter('type_vin');
+                        filter.setValue(r.filter.type_vin);
                         filter.setActive(true);
                     }
                     if (r.target === 'backorder' && r.hasOwnProperty('filter')) {
-                        var bog = VIN.app.getController('Backorder').createBOGrid(true);
+                        var bog = VIN.app.getController('Backorder').createBOTab().down('#backorder_g');
                         var k = Object.keys(r.filter)[0];
                         var filter = bog.filters.getFilter(k);
                         filter.setValue({eq: r.filter[k]});

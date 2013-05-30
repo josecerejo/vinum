@@ -122,13 +122,14 @@ Ext.define('VIN.controller.Backorder', {
         });
     },
 
-    createBOGrid: function() {
-        var g = Ext.getCmp('main_pnl').down('#backorder_g');
-        if (!g) {
-            g = Ext.create('VIN.view.Grid', {
+    createBOTab: function() {
+        var bot = Ext.create('Ext.panel.Panel', {
+            title: 'Ruptures de stock (BOs)',
+            closable: true,
+            layout: 'fit',
+            header: false,
+            items: Ext.create('VIN.view.Grid', {
                 itemId: 'backorder_g',
-                title: 'Ruptures de stock (BOs)',
-                closable: true,
                 store: Ext.create('VIN.store.Backorders'),
                 add_delete_actioncolumn: true,
                 add_edit_actioncolumn: true,
@@ -189,11 +190,11 @@ Ext.define('VIN.controller.Backorder', {
                         }
                     }]
                 }
-            });
-            Ext.getCmp('main_pnl').add(g);
-        }
-        Ext.getCmp('main_pnl').setActiveTab(g);
-        return g;
+            })
+        });
+        Ext.getCmp('main_pnl').add(bot);
+        Ext.getCmp('main_pnl').setActiveTab(bot);
+        return bot;
     },
 
     popNewBOWindow: function() {
