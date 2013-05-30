@@ -454,7 +454,7 @@ Ext.define('VIN.view.client.Form', {
                             store: Ext.create('Ext.data.Store', {
                                 fields: ['jour'],
                                 data: [{jour: 'lundi'}, {jour: 'mardi'}, {jour: 'mercredi'},
-                                       {jour: 'jeudi'}, {jour: 'vendredi'}, {jour: 'samedi'}, {jour: 'dimanche'}]
+                                       {jour: 'jeudi'}, {jour: 'vendredi'}]
                             })
                         }, {
                             xtype: 'radiofield',
