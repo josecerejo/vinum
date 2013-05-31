@@ -137,7 +137,7 @@ Ext.define('VIN.controller.Prix', {
                                 limitParam: undefined,
                                 pageParam: undefined,
                                 startParam: undefined,
-                                url: ajax_url_prefix + '/produit/get_pays',
+                                url: ajax_url_prefix + '/producteur/get_pays',
                                 reader: {
                                     type: 'json',
                                     root: 'rows'

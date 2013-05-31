@@ -351,6 +351,7 @@ Ext.define('VIN.view.client.Form', {
                     column_flex: {
                         no_commande_facture: 1,
                         date_commande: 1,
+                        date_direct: 1,
                         montant: 1,
                         facture_est_envoyee: 1,
                         bon_de_commande_est_envoye: 1

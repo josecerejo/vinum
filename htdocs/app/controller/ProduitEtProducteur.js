@@ -13,24 +13,26 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                 selectionchange: function(model, records) {
                     if (records.length == 0) { return; }
                     var form = this._getFormViewInstance(model.view).down('#pp_produit_f');
-                    form.down('#nom_producteur_dd').forceSelection = false;
-                    form.down('#format_dd').forceSelection = false;
-                    form.down('#pays_dd').forceSelection = false;
-                    form.getForm().loadRecord(records[0]);
-                    // this is required to load a full producteur model in the dd,
-                    // to allow form.load to retrieve its no_producteur field later
-                    form.down('#nom_producteur_dd').getStore().loadRecords([records[0]]);
-                    // -------------------------------------------------------------------
-                    form.down('#nom_producteur_dd').forceSelection = true;
-                    form.down('#format_dd').forceSelection = true;
-                    form.down('#pays_dd').forceSelection = true;
+                    this.loadProduitForm(form, records[0]);
+                }
+            },
+            'pp_forms #pp_produit_f #type_vin_dd': {
+                select: function(field, records, eopts) {
+                    var form = this._getFormViewInstance(field).down('#pp_produit_f');
+                    this.loadProduitForm(form, records[0]);
                 }
             },
             'pp_forms #producteur_g': {
                 selectionchange: function(model, records) {
                     if (records.length == 0) { return; }
                     var form = this._getFormViewInstance(model.view).down('#pp_producteur_f');
-                    form.getForm().loadRecord(records[0]);
+                    this.loadProducteurForm(form, records[0]);
+                }
+            },
+            'pp_forms #pp_producteur_f #nom_producteur_dd': {
+                select: function(field, records, eopts) {
+                    var form = this._getFormViewInstance(field).down('#pp_producteur_f');
+                    this.loadProducteurForm(form, records[0]);
                 }
             },
             'pp_forms #filter_produits_btn': {
@@ -69,12 +71,13 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                             url: ajax_url_prefix + '/produit/save',
                             params: {
                                 no_producteur: pr.get('no_producteur'),
-                                est_actif: form.down('#est_actif_cb').getValue()
+                                est_actif: form.down('#est_actif_cb').getValue(),
+                                est_en_dispo_reduite: form.down('#est_en_dispo_reduite_cb').getValue()
                             },
                             success: Ext.bind(function(_form, action) {
                                 Ext.Msg.show({
                                     title: 'Vinum',
-                                    msg: Ext.String.format("Le produit '{0}' a été {1}", pf.down('#type_vin_tf').getValue(),
+                                    msg: Ext.String.format("Le produit '{0}' a été {1}", pf.down('#type_vin_dd').getValue(),
                                                            pf.down('#no_produit_interne_tf').getValue() ? 'modifié' : 'créé'),
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
@@ -99,13 +102,14 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                     var pf = form.down('#pp_produit_f');
                     if (!pf.down('#no_produit_interne_tf').getValue()) { return; }
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit \'{0}\' de la base de données?',
-                                                               pf.down('#type_vin_tf').getValue()),
+                                                               pf.down('#type_vin_dd').getValue()),
                         Ext.bind(function(btn) {
                             if (btn == 'yes') {
                                 pf.submit({
                                     url: ajax_url_prefix + '/produit/delete',
                                     success: function(response) {
                                         form.down('#produit_g').getStore().reload();
+                                        pf.getForm().reset();
                                     }
                                 });
                             }
@@ -122,12 +126,13 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                             success: Ext.bind(function(_form, action) {
                                 Ext.Msg.show({
                                     title: 'Vinum',
-                                    msg: Ext.String.format("Le producteur '{0}' a été {1}", pf.down('#nom_producteur_tf').getValue(),
+                                    msg: Ext.String.format("Le producteur '{0}' a été {1}", pf.down('#nom_producteur_dd').getValue(),
                                                            pf.down('#no_producteur_tf').getValue() ? 'modifié' : 'créé'),
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
                                 });
-                                pf.loadRecord(action.result); // to load no_producteur_tf
+                                //pf.loadRecord(action.result); // to load no_producteur_tf
+                                pf.down('#no_producteur_tf').setValue(action.result.data.no_producteur);
                                 form.down('#producteur_g').getStore().reload();
                             }, this)
                         });
@@ -147,13 +152,14 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                     var pf = form.down('#pp_producteur_f');
                     if (!pf.down('#no_producteur_tf').getValue()) { return; }
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le producteur \'{0}\' de la base de données?',
-                                                               pf.down('#nom_producteur_tf').getValue()),
+                                                               pf.down('#nom_producteur_dd').getValue()),
                         Ext.bind(function(btn) {
                             if (btn == 'yes') {
                                 pf.submit({
                                     url: ajax_url_prefix + '/producteur/delete',
                                     success: function(response) {
                                         form.down('#producteur_g').getStore().reload();
+                                        pf.getForm().reset();
                                     }
                                 });
                             }
@@ -174,6 +180,26 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
             Ext.getCmp('main_pnl').add(ppf);
         }
         Ext.getCmp('main_pnl').setActiveTab(ppf);
+    },
+
+    loadProduitForm: function(form, rec) {
+        form.down('#nom_producteur_dd').forceSelection = false;
+        form.down('#format_dd').forceSelection = false;
+        form.getForm().loadRecord(rec);
+        // this is required to load a full producteur model in the dd,
+        // to allow form.load to retrieve its no_producteur field later
+        form.down('#nom_producteur_dd').getStore().loadRecords([rec]);
+        // -------------------------------------------------------------------
+        form.down('#nom_producteur_dd').forceSelection = true;
+        form.down('#format_dd').forceSelection = true;
+    },
+
+    loadProducteurForm: function(form, rec) {
+        form.down('#region_dd').forceSelection = false;
+        form.down('#pays_dd').forceSelection = false;
+        form.getForm().loadRecord(rec);
+        form.down('#pays_dd').forceSelection = true;
+        form.down('#region_dd').forceSelection = true;
     }
 
 });

@@ -84,19 +84,13 @@ def download_liste_prix():
 @app.route('/produit/get_nom_domaine', methods=['GET'])
 @login_required
 def get_nom_domaine():
-    return get(g, request, 'produit', ('nom_domaine',))
+    return get(g, request, 'produit', ('nom_domaine',), what='distinct nom_domaine')
 
 
 @app.route('/produit/get_format', methods=['GET'])
 @login_required
 def get_format():
     return get(g, request, 'produit', ('format',), what='distinct format')
-
-
-@app.route('/produit/get_pays', methods=['GET'])
-@login_required
-def get_pays():
-    return get(g, request, 'produit', ('pays',), what='distinct pays')
 
 
 @app.route('/produit/save', methods=['POST'])

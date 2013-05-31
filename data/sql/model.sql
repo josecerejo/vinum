@@ -1,3 +1,4 @@
+
 drop table if exists succursale_saq cascade;
 create table succursale_saq (
     no_succursale_saq text primary key, -- text to allow searching
@@ -64,6 +65,7 @@ create table producteur (
     ville text,
     comte text,
     code_postal text check (code_postal ~ $re$^[A-Z]\d[A-Z] \d[A-Z]\d$|^\d{4,5}$$re$), -- 'H0H 0H0'|'1234'|'12345'
+    region text,
     pays text,
     no_tel text,
     no_fax text,
@@ -83,9 +85,10 @@ create table produit (
     format text not null references timbre_restaurateur (format_timbre),
     couleur text not null,
     quantite_par_caisse integer not null,
-    pays text,
+    --pays text, transferred to producteur
     suc_num integer,
-    est_actif bool default true
+    est_actif bool default true,
+    est_en_dispo_reduite bool default false
 );
 
 drop table if exists client_produit cascade;
