@@ -7,13 +7,10 @@ from common import *
 @app.route('/backorder/get', methods=['GET'])
 @login_required
 def get_bos():
-    request.args = request.args.to_dict()
-    if 'filter' in request.args:
-        request.args['filter'] = request.args['filter'].replace('"no_client"', '"b.no_client"')
-        request.args['filter'] = request.args['filter'].replace('"no_produit_interne"', '"b.no_produit_interne"')
     return get(g, request, {'backorder': 'b', 'produit': 'p', 'client': 'c', 'representant': 'r'},
                join={'b.no_produit_interne': 'p.no_produit_interne', 'b.no_client': 'c.no_client',
-                     'c.representant_id': 'r.representant_id'})
+                     'c.representant_id': 'r.representant_id'}, field_map={'no_client': 'b.no_client',
+                                                                           'no_produit_interne': 'b.no_produit_interne'})
 
 
 @app.route('/backorder/remove', methods=['POST'])

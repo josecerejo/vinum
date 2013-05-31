@@ -8,6 +8,7 @@ TVQ = 0.09975
 
 
 # get everything! handles every single possible select query required by the app..
+# note: field_map is not the nicest thing in the world.. it should be replaced by something wiser sometime!
 def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=None, where=None, field_map=None):
     if query_fields is None: query_fields = ()
     if join is None: join = {}
@@ -18,7 +19,8 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
     order_by = None
     if 'sort' in request.args:
         sort_args = json.loads(request.args['sort'])
-        order_by = ','.join(['%s %s' % (sa['property'], sa['direction']) for sa in sort_args])
+        order_by = ','.join(['%s %s' % (field_map.get(sa['property'], sa['property']),
+                                        sa['direction']) for sa in sort_args])
 
     # todo: put that somewhere that makes more sense
     comp_op_map = {'lt':'<', 'gt':'>', 'le':'<=', 'ge':'>=', 'eq':'='}

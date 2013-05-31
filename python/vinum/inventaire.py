@@ -8,16 +8,14 @@ import math
 def get_inventaire():
     # if no_produit_interne is specified, it's a product-specific request from a commande screen,
     # otherwise it's a request from the master grid (i.e. where={})
-    request.args = request.args.to_dict()
-    if 'filter' in request.args:
-        request.args['filter'] = request.args['filter'].replace('"no_produit_interne"', '"i.no_produit_interne"')
     return get(g, request, {'inventaire': 'i', 'produit': 'p', 'producteur': 'r'},
                what=['i.*', 'p.type_vin', 'p.format', 'p.quantite_par_caisse',
                      'r.nom_producteur', 'age_in_days(date_recue)'],
                join={'p.no_produit_interne':'i.no_produit_interne',
                      'p.no_producteur': 'r.no_producteur'},
                where={'i.no_produit_interne': request.args['no_produit_interne']}
-               if 'no_produit_interne' in request.args else {})
+               if 'no_produit_interne' in request.args else {},
+               field_map={'no_produit_interne': 'i.no_produit_interne'})
 
 
 @app.route('/inventaire/save', methods=['POST'])
