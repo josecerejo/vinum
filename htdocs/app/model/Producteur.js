@@ -31,6 +31,9 @@ Ext.define('VIN.model.Producteur', {
         header: 'Code postal',
         name: 'code_postal'
     }, {
+        header: 'Région',
+        name: 'region'
+    }, {
         name: 'pays'
     }, {
         header: '# téléphone',

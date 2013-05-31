@@ -40,8 +40,6 @@ Ext.define('VIN.model.Produit', {
         type: 'int',
         useNull: true
     }, {
-        name: 'pays'
-    }, {
         name: 'suc_num',
         type: 'int',
         useNull: true
@@ -69,6 +67,10 @@ Ext.define('VIN.model.Produit', {
             active: true,
             value: true
         }
+    }, {
+        header: 'Dispo réduite',
+        name: 'est_en_dispo_reduite',
+        type: 'bool'
     }],
 
     idProperty: 'no_produit_interne'

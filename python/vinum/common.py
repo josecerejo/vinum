@@ -51,6 +51,10 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
     return json_out
 
 
+def get_distinct_values(g, request, table, field):
+    return get(g, request, table, (field,), what='distinct %s' % field, where={(field, 'is not'): None})
+
+
 # $$$-related utils (could be elsewhere that make more sense!)
 
 def remove_taxes_(v):

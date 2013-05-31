@@ -57,7 +57,9 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                     resizable: { handles: 's' },
                     height: grid_height,
                     column_flex: {
-                        nom_producteur: 1
+                        nom_producteur: 1,
+                        region: 0.5,
+                        pays: 0.25
                     }
                 }]
             }, {
@@ -80,212 +82,215 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         },
                         itemId: 'pp_produit_f',
                         items: [{
-                        layout: 'hbox',
-                        bodyStyle: 'background-color:#dfe8f5',
-                        border: false,
-                        style: 'margin-bottom: 10px',
-                        defaults: {
-                            padding: 5
-                        },
-                        items: [{
-                            xtype: 'textfield',
-                            fieldLabel: 'No produit',
-                            readOnly: true,
-                            cls: 'x-item-disabled',
-                            name: 'no_produit_interne',
-                            itemId: 'no_produit_interne_tf',
-                            flex: 0.25
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Type de vin',
-                            allowBlank: false,
-                            name: 'type_vin',
-                            itemId: 'type_vin_tf',
-                            flex: 0.75
-                        }, {
-                            xtype: 'checkbox',
-                            boxLabel: 'Est actif (i.e. visible dans les listes de prix)',
-                            name: 'est_actif',
-                            itemId: 'est_actif_cb',
-                            style: 'margin-top: 20px',
-                            checked: true
-                        }]
-                    }, {
-                        layout: 'hbox',
-                        bodyStyle: 'background-color:#dfe8f5',
-                        border: false,
-                        style: 'margin-bottom: 10px',
-                        defaults: {
-                            padding: 5
-                        },
-                        items: [{
-                            xtype: 'combo',
-                            flex: 0.75,
-                            fieldLabel: 'Nom du domaine',
-                            displayField: 'nom_domaine',
-                            name: 'nom_domaine',
-                            allowBlank: false,
-                            store: Ext.create('Ext.data.Store', {
-                                fields: ['nom_domaine'],
-                                proxy: {
-                                    type: 'ajax',
-                                    limitParam: undefined,
-                                    pageParam: undefined,
-                                    startParam: undefined,
-                                    url: ajax_url_prefix + '/produit/get_nom_domaine',
-                                    reader: {
-                                        type: 'json',
-                                        root: 'rows'
-                                    }
+                            layout: 'hbox',
+                            bodyStyle: 'background-color:#dfe8f5',
+                            border: false,
+                            style: 'margin-bottom: 10px',
+                            defaults: {
+                                padding: 5
+                            },
+                            items: [{
+                                xtype: 'textfield',
+                                fieldLabel: 'No produit',
+                                readOnly: true,
+                                cls: 'x-item-disabled',
+                                name: 'no_produit_interne',
+                                itemId: 'no_produit_interne_tf',
+                                flex: 0.25
+                            }, {
+                                xtype: 'combo',
+                                flex: 0.75,
+                                displayField: 'type_vin',
+                                name: 'type_vin',
+                                store: Ext.create('VIN.store.Produits'),
+                                itemId: 'type_vin_dd',
+                                fieldLabel: 'Type de vin',
+                                minChars: 3,
+                                forceSelection: false,
+                                allowBlank: false,
+                                pageSize: 10,
+                                listConfig: {
+                                    loadingText: 'Recherche...',
+                                    emptyText: 'Aucun produit ne correspond à cette recherche..'
                                 }
-                            }),
-                            minChars: 3,
-                            forceSelection: false,
-                            listConfig: {
-                                loadingText: 'Recherche...',
-                                emptyText: 'Aucun domaine avec ce nom..'
-                            }
+                            }]
                         }, {
-                            xtype: 'combo',
-                            allowBlank: false,
-                            flex: 0.25,
-                            fieldLabel: 'Format',
-                            displayField: 'format',
-                            name: 'format',
-                            itemId: 'format_dd',
-                            forceSelection: true,
-                            store: Ext.create('Ext.data.Store', {
-                                fields: ['format'],
-                                proxy: {
-                                    type: 'ajax',
-                                    limitParam: undefined,
-                                    pageParam: undefined,
-                                    startParam: undefined,
-                                    url: ajax_url_prefix + '/produit/get_format',
-                                    reader: {
-                                        type: 'json',
-                                        root: 'rows'
+                            layout: 'hbox',
+                            bodyStyle: 'background-color:#dfe8f5',
+                            border: false,
+                            style: 'margin-bottom: 10px',
+                            defaults: {
+                                padding: 5
+                            },
+                            items: [{
+                                xtype: 'combo',
+                                flex: 0.5,
+                                fieldLabel: 'Nom du domaine',
+                                displayField: 'nom_domaine',
+                                name: 'nom_domaine',
+                                allowBlank: false,
+                                store: Ext.create('Ext.data.Store', {
+                                    fields: ['nom_domaine'],
+                                    proxy: {
+                                        type: 'ajax',
+                                        limitParam: undefined,
+                                        pageParam: undefined,
+                                        startParam: undefined,
+                                        url: ajax_url_prefix + '/produit/get_nom_domaine',
+                                        reader: {
+                                            type: 'json',
+                                            root: 'rows'
+                                        }
                                     }
+                                }),
+                                minChars: 3,
+                                forceSelection: false,
+                                listConfig: {
+                                    loadingText: 'Recherche...',
+                                    emptyText: 'Aucun domaine avec ce nom..'
                                 }
-                            }),
-                            minChars: 2,
-                            listConfig: {
-                                loadingText: 'Recherche...',
-                                emptyText: 'Aucun format trouvé..'
-                            }
-                        }]
-                    }, {
-                        layout: 'hbox',
-                        bodyStyle: 'background-color:#dfe8f5',
-                        border: false,
-                        style: 'margin-bottom: 10px',
-                        defaults: {
-                            padding: 5
-                        },
-                        items: [{
-                            xtype: 'combo',
-                            allowBlank: false,
-                            name: 'couleur',
-                            queryMode: 'local',
-                            triggerAction: 'all',
-                            displayField: 'couleur',
-                            valueField: 'couleur',
-                            fieldLabel: 'Couleur',
-                            forceSelection: true,
-                            flex: 0.3,
-                            store: Ext.create('Ext.data.Store', {
-                                fields: ['couleur'],
-                                data: [{couleur: 'Blanc'},
-                                       {couleur: 'Rouge'},
-                                       {couleur: 'Rosé'}]
-                            })
-                        }, {
-                            xtype: 'combo',
-                            allowBlank: false,
-                            flex: 0.4,
-                            fieldLabel: 'Pays',
-                            displayField: 'pays',
-                            name: 'pays',
-                            itemId: 'pays_dd',
-                            allowBlank: false,
-                            forceSelection: true,
-                            store: Ext.create('Ext.data.Store', {
-                                fields: ['pays'],
-                                proxy: {
-                                    type: 'ajax',
-                                    limitParam: undefined,
-                                    pageParam: undefined,
-                                    startParam: undefined,
-                                    url: ajax_url_prefix + '/produit/get_pays',
-                                    reader: {
-                                        type: 'json',
-                                        root: 'rows'
+                            }, {
+                                xtype: 'combo',
+                                allowBlank: false,
+                                flex: 0.5,
+                                displayField: 'nom_producteur',
+                                name: 'nom_producteur',
+                                itemId: 'nom_producteur_dd',
+                                store: Ext.create('VIN.store.Producteurs'),
+                                itemId: 'nom_producteur_dd',
+                                fieldLabel: 'Nom du producteur',
+                                minChars: 3,
+                                forceSelection: true,
+                                allowBlank: false,
+                                store: Ext.create('Ext.data.Store', {
+                                    fields: ['nom_producteur'],
+                                    proxy: {
+                                        type: 'ajax',
+                                        limitParam: undefined,
+                                        pageParam: undefined,
+                                        startParam: undefined,
+                                        url: ajax_url_prefix + '/producteur/get_nom',
+                                        reader: {
+                                            type: 'json',
+                                            root: 'rows'
+                                        }
                                     }
+                                }),
+                                listConfig: {
+                                    loadingText: 'Recherche...',
+                                    emptyText: 'Aucun producteur ne correspond à cette recherche..'
                                 }
-                            }),
-                            minChars: 2,
-                            listConfig: {
-                                loadingText: 'Recherche...',
-                                emptyText: 'Aucun pays trouvé..'
-                            }
+                            }]
                         }, {
-                            xtype: 'numberfield',
-                            fieldLabel: 'Quantité par caisse',
-                            name: 'quantite_par_caisse',
-                            allowBlank: false,
-                            flex: 0.3
-                        }]
-                    }, {
-                        layout: 'hbox',
-                        bodyStyle: 'background-color:#dfe8f5',
-                        border: false,
-                        defaults: {
-                            padding: 5
-                        },
-                        items: [{
-                            xtype: 'combo',
-                            allowBlank: false,
-                            flex: 1,
-                            displayField: 'nom_producteur',
-                            name: 'nom_producteur',
-                            itemId: 'nom_producteur_dd',
-                            store: Ext.create('VIN.store.Producteurs'),
-                            itemId: 'nom_producteur_dd',
-                            fieldLabel: 'Nom du producteur',
-                            minChars: 3,
-                            forceSelection: true,
-                            listConfig: {
-                                loadingText: 'Recherche...',
-                                emptyText: 'Aucun producteur ne correspond à cette recherche..'
-                            }
-                        }]
-                    }, {
-                        layout: 'hbox',
-                        bodyStyle: 'background-color:#dfe8f5',
-                        border: false,
-                        style: 'margin-bottom: 5px; margin-top: 15px',
-                        defaults: {
-                            padding: 5
-                        },
-                        items: [{
-                            xtype: 'button',
-                            text: 'Sauvegarder',
-                            iconCls: 'disk-icon',
-                            itemId: 'save_produit_btn'
+                            layout: 'hbox',
+                            bodyStyle: 'background-color:#dfe8f5',
+                            border: false,
+                            style: 'margin-bottom: 10px',
+                            defaults: {
+                                padding: 5
+                            },
+                            items: [{
+                                xtype: 'combo',
+                                allowBlank: false,
+                                flex: 0.33,
+                                fieldLabel: 'Format',
+                                displayField: 'format',
+                                name: 'format',
+                                itemId: 'format_dd',
+                                forceSelection: true,
+                                store: Ext.create('Ext.data.Store', {
+                                    fields: ['format'],
+                                    proxy: {
+                                        type: 'ajax',
+                                        limitParam: undefined,
+                                        pageParam: undefined,
+                                        startParam: undefined,
+                                        url: ajax_url_prefix + '/produit/get_format',
+                                        reader: {
+                                            type: 'json',
+                                            root: 'rows'
+                                        }
+                                    }
+                                }),
+                                minChars: 2,
+                                listConfig: {
+                                    loadingText: 'Recherche...',
+                                    emptyText: 'Aucun format trouvé..'
+                                }
+                            }, {
+                                xtype: 'combo',
+                                allowBlank: false,
+                                name: 'couleur',
+                                queryMode: 'local',
+                                triggerAction: 'all',
+                                displayField: 'couleur',
+                                valueField: 'couleur',
+                                fieldLabel: 'Couleur',
+                                forceSelection: true,
+                                flex: 0.33,
+                                store: Ext.create('Ext.data.Store', {
+                                    fields: ['couleur'],
+                                    data: [{couleur: 'Blanc'},
+                                           {couleur: 'Rouge'},
+                                           {couleur: 'Rosé'}]
+                                })
+                            }, {
+                                xtype: 'numberfield',
+                                fieldLabel: 'Quantité par caisse',
+                                name: 'quantite_par_caisse',
+                                allowBlank: false,
+                                flex: 0.33
+                            }]
                         }, {
-                            xtype: 'button',
-                            text: 'Nouveau',
-                            iconCls: 'app-form-add-icon',
-                            itemId: 'new_produit_btn',
-                            style: 'margin-left: 5px'
+                            layout: 'hbox',
+                            bodyStyle: 'background-color:#dfe8f5',
+                            border: false,
+                            style: 'margin-bottom: 5px; margin-top: 15px',
+                            defaults: {
+                                padding: 5
+                            },
+                            items: [{
+                                xtype: 'checkbox',
+                                boxLabel: 'Est actif (i.e. visible dans les listes de prix)',
+                                name: 'est_actif',
+                                itemId: 'est_actif_cb',
+                                style: 'margin-top: 20px',
+                                checked: true
+                            }, {
+                                xtype: 'checkbox',
+                                boxLabel: 'Est en disponibilité réduite',
+                                name: 'est_en_dispo_reduite',
+                                itemId: 'est_en_dispo_reduite_cb',
+                                style: 'margin-top: 20px',
+                                checked: false
+                            }]
                         }, {
-                            xtype: 'button',
-                            text: 'Détruire',
-                            itemId: 'del_produit_btn',
-                            iconCls: 'del-icon',
-                            style: 'margin-left: 5px'
+                            layout: 'hbox',
+                            bodyStyle: 'background-color:#dfe8f5',
+                            border: false,
+                            style: 'margin-bottom: 5px; margin-top: 15px',
+                            defaults: {
+                                padding: 5
+                            },
+                            items: [{
+                                xtype: 'button',
+                                text: 'Sauvegarder',
+                                iconCls: 'disk-icon',
+                                itemId: 'save_produit_btn'
+                            }, {
+                                xtype: 'button',
+                                text: 'Nouveau',
+                                iconCls: 'app-form-add-icon',
+                                itemId: 'new_produit_btn',
+                                style: 'margin-left: 5px'
+                            }, {
+                                xtype: 'button',
+                                text: 'Détruire',
+                                itemId: 'del_produit_btn',
+                                iconCls: 'del-icon',
+                                style: 'margin-left: 5px'
+                            }]
                         }]
-                    }]
                     }
                 }, {
                     xtype: 'fieldset',
@@ -319,14 +324,35 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             itemId: 'no_producteur_tf',
                             flex: 0.25
                         }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Nom du producteur',
-                            allowBlank: false,
+                            xtype: 'combo',
+                            flex: 0.75,
+                            displayField: 'nom_producteur',
                             name: 'nom_producteur',
-                            itemId: 'nom_producteur_tf',
-                            flex: 0.75
-                        }]
+                            itemId: 'nom_producteur_dd',
+                            store: Ext.create('VIN.store.Producteurs'),
+                            itemId: 'nom_producteur_dd',
+                            fieldLabel: 'Nom du producteur',
+                            minChars: 3,
+                            forceSelection: false, // allowed to create here
+                            allowBlank: false,
+                            pageSize: 10,
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucun produit ne correspond à cette recherche..'
+                            }
+                            // xtype: 'textfield',
+                            // fieldLabel: 'Nom du producteur',
+                            // allowBlank: false,
+                            // name: 'nom_producteur',
+                            // itemId: 'nom_producteur_tf',
+                            // flex: 0.75
                         }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Nom du responsable',
+                            name: 'nom_responsable',
+                            flex: 2/3
+                        }]
+                     }, {
                         layout: 'hbox',
                         bodyStyle: 'background-color:#dfe8f5',
                         border: false,
@@ -361,16 +387,106 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                         style: 'margin-bottom: 10px',
                         defaults: {
                             padding: 5,
-                            flex: 1/4
+                            flex: 1/3
+                        },
+                        items: [{
+                            xtype: 'combo',
+                            allowBlank: false,
+                            fieldLabel: 'Comté',
+                            displayField: 'comte',
+                            name: 'comte',
+                            itemId: 'comte_dd',
+                            allowBlank: true,
+                            forceSelection: false, // open list!
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['comte'],
+                                proxy: {
+                                    type: 'ajax',
+                                    limitParam: undefined,
+                                    pageParam: undefined,
+                                    startParam: undefined,
+                                    url: ajax_url_prefix + '/producteur/get_comte',
+                                    reader: {
+                                        type: 'json',
+                                        root: 'rows'
+                                    }
+                                }
+                            }),
+                            minChars: 2,
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucun comté trouvé..'
+                            }
+                        }, {
+                            xtype: 'combo',
+                            allowBlank: false,
+                            fieldLabel: 'Région',
+                            displayField: 'region',
+                            name: 'region',
+                            itemId: 'region_dd',
+                            allowBlank: false,
+                            forceSelection: true, // closed list!
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['region'],
+                                proxy: {
+                                    type: 'ajax',
+                                    limitParam: undefined,
+                                    pageParam: undefined,
+                                    startParam: undefined,
+                                    url: ajax_url_prefix + '/producteur/get_region',
+                                    reader: {
+                                        type: 'json',
+                                        root: 'rows'
+                                    }
+                                }
+                            }),
+                            minChars: 2,
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucune région trouvée..'
+                            }
+                        }, {
+                            xtype: 'combo',
+                            allowBlank: false,
+                            fieldLabel: 'Pays',
+                            displayField: 'pays',
+                            name: 'pays',
+                            itemId: 'pays_dd',
+                            allowBlank: false,
+                            forceSelection: true, // closed list!
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['pays'],
+                                proxy: {
+                                    type: 'ajax',
+                                    limitParam: undefined,
+                                    pageParam: undefined,
+                                    startParam: undefined,
+                                    url: ajax_url_prefix + '/producteur/get_pays',
+                                    reader: {
+                                        type: 'json',
+                                        root: 'rows'
+                                    }
+                                }
+                            }),
+                            minChars: 2,
+                            listConfig: {
+                                loadingText: 'Recherche...',
+                                emptyText: 'Aucun pays trouvé..'
+                            }
+                        }]
+                    }, {
+                        layout: 'hbox',
+                        bodyStyle: 'background-color:#dfe8f5',
+                        border: false,
+                        style: 'margin-bottom: 10px',
+                        defaults: {
+                            padding: 5,
+                            flex: 1/3
                         },
                         items: [{
                             xtype: 'textfield',
-                            fieldLabel: 'Comté',
-                            name: 'comte'
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Pays',
-                            name: 'pays'
+                            fieldLabel: 'Courriel',
+                            name: 'courriel',
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'No téléphone',
@@ -379,25 +495,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             xtype: 'textfield',
                             fieldLabel: 'No fax',
                             name: 'no_fax'
-                        }]
-                    }, {
-                        layout: 'hbox',
-                        bodyStyle: 'background-color:#dfe8f5',
-                        border: false,
-                        style: 'margin-bottom: 10px',
-                        defaults: {
-                            padding: 5
-                        },
-                        items: [{
-                            xtype: 'textfield',
-                            fieldLabel: 'Nom du responsable',
-                            name: 'nom_responsable',
-                            flex: 2/3
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Courriel',
-                            name: 'courriel',
-                            flex: 1/3
                         }]
                     }, {
                         layout: 'hbox',
