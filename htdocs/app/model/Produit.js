@@ -39,10 +39,6 @@ Ext.define('VIN.model.Produit', {
         name: 'quantite_par_caisse',
         type: 'int',
         useNull: true
-    }, {
-        name: 'suc_num',
-        type: 'int',
-        useNull: true
     }, { // those two are actually part of a Commande, but since
          // they can displayed in a product table, they must be here too
         header: 'Quantité (c)',
@@ -71,6 +67,11 @@ Ext.define('VIN.model.Produit', {
         header: 'Dispo réduite',
         name: 'est_en_dispo_reduite',
         type: 'bool'
+    }, {
+        header: 'Région', // producteur field
+        name: 'region'
+    }, {
+        name: 'pays' // producteur field
     }],
 
     idProperty: 'no_produit_interne'

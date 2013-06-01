@@ -82,6 +82,12 @@ Ext.define('VIN.controller.Prix', {
                     model: 'VIN.model.Produit',
                     remoteSort: true,
                     sorters: [{
+                        property: 'pays',
+                        direction: 'ASC'
+                    }, {
+                        property: 'couleur',
+                        direction: 'ASC'
+                    }, {
                         property: 'type_vin',
                         direction: 'ASC'
                     }],
@@ -95,17 +101,9 @@ Ext.define('VIN.controller.Prix', {
                     }
                 }),
                 selModel: Ext.create('Ext.selection.CheckboxModel'),
-                column_flex: {
-                    type_vin: 2,
-                    nom_domaine: 2,
-                    nom_producteur: 2,
-                    millesime: 1,
-                    couleur: 1,
-                    format: 1,
-                    pays: 1,
-                    quantite_par_caisse: 1,
-                    prix: 1
-                },
+                column_flex: [['pays', 1], ['couleur', 1], ['type_vin', 2], ['millesime', 1],
+                              ['nom_producteur', 2], ['region', 2], ['quantite_par_caisse', 1],
+                              ['format', 1], ['prix', 1]],
                 dockedItems: {
                     xtype: 'toolbar',
                     dock: 'top',

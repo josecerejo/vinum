@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from vinum import *
 from common import *
 from appy.pod.renderer import Renderer
@@ -24,14 +26,14 @@ def _get_prix_data(request):
     ptc = 'i.prix_%s as prix' % request['type_client']
     q = """select * from (
                 -- actif/en reserve/en attente
-                select p.*, i.*, r.nom_producteur, %s
+                select p.*, i.*, r.*, %s
                      from produit p, inventaire i, producteur r where p.no_producteur = r.no_producteur and
                                 i.no_inventaire = (select no_inventaire from inventaire i
                                                    where i.no_produit_interne = p.no_produit_interne and statut_inventaire != 'inactif'
                                                    order by date_commande limit 1)
                 union
                 -- inactif records
-                select p.*, i.*, r.nom_producteur, %s
+                select p.*, i.*, r.*, %s
                          from produit p, inventaire i, producteur r where p.no_producteur = r.no_producteur and
                                 i.no_inventaire = (select no_inventaire from inventaire i
                                                    where i.no_produit_interne = p.no_produit_interne
@@ -49,11 +51,13 @@ def _get_prix_data(request):
                 comp_op_map = {'lt':'<', 'gt':'>', 'le':'<=', 'ge':'>=', 'eq':'='}
                 q += ' and %s %s %%s ' % (filter_arg['field'], comp_op_map[filter_arg.get('comparison', 'eq')])
                 qvals.append(filter_arg['value'])
-    if 'sort' in request:
-        sort_args = json.loads(request['sort'])
-        q += ('order by ' + ','.join(['%s %s' % (sa['property'], sa['direction']) for sa in sort_args]))
-    else:
-        q += "order by type_vin"
+    # if 'sort' in request:
+    #     sort_args = json.loads(request['sort'])
+    #     q += ('order by ' + ','.join(['%s %s' % (sa['property'], sa['direction']) for sa in sort_args]))
+    # else:
+    #     q += "order by type_vin"
+    q += u"order by pays, strpos('Rouge Blanc Rosé', couleur), type_vin"
+    #print cur.mogrify(q, qvals)
     cur.execute(q, qvals)
     return cur.fetchall()
 

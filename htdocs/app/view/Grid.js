@@ -89,8 +89,30 @@ Ext.define('VIN.view.Grid', {
     statics: {
 
         getColumnsFromModel: function(model, column_flex) {
+            // if column_flex is an array, only the column whose names are found in it will be
+            // used, and moreover, in the given order; the following structure is expected:
+            // [[col1_name, flex_value], [col2_name, flex_value], ..]
+            if (jQuery.isArray(column_flex)) {
+                var items = [];
+                var column_flex_obj = {};
+                Ext.each(column_flex, function(cf_item) {
+                    // really not efficient..!
+                    Ext.each(model.prototype.fields.items, function(model_item) {
+                        if (model_item.name === cf_item[0]) {
+                            items.push(model_item);
+                            column_flex_obj[model_item.name] = cf_item[1];
+                            return false;
+                        }
+                    });
+                });
+                column_flex = column_flex_obj;
+            } else {
+                // if it's an object (or 'all'), then the columns will be visited in the order they
+                // were defined in the corresponding Model (with their visibility and flex values modified on
+                // the fly with the column_flex struct)
+                var items = model.prototype.fields.items;
+            }
             var cols = [];
-            var items = model.prototype.fields.items;
             Ext.each(items, function(item) {
                 var name = item.name;
                 var flex = 1;
