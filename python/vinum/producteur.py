@@ -56,7 +56,10 @@ Maipu"""
 @app.route('/producteur/get_pays', methods=['GET'])
 @login_required
 def get_pays():
-    return get_distinct_values(g, request, 'producteur', 'pays')
+    res = get_distinct_values(g, request, 'producteur', 'pays')
+    if 'add_nouveau_monde' in request.args:
+        res['rows'].append({'pays': 'Nouveau Monde'})
+    return res
 
 
 @app.route('/producteur/save', methods=['POST'])

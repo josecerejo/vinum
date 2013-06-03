@@ -7,11 +7,18 @@ Ext.define('VIN.view.Grid', {
     add_delete_actioncolumn: false,
     column_flex: 'all',
     load_after_render: true,
+    sortable: true, // applies to all columns
 
     initComponent: function() {
 
         if (!this.columns) {
             this.columns = VIN.view.Grid.getColumnsFromModel(this.store.getProxy().getModel(), this.column_flex);
+        }
+
+        if (!this.sortable) {
+            Ext.each(this.columns, function(col) {
+                col.sortable = false;
+            });
         }
 
         if (this.add_edit_actioncolumn) {

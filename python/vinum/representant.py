@@ -3,7 +3,7 @@ from common import *
 from appy.pod.renderer import Renderer
 
 
-@app.route('/representant/get_representants', methods=['GET'])
+@app.route('/representant/get', methods=['GET'])
 @login_required
 def get_representants():
     return get(g, request, 'representant', ('representant_nom',),

@@ -9,7 +9,9 @@ create table succursale_saq (
 drop table if exists representant cascade;
 create table representant (
     representant_id serial primary key,
-    representant_nom text
+    representant_nom text,
+    courriel text,
+    no_tel text
 );
 
 drop table if exists timbre_restaurateur cascade;
