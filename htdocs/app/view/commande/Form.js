@@ -193,7 +193,7 @@ Ext.define('VIN.view.commande.Form', {
                             displayField: 'nom_social',
                             name: 'nom_social',
                             store: Ext.create('VIN.store.Clients'),
-                            fieldLabel: 'Nom',
+                            fieldLabel: '<b>Nom</b>',
                             minChars: 3,
                             forceSelection: true,
                             pageSize: 10,
@@ -386,7 +386,7 @@ Ext.define('VIN.view.commande.Form', {
                     load_after_render: false,
                     column_flex: {
                         type_vin: 2,
-                        nom_domaine: 2,
+                        nom_producteur: 2,
                         format: 1,
                         quantite_caisse: 1
                     },

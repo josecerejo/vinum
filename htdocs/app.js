@@ -8,7 +8,7 @@ Ext.Loader.setConfig({
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
 var initial_tab = null; //'widget.inventaire_grid';
-var last_update = '2013-05-30';
+var last_update = '2013-06-03';
 var vinum_version = 'alpha';
 var server;
 if (window.location.href.indexOf('localhost') !== -1) {
@@ -24,8 +24,8 @@ if (window.location.href.indexOf('localhost') !== -1) {
 }
 
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    //"<br>&bull; Ajout d'un champ \"est actif\" au client" +
-    "<br>&bull; Intégration des changements de la version test en production";
+    "<br>&bull; Liste de prix" +
+    "<br>&bull; Le nom de domaine est maintenant associé au producteur";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',

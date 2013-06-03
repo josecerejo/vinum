@@ -16,7 +16,7 @@ Ext.define('VIN.model.Produit', {
         header: 'Type de vin',
         name: 'type_vin'
     }, {
-        header: 'Nom du domaine',
+        header: 'Domaine',
         name: 'nom_domaine'
     }, {
         header: 'No producteur',
@@ -24,7 +24,7 @@ Ext.define('VIN.model.Produit', {
         type: 'int',
         useNull: true
     }, {
-        header: 'Nom du producteur',
+        header: 'Producteur',
         name: 'nom_producteur'
     }, {
         name: 'format',
@@ -37,10 +37,6 @@ Ext.define('VIN.model.Produit', {
     }, {
         header: 'Qté par caisse',
         name: 'quantite_par_caisse',
-        type: 'int',
-        useNull: true
-    }, {
-        name: 'suc_num',
         type: 'int',
         useNull: true
     }, { // those two are actually part of a Commande, but since
@@ -62,15 +58,16 @@ Ext.define('VIN.model.Produit', {
     }, {
         header: 'Actif',
         name: 'est_actif',
-        type: 'bool',
-        filter: {
-            active: true,
-            value: true
-        }
+        type: 'bool'
     }, {
         header: 'Dispo réduite',
         name: 'est_en_dispo_reduite',
         type: 'bool'
+    }, {
+        header: 'Région', // producteur field
+        name: 'region'
+    }, {
+        name: 'pays' // producteur field
     }],
 
     idProperty: 'no_produit_interne'

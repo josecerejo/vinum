@@ -294,8 +294,7 @@ def _generate_facture(g, ncf, with_logo=True):
                                                                            'statut_item': 'OK'},
                      order_by='type_vin')
     for row in rows:
-        nom = '%s %s' % (row['type_vin'], row['nom_domaine'] or '')
-        doc_values['elems'].append([row['quantite_bouteille'], nom, row['nom_producteur'], row['millesime'],
+        doc_values['elems'].append([row['quantite_bouteille'], row['type_vin'], row['nom_domaine'], row['millesime'],
                                     row['no_produit_saq'], row['format'], as_currency(row['montant_commission']),
                                     as_currency(row['montant_commission'] * row['quantite_bouteille'])])
     for f in ['sous_total', 'tps', 'tvq', 'montant']:

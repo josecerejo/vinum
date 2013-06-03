@@ -9,7 +9,9 @@ create table succursale_saq (
 drop table if exists representant cascade;
 create table representant (
     representant_id serial primary key,
-    representant_nom text
+    representant_nom text,
+    courriel text,
+    no_tel text
 );
 
 drop table if exists timbre_restaurateur cascade;
@@ -60,6 +62,7 @@ create table producteur (
     no_producteur serial primary key,
     ancien_no_producteur integer,
     nom_producteur text not null,
+    nom_domaine text not null,
     no_civique text,
     rue text,
     ville text,
@@ -81,7 +84,7 @@ create table produit (
     ancien_no_produit integer,
     no_producteur integer not null references producteur,
     type_vin text not null unique,
-    nom_domaine text,
+    --nom_domaine text, transferred to producteur
     format text not null references timbre_restaurateur (format_timbre),
     couleur text not null,
     quantite_par_caisse integer not null,

@@ -9,15 +9,16 @@ TVQ = 0.09975
 
 # get everything! handles every single possible select query required by the app..
 # note: field_map is not the nicest thing in the world.. it should be replaced by something wiser sometime!
-def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=None, where=None, field_map=None):
+def get(g, request, tables, query_fields=None, query_op='ilike', what='*',
+        join=None, where=None, field_map=None, order_by=None):
     if query_fields is None: query_fields = ()
     if join is None: join = {}
     if where is None: where = {}
     if field_map is None: field_map = {}
     assert query_fields.__class__ is tuple
     cursor = g.db.cursor()
-    order_by = None
     if 'sort' in request.args:
+        assert order_by is None
         sort_args = json.loads(request.args['sort'])
         order_by = ','.join(['%s %s' % (field_map.get(sa['property'], sa['property']),
                                         sa['direction']) for sa in sort_args])
@@ -54,7 +55,8 @@ def get(g, request, tables, query_fields=None, query_op='ilike', what='*', join=
 
 
 def get_distinct_values(g, request, table, field):
-    return get(g, request, table, (field,), what='distinct %s' % field, where={(field, 'is not'): None})
+    return get(g, request, table, (field,), what='distinct %s' % field,
+               where={(field, 'is not'): None}, order_by=field)
 
 
 # $$$-related utils (could be elsewhere that make more sense!)

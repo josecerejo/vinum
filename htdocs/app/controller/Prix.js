@@ -62,7 +62,8 @@ Ext.define('VIN.controller.Prix', {
                             selected: Ext.JSON.encode(sels),
                             filter: Ext.JSON.encode(filters),
                             sort: Ext.JSON.encode(sorters),
-                            type_client: g.getStore().getProxy().extraParams.type_client
+                            type_client: g.getStore().getProxy().extraParams.type_client,
+                            representant_nom: g.down('#representant_nom_dd').getValue()
                         }
                     });
                 }
@@ -80,11 +81,17 @@ Ext.define('VIN.controller.Prix', {
                 closable: true,
                 store: Ext.create('Ext.data.Store', {
                     model: 'VIN.model.Produit',
-                    remoteSort: true,
-                    sorters: [{
-                        property: 'type_vin',
-                        direction: 'ASC'
-                    }],
+                    //remotesort: true,
+                    // sorters: [{
+                    //     property: 'pays',
+                    //     direction: 'ASC'
+                    // }, {
+                    //     property: 'couleur',
+                    //     direction: 'ASC'
+                    // }, {
+                    //     property: 'type_vin',
+                    //     direction: 'ASC'
+                    // }],
                     proxy: {
                         type: 'ajax',
                         url: ajax_url_prefix + '/produit/get_prix',
@@ -95,23 +102,48 @@ Ext.define('VIN.controller.Prix', {
                     }
                 }),
                 selModel: Ext.create('Ext.selection.CheckboxModel'),
-                column_flex: {
-                    type_vin: 2,
-                    nom_domaine: 2,
-                    nom_producteur: 2,
-                    millesime: 1,
-                    couleur: 1,
-                    format: 1,
-                    pays: 1,
-                    quantite_par_caisse: 1,
-                    prix: 1
-                },
+                column_flex: [['pays', 1], ['couleur', 1], ['type_vin', 2], ['millesime', 1],
+                              ['nom_producteur', 2], ['region', 2], ['quantite_par_caisse', 1],
+                              ['format', 1], ['prix', 1]],
+                sortable: false,
                 dockedItems: {
                     xtype: 'toolbar',
                     dock: 'top',
                     items: [{
                         xtype: 'clearablecombo',
-                        emptyText: 'Filtrer par couleur',
+                        emptyText: 'Filtrer par pays',
+                        displayField: 'pays',
+                        itemId: 'pays_external_filter_dd',
+                        name: 'pays',
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['pays'],
+                            proxy: {
+                                type: 'ajax',
+                                limitParam: undefined,
+                                pageParam: undefined,
+                                startParam: undefined,
+                                url: ajax_url_prefix + '/producteur/get_pays',
+                                extraParams: {
+                                    add_nouveau_monde: true
+                                },
+                                reader: {
+                                    type: 'json',
+                                    root: 'rows'
+                                }
+                            }
+                        }),
+                        minChars: 3,
+                        forceSelection: false,
+                        listConfig: {
+                            loadingText: 'Recherche...',
+                            emptyText: 'Aucun pays ne correspond à cette recherche..'
+                        }
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'clearablecombo',
+                        emptyText: 'Filter par couleur',
                         displayField: 'couleur',
                         itemId: 'couleur_external_filter_dd',
                         name: 'couleur',
@@ -126,18 +158,18 @@ Ext.define('VIN.controller.Prix', {
                         width: 5
                     }, {
                         xtype: 'clearablecombo',
-                        emptyText: 'Pays',
-                        displayField: 'pays',
-                        itemId: 'pays_external_filter_dd',
-                        name: 'pays',
+                        emptyText: 'Représentant',
+                        displayField: 'representant_nom',
+                        name: 'representant_nom',
+                        itemId: 'representant_nom_dd',
                         store: Ext.create('Ext.data.Store', {
-                            fields: ['pays'],
+                            fields: ['representant_nom'],
                             proxy: {
                                 type: 'ajax',
                                 limitParam: undefined,
                                 pageParam: undefined,
                                 startParam: undefined,
-                                url: ajax_url_prefix + '/producteur/get_pays',
+                                url: ajax_url_prefix + '/representant/get',
                                 reader: {
                                     type: 'json',
                                     root: 'rows'
@@ -148,7 +180,7 @@ Ext.define('VIN.controller.Prix', {
                         forceSelection: false,
                         listConfig: {
                             loadingText: 'Recherche...',
-                            emptyText: 'Aucun pays ne correspond à cette recherche..'
+                            emptyText: 'Aucun représentant ne correspond à cette recherche..'
                         }
                     }, {
                         xtype: 'tbspacer',
@@ -190,6 +222,13 @@ Ext.define('VIN.controller.Prix', {
                 //g.getSelectionModel().selectAll();
             });
         }
+
+        if (current_user.representant_id) {
+            var rdd = g.down('#representant_nom_dd');
+            rdd.setValue(current_user.usager_nom);
+            rdd.setDisabled(true);
+        }
+
         Ext.getCmp('main_pnl').setActiveTab(g);
     }
 

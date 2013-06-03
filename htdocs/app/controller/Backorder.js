@@ -175,7 +175,7 @@ Ext.define('VIN.controller.Backorder', {
                                 limitParam: undefined,
                                 pageParam: undefined,
                                 startParam: undefined,
-                                url: ajax_url_prefix + '/representant/get_representants',
+                                url: ajax_url_prefix + '/representant/get',
                                 reader: {
                                     type: 'json',
                                     root: 'rows'

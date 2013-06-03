@@ -16,6 +16,9 @@ Ext.define('VIN.model.Producteur', {
         header: 'Nom',
         name: 'nom_producteur'
     }, {
+        header: 'Domaine',
+        name: 'nom_domaine'
+    }, {
         header: 'Nom du responsable',
         name: 'nom_responsable'
     }, {
