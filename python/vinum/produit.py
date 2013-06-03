@@ -111,7 +111,7 @@ def download_liste_prix():
         if (row['pays'], row['couleur']) != prev_pays_couleur:
             sections.append({'pays': row['pays'], 'couleur': row['couleur'].lower(), 'rows': []})
         dispo = [u'\u2605' if row['est_en_dispo_reduite'] else '']
-        sections[-1]['rows'].append(dispo + [row[f] for f in ['type_vin', 'millesime', 'nom_producteur',
+        sections[-1]['rows'].append(dispo + [row[f] for f in ['type_vin', 'millesime', 'nom_domaine',
                                                               'region', 'quantite_par_caisse', 'format', 'prix']])
         prev_pays_couleur = (row['pays'], row['couleur'])
     doc_values['sections'] = sections
