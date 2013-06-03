@@ -58,11 +58,7 @@ Ext.define('VIN.model.Produit', {
     }, {
         header: 'Actif',
         name: 'est_actif',
-        type: 'bool',
-        filter: {
-            active: true,
-            value: true
-        }
+        type: 'bool'
     }, {
         header: 'Dispo réduite',
         name: 'est_en_dispo_reduite',

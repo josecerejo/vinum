@@ -35,24 +35,6 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                     this.loadProducteurForm(form, records[0]);
                 }
             },
-            'pp_forms #filter_produits_btn': {
-                click: function(btn) {
-                    var form = this._getFormViewInstance(btn);
-                    var no_producteur = form.down('#no_producteur_tf').getValue();
-                    if (no_producteur) {
-                        var filter = form.down('#produit_g').filters.getFilter('no_producteur');
-                        filter.setValue({eq: no_producteur});
-                        filter.setActive(true);
-                    } else {
-                        Ext.Msg.show({
-                            title: 'Vinum',
-                            msg: Ext.String.format("Veuillez tout d'abord sélectionner un producteur dans la table de gauche"),
-                            icon: Ext.MessageBox.INFO,
-                            buttons: Ext.MessageBox.OK
-                        });
-                    }
-                }
-            },
             'pp_forms #all_produits_btn': {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
@@ -200,6 +182,9 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
         form.getForm().loadRecord(rec);
         form.down('#pays_dd').forceSelection = true;
         form.down('#region_dd').forceSelection = true;
+        var filter = form.up('pp_forms').down('#produit_g').filters.getFilter('no_producteur');
+        filter.setValue({eq: rec.get('no_producteur')});
+        filter.setActive(true);
     }
 
 });

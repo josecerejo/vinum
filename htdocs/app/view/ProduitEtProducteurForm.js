@@ -511,12 +511,6 @@ Ext.define('VIN.view.ProduitEtProducteurForm', {
                             iconCls: 'disk-icon'
                         }, {
                             xtype: 'button',
-                            text: 'Filtrer les produits',
-                            iconCls: 'drink-icon',
-                            itemId: 'filter_produits_btn',
-                            style: 'margin-left: 5px'
-                        }, {
-                            xtype: 'button',
                             text: 'Nouveau',
                             iconCls: 'app-form-add-icon',
                             style: 'margin-top: 10px',

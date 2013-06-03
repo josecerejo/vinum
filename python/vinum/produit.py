@@ -25,16 +25,20 @@ def _get_prix_data(request):
     qvals = []
     ptc = 'i.prix_%s as prix' % request['type_client']
     q = """select * from (
-                -- actif/en reserve/en attente
+                -- statut_inventaire: actif/en reserve/en attente
                 select p.*, i.*, r.*, %s
-                     from produit p, inventaire i, producteur r where p.no_producteur = r.no_producteur and
+                     from produit p, inventaire i, producteur r
+                                where p.no_producteur = r.no_producteur and
+                                p.est_actif and
                                 i.no_inventaire = (select no_inventaire from inventaire i
                                                    where i.no_produit_interne = p.no_produit_interne and statut_inventaire != 'inactif'
                                                    order by date_commande limit 1)
                 union
-                -- inactif records
+                -- statut_inventaire: inactif
                 select p.*, i.*, r.*, %s
-                         from produit p, inventaire i, producteur r where p.no_producteur = r.no_producteur and
+                         from produit p, inventaire i, producteur r
+                                where p.no_producteur = r.no_producteur and
+                                p.est_actif and
                                 i.no_inventaire = (select no_inventaire from inventaire i
                                                    where i.no_produit_interne = p.no_produit_interne
                                                    order by date_commande desc limit 1)
