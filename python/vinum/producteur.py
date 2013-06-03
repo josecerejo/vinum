@@ -7,13 +7,13 @@ from common import *
 @app.route('/producteur/get', methods=['GET'])
 @login_required
 def get_producteur():
-    return get(g, request, 'producteur', query_fields=('nom_producteur',))
+    return get(g, request, 'producteur', query_fields=('nom_producteur','nom_domaine'))
 
 
-@app.route('/producteur/get_nom', methods=['GET'])
+@app.route('/producteur/get_domaine', methods=['GET'])
 @login_required
-def get_nom_producteur():
-    return get_distinct_values(g, request, 'producteur', 'nom_producteur')
+def get_nom_domaine():
+    return get_distinct_values(g, request, 'producteur', 'nom_domaine')
 
 
 @app.route('/producteur/get_comte', methods=['GET'])

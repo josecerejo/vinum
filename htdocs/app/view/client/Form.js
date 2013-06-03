@@ -103,7 +103,7 @@ Ext.define('VIN.view.client.Form', {
                         name: 'nom_social',
                         store: Ext.create('VIN.store.Clients'),
                         itemId: 'nom_social_dd',
-                        fieldLabel: 'Client',
+                        fieldLabel: '<b>Client</b>',
                         minChars: 3,
                         forceSelection: false, // important if we want to allow client creation
                         pageSize: 10,

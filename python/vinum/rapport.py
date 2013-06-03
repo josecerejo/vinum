@@ -6,13 +6,14 @@ from unidecode import unidecode
 
 
 def _get_rapport_vente_data(request):
-    q = """ select ci.no_produit_interne, p.type_vin, p.nom_domaine, p.format, p.quantite_par_caisse,
+    q = """ select ci.no_produit_interne, type_vin, nom_domaine, format, quantite_par_caisse,
                    sum(ci.quantite_caisse) as quantite_caisse
             from produit p
             inner join commande_item ci on ci.no_produit_interne = p.no_produit_interne
             inner join commande o on o.no_commande_facture = ci.no_commande_facture
             inner join client c on o.no_client = c.no_client
-            left join representant r on c.representant_id = r.representant_id
+            inner join representant r on c.representant_id = r.representant_id
+            inner join producteur t on p.no_producteur = t.no_producteur
             where statut_item != 'BO' and
             date_commande >= %s and date_commande <= %s
         """
@@ -39,7 +40,8 @@ def _get_rapport_transaction_data(request):
             inner join commande o on c.no_client = o.no_client
             inner join commande_item ci on o.no_commande_facture = ci.no_commande_facture
             inner join produit p on ci.no_produit_interne = p.no_produit_interne
-            left join representant r on r.representant_id = c.representant_id
+            inner join representant r on r.representant_id = c.representant_id
+            inner join producteur t on p.no_producteur = t.no_producteur
             where statut_item != 'BO'
             and date_commande >= %s and date_commande <= %s
         """

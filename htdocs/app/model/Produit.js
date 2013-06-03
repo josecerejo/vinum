@@ -16,7 +16,7 @@ Ext.define('VIN.model.Produit', {
         header: 'Type de vin',
         name: 'type_vin'
     }, {
-        header: 'Nom du domaine',
+        header: 'Domaine',
         name: 'nom_domaine'
     }, {
         header: 'No producteur',
@@ -24,7 +24,7 @@ Ext.define('VIN.model.Produit', {
         type: 'int',
         useNull: true
     }, {
-        header: 'Nom du producteur',
+        header: 'Producteur',
         name: 'nom_producteur'
     }, {
         name: 'format',

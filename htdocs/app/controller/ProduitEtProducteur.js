@@ -60,11 +60,11 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                 Ext.Msg.show({
                                     title: 'Vinum',
                                     msg: Ext.String.format("Le produit '{0}' a été {1}", pf.down('#type_vin_dd').getValue(),
-                                                           pf.down('#no_produit_interne_tf').getValue() ? 'modifié' : 'créé'),
+                                                           pf.down('#no_produit_interne_hidden').getValue() ? 'modifié' : 'créé'),
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
                                 });
-                                pf.down('#no_produit_interne_tf').setValue(action.result.data.no_produit_interne);
+                                pf.down('#no_produit_interne_hidden').setValue(action.result.data.no_produit_interne);
                                 form.down('#produit_g').getStore().reload();
                             }, this)
                         });
@@ -82,7 +82,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     var pf = form.down('#pp_produit_f');
-                    if (!pf.down('#no_produit_interne_tf').getValue()) { return; }
+                    if (!pf.down('#no_produit_interne_hidden').getValue()) { return; }
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le produit \'{0}\' de la base de données?',
                                                                pf.down('#type_vin_dd').getValue()),
                         Ext.bind(function(btn) {
@@ -109,12 +109,12 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                                 Ext.Msg.show({
                                     title: 'Vinum',
                                     msg: Ext.String.format("Le producteur '{0}' a été {1}", pf.down('#nom_producteur_dd').getValue(),
-                                                           pf.down('#no_producteur_tf').getValue() ? 'modifié' : 'créé'),
+                                                           pf.down('#no_producteur_hidden').getValue() ? 'modifié' : 'créé'),
                                     icon: Ext.MessageBox.INFO,
                                     buttons: Ext.MessageBox.OK
                                 });
                                 //pf.loadRecord(action.result); // to load no_producteur_tf
-                                pf.down('#no_producteur_tf').setValue(action.result.data.no_producteur);
+                                pf.down('#no_producteur_hidden').setValue(action.result.data.no_producteur);
                                 form.down('#producteur_g').getStore().reload();
                             }, this)
                         });
@@ -132,7 +132,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     var pf = form.down('#pp_producteur_f');
-                    if (!pf.down('#no_producteur_tf').getValue()) { return; }
+                    if (!pf.down('#no_producteur_hidden').getValue()) { return; }
                     Ext.Msg.confirm('Vinum', Ext.String.format('Êtes-vous certain de vouloir enlever le producteur \'{0}\' de la base de données?',
                                                                pf.down('#nom_producteur_dd').getValue()),
                         Ext.bind(function(btn) {
