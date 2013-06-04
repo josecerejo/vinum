@@ -54,6 +54,10 @@ def ask():
                         results.append({'suggestion': "Voir les BOs pour le produit %s" % row['type_vin'],
                                         'target': 'backorder',
                                         'filter': {'no_produit_interne': row['no_produit_interne']}})
+                    elif 'prix' in q:
+                        results.append({'suggestion': "Voir le prix du produit %s" % row['type_vin'],
+                                        'target': 'prix',
+                                        'filter': {'no_produit_interne': row['no_produit_interne']}})
                     else:
                         results.append({'suggestion': "Voir l'inventaire pour le produit %s" % row['type_vin'],
                                         'target': 'inventaire',

@@ -36,6 +36,9 @@ Ext.define('VIN.controller.Assistant', {
                         filter.setValue({eq: r.filter[k]});
                         filter.setActive(true);
                     }
+                    if (r.target === 'prix' && r.hasOwnProperty('filter')) {
+                        var pg = VIN.app.getController('Prix').createBOTab().down('#backorder_g');
+                    }
                 }
             }
 
