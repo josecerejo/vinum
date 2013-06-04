@@ -19,6 +19,9 @@ Ext.define('VIN.model.Inventaire', {
         header: 'Producteur',
         name: 'nom_producteur'
     }, {
+        header: 'Domaine',
+        name: 'nom_domaine'
+    }, {
         header: 'Format',
         name: 'format',
         align: 'right'

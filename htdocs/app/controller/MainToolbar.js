@@ -80,14 +80,6 @@ Ext.define('VIN.controller.MainToolbar', {
     },
 
     onLaunch: function() {
-        if (initial_tab && window.location.hostname == 'localhost') {
-            var t = Ext.create(initial_tab);
-            if (t.xtype.match(/_grid$/)) {
-                t.getStore().load();
-            }
-            Ext.getCmp('main_pnl').add(t);
-            Ext.getCmp('main_pnl').setActiveTab(t);
-        }
     }
 
 });
