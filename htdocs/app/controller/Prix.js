@@ -72,13 +72,14 @@ Ext.define('VIN.controller.Prix', {
         });
     },
 
-    createPrixGrid: function() {
-        var g = Ext.getCmp('main_pnl').down('#prix_g');
-        if (!g) {
-            g = Ext.create('VIN.view.Grid', {
+    createPrixTab: function() {
+        var pt = Ext.create('Ext.panel.Panel', {
+            title: 'Liste de prix',
+            closable: true,
+            layout: 'fit',
+            header: false,
+            items: Ext.create('VIN.view.Grid', {
                 itemId: 'prix_g',
-                title: 'Liste de prix',
-                closable: true,
                 store: Ext.create('Ext.data.Store', {
                     model: 'VIN.model.Produit',
                     //remotesort: true,
@@ -211,17 +212,16 @@ Ext.define('VIN.controller.Prix', {
                         itemId: 'download_liste_prix_btn'
                     }]
                 }
-            });
-            Ext.getCmp('main_pnl').add(g);
+            })
+        });
 
-            g.getStore().getProxy().extraParams = {
-                type_client: 'particulier'
-            };
-
-            g.getStore().on('load', function(store, records, successful, options) {
-                //g.getSelectionModel().selectAll();
-            });
-        }
+        var g = pt.down('#prix_g');
+        g.getStore().getProxy().extraParams = {
+            type_client: 'particulier'
+        };
+        // g.getStore().on('load', function(store, records, successful, options) {
+        //     g.getSelectionModel().selectAll();
+        // });
 
         if (current_user.representant_id) {
             var rdd = g.down('#representant_nom_dd');
@@ -229,7 +229,10 @@ Ext.define('VIN.controller.Prix', {
             rdd.setDisabled(true);
         }
 
-        Ext.getCmp('main_pnl').setActiveTab(g);
+        Ext.getCmp('main_pnl').add(pt);
+        Ext.getCmp('main_pnl').setActiveTab(pt);
+
+        return pt;
     }
 
 });

@@ -56,7 +56,7 @@ Ext.define('VIN.controller.MainToolbar', {
                         VIN.app.getController('Inventaire').createInventaireForm();
                         break;
                     case 'produits_prix_menu_itm':
-                        VIN.app.getController('Prix').createPrixGrid();
+                        VIN.app.getController('Prix').createPrixTab();
                         break;
                     case 'bo_list_menu_itm':
                         VIN.app.getController('Backorder').createBOTab();
