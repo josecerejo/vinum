@@ -24,10 +24,10 @@ Ext.define('VIN.controller.Inventaire', {
                 }
             },
 
-            'inventaire_grid #producteur_external_filter_tf': {
+            'inventaire_grid #domaine_external_filter_tf': {
                 change: function(field, e, opts) {
                     var g = field.up('inventaire_grid');
-                    VIN.view.Grid.applyExternalGridFilter(g, field, 'nom_producteur');
+                    VIN.view.Grid.applyExternalGridFilter(g, field, 'nom_domaine');
                 }
             },
 

@@ -21,8 +21,8 @@ Ext.define('VIN.view.inventaire.Grid', {
             }, {
                 xtype: 'clearabletextfield',
                 enableKeyEvents: true,
-                emptyText: 'Filtrer par producteur',
-                itemId: 'producteur_external_filter_tf',
+                emptyText: 'Filtrer par domaine',
+                itemId: 'domaine_external_filter_tf',
                 width: 200
             }, {
                 xtype: 'tbspacer',
