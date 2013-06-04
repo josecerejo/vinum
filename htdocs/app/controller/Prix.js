@@ -103,7 +103,7 @@ Ext.define('VIN.controller.Prix', {
                 }),
                 selModel: Ext.create('Ext.selection.CheckboxModel'),
                 column_flex: [['pays', 1], ['couleur', 1], ['type_vin', 2], ['millesime', 1],
-                              ['nom_producteur', 2], ['region', 2], ['quantite_par_caisse', 1],
+                              ['nom_domaine', 2], ['region', 2], ['quantite_par_caisse', 1],
                               ['format', 1], ['prix', 1]],
                 sortable: false,
                 dockedItems: {
