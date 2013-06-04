@@ -102,7 +102,7 @@ def download_liste_prix():
     fl1 = {'particulier': 'Ces prix incluent les taxes et les frais de la Société Roucet.',
            'restaurant': 'Prix sans taxes incluant les droits de la SAQ spécifiques à la restauration s’il y a lieu et les frais de la Société Roucet.'}
     doc_values = {'pays': pays, 'date': datetime.date.today().isoformat(),
-                  'url': 'http://www.roucet.com',
+                  'url': 'http://www.roucet.com', 'type_liste': 'LPP' if rf['type_client'] == 'particulier' else 'Resto',
                   'footer_line1': fl1[rf['type_client']]}
     doc_values.update(rep)
     sections = []
