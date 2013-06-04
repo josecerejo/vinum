@@ -114,6 +114,9 @@ def download_liste_prix():
         sections[-1]['rows'].append(dispo + [row[f] for f in ['type_vin', 'millesime', 'nom_domaine',
                                                               'region', 'quantite_par_caisse', 'format', 'prix']])
         prev_pays_couleur = (row['pays'], row['couleur'])
+    # add plural
+    for sect in sections:
+        if len(sect['rows']) > 1: sect['couleur'] += 's'
     doc_values['sections'] = sections
     out_fn = 'liste_de_prix.%s' % ('odt' if hasattr(app, 'is_dev') else 'pdf')
     ren = Renderer('/home/christian/vinum/docs/liste_de_prix.odt', doc_values,
