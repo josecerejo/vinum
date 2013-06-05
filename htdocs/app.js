@@ -24,7 +24,7 @@ if (window.location.href.indexOf('localhost') !== -1) {
 
 var dev_msg = '<b>Dernières mises à jour:</b>' +
     "<br>&bull; Liste de prix" +
-    "<br>&bull; Le nom de domaine est maintenant associé au producteur";
+    "<br>&bull; Commission modifiable pour la liste de prix des particuliers";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',

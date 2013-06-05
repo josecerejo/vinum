@@ -25,7 +25,11 @@ def get_produit():
 def _get_prix_data(request):
     cur = g.db.cursor()
     qvals = []
-    ptc = 'i.prix_%s as prix' % request['type_client']
+    if request['type_client'] == 'restaurant' or 'commission_particulier' not in request or \
+      not request['commission_particulier']:
+        ptc = 'i.prix_%s as prix' % request['type_client']
+    else:
+        ptc = '(i.prix_coutant * (1 + %f)) as prix' % float(request['commission_particulier'])
     q = """select * from (
                 -- statut_inventaire: actif/en reserve/en attente
                 select p.*, i.*, r.*, %s
@@ -102,7 +106,7 @@ def download_liste_prix():
     fl1 = {'particulier': 'Ces prix incluent les taxes et les frais de la Société Roucet.',
            'restaurant': 'Prix sans taxes incluant les droits de la SAQ spécifiques à la restauration s’il y a lieu et les frais de la Société Roucet.'}
     doc_values = {'pays': pays, 'date': datetime.date.today().isoformat(),
-                  'url': 'http://www.roucet.com',
+                  'url': 'http://www.roucet.com', 'type_liste': 'LPP' if rf['type_client'] == 'particulier' else 'Resto',
                   'footer_line1': fl1[rf['type_client']]}
     doc_values.update(rep)
     sections = []
