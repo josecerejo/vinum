@@ -74,7 +74,8 @@ Ext.define('VIN.controller.Prix', {
                             filter: Ext.JSON.encode(filters),
                             sort: Ext.JSON.encode(sorters),
                             type_client: g.getStore().getProxy().extraParams.type_client,
-                            representant_nom: g.down('#representant_nom_dd').getValue()
+                            representant_nom: g.down('#representant_nom_dd').getValue(),
+                            commission_particulier: g.getStore().getProxy().extraParams.commission_particulier
                         }
                     });
                 }
