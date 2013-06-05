@@ -170,7 +170,7 @@ create table inventaire (
     solde_30_jours numeric,
     solde_60_jours numeric,
     suc_num integer,
-    prix_restaurant numeric(1000, 2), -- prix_coutant / 1.14975 + 16% + 0.81$
+    prix_restaurant numeric(1000, 2), -- prix_coutant / 1.14975 + 16% + timbre(format)
     prix_particulier numeric(1000, 2) -- prix_coutant + 23%
 );
 

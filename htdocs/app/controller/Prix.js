@@ -23,10 +23,21 @@ Ext.define('VIN.controller.Prix', {
             '#prix_g #type_client_particulier_rb': {
                 change: function(field, is_particulier) {
                     var g = field.up('#prix_g');
-                    g.getStore().getProxy().extraParams = {
-                        type_client: is_particulier ? 'particulier' : 'restaurant'
-                    };
+                    g.down('#commission_particulier_nf').setDisabled(!is_particulier);
+                    g.getStore().getProxy().extraParams.type_client = (is_particulier ? 'particulier' : 'restaurant');
                     g.getStore().reload();
+                }
+            },
+
+            '#prix_g #commission_particulier_nf': {
+                change: function(field, new_val, old_val) {
+                    if (field.isValid()) {
+                        var g = field.up('#prix_g');
+                        g.getStore().getProxy().extraParams.commission_particulier = field.getValue();
+                        g.getStore().reload();
+                    } else {
+                        field.markInvalid();
+                    }
                 }
             },
 
@@ -188,20 +199,33 @@ Ext.define('VIN.controller.Prix', {
                         width: 5
                     }, {
                         xtype: 'radiofield',
-                        boxLabel: 'Particuliers',
-                        itemId: 'type_client_particulier_rb',
+                        boxLabel: 'Restaurateurs',
+                        itemId: 'type_client_restaurant_rb',
                         name: 'type_client',
-                        inputValue: 'particulier',
+                        inputValue: 'restaurant',
                         checked: true
                     }, {
                         xtype: 'tbspacer',
                         width: 5
                     }, {
                         xtype: 'radiofield',
-                        boxLabel: 'Restaurateurs',
-                        itemId: 'type_client_restaurant_rb',
+                        boxLabel: 'Particuliers',
+                        itemId: 'type_client_particulier_rb',
                         name: 'type_client',
-                        inputValue: 'restaurant'
+                        inputValue: 'particulier'
+                    }, {
+                        xtype: 'tbspacer',
+                        width: 5
+                    }, {
+                        xtype: 'numberfield',
+                        emptyText: 'Comm. (0.23)',
+                        itemId: 'commission_particulier_nf',
+                        name: 'commission_particulier',
+                        minText: 'La commission doit être une valeur entre 0 et 1 (ex. 0.23)',
+                        maxText: 'La commission doit être une valeur entre 0 et 1 (ex. 0.23)',
+                        minValue: 0,
+                        maxValue: 1,
+                        disabled: true
                     }, {
                         xtype: 'tbspacer',
                         width: 5
@@ -217,7 +241,7 @@ Ext.define('VIN.controller.Prix', {
 
         var g = pt.down('#prix_g');
         g.getStore().getProxy().extraParams = {
-            type_client: 'particulier'
+            type_client: 'restaurant'
         };
         // g.getStore().on('load', function(store, records, successful, options) {
         //     g.getSelectionModel().selectAll();

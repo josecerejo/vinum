@@ -25,7 +25,11 @@ def get_produit():
 def _get_prix_data(request):
     cur = g.db.cursor()
     qvals = []
-    ptc = 'i.prix_%s as prix' % request['type_client']
+    if request['type_client'] == 'restaurant' or 'commission_particulier' not in request or \
+      not request['commission_particulier']:
+        ptc = 'i.prix_%s as prix' % request['type_client']
+    else:
+        ptc = '(i.prix_coutant * (1 + %f)) as prix' % float(request['commission_particulier'])
     q = """select * from (
                 -- statut_inventaire: actif/en reserve/en attente
                 select p.*, i.*, r.*, %s

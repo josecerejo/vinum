@@ -439,8 +439,8 @@ Ext.define('VIN.view.commande.Form', {
                         name: 'default_commission',
                         fieldLabel: 'Commission',
                         forceSelection: false,
-                        regex: /^0\.?[0-9]*$/,
-                        regexText: 'La commission doit être une valeur entre 0 et 1',
+                        regex: /^0\.[0-9]+$/,
+                        regexText: 'La commission doit être une valeur entre 0 et 1 (ex. 0.23)',
                         store: Ext.create('Ext.data.Store', {
                             fields: ['default_commission'],
                             // !!! this should ideally come from the backend, not be hardcoded here

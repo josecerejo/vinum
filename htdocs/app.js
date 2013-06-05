@@ -24,7 +24,7 @@ if (window.location.href.indexOf('localhost') !== -1) {
 
 var dev_msg = '<b>Dernières mises à jour:</b>' +
     "<br>&bull; Liste de prix" +
-    "<br>&bull; github -> bitbucket";
+    "<br>&bull; Commission modifiable pour la liste de prix des particuliers";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',
