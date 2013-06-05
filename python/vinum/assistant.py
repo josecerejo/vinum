@@ -9,7 +9,7 @@ from collections import defaultdict
 
 
 MAX_N_RESULTS = 25
-fr_stopwords = set([w.decode('utf-8') for w in stopwords.words('french')])
+fr_stopwords = set([w.decode('utf-8') for w in stopwords.words('french')] + ['tous', 'les'])
 
 @app.route('/assistant/ask', methods=['GET'])
 @login_required
@@ -45,7 +45,8 @@ def ask():
                 results[len(ts)].append({'suggestion': 'Voir le client %s' % row['nom_social'],
                                          'target': 'client', 'action': 'edit',
                                          'no_client': row['no_client']})
-    if not results:
+    #if not results:
+    if True:
         # search for a produit
         for ts in token_subsets:
             rows = pg.select(cur, 'produit', where={('type_vin', 'ilike', 'unaccent'):
@@ -68,4 +69,34 @@ def ask():
                 else:
                     results[len(ts)].append(price)
                     results[len(ts)].append(inv)
+
+    m = max(results.keys()) if results else 0
+    if u'créer' in q:
+        if 'client' in q:
+            results[m].append({'suggestion': 'Créer un nouveau client',
+                               'target': 'client', 'action': 'create'})
+        elif 'commande' in q:
+            results[m].append({'suggestion': 'Créer une nouvelle commande',
+                               'target': 'commande', 'action': 'create'})
+        else:
+            results[m].append({'suggestion': 'Créer un nouveau client',
+                               'target': 'client', 'action': 'create'})
+            results[m].append({'suggestion': 'Créer une nouvelle commande',
+                               'target': 'commande', 'action': 'create'})
+    elif 'commande' in q:
+        results[m].append({'suggestion': 'Voir la liste de toutes les commandes',
+                                             'target': 'commande', 'action': 'all'})
+    elif 'client' in q:
+        results[m].append({'suggestion': 'Voir la liste de tous les clients',
+                                             'target': 'client', 'action': 'all'})
+    elif 'inventaire' in q:
+        results[m].append({'suggestion': "Voir tout l'inventaire",
+                           'target': 'inventaire', 'action': 'all'})
+    elif 'backorder' in q or 'rupture' in q:
+        results[m].append({'suggestion': "Voir toutes les ruptures de stock (BOs)",
+                           'target': 'backorder', 'action': 'all'})
+    elif 'liste' in q or 'prix' in q:
+        results[m].append({'suggestion': "Voir la liste de prix",
+                           'target': 'prix', 'action': 'all'})
+
     return {'success': True, 'rows': results[max(results.keys())][:MAX_N_RESULTS] if results else []}
