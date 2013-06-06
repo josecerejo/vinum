@@ -82,7 +82,7 @@ Ext.define('VIN.controller.Rapport', {
         });
     },
 
-    createRapportVenteGrid: function() {
+    createRapportVenteTab: function() {
 
         var store = Ext.create('VIN.store.Produits', {
             buffered: false,
@@ -217,7 +217,7 @@ Ext.define('VIN.controller.Rapport', {
         Ext.getCmp('main_pnl').setActiveTab(g);
     },
 
-    createRapportTransactionGrid: function() {
+    createRapportTransactionTab: function() {
 
         // var store = Ext.create('Ext.data.Store', {
         //     model: 'VIN.model.Transaction',

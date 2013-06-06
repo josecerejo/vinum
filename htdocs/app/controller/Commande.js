@@ -29,7 +29,7 @@ Ext.define('VIN.controller.Commande', {
                     var form = this._getFormViewInstance(btn);
                     var cdd = form.down('#client_dd');
                     var cr = cdd.findRecordByDisplay(cdd.getValue());
-                    VIN.app.getController('Client').createClientForm(cr);
+                    VIN.app.getController('Client').createFormTab(cr);
                 }
             },
             '#direct_df': {
@@ -318,7 +318,7 @@ Ext.define('VIN.controller.Commande', {
             },
             '#commande_g': {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
-                    this.createCommandeForm(record);
+                    this.createFormTab(record);
                 },
 
             },
@@ -345,12 +345,12 @@ Ext.define('VIN.controller.Commande', {
                                     }, this));
                 },
                 edit_click: function(grid, el, rowIndex, colIndex, e, record, rowEl) {
-                    this.createCommandeForm(record);
+                    this.createFormTab(record);
                 }
             },
             '#commande_grid_add_btn': {
                 click: function(btn) {
-                    this.createCommandeForm();
+                    this.createFormTab();
                 }
             },
             '#facture_print_logo_btn': {
@@ -652,7 +652,7 @@ Ext.define('VIN.controller.Commande', {
         cig.getStore().load();
     },
 
-    createCommandeForm: function(commande_rec_or_no_client) {
+    createFormTab: function(commande_rec_or_no_client) {
         var cf = Ext.create('widget.commande_form');
         var mp = Ext.getCmp('main_pnl');
         mp.add(cf);
@@ -668,7 +668,7 @@ Ext.define('VIN.controller.Commande', {
         }
     },
 
-    createCommandeGrid: function() {
+    createGridTab: function() {
         var cg = Ext.getCmp('main_pnl').down('#commande_g');
         if (!cg) {
             cg = Ext.create('VIN.view.Grid', {

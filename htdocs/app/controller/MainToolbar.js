@@ -35,43 +35,43 @@ Ext.define('VIN.controller.MainToolbar', {
                         });
                         break;
                     case 'create_commande_menu_itm':
-                        VIN.app.getController('Commande').createCommandeForm();
+                        VIN.app.getController('Commande').createFormTab();
                         break;
                     case 'edit_client_menu_itm':
-                        VIN.app.getController('Client').createClientForm();
+                        VIN.app.getController('Client').createFormTab();
                         break;
                     case 'list_clients_menu_itm':
-                        VIN.app.getController('Client').createClientGrid();
+                        VIN.app.getController('Client').createGridTab();
                         break;
                     case 'bottin_restos_menu_itm':
                         VIN.app.getController('Client').downloadBottinRepr();
                         break;
                     case 'list_commandes_menu_itm':
-                        VIN.app.getController('Commande').createCommandeGrid();
+                        VIN.app.getController('Commande').createGridTab();
                         break;
                     case 'produits_pp_menu_itm':
-                        VIN.app.getController('ProduitEtProducteur').createForm();
+                        VIN.app.getController('ProduitEtProducteur').createTab();
                         break;
                     case 'produits_inv_menu_itm':
-                        VIN.app.getController('Inventaire').createInventaireForm();
+                        VIN.app.getController('Inventaire').createTab();
                         break;
                     case 'produits_prix_menu_itm':
-                        VIN.app.getController('Prix').createPrixTab();
+                        VIN.app.getController('Prix').createTab();
                         break;
                     case 'bo_list_menu_itm':
-                        VIN.app.getController('Backorder').createBOTab();
+                        VIN.app.getController('Backorder').createTab();
                         break;
                     case 'bo_create_menu_itm':
-                        VIN.app.getController('Backorder').popNewBOWindow();
+                        VIN.app.getController('Backorder').popNewWindow();
                         break;
                     case 'rapport_transaction_menu_itm':
-                        VIN.app.getController('Rapport').createRapportTransactionGrid();
+                        VIN.app.getController('Rapport').createRapportTransactionTab();
                         break;
                     case 'rapport_vente_menu_itm':
-                        VIN.app.getController('Rapport').createRapportVenteGrid();
+                        VIN.app.getController('Rapport').createRapportVenteTab();
                         break;
                     case 'succ_saq_menu_itm':
-                        VIN.app.getController('Succursale').createSuccGrid();
+                        VIN.app.getController('Succursale').createTab();
                         break;
                     };
                 }

@@ -51,7 +51,7 @@ Ext.define('VIN.controller.Succursale', {
         });
     },
 
-    createSuccGrid: function() {
+    createTab: function() {
         var g = Ext.getCmp('main_pnl').down('#succ_g');
         if (!g) {
             g = Ext.create('VIN.view.Grid', {

@@ -84,7 +84,7 @@ Ext.define('VIN.controller.Prix', {
         });
     },
 
-    createPrixTab: function() {
+    createTab: function() {
         var pt = Ext.create('Ext.panel.Panel', {
             title: 'Liste de prix',
             closable: true,

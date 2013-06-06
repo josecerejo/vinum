@@ -23,7 +23,7 @@ Ext.define('VIN.controller.Backorder', {
 
             '#backorder_g #add_bo_btn': {
                 click: function(btn) {
-                    this.popNewBOWindow();
+                    this.popNewWindow();
                 }
             },
 
@@ -122,7 +122,7 @@ Ext.define('VIN.controller.Backorder', {
         });
     },
 
-    createBOTab: function() {
+    createTab: function() {
         var bot = Ext.create('Ext.panel.Panel', {
             title: 'Ruptures de stock (BOs)',
             closable: true,
@@ -197,7 +197,7 @@ Ext.define('VIN.controller.Backorder', {
         return bot;
     },
 
-    popNewBOWindow: function() {
+    popNewWindow: function() {
         var f = backorder_win.down('#backorder_f');
         f.getForm().reset();
         f.down('#client_dd').setDisabled(false);

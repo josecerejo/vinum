@@ -46,22 +46,22 @@ Ext.define('VIN.view.StartPanel', {
                             if (jQuery(item).hasClass('x-item-disabled')) { return; }
                             switch (rec.get('name')) {
                             case 'create_commande':
-                                VIN.app.getController('Commande').createCommandeForm();
+                                VIN.app.getController('Commande').createFormTab();
                                 break;
                             case 'edit_client':
-                                VIN.app.getController('Client').createClientForm();
+                                VIN.app.getController('Client').createFormTab();
                                 break;
                             case 'list_clients':
-                                VIN.app.getController('Client').createClientGrid();
+                                VIN.app.getController('Client').createGridTab();
                                 break;
                             case 'list_commandes':
-                                VIN.app.getController('Commande').createCommandeGrid();
+                                VIN.app.getController('Commande').createGridTab();
                                 break;
                             case 'list_pp':
-                                VIN.app.getController('ProduitEtProducteur').createForm();
+                                VIN.app.getController('ProduitEtProducteur').createTab();
                                 break;
                             case 'inventaire':
-                                VIN.app.getController('Inventaire').createInventaireForm();
+                                VIN.app.getController('Inventaire').createTab();
                                 break;
                             }
                         },

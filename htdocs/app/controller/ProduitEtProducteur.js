@@ -155,7 +155,7 @@ Ext.define('VIN.controller.ProduitEtProducteur', {
         return any_contained_view.up('pp_forms');
     },
 
-    createForm: function() {
+    createTab: function() {
         var ppf = Ext.getCmp('main_pnl').down('pp_forms');
         if (!ppf) {
             ppf = Ext.create('widget.pp_forms');

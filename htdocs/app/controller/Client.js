@@ -46,7 +46,7 @@ Ext.define('VIN.controller.Client', {
                 click: function(btn) {
                     var form = this._getFormViewInstance(btn);
                     this.saveClientForm(form, function() {
-                        VIN.app.getController('Commande').createCommandeForm(form.down('#no_client_tf').getValue());
+                        VIN.app.getController('Commande').createFormTab(form.down('#no_client_tf').getValue());
                     });
                 }
             },
@@ -105,19 +105,19 @@ Ext.define('VIN.controller.Client', {
                         }, this));
                 },
                 edit_click: function(grid, el, rowIndex, colIndex, e, record, rowEl) {
-                    this.createClientForm(record);
+                    this.createFormTab(record);
                 }
             },
 
             '#client_g': {
                 itemdblclick: function(view, record, item, index, e, eOpts) {
-                    this.createClientForm(record);
+                    this.createFormTab(record);
                 }
             },
 
             '#client_g #add_btn': {
                 click: function(btn) {
-                    this.createClientForm();
+                    this.createFormTab();
                 }
             },
 
@@ -151,7 +151,7 @@ Ext.define('VIN.controller.Client', {
     },
 
     // TODO: put focus on tab if one already exists instead of creating one
-    createClientForm: function(client_rec) {
+    createFormTab: function(client_rec) {
         var cf = Ext.create('widget.client_form');
         var mp = Ext.getCmp('main_pnl');
         mp.add(cf);
@@ -243,7 +243,7 @@ Ext.define('VIN.controller.Client', {
         }
     },
 
-    createClientGrid: function() {
+    createGridTab: function() {
         var cg = Ext.getCmp('main_pnl').down('#client_g');
         if (!cg) {
             cg = Ext.create('VIN.view.Grid', {

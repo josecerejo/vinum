@@ -139,7 +139,7 @@ Ext.define('VIN.controller.Inventaire', {
         });
     },
 
-    createInventaireForm: function() {
+    createTab: function() {
         var invf = Ext.getCmp('main_pnl').down('inventaire_form');
         if (!invf) {
             invf = Ext.create('VIN.view.inventaire.Form');
