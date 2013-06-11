@@ -147,11 +147,11 @@ Ext.define('VIN.controller.Inventaire', {
     },
 
     createTab: function() {
-        var invf = Ext.getCmp('main_pnl').down('inventaire_form');
-        if (!invf) {
-            invf = Ext.create('VIN.view.inventaire.Form');
-            Ext.getCmp('main_pnl').add(invf);
-        }
+        //var invf = Ext.getCmp('main_pnl').down('inventaire_form');
+        //if (!invf) {
+        var invf = Ext.create('VIN.view.inventaire.Form');
+        Ext.getCmp('main_pnl').add(invf);
+        //}
         Ext.getCmp('main_pnl').setActiveTab(invf);
         if (current_user.representant_id) {
             invf.down('#editor_pnl').collapse();

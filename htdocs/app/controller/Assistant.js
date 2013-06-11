@@ -21,6 +21,9 @@ Ext.define('VIN.controller.Assistant', {
                         case 'all':
                             VIN.app.getController('Client').createGridTab();
                             break;
+                        case 'query':
+                            VIN.app.getController('Client').createGridTab(r.no_produit_interne);
+                            break;
                         }
                     } else if (r.target === 'commande') {
                         switch (r.action) {

@@ -243,14 +243,22 @@ Ext.define('VIN.controller.Client', {
         }
     },
 
-    createGridTab: function() {
-        var cg = Ext.getCmp('main_pnl').down('#client_g');
-        if (!cg) {
-            cg = Ext.create('VIN.view.Grid', {
+    createGridTab: function(no_produit_interne) {
+        var store = Ext.create('VIN.store.Clients');
+        // only show clients who ordered this product
+        if (no_produit_interne !== undefined) {
+                store.getProxy().extraParams = {
+                    no_produit_interne: no_produit_interne
+                }
+        }
+        var cgt = Ext.create('Ext.panel.Panel', {
+            title: 'Clients',
+            closable: true,
+            layout: 'fit',
+            header: false,
+            items: Ext.create('VIN.view.Grid', {
                 itemId: 'client_g',
-                title: 'Clients',
-                closable: true,
-                store: Ext.create('VIN.store.Clients'),
+                store: store,
                 add_edit_actioncolumn: true,
                 add_delete_actioncolumn: true,
                 column_flex: {
@@ -329,10 +337,11 @@ Ext.define('VIN.controller.Client', {
                         })
                     }]
                 }
-            });
-            Ext.getCmp('main_pnl').add(cg);
-        }
-        Ext.getCmp('main_pnl').setActiveTab(cg);
+            })
+        });
+        Ext.getCmp('main_pnl').add(cgt);
+        Ext.getCmp('main_pnl').setActiveTab(cgt);
+        return cgt;
     },
 
     downloadBottinRepr: function() {

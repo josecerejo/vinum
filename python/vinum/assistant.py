@@ -18,7 +18,7 @@ def ask():
     cur = g.db.cursor()
     results = defaultdict(list) # ts_len -> []
     tokens = re.split('\s+', q)
-    tokens = [t for t in tokens if t.lower() and t not in fr_stopwords]
+    tokens = [t for t in tokens if t.lower() and t not in fr_stopwords and len(t) > 2]
     token_subsets = [ts for ts in chain(*map(lambda x: combinations(tokens, x),
                                              range(len(tokens), 0, -1)))]
     # search for clients
@@ -51,6 +51,12 @@ def ask():
         for ts in token_subsets:
             rows = pg.select(cur, 'produit', where={('type_vin', 'ilike', 'unaccent'):
                                                     {'%%%s%%' % t for t in ts}})
+            if not rows and len(ts) == 1: # if not found in produit, search in inventaire
+                rows = pg.select(cur, {'inventaire': 'i', 'produit': 'p'},
+                                 what='distinct type_vin, i.no_produit_interne',
+                                 join={'i.no_produit_interne': 'p.no_produit_interne'},
+                                 where_or={'no_demande_saq': ts[0],
+                                           "coalesce(no_produit_saq::text, '')": ts[0]})
             for row in rows:
                 inv = {'suggestion': "Voir l'inventaire pour le produit %s" % row['type_vin'],
                        'target': 'inventaire', 'action': 'filter',
@@ -58,6 +64,9 @@ def ask():
                 price = {'suggestion': "Voir le prix du produit %s" % row['type_vin'],
                          'target': 'prix', 'action': 'filter',
                          'type_vin': row['type_vin']}
+                client = {'suggestion': "Voir les clients ayant commandé le produit %s" % row['type_vin'],
+                         'target': 'client', 'action': 'query',
+                         'no_produit_interne': row['no_produit_interne']}
                 if 'backorder' in q or 'rupture' in q:
                     results[len(ts)].append({'suggestion': "Voir les BOs pour le produit %s" % row['type_vin'],
                                              'target': 'backorder', 'action': 'filter',
@@ -66,9 +75,12 @@ def ask():
                     results[len(ts)].append(price)
                 elif 'inventaire' in q:
                     results[len(ts)].append(inv)
+                elif 'client' in q:
+                    results[len(ts)].append(client)
                 else:
                     results[len(ts)].append(price)
                     results[len(ts)].append(inv)
+                    results[len(ts)].append(client)
 
     m = max(results.keys()) if results else 0
     if u'créer' in q:

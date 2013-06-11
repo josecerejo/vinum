@@ -5,10 +5,21 @@ from common import *
 @app.route('/client/get', methods=['GET'])
 @login_required
 def get_clients():
-    return get(g, request, {'client': 'c', 'representant': 'r'},
-               ('nom_social', 'no_client_saq', 'no_tel', 'courriel',
-                'no_tel_personnel', 'no_cellulaire', 'note_client',
-                'nom_responsable'), join={'c.representant_id': 'r.representant_id'})
+    if 'no_produit_interne' in request.args:
+        return get(g, request, {'client': 'c', 'representant': 'r'},
+                   ('nom_social', 'no_client_saq', 'no_tel', 'courriel',
+                   'no_tel_personnel', 'no_cellulaire', 'note_client',
+                   'nom_responsable'), join={'c.representant_id': 'r.representant_id'},
+                   where={'exists': """select * from commande o, commande_item ci
+                                       where o.no_client = c.no_client and
+                                       o.no_commande_facture = ci.no_commande_facture and
+                                       ci.no_produit_interne = %s
+                                    """ % request.args['no_produit_interne']})
+    else:
+        return get(g, request, {'client': 'c', 'representant': 'r'},
+                   ('nom_social', 'no_client_saq', 'no_tel', 'courriel',
+                   'no_tel_personnel', 'no_cellulaire', 'note_client',
+                   'nom_responsable'), join={'c.representant_id': 'r.representant_id'})
 
 
 @app.route('/client/load', methods=['POST'])
