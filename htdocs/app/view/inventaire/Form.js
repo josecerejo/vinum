@@ -173,7 +173,8 @@ Ext.define('VIN.view.inventaire.Form', {
                         fieldLabel: 'Qté reçue (b)',
                         name: 'quantite_recue_en_bouteilles',
                         allowBlank: true,
-                        style: 'margin-left: 10px'
+                        style: 'margin-left: 10px',
+                        itemId: 'quantite_recue_en_bouteilles_nf'
                     }]
                 }, {
                     layout: 'hbox',
@@ -212,7 +213,8 @@ Ext.define('VIN.view.inventaire.Form', {
                         fieldLabel: 'Date reçue',
                         name: 'date_recue',
                         style: 'margin-left: 10px',
-                        allowBlank: true
+                        allowBlank: true,
+                        itemId: 'date_recue_df'
                     }]
                 }, {
                     xtype: 'combo',

@@ -7,7 +7,7 @@ Ext.Loader.setConfig({
 
 var ajax_url_prefix = '/vinum_server'; // should correspond to WSGIScriptAlias
 var use_flask_server = window.location.port !== '';
-var last_update = '2013-06-06';
+var last_update = '2013-06-11';
 var vinum_version = 'alpha';
 var server;
 if (window.location.href.indexOf('localhost') !== -1) {
@@ -23,8 +23,8 @@ if (window.location.href.indexOf('localhost') !== -1) {
 }
 
 var dev_msg = '<b>Dernières mises à jour:</b>' +
-    //"<br>&bull; Liste de prix" +
-    "<Br>&bull; Prototype de l'assistant intelligent";
+    "<br>&bull; Commission modifiable pour la liste de prix des particuliers" +
+    "<br>&bull; Inventaire : date obligatoire quand la quantité reçue est spécifiée";
 
 Ext.window.MessageBox.prototype.buttonText = {
     cancel: 'Annuler',

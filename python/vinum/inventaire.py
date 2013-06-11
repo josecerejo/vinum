@@ -40,8 +40,8 @@ def save_inventaire_record():
             if inv[f].__class__ == float: inv[f] = '%.2f' % inv[f]
             if unicode(str(inv[f]), 'utf8') != rf[f] and f not in ['quantite_commandee_en_caisses',
                                                                    'quantite_recue_en_bouteilles',
-                                                                   'solde_bouteille', 'solde_caisse',
-                                                                   'statut_inventaire']:
+                                                                   'date_recue', 'solde_bouteille',
+                                                                   'solde_caisse', 'statut_inventaire']:
                 print f, inv[f], rf[f]
                 raise psycopg2.IntegrityError
 

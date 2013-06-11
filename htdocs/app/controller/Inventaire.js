@@ -77,6 +77,13 @@ Ext.define('VIN.controller.Inventaire', {
                     } else {
                         selected_ni = null;
                     }
+                    console.log(form.down('#quantite_recue_en_bouteilles_nf').getValue());
+                    console.log(form.down('#date_recue_df').getValue());
+                    if (form.down('#quantite_recue_en_bouteilles_nf').getValue() &&
+                        !form.down('#date_recue_df').getValue()) {
+                        form.down('#date_recue_df').markInvalid("Si la quantité reçue est spécifiée, la date doit l'être également");
+                        return;
+                    }
                     if (form.getForm().isValid()) {
                         form.submit({
                             url: ajax_url_prefix + '/inventaire/save',
